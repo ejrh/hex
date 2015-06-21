@@ -1,0 +1,4 @@
+ImageFile("data/images/cursor.png")
+ImageFile("data/images/desert1.png")
+ImageFile("data/images/grass1.png")
+ImageFile("data/images/water1.png")

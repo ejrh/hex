@@ -1,0 +1,4 @@
+# CreateTileType(name, walk_cost)
+CreateTileType("water", -1)
+CreateTileType("grass", 1)
+CreateTileType("desert", 2)

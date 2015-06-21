@@ -1,0 +1,2 @@
+# CreateUnitType(name, moves)
+CreateUnitType("dragon", 20)

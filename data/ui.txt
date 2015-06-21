@@ -1,0 +1,2 @@
+ImageSet("CURSORS", ["cursor.png"])
+ImageSet("ARROWS", ["Pointers.BMP/35", "Pointers.BMP/36", "Pointers.BMP/37", "Pointers.BMP/38", "Pointers.BMP/39", "Pointers.BMP/40"])
