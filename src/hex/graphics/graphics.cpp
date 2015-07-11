@@ -67,7 +67,7 @@ void Graphics::draw_lines(Uint8 R, Uint8 G, Uint8 B, SDL_Point *points, int coun
     SDL_RenderDrawLines(renderer, points, count);
 }
 
-void Graphics::write_text(Uint8 R, Uint8 G, Uint8 B, std::string text, int x, int y) {
+void Graphics::write_text(Uint8 R, Uint8 G, Uint8 B, const std::string& text, int x, int y) {
     SDL_Color colour = {R, G, B};
     SDL_Surface *text_surface = TTF_RenderText_Solid(small_font, text.c_str(), colour);
     if (text_surface == NULL) {
@@ -81,6 +81,20 @@ void Graphics::write_text(Uint8 R, Uint8 G, Uint8 B, std::string text, int x, in
 
     SDL_DestroyTexture(text_texture);
     SDL_FreeSurface(text_surface);
+}
+
+Image *Graphics::write_to_image(Uint8 R, Uint8 G, Uint8 B, const std::string& text) {
+    SDL_Color colour = {R, G, B};
+    SDL_Surface *text_surface = TTF_RenderText_Solid(small_font, text.c_str(), colour);
+    if (text_surface == NULL) {
+        warn("TTF error while rendering text: %s", TTF_GetError());
+        return NULL;
+    }
+    SDL_Texture *text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
+    SDL_FreeSurface(text_surface);
+
+    Image *image = new Image(0, text_texture);
+    return image;
 }
 
 void Graphics::update() {

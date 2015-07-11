@@ -28,7 +28,8 @@ public:
     void blit(Image *im, int x, int y, int alpha=255);
     void blit(SDL_Surface *surface, Image *im, int x, int y);
     void draw_lines(Uint8 R, Uint8 G, Uint8 B, SDL_Point *points, int count);
-    void write_text(Uint8 R, Uint8 G, Uint8 B, std::string text, int x, int y);
+    void write_text(Uint8 R, Uint8 G, Uint8 B, const std::string& text, int x, int y);
+    Image *write_to_image(Uint8 R, Uint8 G, Uint8 B, const std::string& text);
     void update();
     int get_width() { return width; }
     int get_height() { return height; }

@@ -137,8 +137,13 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
 
     std::vector<ImageRef> image_series = view_def->images[facing];
     Image *unit = image_series[(stack_view.phase / 1000) % image_series.size()].image;
-    if (unit == NULL)
-        return;
+    if (unit == NULL) {
+        const std::string& label = view_def->name.substr(0, 3);
+        unit = graphics->write_to_image(255,255,255, label.c_str());
+        unit->x_offset = 24 - unit->width / 2 + 8;
+        unit->y_offset = 16 - unit->height / 2 + 32;
+        image_series[(stack_view.phase / 1000) % image_series.size()].image = unit;
+    }
 
     int alpha;
     if (stack_view.selected) {
