@@ -36,6 +36,7 @@ void Pathfinder::start(const Point start_point, const Point target_point) {
     target.node = &nodes[target.point];
 
     source.node->state = 1;
+    source.node->heuristic = heuristic(source, target);
     source.score = source.node->cost + source.node->heuristic;
     queue.push(source);
     path_head = source;
@@ -75,18 +76,24 @@ void Pathfinder::step() {
         return;
     }
 
-    path_head = queue.top();
+
+    PathfinderQueueEntry next_node = queue.top();
     queue.pop();
-    if (path_head.point == target.point) {
+
+    if (next_node.node->heuristic < path_head.node->heuristic) {
+        path_head = next_node;
+    }
+
+    if (next_node.point == target.point) {
         state = FINISHED;
         return;
     }
 
-    path_head.node->state = 2;
+    next_node.node->state = 2;
     PathfinderQueueEntry neighbours[6];
-    get_neighbours(path_head, neighbours);
+    get_neighbours(next_node, neighbours);
 
-    int offset = path_head.point.x ^ path_head.point.y; // randomise the order we examine neighbours in, for variety
+    int offset = next_node.point.x ^ next_node.point.y; // randomise the order we examine neighbours in, for variety
 
     for (int i = 0; i < 6; i++) {
         PathfinderQueueEntry &neighbour = neighbours[(i + offset) % 6];
@@ -94,11 +101,11 @@ void Pathfinder::step() {
             continue;
         if (neighbour.node->state == 2)
             continue;
-        int step_cost = cost_between(path_head, neighbour);
-        int new_cost = path_head.node->cost + step_cost;
+        int step_cost = cost_between(next_node, neighbour);
+        int new_cost = next_node.node->cost + step_cost;
         if (new_cost < neighbour.node->cost && step_cost < INT_MAX) {
             neighbour.node->cost = new_cost;
-            neighbour.node->predecessor = path_head.point;
+            neighbour.node->predecessor = next_node.point;
             if (neighbour.node->state == 0) {
                 neighbour.node->heuristic = heuristic(neighbour, target);
             }
