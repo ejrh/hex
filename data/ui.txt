@@ -1,2 +1,2 @@
 ImageSet("CURSORS", ["cursor.png"])
-ImageSet("ARROWS", ["Pointers.BMP/35", "Pointers.BMP/36", "Pointers.BMP/37", "Pointers.BMP/38", "Pointers.BMP/39", "Pointers.BMP/40"])
+ImageSet("ARROWS", ["arrow0.png", "arrow1.png", "arrow2.png", "arrow3.png", "arrow4.png", "arrow5.png"])
