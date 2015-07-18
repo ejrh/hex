@@ -12,6 +12,11 @@ target_link_libraries(data_test hex)
 target_link_libraries(data_test SDL2 SDL2_image SDL2_ttf boost_system)
 target_compile_options(data_test PUBLIC "-Wall" "-g")
 
+add_executable(networking_test networking_test.cpp)
+target_link_libraries(networking_test hex)
+target_link_libraries(networking_test SDL2 SDL2_ttf boost_system pthread)
+target_compile_options(networking_test PUBLIC "-Wall" "-g")
+
 add_executable(noise_test noise_test.cpp)
 target_link_libraries(noise_test hex)
 target_link_libraries(noise_test SDL2 SDL2_image SDL2_ttf boost_system)

@@ -10,6 +10,8 @@ set(srcs
     graphics/graphics.cpp
     graphics/ilb.cpp
     graphics/load_image.cpp
+    networking/client.cpp
+    networking/server.cpp
     noise.cpp
     resources/resources.cpp
     resources/resource_loader.cpp
