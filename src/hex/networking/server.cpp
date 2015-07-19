@@ -4,7 +4,7 @@
 #include "hex/networking/networking.h"
 
 void Connection::start() {
-    std::string message("hello\n");
+    static std::string message("hello\n");
 
     boost::asio::async_write(socket, boost::asio::buffer(message),
         boost::bind(&Connection::handle_write, shared_from_this(),
@@ -35,7 +35,7 @@ void Connection::handle_read(const boost::system::error_code& error, size_t byte
     trace("Recevied {%s}\n", line.c_str());
     buffer.consume(bytes_transferred);
 
-    std::string message("ok\n");
+    static std::string message("ok\n");
 
     boost::asio::async_write(socket, boost::asio::buffer(message),
         boost::bind(&Connection::handle_write, shared_from_this(),
