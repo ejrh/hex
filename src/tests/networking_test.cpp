@@ -12,19 +12,6 @@ void run() {
     Server server(SERVER_PORT, io_service);
     trace("run");
     io_service.run();
-
-    //Client client1(io_service);
-    //client1.connect("localhost", SERVER_PORT);
-
-    //Client client2(io_service);
-    //client2.connect("localhost", SERVER_PORT);
-
-    //bool running = true;
-    //while (running) {
-    //    SDL_Delay(1000);
-    //    trace("running");
-    //}
-
     trace("end");
 }
 

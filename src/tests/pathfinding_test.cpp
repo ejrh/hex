@@ -1,8 +1,5 @@
 #include "common.h"
 
-#include <SDL/sge.h>
-
-
 #include "hex/basics/error.h"
 #include "hex/graphics/graphics.h"
 #include "hex/game/game.h"
