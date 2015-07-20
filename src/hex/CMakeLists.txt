@@ -32,6 +32,7 @@ set(srcs
     messaging/updater.cpp
     messaging/updater.h
     networking/client.cpp
+    networking/connection.cpp
     networking/networking.h
     networking/server.cpp
     resources/image_loader.cpp

@@ -1,6 +1,8 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
+#include "hex/messaging/serialiser.h"
+
 class Message;
 
 /* These be defined by implementation. */
@@ -32,7 +34,8 @@ template<typename T>
 class WrapperMessage: public Message {
 public:
     WrapperMessage() { }
-    WrapperMessage(T& data): Message(), data(data) { }
+    WrapperMessage(int type, const T& data): Message(type), data(data) { }
+    WrapperMessage(const T& data): Message(), data(data) { }
     virtual ~WrapperMessage() { }
 
     T data;
@@ -52,7 +55,8 @@ template<typename T1, typename T2>
 class WrapperMessage2: public Message {
 public:
     WrapperMessage2() { }
-    WrapperMessage2(T1& data1, T2& data2): Message(), data1(data1), data2(data2) { }
+    WrapperMessage2(int type, const T1& data1, const T2& data2): Message(type), data1(data1), data2(data2) { }
+    WrapperMessage2(const T1& data1, const T2& data2): Message(), data1(data1), data2(data2) { }
     virtual ~WrapperMessage2() { }
 
     T1 data1;

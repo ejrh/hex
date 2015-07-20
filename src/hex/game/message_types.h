@@ -26,6 +26,8 @@ MSG_TYPE(PlayerName, PlayerNameMessage)
 MSG_TYPE(TurnEnd, TurnEndMessage)
 MSG_TYPE(TurnBegin, TurnBeginMessage)
 MSG_TYPE(UnitMove, UnitMoveMessage)
+
+MSG_TYPE(StreamOpen, WrapperMessage<std::string>)
 MSG_TYPE(StreamClose, Message)
 
 #undef P

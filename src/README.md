@@ -9,6 +9,7 @@ Dependencies:
   * cmake
   * boost-dev
   * boost-system-dev
+  * boost-thread-dev
   * SDL2-dev
   * SDL2-ttf-dev
 
@@ -21,6 +22,7 @@ Approximate order of dependencies between modules:
              basics
     graphics        messaging
                       game
+           networking
            resources
               view
 

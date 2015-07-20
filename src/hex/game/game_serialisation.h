@@ -1,6 +1,8 @@
 #ifndef GAME_SERIALISATION_H
 #define GAME_SERIALISATION_H
 
+#include "hex/messaging/serialiser.h"
+
 inline Serialiser& operator<<(Serialiser& serialiser, const Point& p) {
     serialiser.begin_tuple();
     serialiser << p.x << p.y;

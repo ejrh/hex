@@ -1,6 +1,8 @@
 #ifndef GAME_UPDATER_H
 #define GAME_UPDATER_H
 
+#include "hex/messaging/receiver.h"
+
 class GameUpdater: public MessageReceiver {
 public:
     GameUpdater(Game *game);

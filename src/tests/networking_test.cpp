@@ -1,18 +1,34 @@
 #include "common.h"
 
 #include "hex/basics/error.h"
+#include "hex/messaging/receiver.h"
 #include "hex/networking/networking.h"
 
 #define SERVER_PORT 9999
 
-void run() {
-    trace("begin");
-    boost::asio::io_service io_service;
+class PrintingMessageReceiver: public MessageReceiver {
+public:
+    void receive(boost::shared_ptr<Message> msg) {
+        std::cout << "Received: ";
+        Serialiser s(std::cout);
+        s << msg.get();
+        std::cout << std::endl;
+    }
+};
 
-    Server server(SERVER_PORT, io_service);
-    trace("run");
-    io_service.run();
-    trace("end");
+void run() {
+    PrintingMessageReceiver receiver;
+    Server server(SERVER_PORT, &receiver);
+
+    server.start();
+
+    bool running = true;
+    while (running) {
+        SDL_Delay(60000);
+        trace("running");
+    }
+
+    server.stop();
 }
 
 int main(int argc, char *argv[]) {

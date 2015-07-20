@@ -1,50 +1,16 @@
 #include "common.h"
 
 #include "hex/basics/error.h"
+#include "hex/messaging/message.h"
+#include "hex/game/game.h"
+#include "hex/game/game_serialisation.h"
+#include "hex/game/game_messages.h"
+#include "hex/game/game_updater.h"
 #include "hex/networking/networking.h"
 
-void Connection::start() {
-    static std::string message("hello\n");
-
-    boost::asio::async_write(socket, boost::asio::buffer(message),
-        boost::bind(&Connection::handle_write, shared_from_this(),
-            boost::asio::placeholders::error,
-            boost::asio::placeholders::bytes_transferred));
-}
-
-void Connection::handle_write(const boost::system::error_code& error, size_t bytes_transferred) {
-    if (error) {
-        trace("Error in handle_write: %s\n", error.message().c_str());
-        return;
-    }
-
-    boost::asio::async_read_until(socket, buffer, '\n',
-        boost::bind(&Connection::handle_read, shared_from_this(),
-            boost::asio::placeholders::error,
-            boost::asio::placeholders::bytes_transferred));
-}
-
-void Connection::handle_read(const boost::system::error_code& error, size_t bytes_transferred) {
-    if (error) {
-        trace("Error in handle_read: %s\n", error.message().c_str());
-        return;
-    }
-
-    boost::asio::streambuf::const_buffers_type bufs = buffer.data();
-    std::string line(boost::asio::buffers_begin(bufs), boost::asio::buffers_begin(bufs) + bytes_transferred);
-    trace("Recevied {%s}\n", line.c_str());
-    buffer.consume(bytes_transferred);
-
-    static std::string message("ok\n");
-
-    boost::asio::async_write(socket, boost::asio::buffer(message),
-        boost::bind(&Connection::handle_write, shared_from_this(),
-            boost::asio::placeholders::error,
-            boost::asio::placeholders::bytes_transferred));
-}
-
-Server::Server(int port, boost::asio::io_service& io_service):
-        acceptor(io_service, tcp::endpoint(tcp::v4(), port)) {
+Server::Server(int port, MessageReceiver *receiver):
+        io_service(),
+        receiver(receiver), acceptor(io_service, tcp::endpoint(tcp::v4(), port)), shutdown_requested(false) {
     start_accept();
 }
 
@@ -52,14 +18,32 @@ Server::~Server() {
 
 }
 
+void Server::start() {
+    server_thread = boost::thread(&Server::run_thread, this);
+    trace("started");
+}
+
+void Server::stop() {
+    shutdown_requested = true;
+    server_thread.join();
+    trace("stopped");
+}
+
+void Server::run_thread() {
+    trace("run_thread");
+    io_service.run();
+    trace("/run_thread");
+}
+
 void Server::start_accept() {
-    Connection::pointer new_connection = Connection::create(acceptor.get_io_service());
+    Connection::pointer new_connection = Connection::create(acceptor.get_io_service(), receiver);
     acceptor.async_accept(new_connection->socket, boost::bind(&Server::handle_accept, this, new_connection, boost::asio::placeholders::error));
 }
 
 void Server::handle_accept(Connection::pointer new_connection, const boost::system::error_code& error) {
     if (!error) {
         new_connection->start();
+        new_connection->send_message(boost::make_shared<WrapperMessage<std::string> >(StreamOpen, std::string("Hex 0.1")));
     }
     start_accept();
 }
