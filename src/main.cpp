@@ -8,11 +8,13 @@
 #include "hex/messaging/receiver.h"
 #include "hex/messaging/updater.h"
 #include "hex/messaging/dispatcher.h"
+#include "hex/messaging/event_pusher.h"
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/game_serialisation.h"
 #include "hex/game/game_updater.h"
 #include "hex/game/game_arbiter.h"
+#include "hex/networking/networking.h"
 #include "hex/view/view.h"
 #include "hex/view/view_updater.h"
 #include "hex/view/level_renderer.h"
@@ -65,8 +67,6 @@ void create_game(Game& game, Updater& updater) {
 extern void connect(std::string server, int port);
 
 void run() {
-    //connect("localhost", 9999);
-
     Graphics graphics;
 
     graphics.start();
@@ -79,6 +79,9 @@ void run() {
     load_resources("data/unit_views.txt", resources, &graphics);
 
     resources.resolve_references();
+
+    EventPusher event_pusher;
+    Server server(9999, &event_pusher);
 
     Game game;
     Updater updater(1000);
@@ -95,6 +98,8 @@ void run() {
     create_game(game, updater);
 
     LevelRenderer level_renderer(&graphics, &resources, game.level, &game_view.level_view);
+
+    server.start();
 
     int down_pos_x = 0, down_pos_y = 0;
     bool dragging = false;
@@ -130,6 +135,14 @@ void run() {
                 if (evt.motion.state == SDL_BUTTON_LMASK &&  abs(evt.motion.x - down_pos_x) > 4 && abs(evt.motion.y - down_pos_y) > 4)
                     dragging = true;
             }
+
+            if (evt.type == event_pusher.event_type) {
+                boost::shared_ptr<Message> msg = event_pusher.get_message(evt);
+                std::ostringstream ss;
+                Serialiser writer(ss);
+                writer << msg.get();
+                trace("Recieved from network: %s", ss.str().c_str());
+            }
         }
 
         game_view.level_view.update();
@@ -137,6 +150,8 @@ void run() {
         level_renderer.draw();
         graphics.update();
     }
+
+    server.stop();
 
     graphics.stop();
 }

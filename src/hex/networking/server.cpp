@@ -25,6 +25,7 @@ void Server::start() {
 
 void Server::stop() {
     shutdown_requested = true;
+    io_service.stop();
     server_thread.join();
     trace("stopped");
 }
@@ -45,5 +46,6 @@ void Server::handle_accept(Connection::pointer new_connection, const boost::syst
         new_connection->start();
         new_connection->send_message(boost::make_shared<WrapperMessage<std::string> >(StreamOpen, std::string("Hex 0.1")));
     }
-    start_accept();
+    if (!shutdown_requested)
+        start_accept();
 }
