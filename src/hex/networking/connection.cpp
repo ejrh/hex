@@ -5,6 +5,14 @@
 #include "hex/messaging/serialiser.h"
 #include "hex/messaging/message.h"
 
+Connection::Connection(boost::asio::io_service& io_service, MessageReceiver *receiver): receiver(receiver), socket(io_service) {
+    trace("Connection");
+}
+
+Connection::~Connection() {
+    trace("~Connection");
+}
+
 void Connection::start() {
     static std::string message("hello\n");
 

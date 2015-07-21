@@ -9,8 +9,7 @@
 #include "hex/networking/networking.h"
 
 Server::Server(int port, MessageReceiver *receiver):
-        io_service(),
-        receiver(receiver), acceptor(io_service, tcp::endpoint(tcp::v4(), port)), shutdown_requested(false) {
+        receiver(receiver), io_service(), acceptor(io_service, tcp::endpoint(tcp::v4(), port)), shutdown_requested(false) {
     start_accept();
 }
 
@@ -44,7 +43,7 @@ void Server::start_accept() {
 void Server::handle_accept(Connection::pointer new_connection, const boost::system::error_code& error) {
     if (!error) {
         new_connection->start();
-        new_connection->send_message(boost::make_shared<WrapperMessage<std::string> >(StreamOpen, std::string("Hex 0.1")));
+        new_connection->send_message(boost::make_shared<WrapperMessage<std::string> >(StreamOpen, std::string("Hex Server 0.1")));
     }
     if (!shutdown_requested)
         start_accept();

@@ -12,10 +12,12 @@ void EventPusher::receive(boost::shared_ptr<Message> msg) {
     SDL_Event user_event;
 
     user_event.type = event_type;
-    new (&user_event.user.code) boost::shared_ptr<Message>(msg);
+    new (&user_event.user.data1) boost::shared_ptr<Message>(msg);
     SDL_PushEvent(&user_event);
 }
 
 boost::shared_ptr<Message> EventPusher::get_message(SDL_Event& evt) {
-    return *reinterpret_cast<boost::shared_ptr<Message> *>(&evt.user.code);
+    boost::shared_ptr<Message> msg = *reinterpret_cast<boost::shared_ptr<Message> *>(&evt.user.data1);
+    (reinterpret_cast<boost::shared_ptr<Message> *>(&evt.user.data1))->~shared_ptr();
+    return msg;
 }

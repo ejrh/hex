@@ -20,11 +20,11 @@ public:
         return pointer(new Connection(io_service, receiver));
     }
 
-    void start();
+    Connection(boost::asio::io_service& io_service, MessageReceiver *receiver);
+    ~Connection();
 
 private:
-    Connection(boost::asio::io_service& io_service, MessageReceiver *receiver): receiver(receiver), socket(io_service) { }
-
+    void start();
     void send_message(boost::shared_ptr<Message> msg);
     void continue_reading();
     void continue_writing();
@@ -63,15 +63,22 @@ private:
 
 class Client {
 public:
-    Client(boost::asio::io_service& io_service);
+    Client(MessageReceiver *receiver);
     ~Client();
-
     void connect(std::string server, int port);
+    void disconnect(std::string server, int port);
+
+private:
+    void run_thread();
     void handle_connect(const boost::system::error_code& error, tcp::resolver::iterator iterator);
 
 private:
-    tcp::socket socket;
+    MessageReceiver *receiver;
+    boost::asio::io_service io_service;
+    boost::thread client_thread;
     tcp::resolver resolver;
+    bool shutdown_requested;
+    Connection::pointer connection;
 };
 
 #endif
