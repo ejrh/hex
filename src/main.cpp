@@ -1,5 +1,10 @@
 #include "common.h"
 
+#include <boost/program_options/cmdline.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/parsers.hpp>
+#include <boost/program_options/variables_map.hpp>
+
 #include "hex/basics/error.h"
 #include "hex/noise.h"
 #include "hex/graphics/graphics.h"
@@ -19,6 +24,12 @@
 #include "hex/view/view_updater.h"
 #include "hex/view/level_renderer.h"
 
+struct Options {
+    bool server_mode;
+    bool client_mode;
+    std::string host_name;
+    std::string host_addr;
+};
 
 void generate_level(Level &level, TileType *water, TileType *desert, TileType *grass) {
     PerlinNoise noise(5, 5);
@@ -77,7 +88,7 @@ void create_game(Game& game, Updater& updater) {
 
 extern void connect(std::string server, int port);
 
-void run() {
+void run(Options& options) {
     Graphics graphics;
 
     graphics.start();
@@ -94,10 +105,12 @@ void run() {
     EventPusher event_pusher;
     Server server(9999, &event_pusher);
 
+    Client client(&event_pusher);
+
     Game game;
     Updater updater(1000);
     GameArbiter arbiter(&game, &updater);
-    Dispatcher dispatcher(&arbiter);
+    Updater dispatcher(1000);
 
     GameUpdater game_updater(&game);
     updater.subscribe(&game_updater);
@@ -106,11 +119,23 @@ void run() {
     ViewUpdater view_updater(&game, &game_view, &resources);
     updater.subscribe(&view_updater);
 
-    create_game(game, updater);
+    if (options.server_mode) {
+        server.start();
+        updater.subscribe(&server);
+
+        SDL_Delay(5000);
+    }
+
+    if (options.client_mode) {
+        client.connect(options.host_addr);
+        dispatcher.subscribe(&client);
+    } else {
+        dispatcher.subscribe(&arbiter);
+
+        create_game(game, updater);
+    }
 
     LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view.level_view);
-
-    server.start();
 
     int down_pos_x = 0, down_pos_y = 0;
     bool dragging = false;
@@ -153,6 +178,11 @@ void run() {
                 Serialiser writer(ss);
                 writer << msg.get();
                 trace("Recieved from network: %s", ss.str().c_str());
+                if (options.server_mode) {
+                    arbiter.receive(msg);
+                } else if (options.client_mode) {
+                    updater.receive(msg);
+                }
             }
         }
 
@@ -167,10 +197,47 @@ void run() {
     graphics.stop();
 }
 
-int main(int argc, char *argv[]) {
+bool parse_options(int argc, char *argv[], Options& options) {
 
+    namespace po = boost::program_options;
+
+    po::options_description desc("Allowed options");
+    desc.add_options()
+        ("help", "produce help message")
+        ("server", "run in server mode")
+        ("connect", po::value<std::string>(), "connect to server")
+    ;
+
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+
+    if (vm.count("help")) {
+        std::cout << desc << "\n";
+        return false;
+    }
+
+    if (vm.count("server")) {
+        options.server_mode = true;
+    } else {
+        options.server_mode = false;
+    }
+
+    if (vm.count("connect")) {
+        options.client_mode = true;
+        options.host_addr = vm["connect"].as<std::string>();
+    } else {
+        options.client_mode = false;
+    }
+
+    return true;
+}
+
+int main(int argc, char *argv[]) {
     try {
-        run();
+        Options options;
+        if (parse_options(argc, argv, options))
+            run(options);
     } catch (Error &ex) {
         std::cerr << "Failed with: " << ex.what() << std::endl;
     }

@@ -27,7 +27,7 @@ void run() {
     SDL_Delay(1000);
 
     Client client(&event_pusher);
-    client.connect(std::string("localhost"), SERVER_PORT);
+    client.connect(std::string("localhost:9999"));
 
     bool running = true;
     while (running) {

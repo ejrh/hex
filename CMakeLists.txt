@@ -4,7 +4,7 @@ project(hex)
 # Find dependencies
 set(BOOST_ROOT D:/lib/boost_1_58_0)
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost REQUIRED COMPONENTS system thread)
+find_package(Boost REQUIRED COMPONENTS system thread program_options)
 
 find_package(Threads)
 

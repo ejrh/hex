@@ -14,8 +14,6 @@ Connection::~Connection() {
 }
 
 void Connection::start() {
-    static std::string message("hello\n");
-
     continue_reading();
 }
 
@@ -49,6 +47,8 @@ void Connection::continue_writing() {
 }
 
 void Connection::handle_write(const boost::system::error_code& error, size_t bytes_transferred) {
+    trace("wrote %d bytes", bytes_transferred);
+
     if (error) {
         trace("Error in handle_write: %s\n", error.message().c_str());
         return;
@@ -60,6 +60,8 @@ void Connection::handle_write(const boost::system::error_code& error, size_t byt
 }
 
 void Connection::handle_read(const boost::system::error_code& error, size_t bytes_transferred) {
+    trace("read %d bytes", bytes_transferred);
+
     if (error) {
         trace("Error in handle_read: %s\n", error.message().c_str());
         return;
@@ -74,7 +76,7 @@ void Connection::handle_read(const boost::system::error_code& error, size_t byte
         return;
     }
     boost::shared_ptr<Message> msg(msg_ptr);
-
+    msg->origin = id;
     receiver->receive(msg);
 
     continue_reading();

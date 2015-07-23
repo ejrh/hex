@@ -31,6 +31,7 @@ private:
     void handle_write(const boost::system::error_code& error, size_t bytes_transferred);
     void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
 
+    int id;
     MessageReceiver *receiver;
     tcp::socket socket;
     boost::asio::streambuf buffer;
@@ -41,32 +42,39 @@ private:
     friend class Client;
 };
 
-class Server {
+class Server: public MessageReceiver {
 public:
     Server(int port, MessageReceiver *receiver);
     ~Server();
     void start();
     void stop();
+    virtual void receive(boost::shared_ptr<Message> msg);
 
 private:
+    void broadcast(boost::shared_ptr<Message> msg);
     void run_thread();
     void start_accept();
     void handle_accept(Connection::pointer new_connection, const boost::system::error_code& error);
 
 private:
+    int port;
     MessageReceiver *receiver;
     boost::asio::io_service io_service;
     boost::thread server_thread;
     tcp::acceptor acceptor;
     bool shutdown_requested;
+
+    int next_connection_id;
+    std::map<int, Connection::pointer> connections;
 };
 
-class Client {
+class Client: public MessageReceiver {
 public:
     Client(MessageReceiver *receiver);
     ~Client();
-    void connect(std::string server, int port);
-    void disconnect(std::string server, int port);
+    void connect(std::string server);
+    void disconnect();
+    virtual void receive(boost::shared_ptr<Message> msg);
 
 private:
     void run_thread();

@@ -8,6 +8,7 @@ Components:
 Dependencies:
   * cmake
   * boost-dev
+  * boost-program-options-dev
   * boost-system-dev
   * boost-thread-dev
   * SDL2-dev

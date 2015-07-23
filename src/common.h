@@ -16,6 +16,7 @@
 #include <boost/make_shared.hpp>
 #include <boost/asio.hpp>
 #include <boost/heap/priority_queue.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
