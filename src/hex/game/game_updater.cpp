@@ -23,8 +23,26 @@ void GameUpdater::receive(boost::shared_ptr<Message> update) {
 void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
     switch (update->type) {
         case SetLevel: {
-            boost::shared_ptr<SetLevelMessage> upd = boost::dynamic_pointer_cast<SetLevelMessage>(update);
-            game->level = upd->level;
+            boost::shared_ptr<WrapperMessage2<int, int> > upd = boost::dynamic_pointer_cast<WrapperMessage2<int, int> >(update);
+            game->level.width = upd->data1;
+            game->level.height = upd->data2;
+            game->level.tiles.resize(upd->data1, upd->data2);
+        } break;
+
+        case SetLevelData: {
+            boost::shared_ptr<WrapperMessage2<Point, std::vector<std::string> > > upd = boost::dynamic_pointer_cast<WrapperMessage2<Point, std::vector<std::string> > >(update);
+            Point offset = upd->data1;
+            std::vector<std::string>& tile_data = upd->data2;
+            for (unsigned int i = 0; i < tile_data.size(); i++) {
+                Point tile_pos(offset.x + i, offset.y);
+                if (!game->level.contains(tile_pos)) {
+                    std::cerr << "Tile coordinate " << tile_pos << " is outside the level" << std::endl;
+                    continue;
+                }
+                std::string& tile_type_name = tile_data[i];
+                TileType *tile_type = game->tile_types[tile_type_name];
+                game->level.tiles[tile_pos].type = tile_type;
+            }
         } break;
 
         case CreateTileType: {
@@ -71,9 +89,9 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
             UnitStack *stack = game->stacks[upd->unit];
             Point& new_pos = upd->path.back();
 
-            game->level->tiles[stack->position].stack = NULL;
+            game->level.tiles[stack->position].stack = NULL;
             stack->position = new_pos;
-            game->level->tiles[stack->position].stack = stack;
+            game->level.tiles[stack->position].stack = stack;
 
             trace("Unit %d moves to %d,%d", upd->unit, new_pos.x, new_pos.y);
         } break;

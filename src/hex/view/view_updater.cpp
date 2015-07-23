@@ -26,8 +26,31 @@ void ViewUpdater::receive(boost::shared_ptr<Message> update) {
 void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
     switch (update->type) {
         case SetLevel: {
-            boost::shared_ptr<SetLevelMessage> upd = boost::dynamic_pointer_cast<SetLevelMessage>(update);
-            game_view->level_view.set_level(upd->level);
+            boost::shared_ptr<WrapperMessage2<int, int> > upd = boost::dynamic_pointer_cast<WrapperMessage2<int, int> >(update);
+            game_view->level_view.level = &game->level;
+            game_view->level_view.tile_views.resize(upd->data1, upd->data2);
+        } break;
+
+        case SetLevelData: {
+            boost::shared_ptr<WrapperMessage2<Point, std::vector<std::string> > > upd = boost::dynamic_pointer_cast<WrapperMessage2<Point, std::vector<std::string> > >(update);
+            Point offset = upd->data1;
+            std::vector<std::string>& tile_data = upd->data2;
+            for (unsigned int i = 0; i < tile_data.size(); i++) {
+                Point tile_pos(offset.x + i, offset.y);
+                if (!game->level.contains(tile_pos)) {
+                    continue;
+                }
+
+                std::string& tile_type_name = tile_data[i];
+                TileType *tile_type = game->tile_types[tile_type_name];
+                TileView& tile_view = game_view->level_view.tile_views[tile_pos];
+                TileViewDef *view_def = game_view->level_view.resources->get_tile_view_def(tile_type->name);
+                if (view_def == NULL)
+                    continue;
+                tile_view.view_def = view_def;
+                tile_view.variation = rand();
+                tile_view.phase = rand();
+            }
         } break;
 
         case CreateTileType:

@@ -32,7 +32,7 @@ UnitType *Game::create_unit_type(UnitType& unit_type) {
 }
 
 UnitStack *Game::create_unit_stack(int id, const Point position) {
-    if (level->tiles[position].stack != NULL) {
+    if (level.tiles[position].stack != NULL) {
         warn("Stack already exists at position %d,%d", position.x, position.y);
         return NULL;
     }
@@ -45,7 +45,7 @@ UnitStack *Game::create_unit_stack(int id, const Point position) {
     UnitStack *new_stack = new UnitStack(id, position);
     stacks[id] = new_stack;
 
-    level->tiles[position].stack = new_stack;
+    level.tiles[position].stack = new_stack;
 
     return new_stack;
 }

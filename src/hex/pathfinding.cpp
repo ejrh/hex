@@ -5,7 +5,7 @@
 #include "hex/game/game.h"
 #include "hex/pathfinding.h"
 
-Pathfinder::Pathfinder(boost::shared_ptr<Level> level): level(level) {
+Pathfinder::Pathfinder(Level *level): level(level) {
     nodes.resize(level->width, level->height);
 
     clear();

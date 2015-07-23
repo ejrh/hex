@@ -49,14 +49,25 @@ void create_game(Game& game, Updater& updater) {
     replay_messages("data/tile_types.txt", updater);
     replay_messages("data/unit_types.txt", updater);
 
-    boost::shared_ptr<Level> level = boost::make_shared<Level>(width, height);
-    generate_level(*level, game.tile_types["water"], game.tile_types["desert"], game.tile_types["grass"]);
+    game.level.width = width;
+    game.level.height = height;
+    game.level.tiles.resize(width, height);
+    generate_level(game.level, game.tile_types["water"], game.tile_types["desert"], game.tile_types["grass"]);
 
-    updater.receive(boost::make_shared<SetLevelMessage>(level));
+    updater.receive(boost::make_shared<WrapperMessage2<int, int> >(SetLevel, game.level.width, game.level.height));
+    for (int i = 0; i < game.level.height; i++) {
+        Point origin(0, i);
+        std::vector<std::string> data;
+        for (int j = 0; j < game.level.width; j++) {
+            TileType *tile_type = game.level.tiles[i][j].type;
+            data.push_back(tile_type->name);
+        }
+        updater.receive(boost::make_shared<WrapperMessage2<Point, std::vector<std::string> > >(SetLevelData, origin, data));
+    }
 
     for (int i = 0; i < 10; i++) {
-        int tx = rand() % level->width;
-        int ty = rand() % level->height;
+        int tx = rand() % game.level.width;
+        int ty = rand() % game.level.height;
         updater.receive(boost::make_shared<CreateStackMessage>(i, Point(tx, ty)));
         updater.receive(boost::make_shared<CreateUnitMessage>(i, "dragon"));
     };
@@ -91,13 +102,13 @@ void run() {
     GameUpdater game_updater(&game);
     updater.subscribe(&game_updater);
 
-    GameView game_view(graphics.width, graphics.height, &resources, &dispatcher);
+    GameView game_view(graphics.width, graphics.height, &game, &resources, &dispatcher);
     ViewUpdater view_updater(&game, &game_view, &resources);
     updater.subscribe(&view_updater);
 
     create_game(game, updater);
 
-    LevelRenderer level_renderer(&graphics, &resources, game.level, &game_view.level_view);
+    LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view.level_view);
 
     server.start();
 

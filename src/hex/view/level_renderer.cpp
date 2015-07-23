@@ -7,7 +7,7 @@
 #include "hex/view/view.h"
 #include "hex/view/level_renderer.h"
 
-LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, boost::shared_ptr<Level> level, LevelView *level_view):
+LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *level, LevelView *level_view):
         graphics(graphics), resources(resources), level(level), level_view(level_view) {
     cursor_images = resources->image_series["CURSORS"];
     arrow_images = resources->image_series["ARROWS"];

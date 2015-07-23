@@ -23,9 +23,10 @@
 #define SLOPE_WIDTH (TILE_WIDTH - X_SPACING)
 #define SLOPE_HEIGHT (Y_SPACING/2)
 
-LevelView::LevelView(int width, int height, Resources *resources, MessageReceiver *dispatcher):
-    width(width), height(height), resources(resources), dispatcher(dispatcher),
-    last_update(0), shift_x(0), shift_y(0), x_spacing(X_SPACING), y_spacing(Y_SPACING), selected_stack(NULL), moving_unit(NULL) {
+LevelView::LevelView(int width, int height, Level *level, Resources *resources, MessageReceiver *dispatcher):
+        width(width), height(height), level(level), resources(resources), dispatcher(dispatcher),
+        last_update(0), shift_x(0), shift_y(0), x_spacing(X_SPACING), y_spacing(Y_SPACING), selected_stack(NULL), moving_unit(NULL) {
+    tile_views.resize(level->width, level->height);
 }
 
 LevelView::~LevelView() {
@@ -71,13 +72,13 @@ void LevelView::update() {
 }
 
 void LevelView::set_mouse_position(int x, int y) {
-    if (level->contains(highlight_tile)) {
+    if (tile_views.contains(highlight_tile)) {
         tile_views[highlight_tile].highlighted = false;
     }
 
     mouse_to_tile(x, y, &highlight_tile);
 
-    if (level->contains(highlight_tile)) {
+    if (tile_views.contains(highlight_tile)) {
         tile_views[highlight_tile].highlighted = true;
     }
 }
@@ -232,27 +233,4 @@ TileView *LevelView::get_tile_view(const Point tile_pos) {
     }
 
     return NULL;
-}
-
-void LevelView::set_level(boost::shared_ptr<Level> level) {
-    this->level = level;
-    if (this->level.get() == NULL)
-        return;
-
-    tile_views.resize(level->width, level->height);
-    for (int i = 0; i < tile_views.height; i++)
-        for (int j = 0; j < tile_views.width; j++) {
-            Tile& tile = level->tiles[i][j];
-            TileType* tile_type = tile.type;
-            if (tile_type == NULL)
-                continue;
-
-            TileView& tile_view = tile_views[i][j];
-            TileViewDef *view_def = resources->get_tile_view_def(tile_type->name);
-            if (view_def == NULL)
-                continue;
-            tile_view.view_def = view_def;
-            tile_view.variation = rand();
-            tile_view.phase = rand();
-        }
 }

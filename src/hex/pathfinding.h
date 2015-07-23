@@ -33,7 +33,7 @@ struct PathfinderNodeComparator {
 
 class Pathfinder {
 public:
-    Pathfinder(boost::shared_ptr<Level> level);
+    Pathfinder(Level *level);
     virtual ~Pathfinder();
     virtual void clear();
     virtual void start(const Point start_point, const Point target_point);
@@ -53,7 +53,7 @@ private:
     int heuristic(const PathfinderQueueEntry& entry1, const PathfinderQueueEntry& entry2);
 
 public:
-    boost::shared_ptr<Level> level;
+    Level *level;
     Vector2<PathfinderNode> nodes;
     boost::heap::priority_queue<PathfinderQueueEntry, boost::heap::compare<PathfinderNodeComparator> > queue;
 };

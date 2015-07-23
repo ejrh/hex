@@ -14,28 +14,6 @@ enum MessageType {
 #undef MSG_TYPE
 
 
-class SetLevelMessage: public Message {
-public:
-    SetLevelMessage() { }
-    SetLevelMessage(boost::shared_ptr<Level> level): Message(SetLevel), level(level) { }
-    virtual ~SetLevelMessage() { }
-
-    boost::shared_ptr<Level> level;
-
-protected:
-    virtual void read(Deserialiser& deserialiser) {
-        deserialiser >> level->width;
-        deserialiser >> level->height;
-        //tiles
-    }
-
-    virtual void write(Serialiser& serialiser) const {
-        serialiser << level->width;
-        serialiser << level->height;
-        //tiles
-    };
-};
-
 class CreateStackMessage: public Message {
 public:
     CreateStackMessage() { }

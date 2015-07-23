@@ -40,7 +40,7 @@ class MessageReceiver;
 
 class LevelView {
 public:
-    LevelView(int width, int height, Resources *resources, MessageReceiver *dispatcher);
+    LevelView(int width, int height, Level *level, Resources *resources, MessageReceiver *dispatcher);
     ~LevelView();
     void update();
     void set_mouse_position(int x, int y);
@@ -51,8 +51,8 @@ public:
     void right_click(int x, int y);
 
 public:
-    boost::shared_ptr<Level> level;
     int width, height;
+    Level *level;
     std::map<int, UnitStackView> unit_stack_views;
     Vector2<TileView> tile_views;
 
@@ -60,8 +60,6 @@ protected:
     void set_drawn_path(Path& path);
     UnitStackView *get_unit_stack_view(const UnitStack &stack);
     TileView *get_tile_view(const Point tile_pos);
-
-    void set_level(boost::shared_ptr<Level> level);
 
 protected:
     Resources *resources;
@@ -82,10 +80,12 @@ protected:
 
 class GameView {
 public:
-    GameView(int width, int height, Resources *resources, MessageReceiver *dispatcher): level_view(width, height, resources, dispatcher) { }
+    GameView(int width, int height, Game *game, Resources *resources, MessageReceiver *dispatcher): game(game), level_view(width, height, &game->level, resources, dispatcher) { }
 
 public:
+    Game *game;
     LevelView level_view;
+
 };
 
 #endif

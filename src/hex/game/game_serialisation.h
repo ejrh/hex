@@ -39,9 +39,9 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, UnitType& d) {
     return deserialiser;
 }
 
-/*inline std::ostream& operator<<(std::ostream& os, const Point& p) {
+inline std::ostream& operator<<(std::ostream& os, const Point& p) {
     return os << "(" << p.x << "," << p.y << ")";
-}*/
+}
 
 /*static std::ostream& operator<<(std::ostream& os, const std::vector<Point> &path) {
     os << "[";

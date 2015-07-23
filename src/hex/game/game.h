@@ -88,7 +88,7 @@ std::ostream& operator<<(std::ostream &strm, const Level& level);
 
 class Game {
 public:
-    Game() { }
+    Game(): level(0, 0) { }
     ~Game() { }
 
     TileType *create_tile_type(TileType& tile_type);
@@ -103,7 +103,7 @@ public:
     UnitTypeMap unit_types;
 
     int turn_number;
-    boost::shared_ptr<Level> level;
+    Level level;
     std::vector<Player *> players;
     std::map<int, UnitStack *> stacks;
 };

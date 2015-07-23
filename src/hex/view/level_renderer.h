@@ -5,7 +5,7 @@ class LevelRenderer {
 public:
     typedef void (LevelRenderer::*RenderMethod)(int x, int y, Point tile_pos);
 
-    LevelRenderer(Graphics *graphics, Resources *resources, boost::shared_ptr<Level> level, LevelView *level_view);
+    LevelRenderer(Graphics *graphics, Resources *resources, Level *level, LevelView *level_view);
     ~LevelRenderer();
     void draw();
     void draw_level(RenderMethod render);
@@ -23,7 +23,7 @@ protected:
 protected:
     Graphics *graphics;
     Resources *resources;
-    boost::shared_ptr<Level> level;
+    Level *level;
     LevelView *level_view;
 
     ImageSeries cursor_images;

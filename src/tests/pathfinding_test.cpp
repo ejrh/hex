@@ -29,8 +29,8 @@ static TileType closed_tile("closed", -1);
 
 class PathfindingLevelView: public LevelView {
 public:
-    PathfindingLevelView(boost::shared_ptr<Level> level, int width, int height):
-        LevelView(width, height, &::resources, NULL), pathfinder(level) { set_level(level); }
+    PathfindingLevelView(Level *level, int width, int height):
+        LevelView(width, height, level, &::resources, NULL), pathfinder(level) { }
 
     void left_click() {
         source = highlight_tile;
@@ -78,7 +78,7 @@ public:
 
 class PathfindingRenderer: public LevelRenderer {
 public:
-    PathfindingRenderer(Graphics *graphics, boost::shared_ptr<Level> level, PathfindingLevelView *level_view):
+    PathfindingRenderer(Graphics *graphics, Level *level, PathfindingLevelView *level_view):
             LevelRenderer(graphics, &::resources, level, level_view) { }
     void render_tile(int x, int y, Point tile_pos);
 };
@@ -156,7 +156,7 @@ void run() {
     Graphics graphics;
     graphics.start();
 
-    boost::shared_ptr<Level> level = boost::make_shared<Level>(200,200);
+    Level *level = new Level(200,200);
     generate_level(*level);
 
     PathfindingLevelView level_view(level, graphics.width, graphics.height);
@@ -204,6 +204,8 @@ void run() {
         level_renderer.draw();
         graphics.update();
     }
+
+    delete level;
 
     graphics.stop();
 }
