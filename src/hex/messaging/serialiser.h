@@ -147,6 +147,8 @@ public:
     }
 
     void type_begin_tuple(std::string &type_name) {
+        if (expect_seperator)
+            skip_separator();
         std::stringbuf sbuf;
         in.get(sbuf, '(');
         type_name.assign(sbuf.str());
