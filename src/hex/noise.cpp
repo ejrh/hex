@@ -48,9 +48,9 @@ float PerlinNoise::dot_product(int ix, int iy, float x, float y) {
  }
 
 float PerlinNoise::value(float x, float y) {
-     int x0 = x * grid_width;;
+     int x0 = (int) (x * grid_width);
      int x1 = x0  + 1;
-     int y0 = y * grid_height;
+     int y0 = (int) (y * grid_height);
      int y1 = y0 + 1;
 
      if (x0 < 0 || x1 > grid_width || y0 < 0 || y1 > grid_width)
