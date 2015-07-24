@@ -5,6 +5,7 @@
 #include "hex/game/game.h"
 #include "hex/view/view.h"
 #include "hex/view/level_renderer.h"
+#include "hex/view/level_window.h"
 #include "hex/noise.h"
 #include "hex/pathfinding.h"
 
@@ -29,8 +30,8 @@ static TileType closed_tile("closed", -1);
 
 class PathfindingLevelView: public LevelView {
 public:
-    PathfindingLevelView(Level *level, int width, int height):
-        LevelView(width, height, level, &::resources, NULL), pathfinder(level) { }
+    PathfindingLevelView(Level *level):
+        LevelView(level, &::resources, NULL), pathfinder(level) { }
 
     void left_click() {
         source = highlight_tile;
@@ -159,9 +160,10 @@ void run() {
     Level *level = new Level(200,200);
     generate_level(*level);
 
-    PathfindingLevelView level_view(level, graphics.width, graphics.height);
+    PathfindingLevelView level_view(level);
 
     PathfindingRenderer level_renderer(&graphics, level, &level_view);
+    LevelWindow level_window(graphics.width, graphics.height, &level_view, &level_renderer, &resources);
 
     int down_pos_x, down_pos_y;
     bool dragging = false;
@@ -175,7 +177,7 @@ void run() {
             running = false;
 
         if (evt.type == SDL_MOUSEMOTION) {
-            level_view.set_mouse_position(evt.motion.x, evt.motion.y);
+            level_window.set_mouse_position(evt.motion.x, evt.motion.y);
         }
 
         if (evt.type == SDL_MOUSEBUTTONDOWN && evt.button.button == SDL_BUTTON_LMASK) {
@@ -190,7 +192,7 @@ void run() {
         } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_RIGHT) {
             level_view.middle_click();
         } else if (evt.type == SDL_MOUSEMOTION && dragging) {
-            level_view.shift(evt.motion.xrel, evt.motion.yrel);
+            level_window.shift(evt.motion.xrel, evt.motion.yrel);
         } else if (evt.type == SDL_MOUSEMOTION) {
             if (evt.motion.state == SDL_BUTTON_LMASK &&  abs(evt.motion.x - down_pos_x) > 4 && abs(evt.motion.y - down_pos_y) > 4)
                 dragging = true;
@@ -201,7 +203,7 @@ void run() {
         SDL_SetRenderDrawColor(graphics.renderer, 0,0,0, 255);
         SDL_RenderClear(graphics.renderer);
 
-        level_renderer.draw();
+        level_window.draw();
         graphics.update();
     }
 

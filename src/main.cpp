@@ -23,6 +23,7 @@
 #include "hex/view/view.h"
 #include "hex/view/view_updater.h"
 #include "hex/view/level_renderer.h"
+#include "hex/view/level_window.h"
 
 struct Options {
     bool server_mode;
@@ -115,7 +116,7 @@ void run(Options& options) {
     GameUpdater game_updater(&game);
     updater.subscribe(&game_updater);
 
-    GameView game_view(graphics.width, graphics.height, &game, &resources, &dispatcher);
+    GameView game_view(&game, &resources, &dispatcher);
     ViewUpdater view_updater(&game, &game_view, &resources);
     updater.subscribe(&view_updater);
 
@@ -134,6 +135,7 @@ void run(Options& options) {
     }
 
     LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view.level_view);
+    LevelWindow level_window(graphics.width, graphics.height, &game_view.level_view, &level_renderer, &resources);
 
     int down_pos_x = 0, down_pos_y = 0;
     bool dragging = false;
@@ -147,7 +149,7 @@ void run(Options& options) {
                 running = false;
 
             if (evt.type == SDL_MOUSEMOTION) {
-                game_view.level_view.set_mouse_position(evt.motion.x, evt.motion.y);
+                level_window.set_mouse_position(evt.motion.x, evt.motion.y);
             }
 
             if (evt.type == SDL_MOUSEBUTTONDOWN && evt.button.button == SDL_BUTTON_LMASK) {
@@ -155,16 +157,16 @@ void run(Options& options) {
                 down_pos_y = evt.motion.y;
             } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_LMASK) {
                 if (!dragging) {
-                    game_view.level_view.left_click(evt.button.x, evt.button.y);
+                    level_window.left_click(evt.button.x, evt.button.y);
                 }
                 dragging = false;
             } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == 3) {
                 if (!dragging) {
-                    game_view.level_view.right_click(evt.button.x, evt.button.y);
+                    level_window.right_click(evt.button.x, evt.button.y);
                 }
                 dragging = false;
             } else if (evt.type == SDL_MOUSEMOTION && dragging) {
-                game_view.level_view.shift(evt.motion.xrel, evt.motion.yrel);
+                level_window.shift(evt.motion.xrel, evt.motion.yrel);
             } else if (evt.type == SDL_MOUSEMOTION) {
                 if (evt.motion.state == SDL_BUTTON_LMASK &&  abs(evt.motion.x - down_pos_x) > 4 && abs(evt.motion.y - down_pos_y) > 4)
                     dragging = true;
@@ -186,7 +188,7 @@ void run(Options& options) {
 
         game_view.level_view.update();
 
-        level_renderer.draw();
+        level_window.draw();
         graphics.update();
     }
 

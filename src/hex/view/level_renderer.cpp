@@ -7,59 +7,21 @@
 #include "hex/view/view.h"
 #include "hex/view/level_renderer.h"
 
+#define TILE_WIDTH 48
+#define X_SPACING 32
+#define Y_SPACING 32
+
+#define SLOPE_WIDTH (TILE_WIDTH - X_SPACING)
+#define SLOPE_HEIGHT (Y_SPACING/2)
+
+
 LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *level, LevelView *level_view):
-        graphics(graphics), resources(resources), level(level), level_view(level_view) {
+        graphics(graphics), resources(resources), level(level), level_view(level_view), x_spacing(X_SPACING), y_spacing(Y_SPACING) {
     cursor_images = resources->image_series["CURSORS"];
     arrow_images = resources->image_series["ARROWS"];
 }
 
 LevelRenderer::~LevelRenderer() {
-}
-
-void LevelRenderer::draw() {
-    draw_level(&LevelRenderer::render_tile);
-    draw_level(&LevelRenderer::render_unit_stack);
-    draw_level(&LevelRenderer::render_path_arrow);
-    draw_moving_unit();
-}
-
-void LevelRenderer::draw_level(RenderMethod render) {
-    int x_spacing = level_view->x_spacing;
-    int y_spacing = level_view->y_spacing;
-
-    Point min_pos, max_pos;
-    level_view->mouse_to_tile(0, 0, &min_pos);
-    level_view->mouse_to_tile(level_view->width, level_view->height, &max_pos);
-
-    if (min_pos.x % 2 == 1)
-        min_pos.x--;
-    if (min_pos.x < 0)
-        min_pos.x = 0;
-    min_pos.y--;
-    if (min_pos.y < 0)
-        min_pos.y = 0;
-    max_pos.x++;
-    if (max_pos.x > level->width)
-        max_pos.x = level->width;
-    max_pos.y++;
-    if (max_pos.y > level->height)
-        max_pos.y = level->height;
-
-    for (int i = min_pos.y; i < max_pos.y; i++) {
-        for (int j = min_pos.x; j < max_pos.x; j += 2) {
-
-            int xpos = j*x_spacing - level_view->shift_x;
-            int ypos = i*y_spacing - level_view->shift_y;
-            (*this.*render)(xpos, ypos, Point(j, i));
-        }
-
-        for (int j = min_pos.x + 1; j < max_pos.x; j += 2) {
-            int y_offset = y_spacing / 2;
-            int xpos = j*x_spacing - level_view->shift_x;
-            int ypos = i*y_spacing + y_offset - level_view->shift_y;
-            (*this.*render)(xpos, ypos, Point(j, i));
-        }
-    }
 }
 
 void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
@@ -100,30 +62,6 @@ void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
     UnitStackView& stack_view = *level_view->get_unit_stack_view(*stack);
 
     draw_unit_stack(x, y, stack_view);
-}
-
-void LevelRenderer::draw_moving_unit() {
-    if (level_view->moving_unit == NULL)
-        return;
-
-    UnitStackView *stack_view = level_view->get_unit_stack_view(*level_view->moving_unit);
-
-    int step = level_view->moving_unit_progress / 1000;
-    Point prev_pos = level_view->moving_unit_path[step];
-    Point next_pos = level_view->moving_unit_path[step + 1];
-    int f = level_view->moving_unit_progress % 1000;
-
-    int px1, py1, px2, py2;
-
-    level_view->tile_to_pixel(prev_pos, &px1, &py1);
-    level_view->tile_to_pixel(next_pos, &px2, &py2);
-
-    int px = (px1 * (1000 - f) + px2 * f) / 1000;
-    int py = (py1 * (1000 - f) + py2 * f) / 1000;
-    bool selected = stack_view->selected;
-    stack_view->selected = false;
-    draw_unit_stack(px, py, *stack_view);
-    stack_view->selected = selected;
 }
 
 void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {

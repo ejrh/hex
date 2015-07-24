@@ -40,18 +40,14 @@ class MessageReceiver;
 
 class LevelView {
 public:
-    LevelView(int width, int height, Level *level, Resources *resources, MessageReceiver *dispatcher);
+    LevelView(Level *level, Resources *resources, MessageReceiver *dispatcher);
     ~LevelView();
     void update();
-    void set_mouse_position(int x, int y);
-    void mouse_to_tile(int x, int y, Point *tile);
-    void tile_to_pixel(const Point tile, int *px, int *py);
-    void shift(int xrel, int yrel);
-    void left_click(int x, int y);
-    void right_click(int x, int y);
+    void set_highlight_tile(const Point& tile_pos);
+    void left_click_tile(const Point& tile_pos);
+    void right_click_tile(const Point& tile_pos);
 
 public:
-    int width, height;
     Level *level;
     std::map<int, UnitStackView> unit_stack_views;
     Vector2<TileView> tile_views;
@@ -66,8 +62,6 @@ protected:
     MessageReceiver *dispatcher;
     unsigned int last_update;
     Point highlight_tile;
-    int shift_x, shift_y;
-    int x_spacing, y_spacing;
     UnitStack *selected_stack;
     Path drawn_path;
     UnitStack *moving_unit;
@@ -75,12 +69,13 @@ protected:
     int moving_unit_progress;
 
     friend class LevelRenderer;
+    friend class LevelWindow;
     friend class ViewUpdater;
 };
 
 class GameView {
 public:
-    GameView(int width, int height, Game *game, Resources *resources, MessageReceiver *dispatcher): game(game), level_view(width, height, &game->level, resources, dispatcher) { }
+    GameView(Game *game, Resources *resources, MessageReceiver *dispatcher): game(game), level_view(&game->level, resources, dispatcher) { }
 
 public:
     Game *game;

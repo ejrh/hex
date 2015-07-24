@@ -44,9 +44,13 @@ set(srcs
     resources/resources.h
     resources/view_def.h
     resources/view_def_serialisation.h
+        ui/ui.h
+        ui/ui_window.cpp
     view/level_renderer.cpp
     view/level_renderer.h
     view/level_view.cpp
+        view/level_window.cpp
+        view/level_window.h
     view/view.h
     view/view_updater.cpp
     view/view_updater.h
@@ -59,6 +63,7 @@ source_group(Sources\\graphics REGULAR_EXPRESSION graphics)
 source_group(Sources\\messaging REGULAR_EXPRESSION messaging)
 source_group(Sources\\networking REGULAR_EXPRESSION networking)
 source_group(Sources\\resources REGULAR_EXPRESSION resources)
+source_group(Sources\\ui REGULAR_EXPRESSION ui)
 source_group(Sources\\view REGULAR_EXPRESSION view)
 add_library(hex ${srcs})
 target_compile_options(hex PUBLIC ${gen_opts})
