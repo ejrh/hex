@@ -52,6 +52,7 @@ public:
 
 private:
     void broadcast(boost::shared_ptr<Message> msg);
+    void receive_from_network(boost::shared_ptr<Message> msg);
     void run_thread();
     void start_accept();
     void handle_accept(Connection::pointer new_connection, const boost::system::error_code& error);
@@ -66,6 +67,10 @@ private:
 
     int next_connection_id;
     std::map<int, Connection::pointer> connections;
+
+    int next_message_id;
+    unsigned int max_backlog_size;
+    std::map<int, boost::shared_ptr<Message> > message_backlog;
 };
 
 class Client: public MessageReceiver {
@@ -77,6 +82,7 @@ public:
     virtual void receive(boost::shared_ptr<Message> msg);
 
 private:
+    void receive_from_network(boost::shared_ptr<Message> msg);
     void run_thread();
     void handle_connect(const boost::system::error_code& error, tcp::resolver::iterator iterator);
 
@@ -87,6 +93,7 @@ private:
     tcp::resolver resolver;
     bool shutdown_requested;
     Connection::pointer connection;
+    int last_received_id;
 };
 
 #endif

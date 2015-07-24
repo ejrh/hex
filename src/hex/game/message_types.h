@@ -30,5 +30,6 @@ MSG_TYPE(UnitMove, UnitMoveMessage)
 
 MSG_TYPE(StreamOpen, WrapperMessage<std::string>)
 MSG_TYPE(StreamClose, Message)
+MSG_TYPE(StreamReplay, WrapperMessage<int>)
 
 #undef P

@@ -122,8 +122,6 @@ void run(Options& options) {
     if (options.server_mode) {
         server.start();
         updater.subscribe(&server);
-
-        SDL_Delay(5000);
     }
 
     if (options.client_mode) {
