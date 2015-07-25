@@ -24,6 +24,7 @@
 #include "hex/view/view_updater.h"
 #include "hex/view/level_renderer.h"
 #include "hex/view/level_window.h"
+#include "hex/chat/chat.h"
 
 struct Options {
     bool server_mode;
@@ -137,6 +138,8 @@ void run(Options& options) {
     LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view.level_view);
     LevelWindow level_window(graphics.width, graphics.height, &game_view.level_view, &level_renderer, &resources);
 
+    ChatWindow chat_window(200, graphics.height, &resources, &graphics, &dispatcher);
+
     int down_pos_x = 0, down_pos_y = 0;
     bool dragging = false;
 
@@ -172,6 +175,13 @@ void run(Options& options) {
                     dragging = true;
             }
 
+            if (evt.type == SDL_KEYDOWN)
+                chat_window.keypress(evt.key.keysym.sym);
+
+            if (evt.type == SDL_TEXTINPUT) {
+                chat_window.type(&evt.text);
+            }
+
             if (evt.type == event_pusher.event_type) {
                 boost::shared_ptr<Message> msg = event_pusher.get_message(evt);
                 std::ostringstream ss;
@@ -183,12 +193,18 @@ void run(Options& options) {
                 } else if (options.client_mode) {
                     updater.receive(msg);
                 }
+
+                if (msg->type == Chat) {
+                    boost::shared_ptr<WrapperMessage<std::string> > chat_msg = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(msg);
+                    chat_window.add_to_history(chat_msg->data);
+                }
             }
         }
 
         game_view.level_view.update();
 
         level_window.draw();
+        chat_window.draw();
         graphics.update();
     }
 

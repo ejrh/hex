@@ -9,6 +9,8 @@ set(srcs
         basics/hexgrid.h
         basics/point.h
         basics/vector2.h
+        chat/chat.h
+        chat/chat_window.cpp
         game/game.cpp
         game/game.h
         game/game_arbiter.cpp
@@ -60,6 +62,7 @@ set(srcs
 
 source_group(Sources REGULAR_EXPRESSION cpp|h)
 source_group(Sources\\basics REGULAR_EXPRESSION basics)
+source_group(Sources\\chat REGULAR_EXPRESSION chat)
 source_group(Sources\\game REGULAR_EXPRESSION game)
 source_group(Sources\\graphics REGULAR_EXPRESSION graphics)
 source_group(Sources\\messaging REGULAR_EXPRESSION messaging)

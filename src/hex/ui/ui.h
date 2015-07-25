@@ -6,6 +6,8 @@ public:
     UiWindow(int x, int y, int width, int height);
     virtual ~UiWindow();
 
+    virtual void draw() = 0;
+
 public:
     int x, y;
     int width, height;

@@ -28,6 +28,11 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
             publisher->receive(boost::make_shared<UnitMoveMessage>(cmd->unit, cmd->path));
         } break;
 
+        case Chat: {
+            boost::shared_ptr<WrapperMessage<std::string> > chat_msg = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(command);
+            publisher->receive(boost::make_shared<WrapperMessage<std::string> >(Chat, chat_msg->data));
+        } break;
+
         default: {
             std::cerr << "Unhandled command of type " << command->type << " (" << get_message_type_name(command->type) << ")" << std::endl;
         }
