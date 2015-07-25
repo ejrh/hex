@@ -3,6 +3,7 @@
 #include "hex/basics/error.h"
 #include "hex/basics/vector2.h"
 #include "hex/graphics/graphics.h"
+#include "hex/graphics/font.h"
 #include "hex/game/game.h"
 #include "hex/view/view.h"
 #include "hex/view/level_renderer.h"
@@ -77,8 +78,9 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
     Image *unit = image_series[(stack_view.phase / 1000) % image_series.size()].image;
     if (unit == NULL) {
         const std::string& label = view_def->name.substr(0, 3);
-        unit = graphics->write_to_image(255,255,255, label.c_str());
-        unit->x_offset = 24 - unit->width / 2 + 8;
+        TextFormat tf(graphics, SmallFont14, true, 255,255,255, 128,128,128);
+        unit = tf.write_to_image(label);
+        unit->x_offset = 24 - unit->width / 2 + 6;
         unit->y_offset = 16 - unit->height / 2 + 32;
         image_series[(stack_view.phase / 1000) % image_series.size()].image = unit;
     }
