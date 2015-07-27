@@ -50,3 +50,18 @@ int distance_between(const Point point1, const Point point2) {
     else
         return dx/2;
 }
+
+void get_circle(const Point point, int radius, int *scanlines) {
+    int num_scanlines = 2*radius + 1;
+    int short_scanlines = (radius + 1) / 2;
+    int adj = (point.x % 2 == 0) ? 1 : 0;
+
+    for (int i = 0; i < short_scanlines; i++) {
+        scanlines[i] = 2*i + adj;
+        scanlines[num_scanlines-1-i] = 2*i + (1 - adj);
+    }
+
+    for (int i = short_scanlines; i < num_scanlines - short_scanlines; i++) {
+        scanlines[i] = radius;
+    }
+}

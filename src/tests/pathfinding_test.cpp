@@ -1,6 +1,7 @@
 #include "common.h"
 
 #include "hex/basics/error.h"
+#include "hex/basics/hexgrid.h"
 #include "hex/graphics/graphics.h"
 #include "hex/graphics/font.h"
 #include "hex/game/game.h"
@@ -32,7 +33,7 @@ static TileType closed_tile("closed", -1);
 class PathfindingLevelView: public LevelView {
 public:
     PathfindingLevelView(Level *level):
-        LevelView(level, &::resources, NULL), pathfinder(level) { }
+        LevelView(level, &::resources, NULL), pathfinder(level), brush_radius(2) { }
 
     void left_click() {
         source = highlight_tile;
@@ -42,7 +43,7 @@ public:
         }
     }
 
-    void right_click() {
+    void middle_click() {
         target = highlight_tile;
         if (level->contains(source) && level->contains(target)) {
             pathfinder.clear();
@@ -50,13 +51,26 @@ public:
         }
     }
 
-    void middle_click() {
+    void right_click() {
         Point tile_pos = highlight_tile;
-        if (level->contains(tile_pos)) {
-            if (level->tiles[tile_pos].type == &closed_tile)
-                level->tiles[tile_pos].type = &open_tile;
-            else
-                level->tiles[tile_pos].type = &closed_tile;
+        if (!level->contains(tile_pos))
+            return;
+
+        TileType *paint;
+        if (level->tiles[tile_pos].type == &closed_tile)
+            paint = &open_tile;
+        else
+            paint = &closed_tile;
+
+        int num_scanlines = 2 * brush_radius + 1;
+        int scanlines[num_scanlines];
+        get_circle(tile_pos, brush_radius, scanlines);
+        for (int i = 0; i < num_scanlines; i++) {
+            for (int j = -scanlines[i]; j <= scanlines[i]; j++) {
+                Point point(tile_pos.x + j, tile_pos.y - brush_radius + i);
+                if (level->contains(point))
+                    level->tiles[point].type = paint;
+            }
         }
     }
 
@@ -75,6 +89,7 @@ public:
     }
 
     Pathfinder pathfinder;
+    int brush_radius;
 };
 
 
@@ -191,14 +206,28 @@ void run() {
         } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_LEFT) {
             level_view.left_click();
         } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_MIDDLE) {
-            level_view.right_click();
-        } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_RIGHT) {
             level_view.middle_click();
+        } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_RIGHT) {
+            level_view.right_click();
         } else if (evt.type == SDL_MOUSEMOTION && dragging) {
             level_window.shift(evt.motion.xrel, evt.motion.yrel);
         } else if (evt.type == SDL_MOUSEMOTION) {
             if (evt.motion.state == SDL_BUTTON_LMASK &&  abs(evt.motion.x - down_pos_x) > 4 && abs(evt.motion.y - down_pos_y) > 4)
                 dragging = true;
+        }
+
+        if (evt.type == SDL_KEYDOWN) {
+            switch (evt.key.keysym.sym) {
+                case SDLK_1: level_view.brush_radius = 1; break;
+                case SDLK_2: level_view.brush_radius = 2; break;
+                case SDLK_3: level_view.brush_radius = 3; break;
+                case SDLK_4: level_view.brush_radius = 4; break;
+                case SDLK_5: level_view.brush_radius = 5; break;
+                case SDLK_6: level_view.brush_radius = 6; break;
+                case SDLK_7: level_view.brush_radius = 7; break;
+                case SDLK_8: level_view.brush_radius = 8; break;
+                case SDLK_9: level_view.brush_radius = 9; break;
+            }
         }
 
         level_view.update();
