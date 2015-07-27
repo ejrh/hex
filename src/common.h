@@ -15,6 +15,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/asio.hpp>
+#include <boost/thread.hpp>
 #include <boost/heap/priority_queue.hpp>
 #include <boost/algorithm/string.hpp>
 

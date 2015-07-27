@@ -5,12 +5,10 @@
 #include "hex/messaging/serialiser.h"
 #include "hex/messaging/message.h"
 
-Connection::Connection(boost::asio::io_service& io_service, MessageReceiver *receiver): receiver(receiver), socket(io_service) {
-    trace("Connection");
+Connection::Connection(boost::asio::io_service& io_service, NetworkInterface *iface): iface(iface), socket(io_service) {
 }
 
 Connection::~Connection() {
-    trace("~Connection");
 }
 
 void Connection::start() {
@@ -52,6 +50,8 @@ void Connection::handle_write(const boost::system::error_code& error, size_t byt
         return;
     }
 
+    trace("Connection %d send %s", id, out_message.c_str());
+
     send_queue.pop_front();
     if (!send_queue.empty())
         continue_writing();
@@ -73,7 +73,16 @@ void Connection::handle_read(const boost::system::error_code& error, size_t byte
     }
     boost::shared_ptr<Message> msg(msg_ptr);
     msg->origin = id;
-    receiver->receive(msg);
+
+    {
+        std::ostringstream ss;
+        Serialiser writer(ss);
+        writer << msg.get();
+        std::string in_message(ss.str());
+        trace("Connection %d recv %s", id, in_message.c_str());
+    }
+
+    iface->receive_from_network(msg);
 
     continue_reading();
 }

@@ -32,6 +32,7 @@ set(srcs
         messaging/event_pusher.cpp
         messaging/event_pusher.h
         messaging/message.cpp
+        messaging/message.h
         messaging/receiver.cpp
         messaging/receiver.h
         messaging/serialiser.h

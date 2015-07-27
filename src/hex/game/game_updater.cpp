@@ -17,6 +17,7 @@ GameUpdater::~GameUpdater() {
 }
 
 void GameUpdater::receive(boost::shared_ptr<Message> update) {
+    game->message_id = update->id;
     apply_update(update);
 }
 
@@ -96,8 +97,7 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
             trace("Unit %d moves to %d,%d", upd->unit, new_pos.x, new_pos.y);
         } break;
 
-        default: {
-            std::cerr << "Unhandled update of type " << update->type << " (" << get_message_type_name(update->type) << ")" << std::endl;
-        }
+        default:
+            break;
     }
 }

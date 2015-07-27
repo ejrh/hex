@@ -10,10 +10,11 @@
 class PrintingMessageReceiver: public MessageReceiver {
 public:
     void receive(boost::shared_ptr<Message> msg) {
-        std::cout << "Received: ";
-        Serialiser s(std::cout);
-        s << msg.get();
-        std::cout << std::endl;
+        std::ostringstream ss;
+        Serialiser writer(ss);
+        writer << msg.get();
+        std::string msg_str(ss.str());
+        trace("Received: %s", msg_str.c_str());
     }
 };
 
@@ -24,6 +25,7 @@ void run() {
 
     server.start();
 
+    SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS);
     SDL_Delay(1000);
 
     Client client(&event_pusher);
@@ -33,9 +35,8 @@ void run() {
     while (running) {
         SDL_Event evt;
 
-        if (SDL_WaitEventTimeout(&evt, 30000)) {
-            if (evt.type == SDL_QUIT
-                || (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_ESCAPE))
+        if (SDL_WaitEventTimeout(&evt, 1000)) {
+            if (evt.type == SDL_QUIT)
                 running = false;
 
             if (evt.type == event_pusher.event_type) {

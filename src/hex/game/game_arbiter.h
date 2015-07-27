@@ -9,6 +9,9 @@ public:
     virtual void receive(boost::shared_ptr<Message> update);
 
 private:
+    void emit(boost::shared_ptr<Message> update);
+
+private:
     Game *game;
     Updater *publisher;
 };

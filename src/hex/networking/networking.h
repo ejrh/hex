@@ -12,15 +12,20 @@
 
 using boost::asio::ip::tcp;
 
+class NetworkInterface: public MessageReceiver {
+public:
+    virtual void receive_from_network(boost::shared_ptr<Message> msg) = 0;
+};
+
 class Connection: public boost::enable_shared_from_this<Connection> {
 public:
     typedef boost::shared_ptr<Connection> pointer;
 
-    static pointer create(boost::asio::io_service& io_service, MessageReceiver *receiver) {
-        return pointer(new Connection(io_service, receiver));
+    static pointer create(boost::asio::io_service& io_service, NetworkInterface *iface) {
+        return pointer(new Connection(io_service, iface));
     }
 
-    Connection(boost::asio::io_service& io_service, MessageReceiver *receiver);
+    Connection(boost::asio::io_service& io_service, NetworkInterface *iface);
     ~Connection();
 
 private:
@@ -32,7 +37,7 @@ private:
     void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
 
     int id;
-    MessageReceiver *receiver;
+    NetworkInterface *iface;
     tcp::socket socket;
     boost::asio::streambuf buffer;
     std::deque<boost::shared_ptr<Message> > send_queue;
@@ -42,10 +47,10 @@ private:
     friend class Client;
 };
 
-class Server: public MessageReceiver {
+class Server: public NetworkInterface {
 public:
     Server(int port, MessageReceiver *receiver);
-    ~Server();
+    virtual ~Server();
     void start();
     void stop();
     virtual void receive(boost::shared_ptr<Message> msg);
@@ -68,15 +73,17 @@ private:
     int next_connection_id;
     std::map<int, Connection::pointer> connections;
 
-    int next_message_id;
+    int game_id;
+    int last_message_id;
+    int last_dropped_id;
     unsigned int max_backlog_size;
     std::map<int, boost::shared_ptr<Message> > message_backlog;
 };
 
-class Client: public MessageReceiver {
+class Client: public NetworkInterface {
 public:
     Client(MessageReceiver *receiver);
-    ~Client();
+    virtual ~Client();
     void connect(std::string server);
     void disconnect();
     virtual void receive(boost::shared_ptr<Message> msg);
@@ -93,6 +100,7 @@ private:
     tcp::resolver resolver;
     bool shutdown_requested;
     Connection::pointer connection;
+    int game_id;
     int last_received_id;
 };
 

@@ -108,13 +108,14 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             if (game_view->level_view.selected_stack == stack) {
                 game_view->level_view.set_drawn_path(stack_view->path);
             }
-            game_view->level_view.moving_unit = stack;
-            game_view->level_view.moving_unit_path = upd->path;
-            game_view->level_view.moving_unit_progress = 0;
+            if (stack_view->view_def != NULL) {
+                game_view->level_view.moving_unit = stack;
+                game_view->level_view.moving_unit_path = upd->path;
+                game_view->level_view.moving_unit_progress = 0;
+            }
         } break;
 
-        default: {
-            std::cerr << "Unhandled update of type " << update->type << " (" << get_message_type_name(update->type) << ")" << std::endl;
-        }
+        default:
+            break;
     }
 }

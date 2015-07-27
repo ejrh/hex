@@ -45,6 +45,8 @@ void LevelView::update() {
         if (iter->second.stack == NULL || iter->second.stack == moving_unit)
             continue;
         UnitViewDef *view_def = iter->second.view_def;
+        if (view_def == NULL)
+            continue;
         iter->second.phase += frame_incr(view_def->hold_bpm, update_ms);
     }
 

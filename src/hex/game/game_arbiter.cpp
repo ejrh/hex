@@ -23,20 +23,23 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
         case UnitMove: {
             boost::shared_ptr<UnitMoveMessage> cmd = boost::dynamic_pointer_cast<UnitMoveMessage>(command);
 
-            // check that move is allowed, refuse if not
+            // TODO check that move is allowed, refuse if not
 
-            publisher->receive(boost::make_shared<UnitMoveMessage>(cmd->unit, cmd->path));
+            emit(boost::make_shared<UnitMoveMessage>(cmd->unit, cmd->path));
         } break;
 
         case Chat: {
             boost::shared_ptr<WrapperMessage<std::string> > chat_msg = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(command);
-            publisher->receive(boost::make_shared<WrapperMessage<std::string> >(Chat, chat_msg->data));
+            emit(boost::make_shared<WrapperMessage<std::string> >(Chat, chat_msg->data));
         } break;
 
-        default: {
-            std::cerr << "Unhandled command of type " << command->type << " (" << get_message_type_name(command->type) << ")" << std::endl;
-        }
+        default:
+            break;
     }
 
     publisher->flush();
+}
+
+void GameArbiter::emit(boost::shared_ptr<Message> update) {
+    publisher->receive(update);
 }

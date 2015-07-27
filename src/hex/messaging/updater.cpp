@@ -14,10 +14,12 @@ Updater::~Updater() {
 
 void Updater::receive(boost::shared_ptr<Message> msg) {
 
-    Serialiser s(std::cout);
-    s << msg.get();
+    //Serialiser s(std::cout);
+    //s << msg.get();
 
     //update_queue.push(msg);
+    msg->origin = id;
+    msg->id = next_message_id++;
     send_update_to_subscribers(msg);
 }
 

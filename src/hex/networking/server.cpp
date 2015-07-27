@@ -10,12 +10,10 @@
 
 Server::Server(int port, MessageReceiver *receiver):
         port(port), receiver(receiver), io_service(), acceptor(io_service), shutdown_requested(false),
-        next_connection_id(1), next_message_id(1), max_backlog_size(1000) {
-
+        next_connection_id(1), game_id(0), last_message_id(0), last_dropped_id(0), max_backlog_size(1000) {
 }
 
 Server::~Server() {
-
 }
 
 void Server::start() {
@@ -29,36 +27,63 @@ void Server::stop() {
 }
 
 void Server::receive(boost::shared_ptr<Message> msg) {
-    if (msg->origin == 0)
-        io_service.post(boost::bind(&Server::broadcast, this, msg));
-    else
-        io_service.post(boost::bind(&Server::receive_from_network, this, msg));
+    io_service.post(boost::bind(&Server::broadcast, this, msg));
 }
 
 void Server::broadcast(boost::shared_ptr<Message> msg) {
-    msg->id = next_message_id++;
+    if (msg->id <= last_message_id) {
+        warn("Message with id %d has already been sent");
+    }
+
     message_backlog[msg->id] = msg;
     for (std::map<int, Connection::pointer>::iterator iter = connections.begin(); iter != connections.end(); iter++) {
         iter->second->send_message(msg);
     }
-    while (message_backlog.size() > max_backlog_size)
+    last_message_id = msg->id;
+    while (message_backlog.size() > max_backlog_size) {
+        last_dropped_id = message_backlog.begin()->second->id;
         message_backlog.erase(message_backlog.begin());
+    }
 }
 
 void Server::receive_from_network(boost::shared_ptr<Message> msg) {
     Connection::pointer source_connection = connections[msg->origin];
-    if (msg->type == StreamReplay) {
-        boost::shared_ptr<WrapperMessage<int> > replay = boost::dynamic_pointer_cast<WrapperMessage<int> >(msg);
-        int replay_from = replay->data;
 
-        for (std::map<int, boost::shared_ptr<Message> >::iterator iter = message_backlog.begin(); iter != message_backlog.end(); iter++) {
-            if (iter->first > replay_from) {
-                source_connection->send_message(iter->second);
+    if (msg->type == StreamReplay) {
+        boost::shared_ptr<WrapperMessage2<int, int> > replay = boost::dynamic_pointer_cast<WrapperMessage2<int, int> >(msg);
+        int client_game_id = replay->data1;
+        int msg_id = replay->data1;
+        bool full_state = false;
+
+        if (client_game_id != game_id) {
+            trace("Expected game id %d but got %d", game_id, client_game_id);
+            full_state = true;
+        }
+
+        if (msg_id < last_dropped_id) {
+            trace("Message replay requested from %d but last dropped was %d", msg_id, last_dropped_id);
+            full_state = true;
+        }
+
+        if (msg_id > last_message_id) {
+            warn("Message replay requested from %d but latest message is only %d", msg_id, message_backlog.end()->second->id);
+            full_state = true;
+        }
+
+        if (full_state) {
+            trace("Sending full state");
+            //TODO
+        } else {
+            trace("Replaying up to %d messages", message_backlog.size());
+            for (std::map<int, boost::shared_ptr<Message> >::iterator iter = message_backlog.begin(); iter != message_backlog.end(); iter++) {
+                if (iter->first > msg_id) {
+                    source_connection->send_message(iter->second);
+                }
             }
         }
-    }
 
-    trace("Received a message");
+        source_connection->send_message(boost::make_shared<WrapperMessage2<int, int> >(StreamState, game_id, last_message_id));
+    }
 
     receiver->receive(msg);
 }

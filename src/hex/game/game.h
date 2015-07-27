@@ -88,7 +88,7 @@ std::ostream& operator<<(std::ostream &strm, const Level& level);
 
 class Game {
 public:
-    Game(): level(0, 0) { }
+    Game(): game_id(0), message_id(0), level(0, 0) { }
     ~Game() { }
 
     TileType *create_tile_type(TileType& tile_type);
@@ -102,6 +102,8 @@ public:
     TileTypeMap tile_types;
     UnitTypeMap unit_types;
 
+    int game_id;
+    int message_id;
     int turn_number;
     Level level;
     std::vector<Player *> players;

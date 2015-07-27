@@ -184,10 +184,6 @@ void run(Options& options) {
 
             if (evt.type == event_pusher.event_type) {
                 boost::shared_ptr<Message> msg = event_pusher.get_message(evt);
-                std::ostringstream ss;
-                Serialiser writer(ss);
-                writer << msg.get();
-                trace("Recieved from network: %s", ss.str().c_str());
                 if (options.server_mode) {
                     arbiter.receive(msg);
                 } else if (options.client_mode) {

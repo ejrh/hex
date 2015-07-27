@@ -2,6 +2,10 @@
 
 #include "error.h"
 
+
+static boost::mutex error_lock;
+
+
 Error::Error(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
@@ -24,6 +28,7 @@ void warn(const char *fmt, ...) {
 
     va_end(args);
 
+    boost::lock_guard<boost::mutex> guard(error_lock);
     std::cerr << "Warning: " << buffer << std::endl;
 }
 
@@ -37,5 +42,6 @@ void trace(const char *fmt, ...) {
 
     va_end(args);
 
+    boost::lock_guard<boost::mutex> guard(error_lock);
     std::cerr << buffer << std::endl;
 }
