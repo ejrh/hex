@@ -22,6 +22,8 @@ set(srcs
         game/game_updater.h
         game/level.cpp
         game/message_types.h
+        game/visibility_map.cpp
+        game/visibility_map.h
         graphics/font.cpp
         graphics/font.h
         graphics/graphics.cpp

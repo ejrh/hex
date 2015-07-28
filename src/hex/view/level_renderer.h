@@ -11,11 +11,9 @@ public:
 
     LevelRenderer(Graphics *graphics, Resources *resources, Level *level, LevelView *level_view);
     ~LevelRenderer();
-    /*void draw_floor();
-    void draw_units();
-    void draw_ceiling();*/
 
 protected:
+    void clear(int x, int y, int width, int height);
     virtual void render_tile(int x, int y, Point tile_pos);
     virtual void render_unit_stack(int x, int y, Point tile_pos);
     virtual void draw_unit_stack(int x, int y, UnitStackView &stack_view);

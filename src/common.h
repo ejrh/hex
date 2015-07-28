@@ -11,6 +11,8 @@
 #include <map>
 #include <vector>
 #include <queue>
+#include <algorithm>
+#include <numeric>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>

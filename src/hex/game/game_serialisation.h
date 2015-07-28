@@ -30,12 +30,12 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, TileType& d) {
 
 
 inline Serialiser& operator<<(Serialiser& serialiser, const UnitType& d) {
-    serialiser << d.name << d.moves;
+    serialiser << d.name << d.moves << d.sight;
     return serialiser;
 }
 
 inline Deserialiser& operator>>(Deserialiser& deserialiser, UnitType& d) {
-    deserialiser >> d.name >> d.moves;
+    deserialiser >> d.name >> d.moves >> d.sight;
     return deserialiser;
 }
 

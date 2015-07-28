@@ -25,6 +25,10 @@ LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *le
 LevelRenderer::~LevelRenderer() {
 }
 
+void LevelRenderer::clear(int x, int y, int width, int height) {
+    graphics->fill_rectangle(0,0,0, x, y, width, height);
+}
+
 void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
 
     TileView& tile_view = level_view->tile_views[tile_pos];
@@ -38,6 +42,10 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
 
     if (ground != NULL)
         graphics->blit(ground, x, y);
+
+    if (!level->visibility.check(tile_pos)) {
+        graphics->fill_rectangle(0,0,0, x+24 - 8, y+16 - 8, 16, 16);
+    }
 
     if (tile_view.highlighted) {
         Image *highlight1 = cursor_images[0].image;
@@ -54,6 +62,8 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
 }
 
 void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
+    if (!level->visibility.check(tile_pos))
+        return;
 
     Tile &tile = level->tiles[tile_pos];
     UnitStack *stack = tile.stack;

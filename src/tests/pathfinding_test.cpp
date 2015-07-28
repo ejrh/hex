@@ -177,6 +177,7 @@ void run() {
 
     Level *level = new Level(200,200);
     generate_level(*level);
+    level->discovered.fill();
 
     PathfindingLevelView level_view(level);
 

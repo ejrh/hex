@@ -120,6 +120,7 @@ void LevelWindow::right_click(int x, int y) {
 }
 
 void LevelWindow::draw() {
+    level_renderer->clear(x, y, width, height);
     draw_level(&LevelRenderer::render_tile);
     draw_level(&LevelRenderer::render_unit_stack);
     draw_level(&LevelRenderer::render_path_arrow);
@@ -147,17 +148,22 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
 
     for (int i = min_pos.y; i < max_pos.y; i++) {
         for (int j = min_pos.x; j < max_pos.x; j += 2) {
-
             int xpos = j*level_renderer->x_spacing - shift_x;
             int ypos = i*level_renderer->y_spacing - shift_y;
-            (*level_renderer.*render)(xpos, ypos, Point(j, i));
+            Point tile_pos(j, i);
+            if (!level_view->level->discovered.check(tile_pos))
+                continue;
+            (*level_renderer.*render)(xpos, ypos, tile_pos);
         }
 
         for (int j = min_pos.x + 1; j < max_pos.x; j += 2) {
             int y_offset = y_spacing / 2;
             int xpos = j*x_spacing - shift_x;
             int ypos = i*y_spacing + y_offset - shift_y;
-            (*level_renderer.*render)(xpos, ypos, Point(j, i));
+            Point tile_pos(j, i);
+            if (!level_view->level->discovered.check(tile_pos))
+                continue;
+            (*level_renderer.*render)(xpos, ypos, tile_pos);
         }
     }
 }
@@ -171,6 +177,10 @@ void LevelWindow::draw_moving_unit() {
     int step = level_view->moving_unit_progress / 1000;
     Point prev_pos = level_view->moving_unit_path[step];
     Point next_pos = level_view->moving_unit_path[step + 1];
+
+    if (!level_view->level->visibility.check(prev_pos) && !level_view->level->visibility.check(next_pos))
+        return;
+
     int f = level_view->moving_unit_progress % 1000;
 
     int px1, py1, px2, py2;

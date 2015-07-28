@@ -2,8 +2,7 @@
 
 #include "hex/game/game.h"
 
-Level::Level(int width, int height): width(width), height(height) {
-    tiles.resize(width, height);
+Level::Level(int width, int height): width(width), height(height), tiles(width, height), visibility(this), discovered(this) {
 }
 
 Level::~Level() {

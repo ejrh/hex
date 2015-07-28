@@ -3,6 +3,7 @@
 
 #include "hex/basics/vector2.h"
 #include "hex/basics/point.h"
+#include "hex/game/visibility_map.h"
 
 
 class Player {
@@ -23,6 +24,7 @@ public:
 public:
     std::string name;
     int moves;
+    int sight;
 };
 
 typedef std::map<std::string, UnitType *> UnitTypeMap;
@@ -44,6 +46,13 @@ public:
     UnitStack(int id, const Point position): id(id), position(position) { };
     ~UnitStack() { };
 
+    static int sight_func(int max1, const Unit *unit) {
+        int max2 = unit->type->sight;
+        return std::max(max1, max2);
+    }
+    int sight() { return std::accumulate(units.begin(), units.end(), 0, sight_func); }
+
+public:
     int id;
     Point position;
     std::vector<Unit *> units;
@@ -81,6 +90,8 @@ public:
 public:
     int width, height;
     Vector2<Tile> tiles;
+    VisibilityMap visibility;
+    VisibilityMap discovered;
 };
 
 std::ostream& operator<<(std::ostream &strm, const Level& level);
