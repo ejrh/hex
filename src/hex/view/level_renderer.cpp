@@ -40,11 +40,9 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
     ImageRef& image_ref = image_series[tile_view.phase % image_series.size()];
     Image *ground = image_ref.image;
 
-    if (ground != NULL)
-        graphics->blit(ground, x, y);
-
-    if (!level->visibility.check(tile_pos)) {
-        graphics->fill_rectangle(0,0,0, x+24 - 8, y+16 - 8, 16, 16);
+    if (ground != NULL) {
+        int alpha = level->visibility.check(tile_pos) ? 255 : 128;
+        graphics->blit(ground, x, y, alpha, alpha, alpha);
     }
 
     if (tile_view.highlighted) {

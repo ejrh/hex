@@ -50,6 +50,18 @@ void Graphics::blit(Image *im, int x, int y, int alpha) {
         warn("SDL error: %s", SDL_GetError());
 }
 
+void Graphics::blit(Image *im, int x, int y, int mod_r, int mod_g, int mod_b) {
+    x += im->x_offset;
+    y += im->y_offset;
+
+    SDL_SetTextureColorMod(im->texture, mod_r, mod_g, mod_b);
+    SDL_SetTextureBlendMode(im->texture, SDL_BLENDMODE_BLEND);
+
+    SDL_Rect destrect = { x, y, im->width, im->height };
+    if (SDL_RenderCopy(renderer, im->texture, NULL, &destrect) != 0)
+        warn("SDL error: %s", SDL_GetError());
+}
+
 void Graphics::draw_lines(Uint8 R, Uint8 G, Uint8 B, SDL_Point *points, int count) {
     SDL_SetRenderDrawColor(renderer, R, G, B, 255);
     SDL_RenderDrawLines(renderer, points, count);
