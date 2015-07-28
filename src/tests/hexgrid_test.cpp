@@ -26,7 +26,7 @@ void test_point(const char *name, Point point) {
     printf("Get circle:");
     for (int i = 0; i < 5; i++) {
         int num_scanlines = i*2 + 1;
-        int scanlines[num_scanlines];
+        std::vector<int> scanlines(num_scanlines);
         get_circle(point, i, scanlines);
         printf("    %d ->", i);
         for (int j = 0; j < num_scanlines; j++)

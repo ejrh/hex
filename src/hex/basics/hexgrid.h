@@ -6,6 +6,6 @@
 extern void get_neighbours(const Point point, Point *points);
 extern int get_direction(const Point point1, const Point point2);
 extern int distance_between(const Point point1, const Point point2);
-extern void get_circle(const Point point, int radius, int *scanlines);
+extern void get_circle(const Point point, int radius, std::vector<int>& scanlines);
 
 #endif

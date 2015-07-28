@@ -2,7 +2,9 @@
 
 #include "hex/game/game.h"
 
-Level::Level(int width, int height): width(width), height(height), tiles(width, height), visibility(this), discovered(this) {
+Level::Level(int width, int height): width(width), height(height), tiles(width, height) {
+    visibility.set_level(this);
+    discovered.set_level(this);
 }
 
 Level::~Level() {

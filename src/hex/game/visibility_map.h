@@ -9,8 +9,9 @@ class Level;
 
 class VisibilityMap {
 public:
-    VisibilityMap(Level *level);
+    VisibilityMap();
 
+    void set_level(Level *level);
     void clear();
     void fill();
     void rebuild();
@@ -18,7 +19,7 @@ public:
     void apply(UnitStack *stack, bool visible);
     void mask(UnitStack *stack);
     void overlay(UnitStack *stack);
-    bool check(const Point &tile_pos);
+    bool check(const Point& tile_pos) const;
 
 private:
     Level *level;

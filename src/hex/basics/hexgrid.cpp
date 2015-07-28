@@ -51,8 +51,10 @@ int distance_between(const Point point1, const Point point2) {
         return dx/2;
 }
 
-void get_circle(const Point point, int radius, int *scanlines) {
+void get_circle(const Point point, int radius, std::vector<int>& scanlines) {
     int num_scanlines = 2*radius + 1;
+    scanlines.resize(num_scanlines);
+
     int short_scanlines = (radius + 1) / 2;
     int adj = (point.x % 2 == 0) ? 1 : 0;
 

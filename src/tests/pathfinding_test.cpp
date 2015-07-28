@@ -63,7 +63,7 @@ public:
             paint = &closed_tile;
 
         int num_scanlines = 2 * brush_radius + 1;
-        int scanlines[num_scanlines];
+        std::vector<int> scanlines(num_scanlines);
         get_circle(tile_pos, brush_radius, scanlines);
         for (int i = 0; i < num_scanlines; i++) {
             for (int j = -scanlines[i]; j <= scanlines[i]; j++) {

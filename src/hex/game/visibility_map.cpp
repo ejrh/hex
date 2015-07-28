@@ -4,14 +4,21 @@
 #include "hex/game/game.h"
 #include "hex/game/visibility_map.h"
 
-VisibilityMap::VisibilityMap(Level *level): level(level), visibility(level->width, level->height) {
+VisibilityMap::VisibilityMap() {
+}
+
+void VisibilityMap::set_level(Level *level) {
+    this->level = level;
+    visibility.resize(level->tiles.width, level->tiles.height);
 }
 
 void VisibilityMap::clear() {
+    visibility.resize(level->tiles.width, level->tiles.height);
     visibility.fill(0);
 }
 
 void VisibilityMap::fill() {
+    visibility.resize(level->tiles.width, level->tiles.height);
     visibility.fill(-1);
 }
 
@@ -51,7 +58,7 @@ void VisibilityMap::apply(UnitStack *stack, bool visible)
 {
     int sight = stack->sight();
     int num_scanlines = 2 * sight + 1;
-    int scanlines[num_scanlines];
+    std::vector<int> scanlines(num_scanlines);
     get_circle(stack->position, sight, scanlines);
     for (int i = 0; i < num_scanlines; i++) {
         int row = stack->position.y - sight + i;
@@ -78,6 +85,6 @@ void VisibilityMap::overlay(UnitStack *stack) {
 
 }
 
-bool VisibilityMap::check(const Point &tile_pos) {
-    return visibility[tile_pos];
+bool VisibilityMap::check(const Point &tile_pos) const {
+    return visibility[tile_pos] != 0;
 }

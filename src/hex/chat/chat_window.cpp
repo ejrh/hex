@@ -21,7 +21,7 @@ void ChatWindow::draw() {
         first_line = 0;
     int y_offset = 8;
     TextFormat tf(graphics, SmallFont14, false, 255,255,255, 0,0,0);
-    for (int i = first_line; i < chat_history.size(); i++) {
+    for (unsigned int i = first_line; i < chat_history.size(); i++) {
         tf.write_text(chat_history[i], x + 8, y_offset);
         y_offset += 16;
     }
