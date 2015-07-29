@@ -1,8 +1,6 @@
 set(srcs
         noise.cpp
         noise.h
-        pathfinding.cpp
-        pathfinding.h
         basics/error.cpp
         basics/error.h
         basics/hexgrid.cpp
@@ -22,6 +20,8 @@ set(srcs
         game/game_updater.h
         game/level.cpp
         game/message_types.h
+        game/pathfinding.cpp
+        game/pathfinding.h
         game/visibility_map.cpp
         game/visibility_map.h
         graphics/font.cpp

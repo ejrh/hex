@@ -9,10 +9,9 @@
 #include "hex/game/game.h"
 #include "hex/game/game_serialisation.h"
 #include "hex/game/game_messages.h"
+#include "hex/game/pathfinding.h"
 #include "hex/resources/resources.h"
 #include "hex/resources/view_def.h"
-
-#include "hex/pathfinding.h"
 
 #include "hex/view/view.h"
 

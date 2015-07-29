@@ -3,7 +3,7 @@
 #include "hex/basics/hexgrid.h"
 #include "hex/messaging/serialiser.h"
 #include "hex/game/game.h"
-#include "hex/pathfinding.h"
+#include "hex/game/pathfinding.h"
 
 Pathfinder::Pathfinder(Level *level): level(level) {
     nodes.resize(level->width, level->height);
