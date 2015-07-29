@@ -45,6 +45,17 @@ TileViewDef *Resources::get_tile_view_def(const std::string& name) const {
     return (iter != tile_view_defs.end()) ? iter->second : NULL;
 }
 
+UnitViewDef *Resources::get_unit_view_def(const std::string& name) {
+    UnitViewDefMap::const_iterator iter = unit_view_defs.find(name);
+    if (iter != unit_view_defs.end())
+        return iter->second;
+
+    warn("No unit view def for: %s", name.c_str());
+    UnitViewDef *view_def = new UnitViewDef(name);
+    unit_view_defs[name] = view_def;
+    return view_def;
+}
+
 void load_resources(const std::string& filename, Resources& resources, Graphics *graphics) {
 
     trace("Loading resources from: %s", filename.c_str());

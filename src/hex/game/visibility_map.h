@@ -12,6 +12,7 @@ public:
     VisibilityMap();
 
     void set_level(Level *level);
+    void resize(int width, int height);
     void clear();
     void fill();
     void rebuild();

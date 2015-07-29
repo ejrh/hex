@@ -25,9 +25,7 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
     switch (update->type) {
         case SetLevel: {
             boost::shared_ptr<WrapperMessage2<int, int> > upd = boost::dynamic_pointer_cast<WrapperMessage2<int, int> >(update);
-            game->level.width = upd->data1;
-            game->level.height = upd->data2;
-            game->level.tiles.resize(upd->data1, upd->data2);
+            game->level.resize(upd->data1, upd->data2);
         } break;
 
         case SetLevelData: {

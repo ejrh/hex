@@ -25,6 +25,7 @@ typedef std::vector<ImageSeries> UnitImageMap;
 class UnitViewDef {
 public:
     UnitViewDef(): images(6) { }
+    UnitViewDef(std::string name): name(name), hold_bpm(60), move_bpm(60), move_speed(60), images(6) { }
     UnitViewDef(std::string name, int hold_bpm, int move_bpm, int move_speed): name(name), hold_bpm(hold_bpm), move_bpm(move_bpm), move_speed(move_speed), images(6) { }
     ~UnitViewDef() { }
 

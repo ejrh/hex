@@ -69,7 +69,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             UnitViewDef *view_def = NULL;
             if (!stack->units.empty()) {
                 UnitType *unit_type = stack->units[0]->type;
-                view_def = resources->unit_view_defs[unit_type->name];
+                view_def = resources->get_unit_view_def(unit_type->name);
             }
 
             UnitStackView stack_view(stack, view_def);
@@ -89,7 +89,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             UnitStackView *stack_view = &game_view->level_view.unit_stack_views[upd->stack_id];
 
             UnitType *unit_type = stack->units[0]->type;
-            UnitViewDef *view_def = resources->unit_view_defs[unit_type->name];
+            UnitViewDef *view_def = resources->get_unit_view_def(unit_type->name);
             stack_view->view_def = view_def;
         } break;
 
@@ -108,7 +108,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             if (game_view->level_view.selected_stack == stack) {
                 game_view->level_view.set_drawn_path(stack_view->path);
             }
-            if (stack_view->view_def != NULL) {
+            if (stack_view->view_def != NULL && upd->path.size() > 1) {
                 game_view->level_view.moving_unit = stack;
                 game_view->level_view.moving_unit_path = upd->path;
                 game_view->level_view.moving_unit_progress = 0;

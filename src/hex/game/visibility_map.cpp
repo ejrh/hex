@@ -12,6 +12,10 @@ void VisibilityMap::set_level(Level *level) {
     visibility.resize(level->tiles.width, level->tiles.height);
 }
 
+void VisibilityMap::resize(int width, int height) {
+    visibility.resize(width, height);
+}
+
 void VisibilityMap::clear() {
     visibility.resize(level->tiles.width, level->tiles.height);
     visibility.fill(0);

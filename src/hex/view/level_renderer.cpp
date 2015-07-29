@@ -75,14 +75,17 @@ void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
 
 void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
     UnitViewDef *view_def = stack_view.view_def;
-    if (view_def == NULL)
+    if (view_def == NULL) {
         return;
+    }
 
     int facing = stack_view.facing;
     if (facing < 0 || facing >= (int) view_def->images.size())
-        return;
+        facing = 0;
 
     std::vector<ImageRef>& image_series = view_def->images[facing];
+    if (image_series.size() == 0)
+        image_series.push_back(ImageRef("missing"));
     Image *unit = image_series[(stack_view.phase / 1000) % image_series.size()].image;
     if (unit == NULL) {
         const std::string& label = view_def->name.substr(0, 3);

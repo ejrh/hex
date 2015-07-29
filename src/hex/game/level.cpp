@@ -7,6 +7,14 @@ Level::Level(int width, int height): width(width), height(height), tiles(width, 
     discovered.set_level(this);
 }
 
+void Level::resize(int width, int height) {
+    this->width = width;
+    this->height = height;
+    tiles.resize(width, height);
+    visibility.resize(width, height);
+    discovered.resize(width, height);
+}
+
 Level::~Level() {
 }
 

@@ -102,6 +102,7 @@ class Level {
 public:
     Level(int width, int height);
     ~Level();
+    void resize(int width, int height);
     bool contains(const Point point) const { return tiles.contains(point); }
 
 public:

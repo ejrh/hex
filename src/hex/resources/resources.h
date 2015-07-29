@@ -18,6 +18,7 @@ public:
     bool resolve_image_ref(ImageRef& image_ref);
 
     TileViewDef *get_tile_view_def(const std::string& name) const;
+    UnitViewDef *get_unit_view_def(const std::string& name);
 
 public:
     ImageMap images;
