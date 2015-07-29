@@ -26,20 +26,23 @@ static Point target(17,12);
 
 static Resources resources;
 
-static TileType open_tile("open", 1);
-static TileType closed_tile("closed", -1);
+static TileType open_tile;
+static TileType closed_tile;
 
+MovementModel movement_model;
+
+UnitStack party(0, source);
 
 class PathfindingLevelView: public LevelView {
 public:
     PathfindingLevelView(Level *level):
-        LevelView(level, &::resources, NULL), pathfinder(level), brush_radius(2) { }
+        LevelView(level, &::resources, NULL), pathfinder(level, &movement_model), brush_radius(2) { }
 
     void left_click() {
         source = highlight_tile;
         if (level->contains(source) && level->contains(target)) {
             pathfinder.clear();
-            pathfinder.start(source, target);
+            pathfinder.start(&party, source, target);
         }
     }
 
@@ -47,7 +50,7 @@ public:
         target = highlight_tile;
         if (level->contains(source) && level->contains(target)) {
             pathfinder.clear();
-            pathfinder.start(source, target);
+            pathfinder.start(&party, source, target);
         }
     }
 
@@ -172,6 +175,14 @@ void generate_level(Level &level) {
 
 
 void run() {
+    open_tile.properties.insert(Walkable);
+
+    UnitType type;
+    type.abilities.insert(Walking);
+    Unit unit;
+    unit.type = &type;
+    party.units.push_back(&unit);
+
     Graphics graphics;
     graphics.start();
 

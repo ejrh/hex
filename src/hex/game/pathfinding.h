@@ -2,6 +2,7 @@
 #define PATHFINDING_H
 
 #include "hex/basics/point.h"
+#include "hex/game/movement.h"
 
 
 struct PathfinderNode {
@@ -33,16 +34,17 @@ struct PathfinderNodeComparator {
 
 class Pathfinder {
 public:
-    Pathfinder(Level *level);
+    Pathfinder(Level *level, MovementModel *movement);
     virtual ~Pathfinder();
     virtual void clear();
-    virtual void start(const Point start_point, const Point target_point);
+    virtual void start(const UnitStack *party, const Point start_point, const Point target_point);
     virtual void step();
     virtual void complete();
     virtual void build_path(Path& path);
 
 public:
     PathfinderState state;
+    const UnitStack *party;
     PathfinderQueueEntry source;
     PathfinderQueueEntry target;
     PathfinderQueueEntry path_head;
@@ -54,6 +56,7 @@ private:
 
 public:
     Level *level;
+    MovementModel *movement;
     Vector2<PathfinderNode> nodes;
     boost::heap::priority_queue<PathfinderQueueEntry, boost::heap::compare<PathfinderNodeComparator> > queue;
 };

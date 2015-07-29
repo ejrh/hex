@@ -20,8 +20,13 @@ set(srcs
         game/game_updater.h
         game/level.cpp
         game/message_types.h
+        game/movement.cpp
+        game/movement.h
         game/pathfinding.cpp
         game/pathfinding.h
+        game/trait_types.h
+        game/traits.cpp
+        game/traits.h
         game/visibility_map.cpp
         game/visibility_map.h
         graphics/font.cpp

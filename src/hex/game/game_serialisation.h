@@ -19,25 +19,39 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, Point& p) {
 
 
 inline Serialiser& operator<<(Serialiser& serialiser, const TileType& d) {
-    serialiser << d.name << d.walk_cost;
+    serialiser << d.name << d.properties;
     return serialiser;
 }
 
 inline Deserialiser& operator>>(Deserialiser& deserialiser, TileType& d) {
-    deserialiser >> d.name >> d.walk_cost;
+    deserialiser >> d.name >> d.properties;
     return deserialiser;
 }
 
 
 inline Serialiser& operator<<(Serialiser& serialiser, const UnitType& d) {
-    serialiser << d.name << d.moves << d.sight;
+    serialiser << d.name << d.abilities << d.moves << d.sight;
     return serialiser;
 }
 
 inline Deserialiser& operator>>(Deserialiser& deserialiser, UnitType& d) {
-    deserialiser >> d.name >> d.moves >> d.sight;
+    deserialiser >> d.name >> d.abilities >> d.moves >> d.sight;
     return deserialiser;
 }
+
+
+inline Serialiser& operator<<(Serialiser& serialiser, const TraitType& t) {
+    serialiser << get_trait_type_name(t);
+    return serialiser;
+}
+
+inline Deserialiser& operator>>(Deserialiser& deserialiser, TraitType& t) {
+    std::string name;
+    deserialiser >> name;
+    t = get_trait_type(name);
+    return deserialiser;
+}
+
 
 inline std::ostream& operator<<(std::ostream& os, const Point& p) {
     return os << "(" << p.x << "," << p.y << ")";

@@ -5,7 +5,7 @@
 #include "hex/game/game.h"
 #include "hex/game/pathfinding.h"
 
-Pathfinder::Pathfinder(Level *level): level(level) {
+Pathfinder::Pathfinder(Level *level, MovementModel *movement): level(level), movement(movement) {
     nodes.resize(level->width, level->height);
 
     clear();
@@ -26,7 +26,9 @@ void Pathfinder::clear() {
     state = CLEAR;
 }
 
-void Pathfinder::start(const Point start_point, const Point target_point) {
+void Pathfinder::start(const UnitStack *party, const Point start_point, const Point target_point) {
+    this->party = party;
+
     source.point = start_point;
     source.node = &nodes[source.point];
     source.node->cost = 0;
@@ -60,10 +62,8 @@ int Pathfinder::cost_between(const PathfinderQueueEntry& entry1, const Pathfinde
     Tile &target = level->tiles[entry2.point];
     if (target.stack != NULL)
         return INT_MAX;
-    TileType *tile_type = target.type;
-    if (tile_type->walk_cost == -1)
-        return INT_MAX;
-    return tile_type->walk_cost;
+    int cost = movement->cost_to(party, &target);
+    return cost;
 }
 
 int Pathfinder::heuristic(const PathfinderQueueEntry& entry1, const PathfinderQueueEntry& entry2) {

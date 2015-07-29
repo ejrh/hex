@@ -78,11 +78,33 @@ void create_game(Game& game, Updater& updater) {
         updater.receive(boost::make_shared<WrapperMessage2<Point, std::vector<std::string> > >(SetLevelData, origin, data));
     }
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 1; i <= 5; i++) {
         int tx = rand() % game.level.width;
         int ty = rand() % game.level.height;
         updater.receive(boost::make_shared<CreateStackMessage>(i, Point(tx, ty)));
         updater.receive(boost::make_shared<CreateUnitMessage>(i, "dragon"));
+    };
+
+    for (int i = 11; i <= 20; i++) {
+        int tx, ty;
+        do {
+            tx = rand() % game.level.width;
+            ty = rand() % game.level.height;
+        } while (game.level.tiles[ty][tx].type == game.tile_types["water"]);
+
+        updater.receive(boost::make_shared<CreateStackMessage>(i, Point(tx, ty)));
+        updater.receive(boost::make_shared<CreateUnitMessage>(i, "drow_archer"));
+    };
+
+    for (int i = 21; i <= 25; i++) {
+        int tx, ty;
+        do {
+            tx = rand() % game.level.width;
+            ty = rand() % game.level.height;
+        } while (game.level.tiles[ty][tx].type != game.tile_types["water"]);
+
+        updater.receive(boost::make_shared<CreateStackMessage>(i, Point(tx, ty)));
+        updater.receive(boost::make_shared<CreateUnitMessage>(i, "boat"));
     };
 
     updater.flush();

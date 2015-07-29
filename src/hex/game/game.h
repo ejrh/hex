@@ -3,6 +3,7 @@
 
 #include "hex/basics/vector2.h"
 #include "hex/basics/point.h"
+#include "hex/game/traits.h"
 #include "hex/game/visibility_map.h"
 
 
@@ -23,6 +24,7 @@ public:
 
 public:
     std::string name;
+    TraitSet abilities;
     int moves;
     int sight;
 };
@@ -33,10 +35,18 @@ class Unit {
 public:
     Unit() { }
     ~Unit() { }
+    bool has_ability(TraitType ability) const {
+        if (abilities.count(ability) == 1)
+            return true;
+        if (type->abilities.count(ability) == 1)
+            return true;
+        return false;
+    }
 
 public:
     UnitType *type;
     int health;
+    TraitSet abilities;
 };
 
 #define MAX_UNITS 12
@@ -61,12 +71,15 @@ public:
 class TileType {
 public:
     TileType() { }
-    TileType(std::string name, int walk_cost): name(name), walk_cost(walk_cost) { }
     ~TileType() { }
+
+    bool has_property(TraitType trait) const {
+        return properties.count(trait) == 1;
+    }
 
 public:
     std::string name;
-    int walk_cost;
+    TraitSet properties;
 };
 
 typedef std::map<std::string, TileType *> TileTypeMap;
@@ -75,6 +88,10 @@ class Tile {
 public:
     Tile(): type(NULL), stack(NULL) { }
     Tile(TileType *type): type(type), stack(NULL) { }
+
+    bool has_property(TraitType trait) const {
+        return type->has_property(trait);
+    }
 
 public:
     TileType *type;

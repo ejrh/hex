@@ -100,8 +100,9 @@ void LevelView::right_click_tile(const Point& tile_pos) {
         return;
 
     if (level->contains(tile_pos)) {
-        Pathfinder pathfinder(level);
-        pathfinder.start(selected_stack->position, tile_pos);
+        MovementModel movement_model;
+        Pathfinder pathfinder(level, &movement_model);
+        pathfinder.start(selected_stack, selected_stack->position, tile_pos);
         pathfinder.complete();
         Path new_path;
         pathfinder.build_path(new_path);
