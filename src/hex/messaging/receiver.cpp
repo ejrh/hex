@@ -13,7 +13,7 @@ void replay_messages(const std::string& filename, MessageReceiver& receiver) {
     Deserialiser reader(file);
 
     while (file.good()) {
-        while (file.peek() == '#')
+        while (file.peek() == '#' || file.peek() == '\n')
             file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         if (file.eof())
         break;

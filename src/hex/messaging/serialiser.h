@@ -191,10 +191,10 @@ public:
     void skip_expected(unsigned ch) {
         unsigned x = in.get();
         if (x == std::char_traits<wchar_t>::eof()) {
-            error("Expected character: %c (%x) but got EOF", ch, ch);
+            throw Error("Expected character: %c (%x) but got EOF", ch, ch);
         }
         if (x != ch) {
-            error("Expected character: %c (%x) but got: %c (%x)", ch, ch, x, x);
+            throw Error("Expected character: %c (%x) but got: %c (%x)", ch, ch, x, x);
         }
     }
 
