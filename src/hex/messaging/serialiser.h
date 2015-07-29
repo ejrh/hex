@@ -51,6 +51,16 @@ public:
         return *this;
     }
 
+    template<typename T>
+    inline Serialiser& operator<<(const std::set<T>& set) {
+        begin_set(set.size());
+        for (typename std::set<T>::const_iterator iter = set.begin(); iter != set.end(); iter++) {
+            *this << *iter;
+        }
+        end_set();
+        return *this;
+    }
+
     void type_begin_tuple(const char *type) {
         if (need_seperator)
             out << ", ";
@@ -67,6 +77,18 @@ public:
 
     void end_vector() {
         out << "]";
+        need_seperator = true;
+    }
+
+    void begin_set(int size) {
+        if (need_seperator)
+            out << ", ";
+        out << "{";
+        need_seperator = false;
+    }
+
+    void end_set() {
+        out << "}";
         need_seperator = true;
     }
 
@@ -146,6 +168,21 @@ public:
         return *this;
     }
 
+    template<typename T>
+    inline Deserialiser& operator>>(std::set<T>& set) {
+        int size;
+        begin_set(size);
+        for (int i = 0; i < size; i++) {
+            T x;
+            if (in.peek() == '}')
+                break;
+            *this >> x;
+            set.insert(x);
+        }
+        end_set();
+        return *this;
+    }
+
     void type_begin_tuple(std::string &type_name) {
         if (expect_seperator)
             skip_separator();
@@ -166,6 +203,19 @@ public:
 
     void end_vector() {
         skip_expected(']');
+        expect_seperator = true;
+    }
+
+    void begin_set(int &size) {
+        size = INT_MAX;
+        if (expect_seperator)
+            skip_separator();
+        skip_expected('{');
+        expect_seperator = false;
+    }
+
+    void end_set() {
+        skip_expected('}');
         expect_seperator = true;
     }
 
