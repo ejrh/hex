@@ -21,6 +21,11 @@ class UnitType {
 public:
     UnitType() { }
     ~UnitType() { }
+    bool has_ability(TraitType ability) const {
+        if (abilities.count(ability) == 1)
+            return true;
+        return false;
+    }
 
 public:
     std::string name;
@@ -38,9 +43,7 @@ public:
     bool has_ability(TraitType ability) const {
         if (abilities.count(ability) == 1)
             return true;
-        if (type->abilities.count(ability) == 1)
-            return true;
-        return false;
+        return type->has_ability(ability);
     }
 
 public:

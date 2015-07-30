@@ -19,6 +19,7 @@
 #include "hex/game/game_serialisation.h"
 #include "hex/game/game_updater.h"
 #include "hex/game/game_arbiter.h"
+#include "hex/game/movement.h"
 #include "hex/networking/networking.h"
 #include "hex/view/view.h"
 #include "hex/view/view_updater.h"
@@ -33,12 +34,17 @@ struct Options {
     std::string host_addr;
 };
 
-void generate_level(Level &level, TileType *water, TileType *desert, TileType *grass) {
+void generate_level(Level &level, TileType *outside, TileType *water, TileType *desert, TileType *grass) {
     PerlinNoise noise(5, 5);
     PerlinNoise noise2(10, 10);
 
     for (int i = 0; i < level.height; i++) {
         for (int j = 0; j < level.width; j++) {
+            if (i == 0 || i == level.height - 1 || j == 0 || j == level.width - 1) {
+                level.tiles[i][j].type = outside;
+                continue;
+            }
+
             float px = (float) j / level.width;
             float py = (float) i / level.height;
             if (j % 2 == 1)
@@ -65,7 +71,7 @@ void create_game(Game& game, Updater& updater) {
     game.level.width = width;
     game.level.height = height;
     game.level.tiles.resize(width, height);
-    generate_level(game.level, game.tile_types["water"], game.tile_types["desert"], game.tile_types["grass"]);
+    generate_level(game.level, game.tile_types["outside"], game.tile_types["water"], game.tile_types["desert"], game.tile_types["grass"]);
 
     updater.receive(boost::make_shared<WrapperMessage2<int, int> >(SetLevel, game.level.width, game.level.height));
     for (int i = 0; i < game.level.height; i++) {
@@ -78,33 +84,25 @@ void create_game(Game& game, Updater& updater) {
         updater.receive(boost::make_shared<WrapperMessage2<Point, std::vector<std::string> > >(SetLevelData, origin, data));
     }
 
-    for (int i = 1; i <= 5; i++) {
-        int tx = rand() % game.level.width;
-        int ty = rand() % game.level.height;
-        updater.receive(boost::make_shared<CreateStackMessage>(i, Point(tx, ty)));
-        updater.receive(boost::make_shared<CreateUnitMessage>(i, "dragon"));
-    };
+    for (int i = 1; i <= 25; i++) {
+        UnitTypeMap::iterator item = game.unit_types.begin();
+        std::advance(item, rand() % game.unit_types.size());
 
-    for (int i = 11; i <= 20; i++) {
-        int tx, ty;
-        do {
-            tx = rand() % game.level.width;
-            ty = rand() % game.level.height;
-        } while (game.level.tiles[ty][tx].type == game.tile_types["water"]);
+        MovementModel movement_model;
+        Point p(-1, -1);
+        for (int j = 0; j < 10; j++) {
+            int tx = rand() % game.level.width;
+            int ty = rand() % game.level.height;
+            if (movement_model.admits(item->second, game.level.tiles[ty][tx].type)) {
+                p = Point(tx, ty);
+                break;
+            }
+        }
 
-        updater.receive(boost::make_shared<CreateStackMessage>(i, Point(tx, ty)));
-        updater.receive(boost::make_shared<CreateUnitMessage>(i, "drow_archer"));
-    };
-
-    for (int i = 21; i <= 25; i++) {
-        int tx, ty;
-        do {
-            tx = rand() % game.level.width;
-            ty = rand() % game.level.height;
-        } while (game.level.tiles[ty][tx].type != game.tile_types["water"]);
-
-        updater.receive(boost::make_shared<CreateStackMessage>(i, Point(tx, ty)));
-        updater.receive(boost::make_shared<CreateUnitMessage>(i, "boat"));
+        if (p.x != -1) {
+            updater.receive(boost::make_shared<CreateStackMessage>(i, p));
+            updater.receive(boost::make_shared<CreateUnitMessage>(i, item->second->name));
+        }
     };
 
     updater.flush();

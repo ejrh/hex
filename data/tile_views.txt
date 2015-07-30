@@ -1,4 +1,6 @@
 # CreateTileView(name, image_name)
+CreateTileView("outside")
+TileAnimation(["outside.png"])
 CreateTileView("water")
 TileAnimation(["water1.png"])
 CreateTileView("grass")

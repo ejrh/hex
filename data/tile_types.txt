@@ -1,4 +1,5 @@
 # CreateTileType(name, properties)
+CreateTileType("outside", {})
 CreateTileType("water", {"Swimmable", "Flyable"})
 CreateTileType("grass", {"Walkable", "Flyable"})
 CreateTileType("desert", {"Walkable", "Flyable"})

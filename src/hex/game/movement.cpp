@@ -25,3 +25,13 @@ int MovementModel::cost_to(const UnitStack *party, const Tile *tile) const {
 
     return INT_MAX;
 }
+
+int MovementModel::admits(const UnitType *unit_type, const TileType *tile_type) const {
+    if (unit_type->has_ability(Walking) && tile_type->has_property(Walkable))
+        return true;
+    else if (unit_type->has_ability(Swimming) && tile_type->has_property(Swimmable))
+        return true;
+    if (unit_type->has_ability(Flying) && tile_type->has_property(Flyable))
+        return true;
+    return false;
+}
