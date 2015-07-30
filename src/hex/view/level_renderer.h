@@ -27,7 +27,6 @@ protected:
 
     ImageSeries cursor_images;
     ImageSeries arrow_images;
-    int x_spacing, y_spacing;
 
     friend class LevelWindow;
 };

@@ -18,7 +18,7 @@
 LevelWindow::LevelWindow(int width, int height, LevelView *level_view, LevelRenderer *level_renderer, Resources *resources):
         UiWindow(0, 0, width, height),
         level_view(level_view), level_renderer(level_renderer), resources(resources),
-        shift_x(0), shift_y(0), x_spacing(X_SPACING), y_spacing(Y_SPACING) {
+        shift_x(SLOPE_WIDTH), shift_y(SLOPE_HEIGHT), x_spacing(X_SPACING), y_spacing(Y_SPACING) {
 }
 
 LevelWindow::~LevelWindow() {
@@ -92,17 +92,22 @@ void LevelWindow::tile_to_pixel(const Point tile, int *px, int *py) {
 }
 
 void LevelWindow::shift(int xrel, int yrel) {
+    int min_shift_x = SLOPE_WIDTH;
+    int max_shift_x = level_view->tile_views.width * X_SPACING - width;
+    int min_shift_y = SLOPE_HEIGHT;
+    int max_shift_y = level_view->tile_views.height * Y_SPACING - height;
+
     shift_x -= xrel;
-    if (shift_x < 0)
-        shift_x = 0;
-    if (shift_x > level_view->tile_views.width * X_SPACING - width + SLOPE_WIDTH)
-        shift_x = level_view->tile_views.width * X_SPACING - width + SLOPE_WIDTH;
+    if (shift_x < min_shift_x)
+        shift_x = min_shift_x;
+    if (shift_x > max_shift_x)
+        shift_x = max_shift_x;
 
     shift_y -= yrel;
-    if (shift_y < 0)
-        shift_y = 0;
-    if (shift_y > level_view->tile_views.height * Y_SPACING - height + SLOPE_HEIGHT)
-        shift_y = level_view->tile_views.height * Y_SPACING - height + SLOPE_HEIGHT;
+    if (shift_y < min_shift_y)
+        shift_y = min_shift_y;
+    if (shift_y > max_shift_y)
+        shift_y = max_shift_y;
 }
 
 void LevelWindow::left_click(int x, int y) {
@@ -148,8 +153,8 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
 
     for (int i = min_pos.y; i < max_pos.y; i++) {
         for (int j = min_pos.x; j < max_pos.x; j += 2) {
-            int xpos = j*level_renderer->x_spacing - shift_x;
-            int ypos = i*level_renderer->y_spacing - shift_y;
+            int xpos = j*x_spacing - shift_x;
+            int ypos = i*y_spacing - shift_y;
             Point tile_pos(j, i);
             if (!level_view->level->discovered.check(tile_pos))
                 continue;

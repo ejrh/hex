@@ -8,16 +8,8 @@
 #include "hex/view/view.h"
 #include "hex/view/level_renderer.h"
 
-#define TILE_WIDTH 48
-#define X_SPACING 32
-#define Y_SPACING 32
-
-#define SLOPE_WIDTH (TILE_WIDTH - X_SPACING)
-#define SLOPE_HEIGHT (Y_SPACING/2)
-
-
 LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *level, LevelView *level_view):
-        graphics(graphics), resources(resources), level(level), level_view(level_view), x_spacing(X_SPACING), y_spacing(Y_SPACING) {
+        graphics(graphics), resources(resources), level(level), level_view(level_view) {
     cursor_images = resources->image_series["CURSORS"];
     arrow_images = resources->image_series["ARROWS"];
 }
