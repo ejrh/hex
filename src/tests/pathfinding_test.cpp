@@ -36,7 +36,9 @@ UnitStack party(0, source);
 class PathfindingLevelView: public LevelView {
 public:
     PathfindingLevelView(Level *level):
-        LevelView(level, &::resources, NULL), pathfinder(level, &movement_model), brush_radius(2) { }
+            LevelView(level, &::resources, NULL), pathfinder(level, &movement_model), brush_radius(2) {
+        discovered.fill();
+    }
 
     void left_click() {
         source = highlight_tile;
@@ -188,7 +190,6 @@ void run() {
 
     Level *level = new Level(200,200);
     generate_level(*level);
-    level->discovered.fill();
 
     PathfindingLevelView level_view(level);
 

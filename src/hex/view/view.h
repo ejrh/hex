@@ -42,6 +42,7 @@ class LevelView {
 public:
     LevelView(Level *level, Resources *resources, MessageReceiver *dispatcher);
     ~LevelView();
+    void resize(int width, int height);
     void update();
     void set_highlight_tile(const Point& tile_pos);
     void left_click_tile(const Point& tile_pos);
@@ -63,6 +64,8 @@ protected:
     unsigned int last_update;
     Point highlight_tile;
     UnitStack *selected_stack;
+    VisibilityMap visibility;
+    VisibilityMap discovered;
     Path drawn_path;
     UnitStack *moving_unit;
     Path moving_unit_path;

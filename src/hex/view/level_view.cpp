@@ -17,11 +17,17 @@
 
 LevelView::LevelView(Level *level, Resources *resources, MessageReceiver *dispatcher):
         level(level), resources(resources), dispatcher(dispatcher),
-        last_update(0), selected_stack(NULL), moving_unit(NULL) {
-    tile_views.resize(level->width, level->height);
+        last_update(0), selected_stack(NULL), visibility(level), discovered(level), moving_unit(NULL) {
+    resize(level->width, level->height);
 }
 
 LevelView::~LevelView() {
+}
+
+void LevelView::resize(int width, int height) {
+    tile_views.resize(width, height);
+    visibility.resize(width, height);
+    discovered.resize(width, height);
 }
 
 // Assumes 1000 increments between frames

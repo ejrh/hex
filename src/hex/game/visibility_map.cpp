@@ -4,12 +4,9 @@
 #include "hex/game/game.h"
 #include "hex/game/visibility_map.h"
 
-VisibilityMap::VisibilityMap() {
-}
-
-void VisibilityMap::set_level(Level *level) {
+VisibilityMap::VisibilityMap(Level *level) {
     this->level = level;
-    visibility.resize(level->tiles.width, level->tiles.height);
+    resize(level->tiles.width, level->tiles.height);
 }
 
 void VisibilityMap::resize(int width, int height) {
@@ -18,18 +15,18 @@ void VisibilityMap::resize(int width, int height) {
 
 void VisibilityMap::clear() {
     visibility.resize(level->tiles.width, level->tiles.height);
-    visibility.fill(0);
+    visibility.fill(false);
 }
 
 void VisibilityMap::fill() {
     visibility.resize(level->tiles.width, level->tiles.height);
-    visibility.fill(-1);
+    visibility.fill(true);
 }
 
 void VisibilityMap::rebuild() {
     visibility.resize(level->tiles.width, level->tiles.height);
 
-    visibility.fill(0);
+    visibility.fill(false);
 
     for (int i = 0; i < level->tiles.height; i++)
         for (int j = 0; j < level->tiles.width; j++) {
@@ -60,16 +57,27 @@ void VisibilityMap::update() {
 
 void VisibilityMap::apply(UnitStack *stack, bool visible)
 {
-    int sight = stack->sight();
+    draw(stack->position, stack->sight(), visible);
+}
+
+void VisibilityMap::mask(UnitStack *stack)
+{
+}
+
+void VisibilityMap::overlay(UnitStack *stack) {
+}
+
+void VisibilityMap::draw(const Point &point, int sight, bool visible)
+{
     int num_scanlines = 2 * sight + 1;
     std::vector<int> scanlines(num_scanlines);
-    get_circle(stack->position, sight, scanlines);
+    get_circle(point, sight, scanlines);
     for (int i = 0; i < num_scanlines; i++) {
-        int row = stack->position.y - sight + i;
+        int row = point.y - sight + i;
         if (row < 0 || row >= visibility.height)
             continue;
-        int x1 = stack->position.x - scanlines[i];
-        int x2 = stack->position.x + scanlines[i];
+        int x1 = point.x - scanlines[i];
+        int x2 = point.x + scanlines[i];
         if (x1 < 0)
             x1 = 0;
         if (x2 >= visibility.width)
@@ -80,15 +88,8 @@ void VisibilityMap::apply(UnitStack *stack, bool visible)
     }
 }
 
-void VisibilityMap::mask(UnitStack *stack)
-{
-
-}
-
-void VisibilityMap::overlay(UnitStack *stack) {
-
-}
-
 bool VisibilityMap::check(const Point &tile_pos) const {
-    return visibility[tile_pos] != 0;
+    if (!visibility.contains(tile_pos))
+        std::cout << "!";
+    return visibility[tile_pos];
 }

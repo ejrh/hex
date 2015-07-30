@@ -111,8 +111,6 @@ public:
 public:
     int width, height;
     Vector2<Tile> tiles;
-    VisibilityMap visibility;
-    VisibilityMap discovered;
 };
 
 std::ostream& operator<<(std::ostream &strm, const Level& level);

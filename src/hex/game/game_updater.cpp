@@ -62,9 +62,6 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
         case CreateUnit: {
             boost::shared_ptr<CreateUnitMessage> upd = boost::dynamic_pointer_cast<CreateUnitMessage>(update);
             game->create_unit(upd->stack_id, upd->type_name);
-
-            game->level.visibility.rebuild();
-            game->level.discovered.update();
         } break;
 
         case PlayerReady: {
@@ -94,9 +91,6 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
             game->level.tiles[stack->position].stack = NULL;
             stack->position = new_pos;
             game->level.tiles[stack->position].stack = stack;
-
-            game->level.visibility.rebuild();
-            game->level.discovered.update();
 
             trace("Unit %d moves to %d,%d", upd->unit, new_pos.x, new_pos.y);
         } break;

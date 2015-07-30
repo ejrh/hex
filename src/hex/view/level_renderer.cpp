@@ -33,7 +33,7 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
     Image *ground = image_ref.image;
 
     if (ground != NULL) {
-        int alpha = level->visibility.check(tile_pos) ? 255 : 128;
+        int alpha = level_view->visibility.check(tile_pos) ? 255 : 128;
         graphics->blit(ground, x, y, alpha, alpha, alpha);
     }
 
@@ -52,7 +52,7 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
 }
 
 void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
-    if (!level->visibility.check(tile_pos))
+    if (!level_view->visibility.check(tile_pos))
         return;
 
     Tile &tile = level->tiles[tile_pos];

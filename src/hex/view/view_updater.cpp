@@ -28,7 +28,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         case SetLevel: {
             boost::shared_ptr<WrapperMessage2<int, int> > upd = boost::dynamic_pointer_cast<WrapperMessage2<int, int> >(update);
             game_view->level_view.level = &game->level;
-            game_view->level_view.tile_views.resize(upd->data1, upd->data2);
+            game_view->level_view.resize(upd->data1, upd->data2);
         } break;
 
         case SetLevelData: {
@@ -91,6 +91,9 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             UnitType *unit_type = stack->units[0]->type;
             UnitViewDef *view_def = resources->get_unit_view_def(unit_type->name);
             stack_view->view_def = view_def;
+
+            game_view->level_view.visibility.rebuild();
+            game_view->level_view.discovered.update();
         } break;
 
         case PlayerReady: {
@@ -113,6 +116,9 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
                 game_view->level_view.moving_unit_path = upd->path;
                 game_view->level_view.moving_unit_progress = 0;
             }
+
+            game_view->level_view.visibility.rebuild();
+            game_view->level_view.discovered.update();
         } break;
 
         default:
