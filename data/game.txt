@@ -1,0 +1,2 @@
+IncludeResource('tile_types.txt')
+IncludeResource('unit_types.txt')

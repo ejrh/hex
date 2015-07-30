@@ -108,7 +108,12 @@ void create_game(Game& game, Updater& updater) {
     updater.flush();
 }
 
-extern void connect(std::string server, int port);
+void load_resources(Resources *resources, Graphics *graphics) {
+    ImageLoader image_loader(resources, graphics);
+    ResourceLoader loader(resources, &image_loader);
+    loader.load(std::string("data/resources.txt"));
+    resources->resolve_references();
+}
 
 void run(Options& options) {
     Graphics graphics;
@@ -116,13 +121,7 @@ void run(Options& options) {
     graphics.start();
 
     Resources resources;
-
-    load_resources("data/images.txt", resources, &graphics);
-    load_resources("data/ui.txt", resources, &graphics);
-    load_resources("data/tile_views.txt", resources, &graphics);
-    load_resources("data/unit_views.txt", resources, &graphics);
-
-    resources.resolve_references();
+    load_resources(&resources, &graphics);
 
     EventPusher event_pusher;
     Server server(9999, &event_pusher);

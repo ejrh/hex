@@ -43,18 +43,22 @@ private:
 
 class ResourceLoader: public MessageReceiver {
 public:
-    ResourceLoader(Resources *resources, ImageLoader *image_loader): resources(resources), image_loader(image_loader), last_unit_view_def(NULL) { }
+    ResourceLoader(Resources *resources, ImageLoader *image_loader): resources(resources), image_loader(image_loader),
+            last_tile_view_def(NULL), last_unit_view_def(NULL) { }
+
     void receive(boost::shared_ptr<Message> msg);
+
+    void load(const std::string& filename);
+    void include(const std::string& filename, bool skip_missing = false);
+    void load_image(const std::string& filename);
 
 private:
     Resources *resources;
     ImageLoader *image_loader;
     TileViewDef *last_tile_view_def;
     UnitViewDef *last_unit_view_def;
+    std::vector<std::string> current_files;
 };
-
-
-void load_resources(const std::string& filename, Resources& resources, Graphics *graphics);
 
 
 #endif

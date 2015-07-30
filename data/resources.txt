@@ -1,0 +1,6 @@
+IncludeResource("view/ui.txt")
+IncludeResource("view/images.txt")
+IncludeResource("view/tile_views.txt")
+IncludeResource("view/unit_views.txt")
+
+IncludeIfResourceExists("custom_resources.txt")

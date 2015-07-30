@@ -55,15 +55,3 @@ UnitViewDef *Resources::get_unit_view_def(const std::string& name) {
     unit_view_defs[name] = view_def;
     return view_def;
 }
-
-void load_resources(const std::string& filename, Resources& resources, Graphics *graphics) {
-
-    trace("Loading resources from: %s", filename.c_str());
-
-    Updater updater(0);
-    ImageLoader image_loader(&resources, graphics);
-    ResourceLoader loader(&resources, &image_loader);
-    updater.subscribe(&loader);
-
-    replay_messages(filename, updater);
-}

@@ -7,6 +7,8 @@
 // (CPP macros don't recognise < > as brackets, but do recognise , as a delimiter)
 #define P(x,y) x,y
 
+MSG_TYPE(IncludeResource, WrapperMessage<std::string>)
+MSG_TYPE(IncludeIfResourceExists, WrapperMessage<std::string>)
 MSG_TYPE(ImageFile, WrapperMessage<std::string>)
 MSG_TYPE(ImageSet, P(WrapperMessage2<std::string, ImageSeries>))
 

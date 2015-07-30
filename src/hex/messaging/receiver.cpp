@@ -12,16 +12,24 @@ void replay_messages(const std::string& filename, MessageReceiver& receiver) {
 
     Deserialiser reader(file);
 
-    while (file.good()) {
-        while (file.peek() == '#' || file.peek() == '\n' || file.peek() == '\r')
-            file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        if (file.eof())
-            break;
-        Message *update_ptr;
-        reader >> update_ptr;
-        if (update_ptr == NULL)
-            break;
-        boost::shared_ptr<Message> update(update_ptr);
-        receiver.receive(update);
+    int line_no = 1;
+    try {
+        while (file.good()) {
+            while (file.peek() == '#' || file.peek() == '\n' || file.peek() == '\r') {
+                file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    line_no++;
+            }
+            if (file.eof())
+                break;
+            Message *update_ptr;
+            reader >> update_ptr;
+            if (update_ptr == NULL)
+                throw Error("Error attempting to deserialise message");
+            boost::shared_ptr<Message> update(update_ptr);
+            receiver.receive(update);
+            line_no++;
+        }
+    } catch (Error err) {
+        warn("Error in %s:%d: %s", filename.c_str(), line_no, err.what());
     }
 }

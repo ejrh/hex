@@ -15,14 +15,23 @@
 
 void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
     switch (msg->type) {
+        case IncludeResource: {
+            boost::shared_ptr<WrapperMessage<std::string> > upd = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(msg);
+            include(upd->data);
+        } break;
+
+        case IncludeIfResourceExists: {
+            boost::shared_ptr<WrapperMessage<std::string> > upd = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(msg);
+            include(upd->data, true);
+        } break;
+
         case ImageFile: {
             if (image_loader == NULL) {
                 warn("Image loader is not defined");
                 return;
             }
             boost::shared_ptr<WrapperMessage<std::string> > upd = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(msg);
-            std::string& filename = upd->data;
-            image_loader->load(filename);
+            load_image(upd->data);
         } break;
 
         case ImageSet: {
@@ -62,4 +71,40 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
             warn("Don't know how to read resources from message type: %s", get_message_type_name(msg->type).c_str());
         }
     }
+}
+
+void ResourceLoader::load(const std::string& filename) {
+    trace("Loading resources from: %s", filename.c_str());
+    current_files.push_back(filename);
+    replay_messages(filename, *this);
+    current_files.pop_back();
+}
+
+void ResourceLoader::include(const std::string& filename, bool skip_missing) {
+    boost::filesystem::path path = boost::filesystem::path(current_files.back()).parent_path();
+    path /= boost::filesystem::path(filename);
+    std::string relative_filename = path.string();
+
+    if (std::find(current_files.begin(), current_files.end(), relative_filename) != current_files.end()) {
+        warn("Self-inclusion of resource file will be ignored: %s", relative_filename.c_str());
+        return;
+    }
+
+    if (skip_missing && !boost::filesystem::exists(boost::filesystem::path(relative_filename))) {
+        trace("Skipping missing resource: %s", relative_filename.c_str());
+        return;
+    }
+
+    trace("Including resources from: %s", filename.c_str());
+    current_files.push_back(relative_filename);
+    replay_messages(relative_filename, *this);
+    current_files.pop_back();
+}
+
+void ResourceLoader::load_image(const std::string& filename) {
+    boost::filesystem::path path = boost::filesystem::path(current_files.back()).parent_path();
+    path /= boost::filesystem::path(filename);
+    std::string relative_filename = path.string();
+
+    image_loader->load(relative_filename);
 }

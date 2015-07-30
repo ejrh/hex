@@ -11,6 +11,7 @@ Dependencies:
   * boost-program-options-dev
   * boost-system-dev
   * boost-thread-dev
+  * boost-filesystem-dev
   * SDL2-dev
   * SDL2-ttf-dev
 

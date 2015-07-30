@@ -6,9 +6,9 @@
 
 void run() {
     Resources resources;
+    ResourceLoader loader(&resources, NULL);
 
-    load_resources("data/tile_views.txt", resources, NULL);
-    load_resources("data/unit_views.txt", resources, NULL);
+    loader.load("data/resources.txt");
 }
 
 int main(int argc, char *argv[]) {
