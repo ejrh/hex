@@ -35,7 +35,6 @@ set(srcs
         graphics/graphics.h
         graphics/ilb.cpp
         graphics/load_image.cpp
-        messaging/dispatcher.h
         messaging/event_pusher.cpp
         messaging/event_pusher.h
         messaging/message.cpp

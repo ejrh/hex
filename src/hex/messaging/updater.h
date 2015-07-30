@@ -8,7 +8,6 @@ public:
 
     void subscribe(MessageReceiver *receiver);
     virtual void receive(boost::shared_ptr<Message> msg);
-    void flush();
 
 private:
     void send_update_to_subscribers(boost::shared_ptr<Message> update);
@@ -17,7 +16,6 @@ private:
     int id;
     int next_message_id;
 
-    std::queue<boost::shared_ptr<Message> > update_queue;
     std::vector<MessageReceiver *> subscribers;
 };
 

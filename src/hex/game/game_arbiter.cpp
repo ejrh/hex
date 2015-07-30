@@ -36,8 +36,6 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
         default:
             break;
     }
-
-    publisher->flush();
 }
 
 void GameArbiter::emit(boost::shared_ptr<Message> update) {

@@ -12,7 +12,6 @@
 #include "hex/messaging/message.h"
 #include "hex/messaging/receiver.h"
 #include "hex/messaging/updater.h"
-#include "hex/messaging/dispatcher.h"
 #include "hex/messaging/event_pusher.h"
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
@@ -104,8 +103,6 @@ void create_game(Game& game, Updater& updater) {
             updater.receive(boost::make_shared<CreateUnitMessage>(i, item->second->name));
         }
     };
-
-    updater.flush();
 }
 
 void load_resources(Resources *resources, Graphics *graphics) {
