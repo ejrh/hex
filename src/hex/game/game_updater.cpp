@@ -54,9 +54,14 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
             game->create_unit_type(upd->data);
         } break;
 
+        case CreateFaction: {
+            boost::shared_ptr<CreateFactionMessage> upd = boost::dynamic_pointer_cast<CreateFactionMessage>(update);
+            game->create_faction(upd->faction_id, upd->name);
+        } break;
+
         case CreateStack: {
             boost::shared_ptr<CreateStackMessage> upd = boost::dynamic_pointer_cast<CreateStackMessage>(update);
-            game->create_unit_stack(upd->stack_id, upd->position);
+            game->create_unit_stack(upd->stack_id, upd->position, upd->owner);
         } break;
 
         case CreateUnit: {
@@ -64,21 +69,17 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
             game->create_unit(upd->stack_id, upd->type_name);
         } break;
 
-        case PlayerReady: {
-            boost::shared_ptr<PlayerReadyMessage> upd = boost::dynamic_pointer_cast<PlayerReadyMessage>(update);
-            game->players[upd->player]->ready = upd->ready;
-            if (game->players[0]->ready && game->players[1]->ready) {
-                //generate_update(boost::make_shared<TurnEndMessage>(game.turn_number + 1));
+        case FactionReady: {
+            boost::shared_ptr<FactionReadyMessage> upd = boost::dynamic_pointer_cast<FactionReadyMessage>(update);
+            Faction *faction = game->get_faction(upd->faction);
+            if (faction != NULL) {
+                faction->ready = upd->ready;
             }
         } break;
 
         case TurnEnd: {
             boost::shared_ptr<TurnEndMessage> upd = boost::dynamic_pointer_cast<TurnEndMessage>(update);
             game->turn_number = upd->turn_number;
-
-            for (int i = 0; i < 2; i++) {
-                //generate_update(boost::make_shared<PlayerReadyMessage>(i, false));
-            }
         } break;
 
         case UnitMove: {
@@ -86,6 +87,11 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
 
             // check unit can move
             UnitStack *stack = game->stacks[upd->unit];
+            if (stack == NULL) {
+                warn("No stack with id %d", upd->unit);
+                return;
+            }
+
             Point& new_pos = upd->path.back();
 
             game->level.tiles[stack->position].stack = NULL;

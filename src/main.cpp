@@ -83,9 +83,16 @@ void create_game(Game& game, Updater& updater) {
         updater.receive(boost::make_shared<WrapperMessage2<Point, std::vector<std::string> > >(SetLevelData, origin, data));
     }
 
+    updater.receive(boost::make_shared<CreateFactionMessage>(1, "Orcs"));
+    updater.receive(boost::make_shared<CreateFactionMessage>(2, "Drow"));
+
     for (int i = 1; i <= 25; i++) {
         UnitTypeMap::iterator item = game.unit_types.begin();
         std::advance(item, rand() % game.unit_types.size());
+
+        std::map<int, Faction *>::iterator faction_iter = game.factions.begin();
+        std::advance(faction_iter, rand() % game.factions.size());
+        int faction = faction_iter->second->id;
 
         MovementModel movement_model;
         Point p(-1, -1);
@@ -99,7 +106,7 @@ void create_game(Game& game, Updater& updater) {
         }
 
         if (p.x != -1) {
-            updater.receive(boost::make_shared<CreateStackMessage>(i, p));
+            updater.receive(boost::make_shared<CreateStackMessage>(i, p, faction));
             updater.receive(boost::make_shared<CreateUnitMessage>(i, item->second->name));
         }
     };

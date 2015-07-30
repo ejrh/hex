@@ -19,7 +19,10 @@ public:
 
     virtual void receive(boost::shared_ptr<Message> update) {
         writer << update.get();
-        std::cerr << "Recorded: " << update << std::endl;
+        std::ostringstream buf;
+        Serialiser writer2(buf);
+        writer2 << update.get();
+        std::cerr << "Recorded: " << buf.str();
     }
 
 private:
@@ -62,13 +65,13 @@ int main(int argc, char *argv[]) {
         path.push_back(Point(4,7));
         path.push_back(Point(4,8));
 
-        updater.receive(boost::make_shared<PlayerNameMessage>(0, "Alice"));
+        updater.receive(boost::make_shared<WrapperMessage2<int, int> >(10, 10));
+
+        updater.receive(boost::make_shared<CreateFactionMessage>(1, "Alice"));
 
         updater.receive(boost::make_shared<UnitMoveMessage>(0, path));
 
-        updater.receive(boost::make_shared<PlayerReadyMessage>(0, true));
-
-        updater.receive(boost::make_shared<PlayerReadyMessage>(1, true));
+        updater.receive(boost::make_shared<FactionReadyMessage>(1, true));
 
         updater.receive(boost::make_shared<Message>(StreamClose));
     } else if (!strcmp(argv[1], "replay")) {

@@ -96,9 +96,6 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             game_view->level_view.discovered.update();
         } break;
 
-        case PlayerReady: {
-        } break;
-
         case TurnEnd: {
         } break;
 

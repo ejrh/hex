@@ -31,7 +31,7 @@ static TileType closed_tile;
 
 MovementModel movement_model;
 
-UnitStack party(0, source);
+UnitStack party(0, source, NULL);
 
 class PathfindingLevelView: public LevelView {
 public:

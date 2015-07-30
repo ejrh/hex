@@ -7,12 +7,13 @@
 #include "hex/game/visibility_map.h"
 
 
-class Player {
+class Faction {
 public:
-    Player() { }
-    ~Player() { }
+    Faction(int id, const std::string& name): id(id), name(name), ready(false) { }
+    ~Faction() { }
 
 public:
+    int id;
     std::string name;
     bool ready;
 };
@@ -56,7 +57,7 @@ public:
 
 class UnitStack {
 public:
-    UnitStack(int id, const Point position): id(id), position(position) { };
+    UnitStack(int id, const Point position, Faction *owner): id(id), owner(owner), position(position) { };
     ~UnitStack() { };
 
     static int sight_func(int max1, const Unit *unit) {
@@ -67,6 +68,7 @@ public:
 
 public:
     int id;
+    Faction *owner;
     Point position;
     std::vector<Unit *> units;
 };
@@ -123,9 +125,11 @@ public:
 
     TileType *create_tile_type(TileType& tile_type);
     UnitType *create_unit_type(UnitType& unit_type);
-    UnitStack *create_unit_stack(int id, const Point position);
+    Faction *create_faction(int id, const std::string& name);
+    UnitStack *create_unit_stack(int id, const Point position, int owner_id);
     Unit *create_unit(int stack_id, const std::string& type_name);
 
+    Faction *get_faction(int id);
     UnitStack *get_stack(int id);
 
 public:
@@ -136,7 +140,7 @@ public:
     int message_id;
     int turn_number;
     Level level;
-    std::vector<Player *> players;
+    std::map<int, Faction *> factions;
     std::map<int, UnitStack *> stacks;
 };
 

@@ -31,7 +31,25 @@ UnitType *Game::create_unit_type(UnitType& unit_type) {
     return new_unit_type;
 }
 
-UnitStack *Game::create_unit_stack(int id, const Point position) {
+Faction *Game::create_faction(int id, const std::string& name) {
+    if (factions.find(id) != factions.end()) {
+        warn("Faction already exists with id %d", id);
+        return NULL;
+    }
+
+    Faction *faction = new Faction(id, name);
+    factions[id] = faction;
+    return faction;
+}
+
+UnitStack *Game::create_unit_stack(int id, const Point position, int owner_id) {
+    Faction *owner = get_faction(owner_id);
+
+    if (owner == NULL) {
+        warn("No faction with id %d", owner_id);
+        return NULL;
+    }
+
     if (level.tiles[position].stack != NULL) {
         warn("Stack already exists at position %d,%d", position.x, position.y);
         return NULL;
@@ -42,7 +60,7 @@ UnitStack *Game::create_unit_stack(int id, const Point position) {
         return NULL;
     }
 
-    UnitStack *new_stack = new UnitStack(id, position);
+    UnitStack *new_stack = new UnitStack(id, position, owner);
     stacks[id] = new_stack;
 
     level.tiles[position].stack = new_stack;
@@ -69,6 +87,12 @@ Unit *Game::create_unit(int stack_id, const std::string& type_name) {
 
     stack->units.push_back(new_unit);
     return new_unit;
+}
+
+Faction *Game::get_faction(int id) {
+    if (factions.find(id) != factions.end())
+        return factions[id];
+    return NULL;
 }
 
 UnitStack *Game::get_stack(int id) {

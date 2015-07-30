@@ -14,24 +14,43 @@ enum MessageType {
 #undef MSG_TYPE
 
 
+class CreateFactionMessage: public Message {
+public:
+    CreateFactionMessage() { }
+    CreateFactionMessage(int faction_id, const std::string& name): Message(CreateFaction), faction_id(faction_id), name(name) { }
+    virtual ~CreateFactionMessage() { }
+
+    int faction_id;
+    std::string name;
+
+protected:
+    virtual void read(Deserialiser& deserialiser) {
+        deserialiser >> faction_id >> name;
+    }
+
+    virtual void write(Serialiser& serialiser) const {
+        serialiser << faction_id << name;
+    };
+};
+
+
 class CreateStackMessage: public Message {
 public:
     CreateStackMessage() { }
-    CreateStackMessage(int stack_id, const Point position): Message(CreateStack), stack_id(stack_id), position(position) { }
+    CreateStackMessage(int stack_id, const Point position, int owner): Message(CreateStack), stack_id(stack_id), position(position), owner(owner) { }
     virtual ~CreateStackMessage() { }
 
     int stack_id;
     Point position;
+    int owner;
 
 protected:
     virtual void read(Deserialiser& deserialiser) {
-        deserialiser >> stack_id;
-        deserialiser >> position;
+        deserialiser >> stack_id >> position >> owner;
     }
 
     virtual void write(Serialiser& serialiser) const {
-        serialiser << stack_id;
-        serialiser << position;
+        serialiser << stack_id << position << owner;
     };
 };
 
@@ -58,46 +77,22 @@ protected:
 };
 
 
-class PlayerReadyMessage: public Message {
+class FactionReadyMessage: public Message {
 public:
-    PlayerReadyMessage() { }
-    PlayerReadyMessage(int player, bool ready): Message(PlayerReady), player(player), ready(ready) { }
-    virtual ~PlayerReadyMessage() { }
+    FactionReadyMessage() { }
+    FactionReadyMessage(int faction, bool ready): Message(FactionReady), faction(faction), ready(ready) { }
+    virtual ~FactionReadyMessage() { }
 
-    int player;
+    int faction;
     bool ready;
 
 protected:
     virtual void read(Deserialiser& deserialiser) {
-        deserialiser >> player;
-        deserialiser >> ready;
+        deserialiser >> faction >> ready;
     }
 
     virtual void write(Serialiser& serialiser) const {
-        serialiser << player;
-        serialiser << ready;
-    };
-};
-
-
-class PlayerNameMessage: public Message {
-public:
-    PlayerNameMessage() { }
-    PlayerNameMessage(int player, const std::string& name): Message(PlayerName), player(player), name(name) { }
-    virtual ~PlayerNameMessage() { }
-
-    int player;
-    std::string name;
-
-protected:
-    virtual void read(Deserialiser& deserialiser) {
-        deserialiser >> player;
-        deserialiser >> name;
-    }
-
-    virtual void write(Serialiser& serialiser) const {
-        serialiser << player;
-        serialiser << name;
+        serialiser << faction << ready;
     };
 };
 
