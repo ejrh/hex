@@ -16,6 +16,7 @@ MSG_TYPE(CreateTileView, WrapperMessage<TileViewDef>)
 MSG_TYPE(TileAnimation, WrapperMessage<ImageSeries>)
 MSG_TYPE(CreateUnitView, WrapperMessage<UnitViewDef>)
 MSG_TYPE(UnitAnimation, P(WrapperMessage2<int, ImageSeries>))
+MSG_TYPE(CreateFactionView, WrapperMessage<FactionViewDef>)
 
 MSG_TYPE(CreateUnitType, WrapperMessage<UnitType>)
 MSG_TYPE(CreateTileType, WrapperMessage<TileType>)

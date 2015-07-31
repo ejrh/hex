@@ -55,3 +55,11 @@ UnitViewDef *Resources::get_unit_view_def(const std::string& name) {
     unit_view_defs[name] = view_def;
     return view_def;
 }
+
+FactionViewDef *Resources::get_faction_view_def(const std::string& name) {
+    FactionViewDefMap::const_iterator iter = faction_view_defs.find(name);
+    if (iter != faction_view_defs.end())
+        return iter->second;
+
+    return NULL;
+}

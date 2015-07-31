@@ -31,13 +31,13 @@ UnitType *Game::create_unit_type(UnitType& unit_type) {
     return new_unit_type;
 }
 
-Faction *Game::create_faction(int id, const std::string& name) {
+Faction *Game::create_faction(int id, const std::string& type_name, const std::string& name) {
     if (factions.find(id) != factions.end()) {
         warn("Faction already exists with id %d", id);
         return NULL;
     }
 
-    Faction *faction = new Faction(id, name);
+    Faction *faction = new Faction(id, type_name, name);
     factions[id] = faction;
     return faction;
 }

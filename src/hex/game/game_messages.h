@@ -17,19 +17,20 @@ enum MessageType {
 class CreateFactionMessage: public Message {
 public:
     CreateFactionMessage() { }
-    CreateFactionMessage(int faction_id, const std::string& name): Message(CreateFaction), faction_id(faction_id), name(name) { }
+    CreateFactionMessage(int faction_id, const std::string& type_name, const std::string& name): Message(CreateFaction), faction_id(faction_id), type_name(type_name), name(name) { }
     virtual ~CreateFactionMessage() { }
 
     int faction_id;
+    std::string type_name;
     std::string name;
 
 protected:
     virtual void read(Deserialiser& deserialiser) {
-        deserialiser >> faction_id >> name;
+        deserialiser >> faction_id >> type_name >> name;
     }
 
     virtual void write(Serialiser& serialiser) const {
-        serialiser << faction_id << name;
+        serialiser << faction_id << type_name << name;
     };
 };
 

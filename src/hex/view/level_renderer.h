@@ -9,7 +9,7 @@ class LevelRenderer {
 public:
     typedef void (LevelRenderer::*RenderMethod)(int x, int y, Point tile_pos);
 
-    LevelRenderer(Graphics *graphics, Resources *resources, Level *level, LevelView *level_view);
+    LevelRenderer(Graphics *graphics, Resources *resources, Level *level, GameView *view, LevelView *level_view);
     ~LevelRenderer();
 
 protected:
@@ -23,6 +23,7 @@ protected:
     Graphics *graphics;
     Resources *resources;
     Level *level;
+    GameView *view;
     LevelView *level_view;
 
     ImageSeries cursor_images;

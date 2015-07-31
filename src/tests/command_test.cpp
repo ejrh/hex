@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
 
         updater.receive(boost::make_shared<WrapperMessage2<int, int> >(10, 10));
 
-        updater.receive(boost::make_shared<CreateFactionMessage>(1, "Alice"));
+        updater.receive(boost::make_shared<CreateFactionMessage>(1, "orcs", "Alice"));
 
         updater.receive(boost::make_shared<UnitMoveMessage>(0, path));
 

@@ -39,6 +39,12 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
             resources->image_series[upd->data1] = upd->data2;
         } break;
 
+        case CreateFactionView: {
+            boost::shared_ptr<WrapperMessage<FactionViewDef> > upd = boost::dynamic_pointer_cast<WrapperMessage<FactionViewDef> >(msg);
+            FactionViewDef *def = new FactionViewDef(upd->data);
+            resources->faction_view_defs[def->name] = def;
+        } break;
+
         case CreateTileView: {
             boost::shared_ptr<WrapperMessage<TileViewDef> > upd = boost::dynamic_pointer_cast<WrapperMessage<TileViewDef> >(msg);
             TileViewDef *def = new TileViewDef(upd->data);

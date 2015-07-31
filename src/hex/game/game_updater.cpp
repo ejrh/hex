@@ -56,7 +56,7 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
 
         case CreateFaction: {
             boost::shared_ptr<CreateFactionMessage> upd = boost::dynamic_pointer_cast<CreateFactionMessage>(update);
-            game->create_faction(upd->faction_id, upd->name);
+            game->create_faction(upd->faction_id, upd->type_name, upd->name);
         } break;
 
         case CreateStack: {

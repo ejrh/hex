@@ -8,8 +8,8 @@
 #include "hex/view/view.h"
 #include "hex/view/level_renderer.h"
 
-LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *level, LevelView *level_view):
-        graphics(graphics), resources(resources), level(level), level_view(level_view) {
+LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *level, GameView *view, LevelView *level_view):
+        graphics(graphics), resources(resources), level(level), view(view), level_view(level_view) {
     cursor_images = resources->image_series["CURSORS"];
     arrow_images = resources->image_series["ARROWS"];
 }
@@ -100,6 +100,12 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
     }
 
     graphics->blit(unit, x - 8, y - 32, alpha);
+
+    Faction *owner = stack_view.stack->owner;
+    FactionView *faction_view = view->faction_views[owner->id];
+    FactionViewDef *faction_view_def = faction_view->view_def;
+
+    graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, x+32, y-12, 8, 12);
 }
 
 void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {

@@ -83,8 +83,8 @@ void create_game(Game& game, Updater& updater) {
         updater.receive(boost::make_shared<WrapperMessage2<Point, std::vector<std::string> > >(SetLevelData, origin, data));
     }
 
-    updater.receive(boost::make_shared<CreateFactionMessage>(1, "Orcs"));
-    updater.receive(boost::make_shared<CreateFactionMessage>(2, "Drow"));
+    updater.receive(boost::make_shared<CreateFactionMessage>(1, "orcs", "Orc Hegemony"));
+    updater.receive(boost::make_shared<CreateFactionMessage>(2, "drow", "Great Drow Empire"));
 
     for (int i = 1; i <= 25; i++) {
         UnitTypeMap::iterator item = game.unit_types.begin();
@@ -158,7 +158,7 @@ void run(Options& options) {
         create_game(game, updater);
     }
 
-    LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view.level_view);
+    LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view, &game_view.level_view);
     LevelWindow level_window(graphics.width, graphics.height, &game_view.level_view, &level_renderer, &resources);
 
     ChatWindow chat_window(200, graphics.height, &resources, &graphics, &dispatcher);

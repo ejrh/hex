@@ -1,6 +1,16 @@
 #ifndef VIEW_DATA_SERIALISATION
 #define VIEW_DATA_SERIALISATION
 
+inline Serialiser& operator<<(Serialiser& serialiser, const FactionViewDef& d) {
+    serialiser << d.name << d.r << d.g << d.b;
+    return serialiser;
+}
+
+inline Deserialiser& operator>>(Deserialiser& deserialiser, FactionViewDef& d) {
+    deserialiser >> d.name >> d.r >> d.g >> d.b;
+    return deserialiser;
+}
+
 inline Serialiser& operator<<(Serialiser& serialiser, const TileViewDef& d) {
     serialiser << d.name;
     return serialiser;

@@ -19,12 +19,14 @@ public:
 
     TileViewDef *get_tile_view_def(const std::string& name) const;
     UnitViewDef *get_unit_view_def(const std::string& name);
+    FactionViewDef *get_faction_view_def(const std::string& name);
 
 public:
     ImageMap images;
     std::map<std::string, ImageSeries> image_series;
     TileViewDefMap tile_view_defs;
     UnitViewDefMap unit_view_defs;
+    FactionViewDefMap faction_view_defs;
 
     friend class ResourceLoader;
 };

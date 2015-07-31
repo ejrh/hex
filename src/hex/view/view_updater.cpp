@@ -58,6 +58,13 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             // Ignore
             break;
 
+        case CreateFaction: {
+            boost::shared_ptr<CreateFactionMessage> upd = boost::dynamic_pointer_cast<CreateFactionMessage>(update);
+            Faction *faction = game->get_faction(upd->faction_id);
+            FactionViewDef *view_def = resources->get_faction_view_def(upd->type_name);
+            game_view->faction_views[upd->faction_id] = new FactionView(faction, view_def);
+        } break;
+
         case CreateStack: {
             boost::shared_ptr<CreateStackMessage> upd = boost::dynamic_pointer_cast<CreateStackMessage>(update);
             UnitStack *stack = game->get_stack(upd->stack_id);

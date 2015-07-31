@@ -5,6 +5,17 @@
 #include "hex/resources/image_ref.h"
 
 
+class FactionViewDef {
+public:
+    FactionViewDef() { }
+    FactionViewDef(std::string name, int r, int g, int b): name(name), r(r), g(g), b(b) { }
+
+    std::string name;
+    int r, g, b;
+};
+
+typedef std::map<std::string, FactionViewDef *> FactionViewDefMap;
+
 typedef std::vector<ImageSeries> TileImageMap;
 
 class TileViewDef {

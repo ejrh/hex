@@ -101,7 +101,7 @@ public:
 class PathfindingRenderer: public LevelRenderer {
 public:
     PathfindingRenderer(Graphics *graphics, Level *level, PathfindingLevelView *level_view):
-            LevelRenderer(graphics, &::resources, level, level_view) { }
+            LevelRenderer(graphics, &::resources, level, NULL, level_view) { }
     void render_tile(int x, int y, Point tile_pos);
 };
 

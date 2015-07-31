@@ -9,11 +9,12 @@
 
 class Faction {
 public:
-    Faction(int id, const std::string& name): id(id), name(name), ready(false) { }
+    Faction(int id, const std::string& type_name, const std::string& name): id(id), type_name(type_name), name(name), ready(false) { }
     ~Faction() { }
 
 public:
     int id;
+    std::string type_name;
     std::string name;
     bool ready;
 };
@@ -125,7 +126,7 @@ public:
 
     TileType *create_tile_type(TileType& tile_type);
     UnitType *create_unit_type(UnitType& unit_type);
-    Faction *create_faction(int id, const std::string& name);
+    Faction *create_faction(int id, const std::string& type_name, const std::string& name);
     UnitStack *create_unit_stack(int id, const Point position, int owner_id);
     Unit *create_unit(int stack_id, const std::string& type_name);
 

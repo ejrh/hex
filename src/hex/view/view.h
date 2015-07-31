@@ -4,6 +4,15 @@
 #include "hex/resources/resources.h"
 #include "hex/resources/view_def.h"
 
+class FactionView {
+public:
+    FactionView(Faction *faction, FactionViewDef *view_def): faction(faction), view_def(view_def) { }
+
+public:
+    Faction *faction;
+    FactionViewDef *view_def;
+};
+
 class TileView {
 public:
     TileView(): view_def(NULL), highlighted(false), path_dir(-1), variation(0), phase(0) { }
@@ -83,7 +92,7 @@ public:
 public:
     Game *game;
     LevelView level_view;
-
+    std::map<int, FactionView *> faction_views;
 };
 
 #endif
