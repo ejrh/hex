@@ -123,7 +123,7 @@ public:
     Deserialiser& operator>>(bool& x) {
         if (expect_seperator)
             skip_separator();
-        unsigned int ch = in.get();
+        int ch = in.get();
         x = (ch == 'y' || ch == 'Y' || ch == '1');
         expect_seperator = true;
         return *this;
@@ -238,9 +238,9 @@ public:
         expect_seperator = false;
     }
 
-    void skip_expected(unsigned ch) {
-        unsigned x = in.get();
-        if (x == std::char_traits<wchar_t>::eof()) {
+    void skip_expected(int ch) {
+        int x = in.get();
+        if (x == std::char_traits<char>::eof()) {
             throw Error("Expected character: %c (%x) but got EOF", ch, ch);
         }
         if (x != ch) {
@@ -254,7 +254,7 @@ public:
             skip_expected(' ');
     }
 
-    unsigned int peek() {
+    int peek() {
         return in.peek();
     }
 

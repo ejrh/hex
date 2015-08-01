@@ -66,11 +66,17 @@ void Connection::handle_read(const boost::system::error_code& error, size_t byte
     std::istream stream(&buffer);
     Deserialiser reader(stream);
     Message *msg_ptr;
-    reader >> msg_ptr;
-    if (msg_ptr == NULL) {
-        trace("Message not read");
+    try {
+        reader >> msg_ptr;
+        if (msg_ptr == NULL) {
+            trace("Message not read");
+            return;
+        }
+    } catch (Error &ex) {
+        std::cerr << "Failed reading message from network with: " << ex.what() << std::endl;
         return;
     }
+
     boost::shared_ptr<Message> msg(msg_ptr);
     msg->origin = id;
 
