@@ -137,17 +137,18 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
     mouse_to_tile(0, 0, &min_pos);
     mouse_to_tile(width, height, &max_pos);
 
+    min_pos.x -= 2;
     if (min_pos.x % 2 == 1)
-        min_pos.x--;
+        min_pos.x++;
     if (min_pos.x < 0)
         min_pos.x = 0;
     min_pos.y--;
     if (min_pos.y < 0)
         min_pos.y = 0;
-    max_pos.x++;
+    max_pos.x += 2;
     if (max_pos.x > level_view->tile_views.width)
         max_pos.x = level_view->tile_views.width;
-    max_pos.y++;
+    max_pos.y += 2;
     if (max_pos.y > level_view->tile_views.height)
         max_pos.y = level_view->tile_views.height;
 

@@ -166,9 +166,10 @@ void run(Options& options) {
     int down_pos_x = 0, down_pos_y = 0;
     bool dragging = false;
 
-    SDL_Event evt;
     bool running = true;
+    unsigned int last_tick = 0;
     while (running) {
+        SDL_Event evt;
         while (SDL_PollEvent(&evt)) {
             if (evt.type == SDL_QUIT
                 || (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_ESCAPE))
@@ -225,6 +226,14 @@ void run(Options& options) {
         level_window.draw();
         chat_window.draw();
         graphics.update();
+
+        unsigned int tick = SDL_GetTicks();
+        unsigned int tick_diff = tick - last_tick;
+        unsigned int sleep_time = 40 - tick_diff;
+        if (sleep_time > 25)
+            sleep_time = 25;
+        SDL_Delay(sleep_time);
+        last_tick = tick;
     }
 
     server.stop();
