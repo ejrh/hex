@@ -8,7 +8,7 @@ class Message;
 /* These be defined by implementation. */
 extern int get_message_type(const std::string& name);
 extern const std::string get_message_type_name(int type);
-extern Message *create_message(int type);
+extern Message *new_message(int type);
 
 class Message {
 public:
@@ -35,7 +35,6 @@ class WrapperMessage: public Message {
 public:
     WrapperMessage() { }
     WrapperMessage(int type, const T& data): Message(type), data(data) { }
-    WrapperMessage(const T& data): Message(), data(data) { }
     virtual ~WrapperMessage() { }
 
     T data;
@@ -56,7 +55,6 @@ class WrapperMessage2: public Message {
 public:
     WrapperMessage2() { }
     WrapperMessage2(int type, const T1& data1, const T2& data2): Message(type), data1(data1), data2(data2) { }
-    WrapperMessage2(const T1& data1, const T2& data2): Message(), data1(data1), data2(data2) { }
     virtual ~WrapperMessage2() { }
 
     T1 data1;
@@ -71,6 +69,32 @@ protected:
     virtual void write(Serialiser& serialiser) const {
         serialiser << data1;
         serialiser << data2;
+    };
+};
+
+
+template<typename T1, typename T2, typename T3>
+class WrapperMessage3: public Message {
+public:
+    WrapperMessage3() { }
+    WrapperMessage3(int type, const T1& data1, const T2& data2, const T3& data3): Message(type), data1(data1), data2(data2), data3(data3) { }
+    virtual ~WrapperMessage3() { }
+
+    T1 data1;
+    T2 data2;
+    T3 data3;
+
+protected:
+    virtual void read(Deserialiser& deserialiser) {
+        deserialiser >> data1;
+        deserialiser >> data2;
+        deserialiser >> data3;
+    }
+
+    virtual void write(Serialiser& serialiser) const {
+        serialiser << data1;
+        serialiser << data2;
+        serialiser << data3;
     };
 };
 

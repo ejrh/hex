@@ -12,3 +12,4 @@ TRAIT_TYPE(Flyable)
 TRAIT_TYPE(Walking)
 TRAIT_TYPE(Swimming)
 TRAIT_TYPE(Flying)
+

@@ -116,7 +116,7 @@ void LevelView::right_click_tile(const Point& tile_pos) {
 
         if (stack_view->path == new_path) {
             trace("Request move to (%d,%d)", tile_pos.x, tile_pos.y);
-            dispatcher->receive(boost::make_shared<UnitMoveMessage>(selected_stack->id, new_path));
+            dispatcher->receive(create_message(UnitMove, selected_stack->id, new_path));
         } else {
             stack_view->path = new_path;
             set_drawn_path(stack_view->path);

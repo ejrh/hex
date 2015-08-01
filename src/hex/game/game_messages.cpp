@@ -34,7 +34,7 @@ const std::string get_message_type_name(int type) {
 }
 
 #define MSG_TYPE(s, c) if (type == s) { Message *m = new c; m->type = s; return m; } else
-Message *create_message(int type) {
+Message *new_message(int type) {
 #include "message_types.h"
     return NULL;
 }

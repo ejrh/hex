@@ -28,8 +28,8 @@ const std::string get_trait_type_name(const TraitType trait_type) {
 #define TRAIT_TYPE(n) case n: return std::string(#n); break;
     switch (trait_type) {
         #include "hex/game/trait_types.h"
+        default:
+            return std::string("unknown");
     }
 #undef TRAIT_TYPE
-
-    return "unknown";
 }

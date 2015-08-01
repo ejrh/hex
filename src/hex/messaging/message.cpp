@@ -32,7 +32,7 @@ Deserialiser& operator>>(Deserialiser& deserialiser, Message *& msg) {
     std::string type_name;
     deserialiser.type_begin_tuple(type_name);
     int type = get_message_type(type_name);
-    msg = create_message(type);
+    msg = new_message(type);
     if (msg == NULL) {
         deserialiser.error("Could not create class of type: %s", type_name.c_str());
         return deserialiser;

@@ -65,15 +65,15 @@ int main(int argc, char *argv[]) {
         path.push_back(Point(4,7));
         path.push_back(Point(4,8));
 
-        updater.receive(boost::make_shared<WrapperMessage2<int, int> >(10, 10));
+        updater.receive(create_message(SetLevel, 10, 10));
 
-        updater.receive(boost::make_shared<CreateFactionMessage>(1, "orcs", "Alice"));
+        updater.receive(create_message(CreateFaction, 1, "orcs", "Alice"));
 
-        updater.receive(boost::make_shared<UnitMoveMessage>(0, path));
+        updater.receive(create_message(UnitMove, 0, path));
 
-        updater.receive(boost::make_shared<FactionReadyMessage>(1, true));
+        updater.receive(create_message(FactionReady, 1, true));
 
-        updater.receive(boost::make_shared<Message>(StreamClose));
+        updater.receive(create_message(StreamClose));
     } else if (!strcmp(argv[1], "replay")) {
         DebugUpdateListener listener;
         updater.subscribe(&listener);

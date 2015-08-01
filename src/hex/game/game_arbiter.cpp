@@ -25,12 +25,12 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
 
             // TODO check that move is allowed, refuse if not
 
-            emit(boost::make_shared<UnitMoveMessage>(cmd->unit, cmd->path));
+            emit(create_message(UnitMove, cmd->data1, cmd->data2));
         } break;
 
         case Chat: {
             boost::shared_ptr<WrapperMessage<std::string> > chat_msg = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(command);
-            emit(boost::make_shared<WrapperMessage<std::string> >(Chat, chat_msg->data));
+            emit(create_message(Chat, chat_msg->data));
         } break;
 
         default:

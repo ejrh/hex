@@ -3,38 +3,43 @@
 #define MSG_TYPE(s, c)
 #endif
 
+
 // Useful for wrapping a template argument for passing to a C preprocessor macro
 // (CPP macros don't recognise < > as brackets, but do recognise , as a delimiter)
 #define P(x,y) x,y
 
-MSG_TYPE(IncludeResource, WrapperMessage<std::string>)
-MSG_TYPE(IncludeIfResourceExists, WrapperMessage<std::string>)
-MSG_TYPE(ImageFile, WrapperMessage<std::string>)
-MSG_TYPE(ImageSet, P(WrapperMessage2<std::string, ImageSeries>))
+#define WM(t) WrapperMessage<t>
+#define WM2(t1,t2) WrapperMessage2<t1,t2>
+#define WM3(t1,t2,t3) WrapperMessage3<t1,t2,t3>
 
-MSG_TYPE(CreateTileView, WrapperMessage<TileViewDef>)
-MSG_TYPE(TileAnimation, WrapperMessage<ImageSeries>)
-MSG_TYPE(CreateUnitView, WrapperMessage<UnitViewDef>)
-MSG_TYPE(UnitAnimation, P(WrapperMessage2<int, ImageSeries>))
-MSG_TYPE(CreateFactionView, WrapperMessage<FactionViewDef>)
+MSG_TYPE(IncludeResource, WM(std::string))
+MSG_TYPE(IncludeIfResourceExists, WM(std::string))
+MSG_TYPE(ImageFile, WM(std::string))
+MSG_TYPE(ImageSet, WM2(std::string, ImageSeries))
 
-MSG_TYPE(CreateUnitType, WrapperMessage<UnitType>)
-MSG_TYPE(CreateTileType, WrapperMessage<TileType>)
+MSG_TYPE(CreateTileView, WM(TileViewDef))
+MSG_TYPE(TileAnimation, WM(ImageSeries))
+MSG_TYPE(CreateUnitView, WM(UnitViewDef))
+MSG_TYPE(UnitAnimation, WM2(int, ImageSeries))
+MSG_TYPE(CreateFactionView, WM(FactionViewDef))
 
-MSG_TYPE(SetLevel, P(WrapperMessage2<int, int>))
-MSG_TYPE(SetLevelData, P(WrapperMessage2<Point, std::vector<std::string> >))
-MSG_TYPE(CreateFaction, CreateFactionMessage)
-MSG_TYPE(CreateStack, CreateStackMessage)
-MSG_TYPE(CreateUnit, CreateUnitMessage)
-MSG_TYPE(FactionReady, FactionReadyMessage)
-MSG_TYPE(Chat, WrapperMessage<std::string>)
-MSG_TYPE(TurnEnd, TurnEndMessage)
-MSG_TYPE(TurnBegin, TurnBeginMessage)
-MSG_TYPE(UnitMove, UnitMoveMessage)
+MSG_TYPE(CreateUnitType, WM(UnitType))
+MSG_TYPE(CreateTileType, WM(TileType))
 
-MSG_TYPE(StreamOpen, WrapperMessage<std::string>)
+MSG_TYPE(SetLevel, WM2(int, int))
+MSG_TYPE(SetLevelData, WM2(Point, std::vector<std::string>))
+MSG_TYPE(CreateFaction, WM3(int, std::string, std::string))
+MSG_TYPE(CreateStack, WM3(int, Point, int))
+MSG_TYPE(CreateUnit, WM2(int, std::string))
+MSG_TYPE(FactionReady, WM2(int, bool))
+MSG_TYPE(Chat, WM(std::string))
+MSG_TYPE(TurnEnd, WM(int))
+MSG_TYPE(TurnBegin, WM(int))
+MSG_TYPE(UnitMove, WM2(int, Path))
+
+MSG_TYPE(StreamOpen, WM(std::string))
 MSG_TYPE(StreamClose, Message)
-MSG_TYPE(StreamReplay, P(WrapperMessage2<int, int>))
-MSG_TYPE(StreamState, P(WrapperMessage2<int, int>))
+MSG_TYPE(StreamReplay, WM2(int, int))
+MSG_TYPE(StreamState, WM2(int, int))
 
 #undef P

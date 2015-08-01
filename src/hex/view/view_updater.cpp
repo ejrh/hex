@@ -60,14 +60,14 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
 
         case CreateFaction: {
             boost::shared_ptr<CreateFactionMessage> upd = boost::dynamic_pointer_cast<CreateFactionMessage>(update);
-            Faction *faction = game->get_faction(upd->faction_id);
-            FactionViewDef *view_def = resources->get_faction_view_def(upd->type_name);
-            game_view->faction_views[upd->faction_id] = new FactionView(faction, view_def);
+            Faction *faction = game->get_faction(upd->data1);
+            FactionViewDef *view_def = resources->get_faction_view_def(upd->data2);
+            game_view->faction_views[upd->data1] = new FactionView(faction, view_def);
         } break;
 
         case CreateStack: {
             boost::shared_ptr<CreateStackMessage> upd = boost::dynamic_pointer_cast<CreateStackMessage>(update);
-            UnitStack *stack = game->get_stack(upd->stack_id);
+            UnitStack *stack = game->get_stack(upd->data1);
             if (stack == NULL) {
                 return;
                 //return false;
@@ -85,7 +85,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
 
         case CreateUnit: {
             boost::shared_ptr<CreateUnitMessage> upd = boost::dynamic_pointer_cast<CreateUnitMessage>(update);
-            UnitStack *stack = game->get_stack(upd->stack_id);
+            UnitStack *stack = game->get_stack(upd->data1);
             if (stack == NULL)
                 return;
                 //return false;
@@ -93,7 +93,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             if (stack->units.empty())
                 return;
 
-            UnitStackView *stack_view = &game_view->level_view.unit_stack_views[upd->stack_id];
+            UnitStackView *stack_view = &game_view->level_view.unit_stack_views[upd->data1];
 
             UnitType *unit_type = stack->units[0]->type;
             UnitViewDef *view_def = resources->get_unit_view_def(unit_type->name);
@@ -109,15 +109,15 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         case UnitMove: {
             boost::shared_ptr<UnitMoveMessage> upd = boost::dynamic_pointer_cast<UnitMoveMessage>(update);
 
-            UnitStack *stack = game->stacks[upd->unit];
+            UnitStack *stack = game->stacks[upd->data1];
             UnitStackView *stack_view = &game_view->level_view.unit_stack_views[stack->id];
             stack_view->path = Path();
             if (game_view->level_view.selected_stack == stack) {
                 game_view->level_view.set_drawn_path(stack_view->path);
             }
-            if (stack_view->view_def != NULL && upd->path.size() > 1) {
+            if (stack_view->view_def != NULL && upd->data2.size() > 1) {
                 game_view->level_view.moving_unit = stack;
-                game_view->level_view.moving_unit_path = upd->path;
+                game_view->level_view.moving_unit_path = upd->data2;
                 game_view->level_view.moving_unit_progress = 0;
             }
 
