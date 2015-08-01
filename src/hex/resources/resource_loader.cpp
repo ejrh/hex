@@ -53,10 +53,9 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
         } break;
 
         case TileAnimation: {
-            boost::shared_ptr<WrapperMessage<ImageSeries> > upd = boost::dynamic_pointer_cast<WrapperMessage<ImageSeries> >(msg);
-            int num = last_tile_view_def->images.size();
-            last_tile_view_def->images.resize(num + 1);
-            last_tile_view_def->images[num] = upd->data;
+            boost::shared_ptr<TileAnimationMessage> upd = boost::dynamic_pointer_cast<TileAnimationMessage>(msg);
+            last_tile_view_def->animation.bpm = upd->data1;
+            last_tile_view_def->animation.images = upd->data2;
         } break;
 
         case CreateUnitView: {
@@ -66,11 +65,18 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
             last_unit_view_def = def;
         } break;
 
-        case UnitAnimation: {
-            boost::shared_ptr<WrapperMessage2<int, ImageSeries> > upd = boost::dynamic_pointer_cast<WrapperMessage2<int, ImageSeries> >(msg);
+        case UnitHoldAnimation: {
+            boost::shared_ptr<UnitHoldAnimationMessage> upd = boost::dynamic_pointer_cast<UnitHoldAnimationMessage>(msg);
             int facing = upd->data1;
-            last_unit_view_def->images[facing].clear();
-            last_unit_view_def->images[facing] = upd->data2;
+            last_unit_view_def->hold_animations[facing].bpm = upd->data2;
+            last_unit_view_def->hold_animations[facing].images = upd->data3;
+        } break;
+
+        case UnitMoveAnimation: {
+            boost::shared_ptr<UnitMoveAnimationMessage> upd = boost::dynamic_pointer_cast<UnitMoveAnimationMessage>(msg);
+            int facing = upd->data1;
+            last_unit_view_def->move_animations[facing].bpm = upd->data2;
+            last_unit_view_def->move_animations[facing].images = upd->data3;
         } break;
 
         default: {

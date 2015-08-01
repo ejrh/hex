@@ -45,8 +45,6 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
                 TileType *tile_type = game->tile_types[tile_type_name];
                 TileView& tile_view = game_view->level_view.tile_views[tile_pos];
                 TileViewDef *view_def = game_view->level_view.resources->get_tile_view_def(tile_type->name);
-                if (view_def == NULL)
-                    continue;
                 tile_view.view_def = view_def;
                 tile_view.variation = rand();
                 tile_view.phase = rand();
@@ -119,6 +117,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
                 game_view->level_view.moving_unit = stack;
                 game_view->level_view.moving_unit_path = upd->data2;
                 game_view->level_view.moving_unit_progress = 0;
+                stack_view->moving = true;
             }
 
             game_view->level_view.visibility.rebuild();

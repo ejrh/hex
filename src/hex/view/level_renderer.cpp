@@ -28,8 +28,8 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
     if (def == NULL)
         return;
 
-    std::vector<ImageRef>& image_series = def->images[tile_view.variation % def->images.size()];
-    ImageRef& image_ref = image_series[tile_view.phase % image_series.size()];
+    std::vector<ImageRef>& image_series = def->animation.images;
+    ImageRef& image_ref = image_series[(tile_view.phase / 1000) % image_series.size()];
     Image *ground = image_ref.image;
 
     if (ground != NULL) {
@@ -72,20 +72,20 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
     }
 
     int facing = stack_view.facing;
-    if (facing < 0 || facing >= (int) view_def->images.size())
+    if (facing < 0 || facing >= 6)
         facing = 0;
 
-    std::vector<ImageRef>& image_series = view_def->images[facing];
-    if (image_series.size() == 0)
-        image_series.push_back(ImageRef("missing"));
-    Image *unit = image_series[(stack_view.phase / 1000) % image_series.size()].image;
+    AnimationDef& animation = stack_view.moving ? view_def->move_animations[facing] : view_def->hold_animations[facing];
+    if (animation.images.size() == 0)
+        animation.images.push_back(ImageRef("missing"));
+    Image *unit = animation.images[(stack_view.phase / 1000) % animation.images.size()].image;
     if (unit == NULL) {
         const std::string& label = view_def->name.substr(0, 3);
         TextFormat tf(graphics, SmallFont14, true, 255,255,255, 128,128,128);
         unit = tf.write_to_image(label);
         unit->x_offset = 24 - unit->width / 2 + 6;
         unit->y_offset = 16 - unit->height / 2 + 32;
-        image_series[(stack_view.phase / 1000) % image_series.size()].image = unit;
+        animation.images[(stack_view.phase / 1000) % animation.images.size()].image = unit;
     }
 
     int alpha;

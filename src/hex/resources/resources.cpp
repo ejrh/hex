@@ -11,16 +11,17 @@ void Resources::resolve_references() {
 
     for (UnitViewDefMap::iterator def_iter = unit_view_defs.begin(); def_iter != unit_view_defs.end(); def_iter++) {
         UnitViewDef *def = def_iter->second;
-        for (UnitImageMap::iterator series_iter = def->images.begin(); series_iter != def->images.end(); series_iter++) {
-            resolve_image_series(*series_iter);
+        for (std::vector<AnimationDef>::iterator anim_iter = def->hold_animations.begin(); anim_iter != def->hold_animations.end(); anim_iter++) {
+            resolve_image_series(anim_iter->images);
+        }
+        for (std::vector<AnimationDef>::iterator anim_iter = def->move_animations.begin(); anim_iter != def->move_animations.end(); anim_iter++) {
+            resolve_image_series(anim_iter->images);
         }
     }
 
     for (TileViewDefMap::iterator def_iter = tile_view_defs.begin(); def_iter != tile_view_defs.end(); def_iter++) {
         TileViewDef *def = def_iter->second;
-        for (TileImageMap::iterator series_iter = def->images.begin(); series_iter != def->images.end(); series_iter++) {
-            resolve_image_series(*series_iter);
-        }
+        resolve_image_series(def->animation.images);
     }
 }
 

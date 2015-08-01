@@ -26,6 +26,7 @@ LevelView::~LevelView() {
 
 void LevelView::resize(int width, int height) {
     tile_views.resize(width, height);
+
     visibility.resize(width, height);
     discovered.resize(width, height);
 }
@@ -43,7 +44,10 @@ void LevelView::update() {
     last_update = ticks;
     for (int i = 0; i < level->height; i++)
         for (int j = 0; j < level->width; j++) {
-            tile_views[i][j].phase++;  //TODO
+            TileViewDef *view_def = tile_views[i][j].view_def;
+            if (view_def ==  NULL)
+                continue;
+            tile_views[i][j].phase += frame_incr(view_def->animation.bpm, update_ms);
         }
 
     for (std::map<int, UnitStackView>::iterator iter = unit_stack_views.begin(); iter != unit_stack_views.end(); iter++) {
@@ -52,7 +56,7 @@ void LevelView::update() {
         UnitViewDef *view_def = iter->second.view_def;
         if (view_def == NULL)
             continue;
-        iter->second.phase += frame_incr(view_def->hold_bpm, update_ms);
+        iter->second.phase += frame_incr(view_def->hold_animations[iter->second.facing].bpm, update_ms);
     }
 
     if (moving_unit != NULL) {
@@ -62,11 +66,12 @@ void LevelView::update() {
         unsigned int step = moving_unit_progress / 1000;
         if (step >= moving_unit_path.size() - 1) {
             moving_unit = NULL;
+            stack_view->moving = false;
         } else {
             Point &prev_pos = moving_unit_path[step];
             Point &next_pos = moving_unit_path[step + 1];
             stack_view->facing = get_direction(next_pos, prev_pos);
-            stack_view->phase += frame_incr(view_def->move_bpm, update_ms);
+            stack_view->phase += frame_incr(view_def->move_animations[stack_view->facing].bpm, update_ms);
         }
     }
 }

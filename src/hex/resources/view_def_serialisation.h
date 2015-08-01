@@ -22,12 +22,12 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, TileViewDef& d) {
 }
 
 inline Serialiser& operator<<(Serialiser& serialiser, const UnitViewDef& d) {
-    serialiser << d.name << d.hold_bpm << d.move_bpm << d.move_speed;
+    serialiser << d.name << d.move_speed;
     return serialiser;
 }
 
 inline Deserialiser& operator>>(Deserialiser& deserialiser, UnitViewDef& d) {
-    deserialiser >> d.name >> d.hold_bpm >> d.move_bpm >> d.move_speed;
+    deserialiser >> d.name >> d.move_speed;
     return deserialiser;
 }
 

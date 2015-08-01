@@ -18,9 +18,10 @@ MSG_TYPE(ImageFile, WM(std::string))
 MSG_TYPE(ImageSet, WM2(std::string, ImageSeries))
 
 MSG_TYPE(CreateTileView, WM(TileViewDef))
-MSG_TYPE(TileAnimation, WM(ImageSeries))
+MSG_TYPE(TileAnimation, WM2(int, ImageSeries))
 MSG_TYPE(CreateUnitView, WM(UnitViewDef))
-MSG_TYPE(UnitAnimation, WM2(int, ImageSeries))
+MSG_TYPE(UnitHoldAnimation, WM3(int, int, ImageSeries))
+MSG_TYPE(UnitMoveAnimation, WM3(int, int, ImageSeries))
 MSG_TYPE(CreateFactionView, WM(FactionViewDef))
 
 MSG_TYPE(CreateUnitType, WM(UnitType))

@@ -31,7 +31,7 @@ public:
     UnitStackView(): stack(NULL) { }
     UnitStackView(UnitStack *stack, UnitViewDef *view_def):
         stack(stack), view_def(view_def),
-        facing(rand() % 6), variation(rand()), phase(rand()), selected(false), move_steps(0) { }
+        facing(rand() % 6), variation(rand()), phase(rand()), selected(false), moving(false), move_steps(0) { }
     ~UnitStackView() { }
 
 public:
@@ -41,6 +41,7 @@ public:
     unsigned int variation;
     unsigned int phase;
     bool selected;
+    bool moving;
     Path path;
     int move_steps;
 };

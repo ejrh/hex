@@ -1,9 +1,14 @@
-# CreateTileView(name, image_name)
+# CreateTileView(name)
+# TileAnimation(bpm, images)
+
 CreateTileView("outside")
-TileAnimation(["outside.png"])
+TileAnimation(0, ["outside.png"])
+
 CreateTileView("water")
-TileAnimation(["water1.png"])
+TileAnimation(0, ["water1.png"])
+
 CreateTileView("grass")
-TileAnimation(["grass1.png"])
+TileAnimation(0, ["grass1.png"])
+
 CreateTileView("desert")
-TileAnimation(["desert1.png"])
+TileAnimation(0, ["desert1.png"])
