@@ -38,24 +38,13 @@ void Graphics::stop() {
     SDL_Quit();
 }
 
-void Graphics::blit(Image *im, int x, int y, int alpha) {
+void Graphics::blit(Image *im, int x, int y, SDL_BlendMode mode, int alpha_mod, int mod_r, int mod_g, int mod_b) {
     x += im->x_offset;
     y += im->y_offset;
 
-    SDL_SetTextureAlphaMod(im->texture, alpha);
-    SDL_SetTextureBlendMode(im->texture, SDL_BLENDMODE_BLEND);
-
-    SDL_Rect destrect = { x, y, im->width, im->height };
-    if (SDL_RenderCopy(renderer, im->texture, NULL, &destrect) != 0)
-        warn("SDL error: %s", SDL_GetError());
-}
-
-void Graphics::blit(Image *im, int x, int y, int mod_r, int mod_g, int mod_b) {
-    x += im->x_offset;
-    y += im->y_offset;
-
+    SDL_SetTextureBlendMode(im->texture, mode);
+    SDL_SetTextureAlphaMod(im->texture, alpha_mod);
     SDL_SetTextureColorMod(im->texture, mod_r, mod_g, mod_b);
-    SDL_SetTextureBlendMode(im->texture, SDL_BLENDMODE_BLEND);
 
     SDL_Rect destrect = { x, y, im->width, im->height };
     if (SDL_RenderCopy(renderer, im->texture, NULL, &destrect) != 0)

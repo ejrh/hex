@@ -34,7 +34,7 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
 
     if (ground != NULL) {
         int alpha = level_view->visibility.check(tile_pos) ? 255 : 128;
-        graphics->blit(ground, x, y, alpha, alpha, alpha);
+        graphics->blit(ground, x, y, SDL_BLENDMODE_BLEND, alpha);
     }
 
     if (tile_view.highlighted) {
@@ -88,18 +88,19 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
         animation.images[(stack_view.phase / 1000) % animation.images.size()].image = unit;
     }
 
-    int alpha;
-    if (stack_view.selected) {
-        int alpha_phase = (stack_view.phase / 2000) % 32;
-        if (alpha_phase < 16)
-            alpha = alpha_phase*16;
-        else
-            alpha = (31 - alpha_phase)*16;
-    } else {
-        alpha = 255;
-    }
+    graphics->blit(unit, x - 8, y - 32, SDL_BLENDMODE_BLEND);
 
-    graphics->blit(unit, x - 8, y - 32, alpha);
+    if (stack_view.selected && !stack_view.moving) {
+        int add_phase = (level_view->phase / 1000) % 32;
+        if (add_phase < 16)
+            add_phase = add_phase*16;
+        else {
+            add_phase = (32 - add_phase)*16;
+            if (add_phase > 255)
+                add_phase = 255;
+        }
+        graphics->blit(unit, x - 8, y - 32, SDL_BLENDMODE_ADD, add_phase);
+    }
 
     Faction *owner = stack_view.stack->owner;
     FactionView *faction_view = view->faction_views[owner->id];
@@ -115,6 +116,6 @@ void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {
         Image *path_arrow = arrow_images[tile_view.path_dir].image;
 
         if (path_arrow != NULL)
-            graphics->blit(path_arrow, x, y - 8);
+            graphics->blit(path_arrow, x, y - 8, SDL_BLENDMODE_BLEND);
     }
 }

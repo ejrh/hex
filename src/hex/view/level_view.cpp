@@ -41,6 +41,9 @@ void LevelView::update() {
 
     unsigned int update_ms = ticks - last_update;
 
+    int level_bpm = 60 * 40;
+    phase += frame_incr(level_bpm, update_ms);
+
     last_update = ticks;
     for (int i = 0; i < level->height; i++)
         for (int j = 0; j < level->width; j++) {

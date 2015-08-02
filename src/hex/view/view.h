@@ -69,6 +69,7 @@ protected:
     TileView *get_tile_view(const Point tile_pos);
 
 protected:
+    unsigned int phase;
     Resources *resources;
     MessageReceiver *dispatcher;
     unsigned int last_update;
