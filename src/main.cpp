@@ -247,6 +247,7 @@ void run(Options& options) {
     }
 
     server.stop();
+    client.disconnect();
 
     graphics.stop();
 }

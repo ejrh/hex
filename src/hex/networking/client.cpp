@@ -38,6 +38,9 @@ void Client::connect(std::string server) {
 }
 
 void Client::disconnect() {
+    shutdown_requested = true;
+    io_service.stop();
+    client_thread.join();
 }
 
 void Client::receive(boost::shared_ptr<Message> msg) {
