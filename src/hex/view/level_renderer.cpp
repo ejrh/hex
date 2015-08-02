@@ -83,12 +83,16 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
         const std::string& label = view_def->name.substr(0, 3);
         TextFormat tf(graphics, SmallFont14, true, 255,255,255, 128,128,128);
         unit = tf.write_to_image(label);
-        unit->x_offset = 24 - unit->width / 2 + 6;
-        unit->y_offset = 16 - unit->height / 2 + 32;
-        animation.images[(stack_view.phase / 1000) % animation.images.size()].image = unit;
+        if (unit != NULL) {
+            unit->x_offset = 24 - unit->width / 2 + 6;
+            unit->y_offset = 16 - unit->height / 2 + 32;
+            animation.images[(stack_view.phase / 1000) % animation.images.size()].image = unit;
+        }
     }
 
-    graphics->blit(unit, x - 8, y - 32, SDL_BLENDMODE_BLEND);
+    if (unit != NULL) {
+        graphics->blit(unit, x - 8, y - 32, SDL_BLENDMODE_BLEND);
+    }
 
     if (stack_view.selected && !stack_view.moving) {
         int add_phase = (level_view->phase / 1000) % 32;

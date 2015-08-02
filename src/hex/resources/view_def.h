@@ -39,8 +39,8 @@ typedef std::map<std::string, TileViewDef *> TileViewDefMap;
 
 class UnitViewDef {
 public:
-    UnitViewDef(): move_speed(60), hold_animations(6), move_animations(6) { }
-    UnitViewDef(std::string name): move_speed(60), hold_animations(6), move_animations(6) { }
+    UnitViewDef(): hold_animations(6), move_animations(6), move_speed(60) { }
+    UnitViewDef(std::string name): name(name), hold_animations(6), move_animations(6), move_speed(60) { }
     ~UnitViewDef() { }
 
     std::string name;
