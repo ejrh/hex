@@ -2,6 +2,7 @@
 #define CHAT_H
 
 #include "hex/ui/ui.h"
+#include "hex/messaging/receiver.h"
 
 class Resources;
 class Graphics;
@@ -23,6 +24,15 @@ private:
     bool open;
     std::string chat_line;
     std::vector<std::string> chat_history;
+};
+
+class ChatUpdater: public MessageReceiver {
+public:
+    ChatUpdater(ChatWindow *chat_window);
+    void receive(boost::shared_ptr<Message> update);
+
+private:
+    ChatWindow *chat_window;
 };
 
 #endif

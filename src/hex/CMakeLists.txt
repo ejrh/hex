@@ -8,6 +8,7 @@ set(srcs
         basics/point.h
         basics/vector2.h
         chat/chat.h
+        chat/chat_updater.cpp
         chat/chat_window.cpp
         game/game.cpp
         game/game.h

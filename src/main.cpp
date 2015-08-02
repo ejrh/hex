@@ -171,6 +171,8 @@ void run(Options& options) {
     LevelWindow level_window(graphics.width, graphics.height, &game_view.level_view, &level_renderer, &resources);
 
     ChatWindow chat_window(200, graphics.height, &resources, &graphics, &dispatcher);
+    ChatUpdater chat_updater(&chat_window);
+    updater.subscribe(&chat_updater);
 
     int down_pos_x = 0, down_pos_y = 0;
     bool dragging = false;
@@ -221,11 +223,6 @@ void run(Options& options) {
                     arbiter.receive(msg);
                 } else if (options.client_mode) {
                     updater.receive(msg);
-                }
-
-                if (msg->type == Chat) {
-                    boost::shared_ptr<WrapperMessage<std::string> > chat_msg = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(msg);
-                    chat_window.add_to_history(chat_msg->data);
                 }
             }
 
