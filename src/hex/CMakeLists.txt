@@ -18,6 +18,8 @@ set(srcs
         game/game_serialisation.h
         game/game_updater.cpp
         game/game_updater.h
+        game/game_writer.cpp
+        game/game_writer.h
         game/level.cpp
         game/message_types.h
         game/movement.cpp
@@ -44,6 +46,7 @@ set(srcs
         messaging/serialiser.h
         messaging/updater.cpp
         messaging/updater.h
+        messaging/writer.h
         networking/client.cpp
         networking/connection.cpp
         networking/networking.h

@@ -13,11 +13,13 @@
 #include "hex/messaging/receiver.h"
 #include "hex/messaging/updater.h"
 #include "hex/messaging/event_pusher.h"
+#include "hex/messaging/writer.h"
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/game_serialisation.h"
 #include "hex/game/game_updater.h"
 #include "hex/game/game_arbiter.h"
+#include "hex/game/game_writer.h"
 #include "hex/game/movement.h"
 #include "hex/networking/networking.h"
 #include "hex/view/view.h"
@@ -119,6 +121,13 @@ void load_resources(Resources *resources, Graphics *graphics) {
     resources->resolve_references();
 }
 
+void save_game(const std::string& filename, Game *game) {
+    std::ofstream f(filename.c_str());
+    MessageWriter message_writer(f);
+    GameWriter game_writer(&message_writer);
+    game_writer.write(game);
+}
+
 void run(Options& options) {
     Graphics graphics;
 
@@ -218,6 +227,10 @@ void run(Options& options) {
                     boost::shared_ptr<WrapperMessage<std::string> > chat_msg = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(msg);
                     chat_window.add_to_history(chat_msg->data);
                 }
+            }
+
+            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_F2) {
+                save_game("save.txt", &game);
             }
         }
 
