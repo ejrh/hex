@@ -118,13 +118,15 @@ void LevelView::left_click_tile(const Point& tile_pos) {
         selected_stack = stack;
 
         set_drawn_path(stack_view->path);
-        trace("Selected stack %d", stack->id);
     }
 }
 
 void LevelView::right_click_tile(const Point& tile_pos) {
 
     if (selected_stack == NULL)  // or dead or whatever
+        return;
+    UnitStackView *current_stack_view = &unit_stack_views[selected_stack->id];
+    if (current_stack_view->moving)
         return;
 
     if (level->contains(tile_pos)) {
@@ -147,12 +149,10 @@ void LevelView::right_click_tile(const Point& tile_pos) {
         UnitStackView *stack_view = get_unit_stack_view(*selected_stack);
 
         if (stack_view->path == new_path) {
-            trace("Request move to (%d,%d)", tile_pos.x, tile_pos.y);
             dispatcher->receive(create_message(UnitMove, selected_stack->id, new_path));
         } else {
             stack_view->path = new_path;
             set_drawn_path(stack_view->path);
-            trace("Path drawn to (%d,%d)", tile_pos.x, tile_pos.y);
         }
     }
 }
