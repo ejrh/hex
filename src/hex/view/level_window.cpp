@@ -19,6 +19,7 @@ LevelWindow::LevelWindow(int width, int height, LevelView *level_view, LevelRend
         UiWindow(0, 0, width, height),
         level_view(level_view), level_renderer(level_renderer), resources(resources),
         shift_x(SLOPE_WIDTH), shift_y(SLOPE_HEIGHT), x_spacing(X_SPACING), y_spacing(Y_SPACING) {
+    shift(0, 0);
 }
 
 LevelWindow::~LevelWindow() {
@@ -108,6 +109,11 @@ void LevelWindow::shift(int xrel, int yrel) {
         shift_y = min_shift_y;
     if (shift_y > max_shift_y)
         shift_y = max_shift_y;
+
+    if (min_shift_x > max_shift_x)
+        shift_x = (min_shift_x + max_shift_x) / 2;
+    if (min_shift_y > max_shift_y)
+        shift_y = (min_shift_y + max_shift_y) / 2;
 }
 
 void LevelWindow::left_click(int x, int y) {
