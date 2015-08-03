@@ -113,6 +113,24 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
     graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, x+32, y-12, 8, 12);
 }
 
+void LevelRenderer::draw_unit(int x, int y, Unit &unit, UnitViewDef *view_def) {
+    int facing = 2;
+    std::vector<ImageRef>& image_series = view_def->hold_animations[facing].images;
+    if (image_series.size() == 0)
+        image_series.push_back(ImageRef("missing"));
+    Image *image = image_series[0].image;
+    if (image == NULL) {
+        const std::string& label = view_def->name.substr(0, 3);
+        TextFormat tf(graphics, SmallFont14, true, 255,255,255, 128,128,128);
+        image = tf.write_to_image(label);
+        image->x_offset = 24 - image->width / 2 + 6;
+        image->y_offset = 16 - image->height / 2 + 32;
+        image_series[0].image = image;
+    }
+
+    graphics->blit(image, x - 8, y - 32, SDL_BLENDMODE_BLEND);
+}
+
 void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {
     TileView &tile_view = level_view->tile_views[tile_pos];
 

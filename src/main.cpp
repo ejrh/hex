@@ -26,6 +26,7 @@
 #include "hex/view/view_updater.h"
 #include "hex/view/level_renderer.h"
 #include "hex/view/level_window.h"
+#include "hex/view/stack_window.h"
 #include "hex/chat/chat.h"
 
 struct Options {
@@ -109,7 +110,10 @@ void create_game(Game& game, Updater& updater) {
 
         if (p.x != -1) {
             updater.receive(create_message(CreateStack, i, p, faction));
-            updater.receive(create_message(CreateUnit, i, item->second->name));
+            int num = (rand() % 5) + 1;
+            for (int j = 0; j < num; j++) {
+                updater.receive(create_message(CreateUnit, i, item->second->name));
+            }
         }
     };
 }
@@ -168,8 +172,8 @@ void run(Options& options) {
     }
 
     LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view, &game_view.level_view);
-    LevelWindow level_window(graphics.width, graphics.height, &game_view.level_view, &level_renderer, &resources);
-
+    LevelWindow level_window(graphics.width - StackWindow::window_width, graphics.height, &game_view.level_view, &level_renderer, &resources);
+    StackWindow stack_window(graphics.width - StackWindow::window_width, 200, StackWindow::window_width, StackWindow::window_height, &resources, &graphics, &game_view.level_view, &level_renderer);
     ChatWindow chat_window(200, graphics.height, &resources, &graphics, &dispatcher);
     ChatUpdater chat_updater(&chat_window);
     updater.subscribe(&chat_updater);
@@ -234,6 +238,7 @@ void run(Options& options) {
         game_view.level_view.update();
 
         level_window.draw();
+        stack_window.draw();
         chat_window.draw();
         graphics.update();
 

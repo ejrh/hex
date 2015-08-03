@@ -17,6 +17,7 @@ protected:
     virtual void render_tile(int x, int y, Point tile_pos);
     virtual void render_unit_stack(int x, int y, Point tile_pos);
     virtual void draw_unit_stack(int x, int y, UnitStackView &stack_view);
+    virtual void draw_unit(int x, int y, Unit &unit, UnitViewDef *view_def);
     virtual void render_path_arrow(int x, int y, Point tile_pos);
 
 protected:
@@ -30,6 +31,7 @@ protected:
     ImageSeries arrow_images;
 
     friend class LevelWindow;
+    friend class StackWindow;
 };
 
 #endif
