@@ -65,8 +65,8 @@ void generate_level(Level &level, TileType *outside, TileType *water, TileType *
 }
 
 void create_game(Game& game, Updater& updater) {
-    int width = 30;
-    int height = 20;
+    int width = 57;
+    int height = 48;
 
     replay_messages("data/tile_types.txt", updater);
     replay_messages("data/unit_types.txt", updater);

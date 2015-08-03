@@ -18,7 +18,7 @@ Image::~Image() {
 void Graphics::start() {
     SDL_Init(SDL_INIT_VIDEO);
 
-    window = SDL_CreateWindow("Hex", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
+    window = SDL_CreateWindow("Hex", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, 0);
 
     SDL_DisplayMode display_mode;
     SDL_GetWindowDisplayMode(window, &display_mode);
