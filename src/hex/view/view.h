@@ -46,6 +46,19 @@ public:
     int move_steps;
 };
 
+class Ghost {
+public:
+    Ghost(UnitStack *stack, Path path, int progress);
+
+private:
+    UnitStack *stack;
+    Path path;
+    int progress;
+
+    friend class LevelView;
+    friend class LevelWindow;
+};
+
 class MessageReceiver;
 
 class LevelView {
@@ -78,9 +91,8 @@ protected:
     VisibilityMap visibility;
     VisibilityMap discovered;
     Path drawn_path;
-    UnitStack *moving_unit;
-    Path moving_unit_path;
-    int moving_unit_progress;
+
+    std::vector<Ghost> ghosts;
 
     friend class LevelRenderer;
     friend class LevelWindow;

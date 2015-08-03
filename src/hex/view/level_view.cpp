@@ -15,9 +15,12 @@
 
 #include "hex/view/view.h"
 
+Ghost::Ghost(UnitStack *stack, Path path, int progress): stack(stack), path(path), progress(progress) {
+}
+
 LevelView::LevelView(Level *level, Resources *resources, MessageReceiver *dispatcher):
         level(level), resources(resources), dispatcher(dispatcher),
-        last_update(0), selected_stack(NULL), visibility(level), discovered(level), moving_unit(NULL) {
+        last_update(0), selected_stack(NULL), visibility(level), discovered(level) {
     resize(level->width, level->height);
 }
 
@@ -54,7 +57,7 @@ void LevelView::update() {
         }
 
     for (std::map<int, UnitStackView>::iterator iter = unit_stack_views.begin(); iter != unit_stack_views.end(); iter++) {
-        if (iter->second.stack == NULL || iter->second.stack == moving_unit)
+        if (iter->second.stack == NULL || iter->second.moving)
             continue;
         UnitViewDef *view_def = iter->second.view_def;
         if (view_def == NULL)
@@ -62,19 +65,23 @@ void LevelView::update() {
         iter->second.phase += frame_incr(view_def->hold_animations[iter->second.facing].bpm, update_ms);
     }
 
-    if (moving_unit != NULL) {
-        UnitStackView *stack_view = get_unit_stack_view(*moving_unit);
+    std::vector<Ghost>::iterator iter = ghosts.begin();
+    while (iter != ghosts.end()) {
+        Ghost& ghost = *iter;
+
+        UnitStackView *stack_view = get_unit_stack_view(*ghost.stack);
         UnitViewDef *view_def = stack_view->view_def;
-        moving_unit_progress += frame_incr(view_def->move_speed, update_ms);
-        unsigned int step = moving_unit_progress / 1000;
-        if (step >= moving_unit_path.size() - 1) {
-            moving_unit = NULL;
+        ghost.progress += frame_incr(view_def->move_speed, update_ms);
+        unsigned int step = ghost.progress / 1000;
+        if (step >= ghost.path.size() - 1) {
             stack_view->moving = false;
+            iter = ghosts.erase(iter);
         } else {
-            Point &prev_pos = moving_unit_path[step];
-            Point &next_pos = moving_unit_path[step + 1];
+            Point &prev_pos = ghost.path[step];
+            Point &next_pos = ghost.path[step + 1];
             stack_view->facing = get_direction(next_pos, prev_pos);
             stack_view->phase += frame_incr(view_def->move_animations[stack_view->facing].bpm, update_ms);
+            iter++;
         }
     }
 }
@@ -114,6 +121,16 @@ void LevelView::right_click_tile(const Point& tile_pos) {
         return;
 
     if (level->contains(tile_pos)) {
+        int target_id = 0;
+        UnitStack *target_stack = level->tiles[tile_pos].stack;
+        if (target_stack != NULL) {
+            if (target_stack->owner == selected_stack->owner) {
+                if (target_stack->units.size() + selected_stack->units.size() > MAX_UNITS)
+                    return;
+            }
+            target_id = target_stack->id;
+        }
+
         MovementModel movement_model;
         Pathfinder pathfinder(level, &movement_model);
         pathfinder.start(selected_stack, selected_stack->position, tile_pos);

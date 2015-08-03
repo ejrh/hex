@@ -108,15 +108,18 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             boost::shared_ptr<UnitMoveMessage> upd = boost::dynamic_pointer_cast<UnitMoveMessage>(update);
 
             UnitStack *stack = game->stacks[upd->data1];
+            if (stack == NULL) {
+                return;
+            }
+
             UnitStackView *stack_view = &game_view->level_view.unit_stack_views[stack->id];
             stack_view->path = Path();
             if (game_view->level_view.selected_stack == stack) {
                 game_view->level_view.set_drawn_path(stack_view->path);
             }
             if (stack_view->view_def != NULL && upd->data2.size() > 1) {
-                game_view->level_view.moving_unit = stack;
-                game_view->level_view.moving_unit_path = upd->data2;
-                game_view->level_view.moving_unit_progress = 0;
+                Ghost ghost(stack, upd->data2, 0);
+                game_view->level_view.ghosts.push_back(ghost);
                 stack_view->moving = true;
             }
 

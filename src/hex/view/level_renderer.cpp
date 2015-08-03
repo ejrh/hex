@@ -57,10 +57,12 @@ void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
 
     Tile &tile = level->tiles[tile_pos];
     UnitStack *stack = tile.stack;
-    if (!stack || stack == level_view->moving_unit)
+    if (!stack)
         return;
 
     UnitStackView& stack_view = *level_view->get_unit_stack_view(*stack);
+    if (stack_view.moving)
+        return;
 
     draw_unit_stack(x, y, stack_view);
 }

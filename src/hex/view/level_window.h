@@ -16,7 +16,7 @@ public:
 
     void draw();
     void draw_level(LevelRenderer::RenderMethod render);
-    void draw_moving_unit();
+    void draw_ghost(Ghost *ghost);
 
 public:
     LevelView *level_view;

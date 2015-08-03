@@ -135,7 +135,9 @@ void LevelWindow::draw() {
     draw_level(&LevelRenderer::render_tile);
     draw_level(&LevelRenderer::render_unit_stack);
     draw_level(&LevelRenderer::render_path_arrow);
-    draw_moving_unit();
+    for (std::vector<Ghost>::iterator iter = level_view->ghosts.begin(); iter != level_view->ghosts.end(); iter++) {
+        draw_ghost(&*iter);
+    }
 }
 
 void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
@@ -180,20 +182,17 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
     }
 }
 
-void LevelWindow::draw_moving_unit() {
-    if (level_view->moving_unit == NULL)
-        return;
+void LevelWindow::draw_ghost(Ghost *ghost) {
+    UnitStackView *stack_view = level_view->get_unit_stack_view(*ghost->stack);
 
-    UnitStackView *stack_view = level_view->get_unit_stack_view(*level_view->moving_unit);
-
-    int step = level_view->moving_unit_progress / 1000;
-    Point prev_pos = level_view->moving_unit_path[step];
-    Point next_pos = level_view->moving_unit_path[step + 1];
+    int step = ghost->progress / 1000;
+    Point prev_pos = ghost->path[step];
+    Point next_pos = ghost->path[step + 1];
 
     if (!level_view->visibility.check(prev_pos) && !level_view->visibility.check(next_pos))
         return;
 
-    int f = level_view->moving_unit_progress % 1000;
+    int f = ghost->progress % 1000;
 
     int px1, py1, px2, py2;
 
