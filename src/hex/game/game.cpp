@@ -89,6 +89,12 @@ Unit *Game::create_unit(int stack_id, const std::string& type_name) {
     return new_unit;
 }
 
+void Game::destroy_unit_stack(int stack_id) {
+    UnitStack *stack = stacks[stack_id];
+    stacks.erase(stack_id);
+    delete stack;
+}
+
 Faction *Game::get_faction(int id) {
     if (factions.find(id) != factions.end())
         return factions[id];

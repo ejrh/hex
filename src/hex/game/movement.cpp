@@ -8,6 +8,12 @@ int MovementModel::cost_to(const UnitStack *party, const Tile *tile) const {
     if (party->units.size() == 0)
         return INT_MAX;
 
+    UnitStack *target_stack = tile->stack;
+    if (target_stack != NULL) {
+        if (target_stack->owner != party->owner)
+            return INT_MAX;
+    }
+
     // TODO use all members of party to determine cost
     Unit *unit = *party->units.begin();
 

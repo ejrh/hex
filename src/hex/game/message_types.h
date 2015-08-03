@@ -30,13 +30,16 @@ MSG_TYPE(CreateTileType, WM(TileType))
 MSG_TYPE(SetLevel, WM2(int, int))
 MSG_TYPE(SetLevelData, WM2(Point, std::vector<std::string>))
 MSG_TYPE(CreateFaction, WM3(int, std::string, std::string))
+
 MSG_TYPE(CreateStack, WM3(int, Point, int))
 MSG_TYPE(CreateUnit, WM2(int, std::string))
+
 MSG_TYPE(FactionReady, WM2(int, bool))
 MSG_TYPE(Chat, WM(std::string))
 MSG_TYPE(TurnEnd, WM(int))
 MSG_TYPE(TurnBegin, WM(int))
-MSG_TYPE(UnitMove, WM2(int, Path))
+
+MSG_TYPE(UnitMove, WM3(int, Path, int))
 
 MSG_TYPE(StreamOpen, WM(std::string))
 MSG_TYPE(StreamClose, Message)

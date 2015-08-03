@@ -24,8 +24,18 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
             boost::shared_ptr<UnitMoveMessage> cmd = boost::dynamic_pointer_cast<UnitMoveMessage>(command);
 
             // TODO check that move is allowed, refuse if not
+            Point end_pos = cmd->data2.back();
+            UnitStack *end_stack = game->level.tiles[end_pos].stack;
+            int end_stack_id = (end_stack != NULL) ? end_stack->id : 0;
+            if (end_stack_id != cmd->data3) {
+                cmd->data2.pop_back();
+                cmd->data3 = 0;
+            }
 
-            emit(create_message(UnitMove, cmd->data1, cmd->data2));
+            if (cmd->data2.size() < 2)
+                return;
+
+            emit(create_message(UnitMove, cmd->data1, cmd->data2, cmd->data3));
         } break;
 
         case Chat: {

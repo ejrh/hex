@@ -93,12 +93,22 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
             }
 
             Point& new_pos = upd->data2.back();
+            UnitStack *target_stack = game->level.tiles[new_pos].stack;
 
+            // TODO but not if some units were left behind
             game->level.tiles[stack->position].stack = NULL;
-            stack->position = new_pos;
-            game->level.tiles[stack->position].stack = stack;
 
-            trace("Unit %d moves to %d,%d", upd->data1, new_pos.x, new_pos.y);
+            if (target_stack != NULL) {
+                trace("absorb!");
+                target_stack->absorb(stack);
+            }
+
+            if (stack->units.size() == 0) {
+                game->destroy_unit_stack(stack->id);
+            } else {
+                stack->position = new_pos;
+                game->level.tiles[stack->position].stack = stack;
+            }
         } break;
 
         default:

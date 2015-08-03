@@ -21,7 +21,6 @@ enum MessageType {
 #include "hex/game/message_types.h"
 #undef MSG_TYPE
 
-
 #define create_message(s, ...) boost::make_shared<s ## Message>(s, ##__VA_ARGS__)
 
 #endif

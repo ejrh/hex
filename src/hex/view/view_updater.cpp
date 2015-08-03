@@ -107,22 +107,35 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         case UnitMove: {
             boost::shared_ptr<UnitMoveMessage> upd = boost::dynamic_pointer_cast<UnitMoveMessage>(update);
 
-            UnitStack *stack = game->stacks[upd->data1];
+            UnitStack *stack = game->get_stack(upd->data1);
             if (stack == NULL) {
-                return;
+                game_view->level_view.unit_stack_views.erase(upd->data1);
+                game_view->level_view.selected_stack = NULL;
             }
 
-            UnitStackView *stack_view = &game_view->level_view.unit_stack_views[stack->id];
-            stack_view->path = Path();
-            if (game_view->level_view.selected_stack == stack) {
-                game_view->level_view.set_drawn_path(stack_view->path);
-            }
-            if (stack_view->view_def != NULL && upd->data2.size() > 1) {
-                Ghost ghost(stack, upd->data2, 0);
-                game_view->level_view.ghosts.push_back(ghost);
-                stack_view->moving = true;
-                game_view->level_view.visibility.mask(stack);
-                game_view->level_view.visibility.rebuild();
+            if (upd->data3 == 0) {
+                UnitStack *stack = game->get_stack(upd->data1);
+                UnitStackView *stack_view = &game_view->level_view.unit_stack_views[stack->id];
+                stack_view->path = Path();
+                if (game_view->level_view.selected_stack == stack) {
+                    game_view->level_view.set_drawn_path(stack_view->path);
+                }
+                if (stack_view->view_def != NULL && upd->data2.size() > 1) {
+                    Ghost ghost(stack, upd->data2, 0);
+                    game_view->level_view.ghosts.push_back(ghost);
+                    stack_view->moving = true;
+                    game_view->level_view.visibility.mask(stack);
+                    game_view->level_view.visibility.rebuild();
+                }
+            } else {
+                UnitStack *stack = game->get_stack(upd->data3);
+                UnitStackView *stack_view = &game_view->level_view.unit_stack_views[stack->id];
+                if (stack_view->view_def != NULL && upd->data2.size() > 1) {
+                    Ghost ghost(stack, upd->data2, 0);
+                    game_view->level_view.ghosts.push_back(ghost);
+                    //TODO target stack should be visible but not movable
+                    //stack_view->moving = true;
+                }
             }
         } break;
 

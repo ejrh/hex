@@ -60,8 +60,6 @@ void Pathfinder::get_neighbours(const PathfinderQueueEntry& entry, PathfinderQue
 
 int Pathfinder::cost_between(const PathfinderQueueEntry& entry1, const PathfinderQueueEntry& entry2) {
     Tile &target = level->tiles[entry2.point];
-    if (target.stack != NULL)
-        return INT_MAX;
     int cost = movement->cost_to(party, &target);
     return cost;
 }

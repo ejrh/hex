@@ -130,26 +130,26 @@ void LevelView::right_click_tile(const Point& tile_pos) {
         return;
 
     if (level->contains(tile_pos)) {
-        int target_id = 0;
-        UnitStack *target_stack = level->tiles[tile_pos].stack;
-        if (target_stack != NULL) {
-            if (target_stack->owner == selected_stack->owner) {
-                if (target_stack->units.size() + selected_stack->units.size() > MAX_UNITS)
-                    return;
-            }
-            target_id = target_stack->id;
-        }
-
         MovementModel movement_model;
         Pathfinder pathfinder(level, &movement_model);
         pathfinder.start(selected_stack, selected_stack->position, tile_pos);
         pathfinder.complete();
         Path new_path;
         pathfinder.build_path(new_path);
+
         UnitStackView *stack_view = get_unit_stack_view(*selected_stack);
 
         if (stack_view->path == new_path) {
-            dispatcher->receive(create_message(UnitMove, selected_stack->id, new_path));
+            int target_id = 0;
+            UnitStack *target_stack = level->tiles[new_path.back()].stack;
+            if (target_stack != NULL) {
+                if (target_stack->owner == selected_stack->owner) {
+                    if (target_stack->units.size() + selected_stack->units.size() > MAX_UNITS)
+                        return;
+                }
+                target_id = target_stack->id;
+            }
+            dispatcher->receive(create_message(UnitMove, selected_stack->id, new_path, target_id));
         } else {
             stack_view->path = new_path;
             set_drawn_path(stack_view->path);

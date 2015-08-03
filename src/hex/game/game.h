@@ -61,6 +61,11 @@ public:
     UnitStack(int id, const Point position, Faction *owner): id(id), owner(owner), position(position) { };
     ~UnitStack() { };
 
+    void absorb(UnitStack *other) {
+        units.insert(units.end(), other->units.begin(), other->units.end());
+        other->units.clear();
+    }
+
     static int sight_func(int max1, const Unit *unit) {
         int max2 = unit->type->sight;
         return std::max(max1, max2);
@@ -129,6 +134,7 @@ public:
     Faction *create_faction(int id, const std::string& type_name, const std::string& name);
     UnitStack *create_unit_stack(int id, const Point position, int owner_id);
     Unit *create_unit(int stack_id, const std::string& type_name);
+    void destroy_unit_stack(int stack_id);
 
     Faction *get_faction(int id);
     UnitStack *get_stack(int id);

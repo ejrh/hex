@@ -65,11 +65,11 @@ int main(int argc, char *argv[]) {
         path.push_back(Point(4,7));
         path.push_back(Point(4,8));
 
-        updater.receive(create_message(SetLevel, 10, 10));
+        updater.receive(create_message(SetLevel, 20, 20));
 
         updater.receive(create_message(CreateFaction, 1, "orcs", "Alice"));
 
-        updater.receive(create_message(UnitMove, 0, path));
+        updater.receive(create_message(UnitMove, 0, path, 0));
 
         updater.receive(create_message(FactionReady, 1, true));
 
