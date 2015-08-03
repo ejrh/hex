@@ -66,6 +66,8 @@ set(srcs
         view/level_view.cpp
         view/level_window.cpp
         view/level_window.h
+        view/map_window.cpp
+        view/map_window.h
         view/stack_window.cpp
         view/stack_window.h
         view/view.h

@@ -26,6 +26,7 @@
 #include "hex/view/view_updater.h"
 #include "hex/view/level_renderer.h"
 #include "hex/view/level_window.h"
+#include "hex/view/map_window.h"
 #include "hex/view/stack_window.h"
 #include "hex/chat/chat.h"
 
@@ -173,10 +174,12 @@ void run(Options& options) {
 
     LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view, &game_view.level_view);
     LevelWindow level_window(graphics.width - StackWindow::window_width, graphics.height, &game_view.level_view, &level_renderer, &resources);
-    StackWindow stack_window(graphics.width - StackWindow::window_width, 200, StackWindow::window_width, StackWindow::window_height, &resources, &graphics, &game_view.level_view, &level_renderer);
     ChatWindow chat_window(200, graphics.height, &resources, &graphics, &dispatcher);
     ChatUpdater chat_updater(&chat_window);
     updater.subscribe(&chat_updater);
+
+    MapWindow map_window(graphics.width - StackWindow::window_width, 0, StackWindow::window_width, 200, &game_view, &level_window, &graphics, &resources);
+    StackWindow stack_window(graphics.width - StackWindow::window_width, 200, StackWindow::window_width, StackWindow::window_height, &resources, &graphics, &game_view.level_view, &level_renderer);
 
     int down_pos_x = 0, down_pos_y = 0;
     bool dragging = false;
@@ -240,6 +243,7 @@ void run(Options& options) {
         level_window.draw();
         stack_window.draw();
         chat_window.draw();
+        map_window.draw();
         graphics.update();
 
         unsigned int tick = SDL_GetTicks();

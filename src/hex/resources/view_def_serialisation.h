@@ -12,12 +12,12 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, FactionViewDef& d) {
 }
 
 inline Serialiser& operator<<(Serialiser& serialiser, const TileViewDef& d) {
-    serialiser << d.name;
+    serialiser << d.name << d.r << d.g << d.b;
     return serialiser;
 }
 
 inline Deserialiser& operator>>(Deserialiser& deserialiser, TileViewDef& d) {
-    deserialiser >> d.name;
+    deserialiser >> d.name >> d.r >> d.g >> d.b;
     return deserialiser;
 }
 

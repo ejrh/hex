@@ -31,6 +31,7 @@ public:
     ~TileViewDef() { }
 
     std::string name;
+    int r, g, b;
     AnimationDef animation;
 };
 

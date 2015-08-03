@@ -28,6 +28,7 @@ public:
     void blit(Image *im, int x, int y, SDL_BlendMode mode = SDL_BLENDMODE_NONE, int alpha_mod = 255, int mod_r = 255, int mod_g = 255, int mod_b = 255);
     void blit(SDL_Surface *surface, Image *im, int x, int y);
     void draw_lines(Uint8 R, Uint8 G, Uint8 B, SDL_Point *points, int count);
+    void draw_rectangle(Uint8 R, Uint8 G, Uint8 B, int x, int y, int w, int h);
     void fill_rectangle(Uint8 R, Uint8 G, Uint8 B, int x, int y, int w, int h);
     void update();
     int get_width() { return width; }

@@ -84,6 +84,7 @@ protected:
 
     friend class LevelRenderer;
     friend class LevelWindow;
+    friend class MapWindow;
     friend class StackWindow;
     friend class ViewUpdater;
 };
