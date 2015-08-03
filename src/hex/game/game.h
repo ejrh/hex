@@ -61,9 +61,18 @@ public:
     UnitStack(int id, const Point position, Faction *owner): id(id), owner(owner), position(position) { };
     ~UnitStack() { };
 
-    void absorb(UnitStack *other) {
-        units.insert(units.end(), other->units.begin(), other->units.end());
-        other->units.clear();
+    void absorb(UnitStack *other, std::set<int> selected_units) {
+        std::vector<Unit *>::iterator iter = other->units.begin();
+        int i = 0;
+        while (iter != other->units.end()) {
+            if (selected_units.find(i) != selected_units.end()) {
+                units.push_back(*iter);
+                iter = other->units.erase(iter);
+            } else {
+                i++;
+                iter++;
+            }
+        }
     }
 
     static int sight_func(int max1, const Unit *unit) {

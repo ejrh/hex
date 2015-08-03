@@ -116,6 +116,10 @@ void LevelView::left_click_tile(const Point& tile_pos) {
         UnitStackView *stack_view = &unit_stack_views[stack->id];
         stack_view->selected = true;
         selected_stack = stack;
+        selected_units.clear();
+        for (unsigned int i = 0; i < stack->units.size(); i++) {
+            selected_units.insert(i);
+        }
 
         set_drawn_path(stack_view->path);
     }
@@ -149,7 +153,7 @@ void LevelView::right_click_tile(const Point& tile_pos) {
                 }
                 target_id = target_stack->id;
             }
-            dispatcher->receive(create_message(UnitMove, selected_stack->id, new_path, target_id));
+            dispatcher->receive(create_message(UnitMove, selected_stack->id, selected_units, new_path, target_id));
         } else {
             stack_view->path = new_path;
             set_drawn_path(stack_view->path);
@@ -161,8 +165,7 @@ bool LevelView::check_visibility(const Point& tile_pos) {
     return visibility.check(tile_pos) || ghost_visibility.check(tile_pos);
 }
 
-void LevelView::set_drawn_path(Path& path)
-{
+void LevelView::set_drawn_path(const Path& path) {
     // Erase existing path
     for (std::vector<Point>::const_iterator iter = drawn_path.begin(); iter != drawn_path.end(); iter++) {
         tile_views[*iter].path_dir = -1;

@@ -11,6 +11,7 @@
 #define WM(t) WrapperMessage<t>
 #define WM2(t1,t2) WrapperMessage2<t1,t2>
 #define WM3(t1,t2,t3) WrapperMessage3<t1,t2,t3>
+#define WM4(t1,t2,t3,t4) WrapperMessage4<t1,t2,t3,t4>
 
 MSG_TYPE(IncludeResource, WM(std::string))
 MSG_TYPE(IncludeIfResourceExists, WM(std::string))
@@ -39,7 +40,7 @@ MSG_TYPE(Chat, WM(std::string))
 MSG_TYPE(TurnEnd, WM(int))
 MSG_TYPE(TurnBegin, WM(int))
 
-MSG_TYPE(UnitMove, WM3(int, Path, int))
+MSG_TYPE(UnitMove, WM4(int, std::set<int>, Path, int))
 
 MSG_TYPE(StreamOpen, WM(std::string))
 MSG_TYPE(StreamClose, Message)

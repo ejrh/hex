@@ -99,6 +99,29 @@ protected:
 };
 
 
+template<typename T1, typename T2, typename T3, typename T4>
+class WrapperMessage4: public Message {
+public:
+    WrapperMessage4() { }
+    WrapperMessage4(int type, const T1& data1, const T2& data2, const T3& data3, const T4& data4): Message(type), data1(data1), data2(data2), data3(data3), data4(data4) { }
+    virtual ~WrapperMessage4() { }
+
+    T1 data1;
+    T2 data2;
+    T3 data3;
+    T4 data4;
+
+protected:
+    virtual void read(Deserialiser& deserialiser) {
+        deserialiser >> data1 >> data2 >> data3 >> data4;
+    }
+
+    virtual void write(Serialiser& serialiser) const {
+        serialiser << data1 << data2 << data3 << data3;
+    };
+};
+
+
 extern Serialiser& operator<<(Serialiser& serialiser, const Message *msg);
 
 extern Deserialiser& operator>>(Deserialiser& deserialiser, Message *& msg);

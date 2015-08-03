@@ -81,7 +81,7 @@ public:
     Vector2<TileView> tile_views;
 
 protected:
-    void set_drawn_path(Path& path);
+    void set_drawn_path(const Path& path);
     UnitStackView *get_unit_stack_view(const UnitStack &stack);
     TileView *get_tile_view(const Point tile_pos);
 
@@ -92,6 +92,7 @@ protected:
     unsigned int last_update;
     Point highlight_tile;
     UnitStack *selected_stack;
+    std::set<int> selected_units;
     VisibilityMap visibility;
     VisibilityMap discovered;
     Path drawn_path;
