@@ -16,3 +16,9 @@ On Linux:
   - cmake ..\
   - make
   - Fix the (noticeably fewer) errors and repeat
+
+To make things a bit faster with [cotire][cotire github], make a subdirectory called `CMake`,
+put `cotire.cmake` in it, and rerun cmake.
+
+[cotire github]: https://github.com/sakra/cotire
+

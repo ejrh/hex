@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(hex)
 
+# Cotire, used for precompiled header support
+set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
+include(cotire OPTIONAL)
+
 # Find dependencies
 set(BOOST_ROOT D:/lib/boost_1_58_0)
 set(Boost_USE_STATIC_LIBS ON)

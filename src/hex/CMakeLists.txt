@@ -87,3 +87,7 @@ source_group(Sources\\ui REGULAR_EXPRESSION ui)
 source_group(Sources\\view REGULAR_EXPRESSION view)
 add_library(hex ${srcs})
 target_compile_options(hex PUBLIC ${gen_opts})
+
+if (COMMAND cotire)
+    cotire(hex)
+endif()
