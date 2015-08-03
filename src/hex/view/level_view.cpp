@@ -20,7 +20,7 @@ Ghost::Ghost(UnitStack *stack, Path path, int progress): stack(stack), path(path
 
 LevelView::LevelView(Level *level, Resources *resources, MessageReceiver *dispatcher):
         level(level), resources(resources), dispatcher(dispatcher),
-        last_update(0), selected_stack(NULL), visibility(level), discovered(level) {
+        last_update(0), selected_stack(NULL), visibility(level), discovered(level), ghost_visibility(level) {
     resize(level->width, level->height);
 }
 
@@ -32,6 +32,7 @@ void LevelView::resize(int width, int height) {
 
     visibility.resize(width, height);
     discovered.resize(width, height);
+    ghost_visibility.resize(width, height);
 }
 
 // Assumes 1000 increments between frames
@@ -65,6 +66,7 @@ void LevelView::update() {
         iter->second.phase += frame_incr(view_def->hold_animations[iter->second.facing].bpm, update_ms);
     }
 
+    ghost_visibility.clear();
     std::vector<Ghost>::iterator iter = ghosts.begin();
     while (iter != ghosts.end()) {
         Ghost& ghost = *iter;
@@ -75,12 +77,17 @@ void LevelView::update() {
         unsigned int step = ghost.progress / 1000;
         if (step >= ghost.path.size() - 1) {
             stack_view->moving = false;
+            visibility.unmask(ghost.stack);
+            visibility.rebuild();
             iter = ghosts.erase(iter);
         } else {
             Point &prev_pos = ghost.path[step];
             Point &next_pos = ghost.path[step + 1];
+            ghost.position = next_pos;
             stack_view->facing = get_direction(next_pos, prev_pos);
             stack_view->phase += frame_incr(view_def->move_animations[stack_view->facing].bpm, update_ms);
+            discovered.draw(next_pos, ghost.stack->sight(), true);
+            ghost_visibility.draw(next_pos, ghost.stack->sight(), true);
             iter++;
         }
     }
@@ -148,6 +155,10 @@ void LevelView::right_click_tile(const Point& tile_pos) {
             trace("Path drawn to (%d,%d)", tile_pos.x, tile_pos.y);
         }
     }
+}
+
+bool LevelView::check_visibility(const Point& tile_pos) {
+    return visibility.check(tile_pos) || ghost_visibility.check(tile_pos);
 }
 
 void LevelView::set_drawn_path(Path& path)

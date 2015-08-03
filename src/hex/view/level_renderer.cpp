@@ -33,7 +33,7 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
     Image *ground = image_ref.image;
 
     if (ground != NULL) {
-        int alpha = level_view->visibility.check(tile_pos) ? 255 : 128;
+        int alpha = (level_view->check_visibility(tile_pos)) ? 255 : 128;
         graphics->blit(ground, x, y, SDL_BLENDMODE_BLEND, alpha);
     }
 

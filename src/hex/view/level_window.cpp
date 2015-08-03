@@ -189,7 +189,7 @@ void LevelWindow::draw_ghost(Ghost *ghost) {
     Point prev_pos = ghost->path[step];
     Point next_pos = ghost->path[step + 1];
 
-    if (!level_view->visibility.check(prev_pos) && !level_view->visibility.check(next_pos))
+    if (!level_view->check_visibility(prev_pos) && !level_view->check_visibility(next_pos))
         return;
 
     int f = ghost->progress % 1000;

@@ -121,10 +121,9 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
                 Ghost ghost(stack, upd->data2, 0);
                 game_view->level_view.ghosts.push_back(ghost);
                 stack_view->moving = true;
+                game_view->level_view.visibility.mask(stack);
+                game_view->level_view.visibility.rebuild();
             }
-
-            game_view->level_view.visibility.rebuild();
-            game_view->level_view.discovered.update();
         } break;
 
         default:

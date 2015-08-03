@@ -31,7 +31,7 @@ void VisibilityMap::rebuild() {
     for (int i = 0; i < level->tiles.height; i++)
         for (int j = 0; j < level->tiles.width; j++) {
             UnitStack *stack = level->tiles[i][j].stack;
-            if (stack == NULL)
+            if (stack == NULL || masked_stacks.find(stack->id) != masked_stacks.end())
                 continue;
             apply(stack, true);
         }
@@ -46,7 +46,7 @@ void VisibilityMap::update() {
     for (int i = 0; i < level->tiles.height; i++)
         for (int j = 0; j < level->tiles.width; j++) {
             UnitStack *stack = level->tiles[i][j].stack;
-            if (stack == NULL)
+            if (stack == NULL || masked_stacks.find(stack->id) != masked_stacks.end())
                 continue;
             apply(stack, true);
         }
@@ -60,8 +60,12 @@ void VisibilityMap::apply(UnitStack *stack, bool visible)
     draw(stack->position, stack->sight(), visible);
 }
 
-void VisibilityMap::mask(UnitStack *stack)
-{
+void VisibilityMap::mask(UnitStack *stack) {
+    masked_stacks.insert(stack->id);
+}
+
+void VisibilityMap::unmask(UnitStack *stack) {
+    masked_stacks.erase(stack->id);
 }
 
 void VisibilityMap::overlay(UnitStack *stack) {

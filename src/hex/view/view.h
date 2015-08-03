@@ -52,11 +52,13 @@ public:
 
 private:
     UnitStack *stack;
+    Point position;
     Path path;
     int progress;
 
     friend class LevelView;
     friend class LevelWindow;
+    friend class MapWindow;
 };
 
 class MessageReceiver;
@@ -70,6 +72,8 @@ public:
     void set_highlight_tile(const Point& tile_pos);
     void left_click_tile(const Point& tile_pos);
     void right_click_tile(const Point& tile_pos);
+
+    bool check_visibility(const Point& tile_pos);
 
 public:
     Level *level;
@@ -93,6 +97,7 @@ protected:
     Path drawn_path;
 
     std::vector<Ghost> ghosts;
+    VisibilityMap ghost_visibility;
 
     friend class LevelRenderer;
     friend class LevelWindow;

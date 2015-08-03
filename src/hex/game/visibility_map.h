@@ -18,6 +18,7 @@ public:
     void update();
     void apply(UnitStack *stack, bool visible);
     void mask(UnitStack *stack);
+    void unmask(UnitStack *stack);
     void overlay(UnitStack *stack);
     void draw(const Point &point, int sight, bool visible);
     bool check(const Point& tile_pos) const;
@@ -25,6 +26,7 @@ public:
 private:
     Level *level;
     Vector2<bool> visibility;
+    std::set<int> masked_stacks;
 };
 
 #endif
