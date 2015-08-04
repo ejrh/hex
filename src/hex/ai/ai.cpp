@@ -32,7 +32,7 @@ void Ai::update() {
 void Ai::update_unit_stack(UnitStack *stack) {
     MovementModel movement_model;
     Pathfinder pathfinder(&game->level, &movement_model);
-    Point tile_pos(rand() % game->level.width, rand() % game->level.width);
+    Point tile_pos(rand() % game->level.width, rand() % game->level.height);
     pathfinder.start(stack, stack->position, tile_pos);
     pathfinder.complete();
     Path new_path;

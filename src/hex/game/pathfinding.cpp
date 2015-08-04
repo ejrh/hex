@@ -30,12 +30,12 @@ void Pathfinder::clear() {
 void Pathfinder::start(const UnitStack *party, const Point start_point, const Point target_point) {
     this->party = party;
 
-    source.point = start_point;
+    source.point = start_point.constrain(0, 0, nodes.width - 1, nodes.height - 1);
     source.node = &nodes[source.point];
     source.node->cost = 0;
     source.node->predecessor = source.point;
 
-    target.point = target_point;
+    target.point = target_point.constrain(0, 0, nodes.width - 1, nodes.height - 1);
     target.node = &nodes[target.point];
 
     source.node->state = 1;
