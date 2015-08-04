@@ -118,7 +118,7 @@ protected:
     }
 
     virtual void write(Serialiser& serialiser) const {
-        serialiser << data1 << data2 << data3 << data3;
+        serialiser << data1 << data2 << data3 << data4;
     };
 };
 
