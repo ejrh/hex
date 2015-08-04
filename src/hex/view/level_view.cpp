@@ -179,7 +179,11 @@ void LevelView::set_drawn_path(const Path& path) {
 }
 
 UnitStackView *LevelView::get_unit_stack_view(const UnitStack &stack) {
-    return &unit_stack_views[stack.id];
+    std::map<int, UnitStackView>::iterator iter = unit_stack_views.find(stack.id);
+    if (iter == unit_stack_views.end())
+        return NULL;
+
+    return &iter->second;
 }
 
 TileView *LevelView::get_tile_view(const Point tile_pos) {

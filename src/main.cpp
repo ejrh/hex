@@ -6,6 +6,8 @@
 #include <boost/program_options/variables_map.hpp>
 
 #include "hex/noise.h"
+#include "hex/ai/ai.h"
+#include "hex/ai/ai_updater.h"
 #include "hex/basics/error.h"
 #include "hex/chat/chat.h"
 #include "hex/game/game.h"
@@ -84,10 +86,11 @@ void create_game(Game& game, Updater& updater) {
         updater.receive(boost::make_shared<WrapperMessage2<Point, std::vector<std::string> > >(SetLevelData, origin, data));
     }
 
-    updater.receive(create_message(CreateFaction, 1, "orcs", "Orc Hegemony"));
-    updater.receive(create_message(CreateFaction, 2, "drow", "Great Drow Empire"));
+    updater.receive(create_message(CreateFaction, 1, "independent", "Independent"));
+    updater.receive(create_message(CreateFaction, 2, "orcs", "Orc Hegemony"));
+    updater.receive(create_message(CreateFaction, 3, "drow", "Great Drow Empire"));
 
-    for (int i = 1; i <= 25; i++) {
+    for (int i = 1; i <= 40; i++) {
         UnitTypeMap::iterator item = game.unit_types.begin();
         std::advance(item, rand() % game.unit_types.size());
 
@@ -155,6 +158,9 @@ void run(Options& options) {
     ViewUpdater view_updater(&game, &game_view, &resources);
     updater.subscribe(&view_updater);
 
+    Ai independent_ai(&game, std::string("independent"), &dispatcher);
+    AiUpdater independent_ai_updater(&independent_ai);
+
     if (options.server_mode) {
         server.start();
         updater.subscribe(&server);
@@ -165,7 +171,7 @@ void run(Options& options) {
         dispatcher.subscribe(&client);
     } else {
         dispatcher.subscribe(&arbiter);
-
+        updater.subscribe(&independent_ai_updater);
         create_game(game, updater);
     }
 
@@ -240,6 +246,7 @@ void run(Options& options) {
         }
 
         game_view.level_view.update();
+        independent_ai.update();
 
         level_window.draw();
         stack_window.draw();

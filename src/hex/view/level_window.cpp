@@ -186,6 +186,8 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
 
 void LevelWindow::draw_ghost(Ghost *ghost) {
     UnitStackView *stack_view = level_view->get_unit_stack_view(*ghost->stack);
+    if (stack_view == NULL)
+        return;
 
     int step = ghost->progress / 1000;
     Point prev_pos = ghost->path[step];

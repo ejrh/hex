@@ -1,6 +1,10 @@
 set(srcs
         noise.cpp
         noise.h
+        ai/ai.cpp
+        ai/ai.h
+        ai/ai_updater.cpp
+        ai/ai_updater.h
         basics/error.cpp
         basics/error.h
         basics/hexgrid.cpp
@@ -76,6 +80,7 @@ set(srcs
 )
 
 source_group(Sources REGULAR_EXPRESSION cpp|h)
+source_group(Sources\\ai REGULAR_EXPRESSION ai)
 source_group(Sources\\basics REGULAR_EXPRESSION basics)
 source_group(Sources\\chat REGULAR_EXPRESSION chat)
 source_group(Sources\\game REGULAR_EXPRESSION game)

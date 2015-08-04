@@ -1,3 +1,4 @@
 # CreateFactionView(name, r, g, b)
+CreateFactionView("independent", 128, 128, 128)
 CreateFactionView("orcs", 255, 64, 64)
 CreateFactionView("drow", 192, 64, 192)
