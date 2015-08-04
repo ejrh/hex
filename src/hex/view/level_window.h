@@ -1,7 +1,14 @@
 #ifndef LEVEL_WINDOW_H
 #define LEVEL_WINDOW_H
 
+#include "hex/basics/point.h"
 #include "hex/ui/ui.h"
+#include "hex/view/level_renderer.h"
+
+
+class LevelView;
+class Resources;
+class Ghost;
 
 class LevelWindow: public UiWindow {
 public:

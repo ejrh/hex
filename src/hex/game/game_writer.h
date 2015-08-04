@@ -2,7 +2,8 @@
 #define GAME_WRITER_H
 
 class Game;
-class MessageReciever;
+class MessageReceiver;
+class Message;
 
 class GameWriter {
 public:

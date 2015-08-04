@@ -4,6 +4,7 @@
 #include "hex/graphics/graphics.h"
 #include "hex/resources/image_ref.h"
 
+
 class AnimationDef {
 public:
     AnimationDef(): bpm(60) { }

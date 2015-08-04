@@ -1,12 +1,11 @@
 #include "common.h"
 
 #include "hex/basics/error.h"
-#include "hex/messaging/message.h"
 #include "hex/game/game.h"
-#include "hex/game/game_serialisation.h"
 #include "hex/game/game_messages.h"
-#include "hex/game/game_updater.h"
+#include "hex/messaging/message.h"
 #include "hex/networking/networking.h"
+
 
 Server::Server(int port, MessageReceiver *receiver):
         port(port), receiver(receiver), io_service(), acceptor(io_service), shutdown_requested(false),

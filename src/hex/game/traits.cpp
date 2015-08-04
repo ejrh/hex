@@ -2,6 +2,7 @@
 
 #include "hex/game/traits.h"
 
+
 class TraitMap {
 public:
 

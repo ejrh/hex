@@ -1,9 +1,10 @@
 #include "common.h"
 
 #include "hex/basics/error.h"
-#include "hex/networking/networking.h"
 #include "hex/messaging/serialiser.h"
 #include "hex/messaging/message.h"
+#include "hex/networking/networking.h"
+
 
 Connection::Connection(boost::asio::io_service& io_service, NetworkInterface *iface): iface(iface), socket(io_service) {
 }

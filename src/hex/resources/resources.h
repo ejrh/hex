@@ -1,11 +1,10 @@
 #ifndef RESOURCES_H
 #define RESOURCES_H
 
-#include "hex/messaging/serialiser.h"
+#include "hex/graphics/graphics.h"
 #include "hex/messaging/message.h"
 #include "hex/messaging/receiver.h"
 #include "hex/messaging/updater.h"
-#include "hex/graphics/graphics.h"
 #include "hex/resources/view_def.h"
 
 

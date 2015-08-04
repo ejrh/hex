@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "resources.h"
+#include "hex/resources/resources.h"
 
 
 extern void load_ilb(const std::string& filename, Graphics *graphics, ImageMap& image_set);

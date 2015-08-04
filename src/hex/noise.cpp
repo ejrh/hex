@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "noise.h"
+#include "hex/noise.h"
 
 static float interpolate(float x1, float x2, float w) {
     return (1.0f - w) * x1+ w * x2;

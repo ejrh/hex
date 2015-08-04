@@ -1,6 +1,10 @@
 #ifndef VIEW_DATA_SERIALISATION
 #define VIEW_DATA_SERIALISATION
 
+#include "hex/messaging/serialiser.h"
+#include "hex/resources/view_def.h"
+
+
 inline Serialiser& operator<<(Serialiser& serialiser, const FactionViewDef& d) {
     serialiser << d.name << d.r << d.g << d.b;
     return serialiser;

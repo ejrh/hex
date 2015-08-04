@@ -4,6 +4,7 @@
 #include "hex/basics/point.h"
 #include "hex/basics/vector2.h"
 
+
 class UnitStack;
 class Level;
 

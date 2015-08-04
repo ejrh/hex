@@ -1,6 +1,14 @@
 #ifndef LEVEL_VIEW_UPDATER_H
 #define LEVEL_VIEW_UPDATER_H
 
+#include "hex/messaging/message.h"
+#include "hex/messaging/receiver.h"
+
+
+class Game;
+class GameView;
+class Resources;
+
 class ViewUpdater: public MessageReceiver {
 public:
     ViewUpdater(Game *game, GameView *game_view, Resources *resources);

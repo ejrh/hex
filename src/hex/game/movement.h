@@ -3,6 +3,8 @@
 
 class UnitStack;
 class Tile;
+class UnitType;
+class TileType;
 
 class MovementModel {
 public:

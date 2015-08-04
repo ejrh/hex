@@ -1,6 +1,5 @@
 #include "common.h"
 
-#include "hex/messaging/serialiser.h"
 #include "hex/messaging/message.h"
 #include "hex/messaging/receiver.h"
 #include "hex/messaging/updater.h"

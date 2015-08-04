@@ -4,6 +4,7 @@
 #include "hex/resources/resources.h"
 #include "hex/resources/view_def.h"
 
+
 void run() {
     Resources resources;
     ResourceLoader loader(&resources, NULL);

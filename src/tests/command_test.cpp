@@ -1,13 +1,14 @@
 #include "common.h"
 
-#include "hex/messaging/serialiser.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
-#include "hex/messaging/updater.h"
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/game_serialisation.h"
 #include "hex/game/game_updater.h"
+#include "hex/messaging/message.h"
+#include "hex/messaging/receiver.h"
+#include "hex/messaging/serialiser.h"
+#include "hex/messaging/updater.h"
+
 
 #define ORIGIN 1
 

@@ -2,6 +2,7 @@
 
 #include "hex/messaging/event_pusher.h"
 
+
 EventPusher::EventPusher() {
     event_type = SDL_RegisterEvents(1);
 }

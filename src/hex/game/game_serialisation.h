@@ -1,7 +1,9 @@
 #ifndef GAME_SERIALISATION_H
 #define GAME_SERIALISATION_H
 
+#include "hex/game/game.h"
 #include "hex/messaging/serialiser.h"
+
 
 inline Serialiser& operator<<(Serialiser& serialiser, const Point& p) {
     serialiser.begin_tuple();
@@ -51,24 +53,6 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, TraitType& t) {
     t = get_trait_type(name);
     return deserialiser;
 }
-
-
-inline std::ostream& operator<<(std::ostream& os, const Point& p) {
-    return os << "(" << p.x << "," << p.y << ")";
-}
-
-/*static std::ostream& operator<<(std::ostream& os, const std::vector<Point> &path) {
-    os << "[";
-    bool first = true;
-    for (std::vector<Point>::const_iterator i = path.begin(); i != path.end(); i++) {
-        if (!first)
-            os << ", ";
-        else
-            first = false;
-        os << *i;
-    }
-    return os << "]";
-}*/
 
 
 #endif

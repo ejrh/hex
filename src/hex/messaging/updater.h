@@ -1,6 +1,9 @@
 #ifndef UPDATER_H
 #define UPDATER_H
 
+#include "hex/messaging/receiver.h"
+
+
 class Updater: public MessageReceiver {
 public:
     Updater(int id);

@@ -4,6 +4,7 @@
 #include "hex/game/game.h"
 #include "hex/game/visibility_map.h"
 
+
 VisibilityMap::VisibilityMap(Level *level) {
     this->level = level;
     resize(level->tiles.width, level->tiles.height);

@@ -1,7 +1,8 @@
 #ifndef VECTOR2_H
 #define VECTOR2_H
 
-#include "point.h"
+#include "hex/basics/point.h"
+
 
 template <typename T>
 struct Vector2 {

@@ -2,8 +2,12 @@
 #define PATHFINDING_H
 
 #include "hex/basics/point.h"
-#include "hex/game/movement.h"
+#include "hex/basics/vector2.h"
 
+
+class Level;
+class MovementModel;
+class UnitStack;
 
 struct PathfinderNode {
     Point predecessor;

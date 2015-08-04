@@ -1,11 +1,12 @@
 #include "common.h"
 
-#include "hex/graphics/graphics.h"
 #include "hex/game/game.h"
+#include "hex/graphics/graphics.h"
 #include "hex/view/view.h"
 #include "hex/view/level_renderer.h"
 #include "hex/view/level_window.h"
 #include "hex/view/map_window.h"
+
 
 MapWindow::MapWindow(int x, int y, int width, int height, GameView *view, LevelWindow *level_window, Graphics *graphics, Resources *resources):
         UiWindow(x, y, width, height), view(view), level_window(level_window), graphics(graphics), resources(resources) {

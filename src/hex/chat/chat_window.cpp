@@ -1,15 +1,10 @@
 #include "common.h"
 
-#include "hex/graphics/graphics.h"
-#include "hex/graphics/font.h"
-#include "hex/messaging/serialiser.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
-#include "hex/messaging/updater.h"
-#include "hex/game/game.h"
-#include "hex/game/game_serialisation.h"
-#include "hex/game/game_messages.h"
 #include "hex/chat/chat.h"
+#include "hex/game/game_messages.h"
+#include "hex/graphics/font.h"
+#include "hex/graphics/graphics.h"
+
 
 ChatWindow::ChatWindow(int width, int height, Resources *resources, Graphics *graphics, MessageReceiver *dispatcher):
         UiWindow(0, 0, width, height), graphics(graphics), dispatcher(dispatcher), open(false) {

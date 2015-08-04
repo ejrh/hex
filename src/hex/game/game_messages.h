@@ -2,8 +2,9 @@
 #define GAME_MESSAGES_H
 
 #include "hex/basics/point.h"
+#include "hex/game/game.h"
 #include "hex/game/game_serialisation.h"
-#include "hex/resources/image_ref.h"
+#include "hex/messaging/message.h"
 #include "hex/resources/view_def.h"
 #include "hex/resources/view_def_serialisation.h"
 

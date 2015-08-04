@@ -2,11 +2,9 @@
 
 #include "hex/basics/point.h"
 #include "hex/game/game.h"
-#include "hex/game/game_serialisation.h"
-#include "hex/resources/resources.h"
-#include "hex/view/view.h"
-#include "hex/view/level_renderer.h"
 #include "hex/view/level_window.h"
+#include "hex/view/view.h"
+
 
 #define TILE_WIDTH 48
 #define X_SPACING 32

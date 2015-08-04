@@ -1,8 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "hex/basics/vector2.h"
 #include "hex/basics/point.h"
+#include "hex/basics/vector2.h"
 #include "hex/game/traits.h"
 #include "hex/game/visibility_map.h"
 

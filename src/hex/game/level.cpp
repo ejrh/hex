@@ -2,6 +2,7 @@
 
 #include "hex/game/game.h"
 
+
 Level::Level(int width, int height): width(width), height(height), tiles(width, height) {
 }
 

@@ -1,9 +1,8 @@
 #include "common.h"
 
 #include "hex/basics/error.h"
-#include "hex/noise.h"
-
 #include "hex/game/game.h"
+
 
 TileType *Game::create_tile_type(TileType& tile_type) {
     if (tile_types.find(tile_type.name) != tile_types.end()) {

@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "error.h"
+#include "hex/basics/error.h"
 
 
 static boost::mutex error_lock;

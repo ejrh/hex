@@ -1,10 +1,11 @@
 #include "common.h"
 
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
+#include "hex/game/game_writer.h"
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
-#include "hex/game/game_writer.h"
+#include "hex/messaging/message.h"
+#include "hex/messaging/receiver.h"
+
 
 void GameWriter::write(Game *game) {
     write_unit_types(game);

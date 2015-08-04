@@ -3,6 +3,7 @@
 #include "hex/basics/error.h"
 #include "hex/basics/hexgrid.h"
 
+
 void test_point(const char *name, Point point) {
     printf("%s: (%d,%d)\n", name, point.x, point.y);
     Point neighbours[6];

@@ -1,6 +1,7 @@
 #include "common.h"
 
-#include "hexgrid.h"
+#include "hex/basics/hexgrid.h"
+
 
 void get_neighbours(const Point point, Point *points) {
     int side_adjustment1 = (point.x % 2) ? 0 : -1;

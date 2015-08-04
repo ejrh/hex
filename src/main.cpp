@@ -5,30 +5,27 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
 
-#include "hex/basics/error.h"
 #include "hex/noise.h"
-#include "hex/graphics/graphics.h"
-#include "hex/messaging/serialiser.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
-#include "hex/messaging/updater.h"
-#include "hex/messaging/event_pusher.h"
-#include "hex/messaging/writer.h"
+#include "hex/basics/error.h"
+#include "hex/chat/chat.h"
 #include "hex/game/game.h"
-#include "hex/game/game_messages.h"
-#include "hex/game/game_serialisation.h"
-#include "hex/game/game_updater.h"
 #include "hex/game/game_arbiter.h"
+#include "hex/game/game_messages.h"
+#include "hex/game/game_updater.h"
 #include "hex/game/game_writer.h"
 #include "hex/game/movement.h"
+#include "hex/graphics/graphics.h"
+#include "hex/messaging/event_pusher.h"
+#include "hex/messaging/message.h"
+#include "hex/messaging/writer.h"
 #include "hex/networking/networking.h"
-#include "hex/view/view.h"
-#include "hex/view/view_updater.h"
 #include "hex/view/level_renderer.h"
 #include "hex/view/level_window.h"
 #include "hex/view/map_window.h"
 #include "hex/view/stack_window.h"
-#include "hex/chat/chat.h"
+#include "hex/view/view.h"
+#include "hex/view/view_updater.h"
+
 
 struct Options {
     bool server_mode;

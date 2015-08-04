@@ -3,6 +3,7 @@
 
 #include "hex/messaging/serialiser.h"
 
+
 class Image;
 
 struct ImageRef {

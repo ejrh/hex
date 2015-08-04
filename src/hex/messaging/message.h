@@ -3,6 +3,7 @@
 
 #include "hex/messaging/serialiser.h"
 
+
 class Message;
 
 /* These be defined by implementation. */

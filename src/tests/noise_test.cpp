@@ -1,7 +1,7 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
 #include "hex/noise.h"
+#include "hex/basics/error.h"
 #include "hex/graphics/graphics.h"
 
 

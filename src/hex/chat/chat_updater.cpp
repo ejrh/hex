@@ -1,13 +1,8 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
-#include "hex/messaging/serialiser.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
-#include "hex/game/game.h"
-#include "hex/game/game_serialisation.h"
-#include "hex/game/game_messages.h"
 #include "hex/chat/chat.h"
+#include "hex/game/game_messages.h"
+#include "hex/messaging/message.h"
 
 
 ChatUpdater::ChatUpdater(ChatWindow *chat_window): chat_window(chat_window) {

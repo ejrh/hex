@@ -5,6 +5,7 @@
 #include "hex/messaging/receiver.h"
 #include "hex/networking/networking.h"
 
+
 #define SERVER_PORT 9999
 
 class PrintingMessageReceiver: public MessageReceiver {

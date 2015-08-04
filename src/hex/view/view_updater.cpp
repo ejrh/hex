@@ -1,14 +1,8 @@
 #include "common.h"
 
-#include "hex/basics/vector2.h"
-#include "hex/messaging/serialiser.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
 #include "hex/game/game.h"
-#include "hex/game/game_serialisation.h"
-#include "hex/resources/resources.h"
-#include "hex/resources/view_def.h"
 #include "hex/game/game_messages.h"
+#include "hex/messaging/message.h"
 #include "hex/view/view.h"
 #include "hex/view/view_updater.h"
 

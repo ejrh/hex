@@ -1,15 +1,10 @@
 #include "common.h"
 
 #include "hex/basics/error.h"
-#include "hex/messaging/serialiser.h"
+#include "hex/game/game.h"
+#include "hex/game/game_messages.h"
 #include "hex/messaging/message.h"
 #include "hex/messaging/receiver.h"
-#include "hex/messaging/updater.h"
-#include "hex/game/game.h"
-#include "hex/game/game_serialisation.h"
-#include "hex/game/game_messages.h"
-#include "hex/resources/view_def.h"
-#include "hex/resources/view_def_serialisation.h"
 #include "hex/resources/resources.h"
 
 

@@ -10,6 +10,7 @@
 #include "hex/messaging/message.h"
 #include "hex/messaging/receiver.h"
 
+
 using boost::asio::ip::tcp;
 
 class NetworkInterface: public MessageReceiver {

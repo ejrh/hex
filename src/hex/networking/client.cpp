@@ -1,12 +1,11 @@
 #include "common.h"
 
 #include "hex/basics/error.h"
-#include "hex/messaging/message.h"
 #include "hex/game/game.h"
-#include "hex/game/game_serialisation.h"
 #include "hex/game/game_messages.h"
-#include "hex/game/game_updater.h"
+#include "hex/messaging/message.h"
 #include "hex/networking/networking.h"
+
 
 Client::Client(MessageReceiver *receiver):
         receiver(receiver), io_service(), resolver(io_service), game_id(0), last_received_id(0) {

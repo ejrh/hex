@@ -4,6 +4,7 @@
 #include "hex/basics/point.h"
 #include "hex/ui/ui.h"
 
+
 class GameView;
 class LevelWindow;
 class Graphics;

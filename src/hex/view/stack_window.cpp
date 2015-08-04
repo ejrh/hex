@@ -1,10 +1,10 @@
 #include "common.h"
 
-#include "hex/graphics/graphics.h"
 #include "hex/game/game.h"
-#include "hex/view/view.h"
+#include "hex/graphics/graphics.h"
 #include "hex/view/level_renderer.h"
 #include "hex/view/stack_window.h"
+#include "hex/view/view.h"
 
 
 StackWindow::StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, LevelView *level_view, LevelRenderer *renderer):

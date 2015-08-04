@@ -1,9 +1,18 @@
 #ifndef LEVEL_RENDERER_H
 #define LEVEL_RENDERER_H
 
+#include "hex/basics/point.h"
+#include "hex/resources/image_ref.h"
+
+
 class Graphics;
 class Resources;
 class Level;
+class GameView;
+class LevelView;
+class UnitStackView;
+class Unit;
+class UnitViewDef;
 
 class LevelRenderer {
 public:

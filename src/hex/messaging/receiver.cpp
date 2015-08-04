@@ -1,9 +1,9 @@
 #include "common.h"
 
 #include "hex/basics/error.h"
-#include "hex/messaging/serialiser.h"
 #include "hex/messaging/message.h"
 #include "hex/messaging/receiver.h"
+
 
 void replay_messages(const std::string& filename, MessageReceiver& receiver) {
     std::ifstream file(filename.c_str(), std::ios::in | std::ios::binary);

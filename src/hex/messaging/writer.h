@@ -3,6 +3,7 @@
 
 #include "hex/messaging/receiver.h"
 
+
 class MessageWriter: public MessageReceiver {
 public:
     MessageWriter(std::ostream& os): writer(os) { }

@@ -2,11 +2,12 @@
 
 #include "hex/basics/error.h"
 #include "hex/basics/vector2.h"
-#include "hex/graphics/graphics.h"
 #include "hex/graphics/font.h"
+#include "hex/graphics/graphics.h"
 #include "hex/game/game.h"
 #include "hex/view/view.h"
 #include "hex/view/level_renderer.h"
+
 
 LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *level, GameView *view, LevelView *level_view):
         graphics(graphics), resources(resources), level(level), view(view), level_view(level_view) {

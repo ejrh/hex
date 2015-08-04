@@ -4,6 +4,7 @@
 #include "hex/game/movement.h"
 #include "hex/game/traits.h"
 
+
 int MovementModel::cost_to(const UnitStack *party, const Tile *tile) const {
     if (party->units.size() == 0)
         return INT_MAX;

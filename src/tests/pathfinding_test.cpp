@@ -1,15 +1,16 @@
 #include "common.h"
 
+#include "hex/noise.h"
 #include "hex/basics/error.h"
 #include "hex/basics/hexgrid.h"
-#include "hex/graphics/graphics.h"
 #include "hex/graphics/font.h"
+#include "hex/graphics/graphics.h"
 #include "hex/game/game.h"
+#include "hex/game/movement.h"
 #include "hex/game/pathfinding.h"
-#include "hex/view/view.h"
 #include "hex/view/level_renderer.h"
 #include "hex/view/level_window.h"
-#include "hex/noise.h"
+#include "hex/view/view.h"
 
 
 #define TILE_WIDTH 48

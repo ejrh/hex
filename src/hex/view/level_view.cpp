@@ -2,18 +2,14 @@
 
 #include "hex/basics/error.h"
 #include "hex/basics/hexgrid.h"
-#include "hex/messaging/serialiser.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
-#include "hex/messaging/updater.h"
 #include "hex/game/game.h"
-#include "hex/game/game_serialisation.h"
 #include "hex/game/game_messages.h"
+#include "hex/game/movement.h"
 #include "hex/game/pathfinding.h"
-#include "hex/resources/resources.h"
+#include "hex/messaging/message.h"
 #include "hex/resources/view_def.h"
-
 #include "hex/view/view.h"
+
 
 Ghost::Ghost(UnitStack *stack, Path path, int progress): stack(stack), path(path), progress(progress) {
 }

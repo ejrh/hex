@@ -3,6 +3,9 @@
 
 #include "hex/messaging/receiver.h"
 
+
+class Game;
+
 class GameUpdater: public MessageReceiver {
 public:
     GameUpdater(Game *game);

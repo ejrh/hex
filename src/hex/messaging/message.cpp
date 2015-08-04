@@ -1,7 +1,7 @@
 #include "common.h"
 
-#include "hex/messaging/serialiser.h"
 #include "hex/messaging/message.h"
+#include "hex/messaging/serialiser.h"
 
 
 Serialiser& operator<<(Serialiser& serialiser, const Message *msg) {

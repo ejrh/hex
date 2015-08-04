@@ -1,18 +1,14 @@
 #include "common.h"
 
-#include "hex/messaging/serialiser.h"
-#include "hex/messaging/message.h"
 #include "hex/game/game.h"
-#include "hex/game/game_serialisation.h"
-#include "hex/resources/image_ref.h"
-#include "hex/resources/view_def.h"
-#include "hex/resources/view_def_serialisation.h"
 #include "hex/game/game_messages.h"
+#include "hex/messaging/message.h"
+
 
 #define MSG_TYPE(s, c) #s,
 const char *msg_type_names[] = {
     "UndefinedMessageType",
-#include "message_types.h"
+#include "hex/game/message_types.h"
     "NUM_MESSAGE_TYPES"
 };
 #undef MSG_TYPE
@@ -35,7 +31,7 @@ const std::string get_message_type_name(int type) {
 
 #define MSG_TYPE(s, c) if (type == s) { Message *m = new c; m->type = s; return m; } else
 Message *new_message(int type) {
-#include "message_types.h"
+#include "hex/game/message_types.h"
     return NULL;
 }
 #undef MSG_TYPE

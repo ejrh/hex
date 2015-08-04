@@ -1,8 +1,10 @@
 #ifndef LEVEL_VIEW_H
 #define LEVEL_VIEW_H
 
+#include "hex/game/game.h"
 #include "hex/resources/resources.h"
 #include "hex/resources/view_def.h"
+
 
 class FactionView {
 public:
