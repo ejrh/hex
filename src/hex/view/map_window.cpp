@@ -22,7 +22,7 @@ void MapWindow::tile_to_pixel(const Point tile, int *px, int *py) {
     *px = x + 4 + tile.x*4;
     *py = y + 4 + tile.y*4;
     if (tile.x % 2 == 1)
-        py -= 2;
+        *py += 2;
 }
 
 void MapWindow::left_click(int x, int y) {
