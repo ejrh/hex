@@ -6,6 +6,7 @@ public:
     UiWindow(int x, int y, int width, int height);
     virtual ~UiWindow();
 
+    virtual bool contains(int px, int py);
     virtual void draw() = 0;
 
 public:

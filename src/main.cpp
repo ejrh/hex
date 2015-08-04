@@ -199,7 +199,11 @@ void run(Options& options) {
                 down_pos_y = evt.motion.y;
             } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_LMASK) {
                 if (!dragging) {
-                    level_window.left_click(evt.button.x, evt.button.y);
+                    if (level_window.contains(evt.button.x, evt.button.y)) {
+                        level_window.left_click(evt.button.x, evt.button.y);
+                    } else if (map_window.contains(evt.button.x, evt.button.y)) {
+                        map_window.left_click(evt.button.x, evt.button.y);
+                    }
                 }
                 dragging = false;
             } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == 3) {

@@ -90,19 +90,19 @@ void LevelWindow::tile_to_pixel(const Point tile, int *px, int *py) {
         *py += y_spacing / 2;
 }
 
-void LevelWindow::shift(int xrel, int yrel) {
+void LevelWindow::set_position(int x, int y) {
     int min_shift_x = SLOPE_WIDTH;
     int max_shift_x = level_view->tile_views.width * X_SPACING - width;
     int min_shift_y = SLOPE_HEIGHT;
     int max_shift_y = level_view->tile_views.height * Y_SPACING - height;
 
-    shift_x -= xrel;
+    shift_x = x;
     if (shift_x < min_shift_x)
         shift_x = min_shift_x;
     if (shift_x > max_shift_x)
         shift_x = max_shift_x;
 
-    shift_y -= yrel;
+    shift_y = y;
     if (shift_y < min_shift_y)
         shift_y = min_shift_y;
     if (shift_y > max_shift_y)
@@ -112,6 +112,10 @@ void LevelWindow::shift(int xrel, int yrel) {
         shift_x = (min_shift_x + max_shift_x) / 2;
     if (min_shift_y > max_shift_y)
         shift_y = (min_shift_y + max_shift_y) / 2;
+}
+
+void LevelWindow::shift(int xrel, int yrel) {
+    set_position(shift_x - xrel, shift_y - yrel);
 }
 
 void LevelWindow::left_click(int x, int y) {

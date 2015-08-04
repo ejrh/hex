@@ -17,6 +17,7 @@ public:
     void set_mouse_position(int x, int y);
     void mouse_to_tile(int x, int y, Point *tile);
     void tile_to_pixel(const Point tile, int *px, int *py);
+    void set_position(int x, int y);
     void shift(int xrel, int yrel);
     void left_click(int x, int y);
     void right_click(int x, int y);

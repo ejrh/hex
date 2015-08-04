@@ -26,11 +26,16 @@ void MapWindow::tile_to_pixel(const Point tile, int *px, int *py) {
 }
 
 void MapWindow::left_click(int x, int y) {
+    int px = x - this->x - 4;
+    int py = y - this->y - 4;
+
+    int lx = px / 4 * 32 - level_window->width / 2;
+    int ly = py / 4 * 32 - level_window->height / 2;
+    level_window->set_position(lx, ly);
 }
 
 void MapWindow::right_click(int x, int y) {
 }
-
 
 void MapWindow::draw() {
     graphics->fill_rectangle(75,75,50, x, y, width, height);
