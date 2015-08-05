@@ -29,13 +29,18 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
     if (def == NULL)
         return;
 
-    std::vector<ImageRef>& image_series = def->animation.images;
-    ImageRef& image_ref = image_series[(tile_view.phase / 1000) % image_series.size()];
-    Image *ground = image_ref.image;
-
+    Image *ground = choose_image(def->animation.images, tile_view.phase / 1000);
     if (ground != NULL) {
         int alpha = (level_view->check_visibility(tile_pos)) ? 255 : 128;
         graphics->blit(ground, x, y, SDL_BLENDMODE_BLEND, alpha);
+    }
+
+    for (int i = 0; i < 3; i++) {
+        Image *trans = tile_view.transition[i];
+        if (trans != NULL) {
+            int alpha = (level_view->check_visibility(tile_pos)) ? 255 : 128;
+            graphics->blit(trans, x - 6, y - 12, SDL_BLENDMODE_BLEND, alpha);
+        }
     }
 
     if (tile_view.highlighted) {

@@ -26,6 +26,7 @@ public:
     int path_dir;
     unsigned int variation;
     unsigned int phase;
+    Image *transition[3];
 };
 
 class UnitStackView {

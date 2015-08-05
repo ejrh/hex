@@ -1,5 +1,6 @@
 #include "common.h"
 
+#include "hex/basics/hexgrid.h"
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/messaging/message.h"
@@ -42,6 +43,27 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
                 tile_view.view_def = view_def;
                 tile_view.variation = rand();
                 tile_view.phase = rand();
+            }
+
+            for (unsigned int i = 0; i < tile_data.size(); i++) {
+                Point tile_pos(offset.x + i, offset.y);
+                if (!game->level.contains(tile_pos)) {
+                    continue;
+                }
+
+                TileView& tile_view = game_view->level_view.tile_views[tile_pos];
+                TileViewDef *view_def = tile_view.view_def;
+
+                for (int j = 0; j < 3; j++) {
+                    int dir = (j + 5) % 6;
+                    Point neighbour;
+                    get_neighbour(tile_pos, dir, &neighbour);
+                    if (game->level.contains(neighbour) && game_view->level_view.tile_views[neighbour].view_def != view_def) {
+                        tile_view.transition[j] = choose_image(view_def->transitions[j], tile_view.phase * (j + 2) / 1000);
+                    } else {
+                        tile_view.transition[j] = NULL;
+                    }
+                }
             }
         } break;
 

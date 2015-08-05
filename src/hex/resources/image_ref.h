@@ -15,6 +15,13 @@ struct ImageRef {
 
 typedef std::vector<ImageRef> ImageSeries;
 
+inline Image *choose_image(ImageSeries& series, int num) {
+    if (series.size() == 0)
+        return NULL;
+    ImageRef& image_ref = series[num % series.size()];
+    return image_ref.image;
+}
+
 inline Serialiser& operator<<(Serialiser& serialiser, const ImageRef& r) {
     serialiser << r.name;
     return serialiser;

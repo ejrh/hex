@@ -3,7 +3,8 @@
 
 #include "hex/basics/point.h"
 
-extern void get_neighbours(const Point point, Point *points);
+extern void get_neighbour(const Point point, int dir, Point *neighbour);
+extern void get_neighbours(const Point point, Point *neighbours);
 extern int get_direction(const Point point1, const Point point2);
 extern int distance_between(const Point point1, const Point point2);
 extern void get_circle(const Point point, int radius, std::vector<int>& scanlines);

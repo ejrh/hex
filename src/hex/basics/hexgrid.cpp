@@ -3,15 +3,42 @@
 #include "hex/basics/hexgrid.h"
 
 
-void get_neighbours(const Point point, Point *points) {
+void get_neighbour(const Point point, int dir, Point *neighbour) {
     int side_adjustment1 = (point.x % 2) ? 0 : -1;
     int side_adjustment2 = side_adjustment1 + 1;
-    points[0] = Point(point.x, point.y - 1);
-    points[1] = Point(point.x + 1, point.y + side_adjustment1);
-    points[2] = Point(point.x + 1, point.y + side_adjustment2);
-    points[3] = Point(point.x, point.y + 1);
-    points[4] = Point(point.x - 1, point.y + side_adjustment2);
-    points[5] = Point(point.x - 1, point.y + side_adjustment1);
+    switch (dir) {
+        case 0:
+            *neighbour = Point(point.x, point.y - 1);
+            break;
+        case 1:
+            *neighbour = Point(point.x + 1, point.y + side_adjustment1);
+            break;
+        case 2:
+            *neighbour = Point(point.x + 1, point.y + side_adjustment2);
+            break;
+        case 3:
+            *neighbour = Point(point.x, point.y + 1);
+            break;
+        case 4:
+            *neighbour = Point(point.x - 1, point.y + side_adjustment2);
+            break;
+        case 5:
+            *neighbour = Point(point.x - 1, point.y + side_adjustment1);
+            break;
+        default:
+            *neighbour = point;
+    }
+}
+
+void get_neighbours(const Point point, Point *neighbour) {
+    int side_adjustment1 = (point.x % 2) ? 0 : -1;
+    int side_adjustment2 = side_adjustment1 + 1;
+    neighbour[0] = Point(point.x, point.y - 1);
+    neighbour[1] = Point(point.x + 1, point.y + side_adjustment1);
+    neighbour[2] = Point(point.x + 1, point.y + side_adjustment2);
+    neighbour[3] = Point(point.x, point.y + 1);
+    neighbour[4] = Point(point.x - 1, point.y + side_adjustment2);
+    neighbour[5] = Point(point.x - 1, point.y + side_adjustment1);
 }
 
 int get_direction(const Point point1, const Point point2) {

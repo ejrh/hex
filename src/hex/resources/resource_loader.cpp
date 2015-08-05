@@ -53,6 +53,13 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
             last_tile_view_def->animation.images = upd->data2;
         } break;
 
+        case TileTransition: {
+            boost::shared_ptr<TileTransitionMessage> upd = boost::dynamic_pointer_cast<TileTransitionMessage>(msg);
+            last_tile_view_def->transitions[0] = upd->data1;
+            last_tile_view_def->transitions[1] = upd->data2;
+            last_tile_view_def->transitions[2] = upd->data3;
+        } break;
+
         case CreateUnitView: {
             boost::shared_ptr<WrapperMessage<UnitViewDef> > upd = boost::dynamic_pointer_cast<WrapperMessage<UnitViewDef> >(msg);
             UnitViewDef *def = new UnitViewDef(upd->data);
