@@ -59,6 +59,7 @@ private:
     Path path;
     int progress;
 
+    friend class GameView;
     friend class LevelView;
     friend class LevelWindow;
     friend class MapWindow;
@@ -68,56 +69,46 @@ class MessageReceiver;
 
 class LevelView {
 public:
-    LevelView(Level *level, Resources *resources, MessageReceiver *dispatcher);
+    LevelView(Level *level);
     ~LevelView();
-    void resize(int width, int height);
-    void update();
-    void set_highlight_tile(const Point& tile_pos);
-    void left_click_tile(const Point& tile_pos);
-    void right_click_tile(const Point& tile_pos);
 
+    void resize(int width, int height);
+    void set_highlight_tile(const Point& tile_pos);
     bool check_visibility(const Point& tile_pos);
 
 public:
     Level *level;
-    std::map<int, UnitStackView> unit_stack_views;
     Vector2<TileView> tile_views;
-
-protected:
-    void set_drawn_path(const Path& path);
-    UnitStackView *get_unit_stack_view(const UnitStack &stack);
-    TileView *get_tile_view(const Point tile_pos);
-
-protected:
-    unsigned int phase;
-    Resources *resources;
-    MessageReceiver *dispatcher;
-    unsigned int last_update;
     Point highlight_tile;
-    UnitStack *selected_stack;
-    std::set<int> selected_units;
     VisibilityMap visibility;
     VisibilityMap discovered;
-    Path drawn_path;
-
-    std::vector<Ghost> ghosts;
     VisibilityMap ghost_visibility;
-
-    friend class LevelRenderer;
-    friend class LevelWindow;
-    friend class MapWindow;
-    friend class StackWindow;
-    friend class ViewUpdater;
 };
 
 class GameView {
 public:
-    GameView(Game *game, Resources *resources, MessageReceiver *dispatcher): game(game), level_view(&game->level, resources, dispatcher) { }
+    GameView(Game *game, Resources *resources, MessageReceiver *dispatcher);
+
+    void update();
+    void left_click_tile(const Point& tile_pos);
+    void right_click_tile(const Point& tile_pos);
+    void set_drawn_path(const Path& path);
+    UnitStackView *get_unit_stack_view(const UnitStack &stack);
+    TileView *get_tile_view(const Point tile_pos);
 
 public:
     Game *game;
     LevelView level_view;
+    Resources *resources;
+    MessageReceiver *dispatcher;
+    unsigned int last_update;
+    unsigned int phase;
     std::map<int, FactionView *> faction_views;
+    std::map<int, UnitStackView> unit_stack_views;
+    std::vector<Ghost> ghosts;
+    UnitStack *selected_stack;
+    std::set<int> selected_units;
+    Path drawn_path;
 };
 
 #endif

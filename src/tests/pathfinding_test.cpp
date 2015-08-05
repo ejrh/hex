@@ -34,36 +34,36 @@ MovementModel movement_model;
 
 UnitStack party(0, source, NULL);
 
-class PathfindingLevelView: public LevelView {
+class PathfindingView: public GameView {
 public:
-    PathfindingLevelView(Level *level):
-            LevelView(level, &::resources, NULL), pathfinder(level, &movement_model), brush_radius(2) {
-        discovered.fill();
+    PathfindingView(Game *game):
+            GameView(game, &::resources, NULL), pathfinder(&game->level, &movement_model), brush_radius(2) {
+        level_view.discovered.fill();
     }
 
     void left_click() {
-        source = highlight_tile;
-        if (level->contains(source) && level->contains(target)) {
+        source = level_view.highlight_tile;
+        if (level_view.level->contains(source) && level_view.level->contains(target)) {
             pathfinder.clear();
             pathfinder.start(&party, source, target);
         }
     }
 
     void middle_click() {
-        target = highlight_tile;
-        if (level->contains(source) && level->contains(target)) {
+        target = level_view.highlight_tile;
+        if (level_view.level->contains(source) && level_view.level->contains(target)) {
             pathfinder.clear();
             pathfinder.start(&party, source, target);
         }
     }
 
     void right_click() {
-        Point tile_pos = highlight_tile;
-        if (!level->contains(tile_pos))
+        Point tile_pos = level_view.highlight_tile;
+        if (!level_view.level->contains(tile_pos))
             return;
 
         TileType *paint;
-        if (level->tiles[tile_pos].type == &closed_tile)
+        if (level_view.level->tiles[tile_pos].type == &closed_tile)
             paint = &open_tile;
         else
             paint = &closed_tile;
@@ -74,8 +74,8 @@ public:
         for (int i = 0; i < num_scanlines; i++) {
             for (int j = -scanlines[i]; j <= scanlines[i]; j++) {
                 Point point(tile_pos.x + j, tile_pos.y - brush_radius + i);
-                if (level->contains(point))
-                    level->tiles[point].type = paint;
+                if (level_view.level->contains(point))
+                    level_view.level->tiles[point].type = paint;
             }
         }
     }
@@ -88,7 +88,7 @@ public:
                 Path new_path;
                 pathfinder.build_path(new_path);
                 for (Path::const_iterator iter = new_path.begin(); iter != new_path.end(); iter++) {
-                    tile_views[iter->y][iter->x].phase = 1;
+                    level_view.tile_views[iter->y][iter->x].phase = 1;
                 }
             }
         }
@@ -101,8 +101,8 @@ public:
 
 class PathfindingRenderer: public LevelRenderer {
 public:
-    PathfindingRenderer(Graphics *graphics, Level *level, PathfindingLevelView *level_view):
-            LevelRenderer(graphics, &::resources, level, NULL, level_view) { }
+    PathfindingRenderer(Graphics *graphics, Level *level, PathfindingView *view):
+            LevelRenderer(graphics, &::resources, level, view) { }
     void render_tile(int x, int y, Point tile_pos);
 };
 
@@ -120,9 +120,9 @@ void PathfindingRenderer::render_tile(int x, int y, Point tile_pos) {
     graphics->draw_lines(100,100,200, points, 7);
 
     Tile &tile = level->tiles[tile_pos];
-    TileView &tile_view = level_view->tile_views[tile_pos];
+    TileView &tile_view = view->level_view.tile_views[tile_pos];
 
-    Pathfinder &pathfinder = (static_cast<PathfindingLevelView *>(level_view))->pathfinder;
+    Pathfinder &pathfinder = (static_cast<PathfindingView *>(view))->pathfinder;
     PathfinderNode &node = pathfinder.nodes[tile_pos];
 
     if (tile.type == &closed_tile) {
@@ -189,13 +189,14 @@ void run() {
     Graphics graphics;
     graphics.start();
 
-    Level *level = new Level(200,200);
-    generate_level(*level);
+    Game game;
+    game.level.resize(200, 200);
+    generate_level(game.level);
 
-    PathfindingLevelView level_view(level);
+    PathfindingView view(&game);
 
-    PathfindingRenderer level_renderer(&graphics, level, &level_view);
-    LevelWindow level_window(graphics.width, graphics.height, &level_view, &level_renderer, &resources);
+    PathfindingRenderer level_renderer(&graphics, &game.level, &view);
+    LevelWindow level_window(graphics.width, graphics.height, &view, &level_renderer, &resources);
 
     int down_pos_x, down_pos_y;
     bool dragging = false;
@@ -218,11 +219,11 @@ void run() {
         } else if (evt.type == SDL_MOUSEBUTTONUP && dragging) {
             dragging = false;
         } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_LEFT) {
-            level_view.left_click();
+            view.left_click();
         } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_MIDDLE) {
-            level_view.middle_click();
+            view.middle_click();
         } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_RIGHT) {
-            level_view.right_click();
+            view.right_click();
         } else if (evt.type == SDL_MOUSEMOTION && dragging) {
             level_window.shift(evt.motion.xrel, evt.motion.yrel);
         } else if (evt.type == SDL_MOUSEMOTION) {
@@ -232,19 +233,19 @@ void run() {
 
         if (evt.type == SDL_KEYDOWN) {
             switch (evt.key.keysym.sym) {
-                case SDLK_1: level_view.brush_radius = 1; break;
-                case SDLK_2: level_view.brush_radius = 2; break;
-                case SDLK_3: level_view.brush_radius = 3; break;
-                case SDLK_4: level_view.brush_radius = 4; break;
-                case SDLK_5: level_view.brush_radius = 5; break;
-                case SDLK_6: level_view.brush_radius = 6; break;
-                case SDLK_7: level_view.brush_radius = 7; break;
-                case SDLK_8: level_view.brush_radius = 8; break;
-                case SDLK_9: level_view.brush_radius = 9; break;
+                case SDLK_1: view.brush_radius = 1; break;
+                case SDLK_2: view.brush_radius = 2; break;
+                case SDLK_3: view.brush_radius = 3; break;
+                case SDLK_4: view.brush_radius = 4; break;
+                case SDLK_5: view.brush_radius = 5; break;
+                case SDLK_6: view.brush_radius = 6; break;
+                case SDLK_7: view.brush_radius = 7; break;
+                case SDLK_8: view.brush_radius = 8; break;
+                case SDLK_9: view.brush_radius = 9; break;
             }
         }
 
-        level_view.update();
+        view.update();
 
         SDL_SetRenderDrawColor(graphics.renderer, 0,0,0, 255);
         SDL_RenderClear(graphics.renderer);
@@ -252,8 +253,6 @@ void run() {
         level_window.draw();
         graphics.update();
     }
-
-    delete level;
 
     graphics.stop();
 }

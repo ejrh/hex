@@ -11,7 +11,7 @@ class LevelRenderer;
 
 class StackWindow: public UiWindow {
 public:
-    StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, LevelView *level_view, LevelRenderer *renderer);
+    StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view, LevelRenderer *renderer);
     void draw();
 
     static const int units_across = 4;
@@ -26,7 +26,7 @@ public:
 private:
     Resources *resources;
     Graphics *graphics;
-    LevelView *level_view;
+    GameView *view;
     LevelRenderer *renderer;
 };
 

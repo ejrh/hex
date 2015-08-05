@@ -7,15 +7,15 @@
 #include "hex/view/view.h"
 
 
-StackWindow::StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, LevelView *level_view, LevelRenderer *renderer):
-        UiWindow(x, y, width, height), resources(resources), graphics(graphics), level_view(level_view), renderer(renderer) {
+StackWindow::StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view, LevelRenderer *renderer):
+        UiWindow(x, y, width, height), resources(resources), graphics(graphics), view(view), renderer(renderer) {
 
 }
 
 void StackWindow::draw() {
     graphics->fill_rectangle(100,150,100, x, y, width, height);
 
-    UnitStack *stack = level_view->selected_stack;
+    UnitStack *stack = view->selected_stack;
     if (stack != NULL) {
         int px = x + StackWindow::border;
         int py = y + StackWindow::border;

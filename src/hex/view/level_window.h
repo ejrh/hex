@@ -12,7 +12,7 @@ class Ghost;
 
 class LevelWindow: public UiWindow {
 public:
-    LevelWindow(int width, int height, LevelView *level_view, LevelRenderer *level_renderer, Resources *resources);
+    LevelWindow(int width, int height, GameView *view, LevelRenderer *level_renderer, Resources *resources);
     ~LevelWindow();
     void set_mouse_position(int x, int y);
     void mouse_to_tile(int x, int y, Point *tile);
@@ -27,7 +27,7 @@ public:
     void draw_ghost(Ghost *ghost);
 
 public:
-    LevelView *level_view;
+    GameView *view;
     LevelRenderer *level_renderer;
 
 protected:

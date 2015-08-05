@@ -13,9 +13,9 @@
 #define SLOPE_WIDTH (TILE_WIDTH - X_SPACING)
 #define SLOPE_HEIGHT (Y_SPACING/2)
 
-LevelWindow::LevelWindow(int width, int height, LevelView *level_view, LevelRenderer *level_renderer, Resources *resources):
+LevelWindow::LevelWindow(int width, int height, GameView *view, LevelRenderer *level_renderer, Resources *resources):
         UiWindow(0, 0, width, height),
-        level_view(level_view), level_renderer(level_renderer), resources(resources),
+        view(view), level_renderer(level_renderer), resources(resources),
         shift_x(SLOPE_WIDTH), shift_y(SLOPE_HEIGHT), x_spacing(X_SPACING), y_spacing(Y_SPACING) {
     shift(0, 0);
 }
@@ -27,7 +27,7 @@ void LevelWindow::set_mouse_position(int x, int y) {
     Point tile_pos;
 
     mouse_to_tile(x, y, &tile_pos);
-    level_view->set_highlight_tile(tile_pos);
+    view->level_view.set_highlight_tile(tile_pos);
 }
 
 void LevelWindow::mouse_to_tile(int x, int y, Point *tile) {
@@ -92,9 +92,9 @@ void LevelWindow::tile_to_pixel(const Point tile, int *px, int *py) {
 
 void LevelWindow::set_position(int x, int y) {
     int min_shift_x = SLOPE_WIDTH;
-    int max_shift_x = level_view->tile_views.width * X_SPACING - width;
+    int max_shift_x = view->level_view.tile_views.width * X_SPACING - width;
     int min_shift_y = SLOPE_HEIGHT;
-    int max_shift_y = level_view->tile_views.height * Y_SPACING - height;
+    int max_shift_y = view->level_view.tile_views.height * Y_SPACING - height;
 
     shift_x = x;
     if (shift_x < min_shift_x)
@@ -122,14 +122,14 @@ void LevelWindow::left_click(int x, int y) {
     Point tile_pos;
 
     mouse_to_tile(x, y, &tile_pos);
-    level_view->left_click_tile(tile_pos);
+    view->left_click_tile(tile_pos);
 }
 
 void LevelWindow::right_click(int x, int y) {
     Point tile_pos;
 
     mouse_to_tile(x, y, &tile_pos);
-    level_view->right_click_tile(tile_pos);
+    view->right_click_tile(tile_pos);
 }
 
 void LevelWindow::draw() {
@@ -137,7 +137,7 @@ void LevelWindow::draw() {
     draw_level(&LevelRenderer::render_tile);
     draw_level(&LevelRenderer::render_unit_stack);
     draw_level(&LevelRenderer::render_path_arrow);
-    for (std::vector<Ghost>::iterator iter = level_view->ghosts.begin(); iter != level_view->ghosts.end(); iter++) {
+    for (std::vector<Ghost>::iterator iter = view->ghosts.begin(); iter != view->ghosts.end(); iter++) {
         draw_ghost(&*iter);
     }
 }
@@ -156,18 +156,18 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
     if (min_pos.y < 0)
         min_pos.y = 0;
     max_pos.x += 2;
-    if (max_pos.x > level_view->tile_views.width)
-        max_pos.x = level_view->tile_views.width;
+    if (max_pos.x > view->level_view.tile_views.width)
+        max_pos.x = view->level_view.tile_views.width;
     max_pos.y += 2;
-    if (max_pos.y > level_view->tile_views.height)
-        max_pos.y = level_view->tile_views.height;
+    if (max_pos.y > view->level_view.tile_views.height)
+        max_pos.y = view->level_view.tile_views.height;
 
     for (int i = min_pos.y; i < max_pos.y; i++) {
         for (int j = min_pos.x; j < max_pos.x; j += 2) {
             int xpos = j*x_spacing - shift_x;
             int ypos = i*y_spacing - shift_y;
             Point tile_pos(j, i);
-            if (!level_view->discovered.check(tile_pos))
+            if (!view->level_view.discovered.check(tile_pos))
                 continue;
             (*level_renderer.*render)(xpos, ypos, tile_pos);
         }
@@ -177,7 +177,7 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
             int xpos = j*x_spacing - shift_x;
             int ypos = i*y_spacing + y_offset - shift_y;
             Point tile_pos(j, i);
-            if (!level_view->discovered.check(tile_pos))
+            if (!view->level_view.discovered.check(tile_pos))
                 continue;
             (*level_renderer.*render)(xpos, ypos, tile_pos);
         }
@@ -185,7 +185,7 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
 }
 
 void LevelWindow::draw_ghost(Ghost *ghost) {
-    UnitStackView *stack_view = level_view->get_unit_stack_view(*ghost->stack);
+    UnitStackView *stack_view = view->get_unit_stack_view(*ghost->stack);
     if (stack_view == NULL)
         return;
 
@@ -193,7 +193,7 @@ void LevelWindow::draw_ghost(Ghost *ghost) {
     Point prev_pos = ghost->path[step];
     Point next_pos = ghost->path[step + 1];
 
-    if (!level_view->check_visibility(prev_pos) && !level_view->check_visibility(next_pos))
+    if (!view->level_view.check_visibility(prev_pos) && !view->level_view.check_visibility(next_pos))
         return;
 
     int f = ghost->progress % 1000;

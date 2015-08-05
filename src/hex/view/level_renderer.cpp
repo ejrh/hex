@@ -9,8 +9,8 @@
 #include "hex/view/level_renderer.h"
 
 
-LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *level, GameView *view, LevelView *level_view):
-        graphics(graphics), resources(resources), level(level), view(view), level_view(level_view) {
+LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *level, GameView *view):
+        graphics(graphics), resources(resources), level(level), view(view) {
     cursor_images = resources->image_series["CURSORS"];
     arrow_images = resources->image_series["ARROWS"];
 }
@@ -24,21 +24,21 @@ void LevelRenderer::clear(int x, int y, int width, int height) {
 
 void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
 
-    TileView& tile_view = level_view->tile_views[tile_pos];
+    TileView& tile_view = view->level_view.tile_views[tile_pos];
     TileViewDef *def = tile_view.view_def;
     if (def == NULL)
         return;
 
     Image *ground = choose_image(def->animation.images, tile_view.phase / 1000);
     if (ground != NULL) {
-        int alpha = (level_view->check_visibility(tile_pos)) ? 255 : 128;
+        int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
         graphics->blit(ground, x, y, SDL_BLENDMODE_BLEND, alpha);
     }
 
     for (int i = 0; i < 3; i++) {
         Image *trans = tile_view.transition[i];
         if (trans != NULL) {
-            int alpha = (level_view->check_visibility(tile_pos)) ? 255 : 128;
+            int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
             graphics->blit(trans, x - 6, y - 12, SDL_BLENDMODE_BLEND, alpha);
         }
     }
@@ -58,7 +58,7 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
 }
 
 void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
-    if (!level_view->visibility.check(tile_pos))
+    if (!view->level_view.visibility.check(tile_pos))
         return;
 
     Tile &tile = level->tiles[tile_pos];
@@ -66,7 +66,7 @@ void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
     if (!stack)
         return;
 
-    UnitStackView& stack_view = *level_view->get_unit_stack_view(*stack);
+    UnitStackView& stack_view = *view->get_unit_stack_view(*stack);
     if (stack_view.moving)
         return;
 
@@ -103,7 +103,7 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
     }
 
     if (stack_view.selected && !stack_view.moving) {
-        int add_phase = (level_view->phase / 1000) % 32;
+        int add_phase = (view->phase / 1000) % 32;
         if (add_phase < 16)
             add_phase = add_phase*16;
         else {
@@ -140,7 +140,7 @@ void LevelRenderer::draw_unit(int x, int y, Unit &unit, UnitViewDef *view_def) {
 }
 
 void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {
-    TileView &tile_view = level_view->tile_views[tile_pos];
+    TileView &tile_view = view->level_view.tile_views[tile_pos];
 
     if (tile_view.path_dir >= 0 && tile_view.path_dir < 6) {
         Image *path_arrow = arrow_images[tile_view.path_dir].image;

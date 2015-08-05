@@ -39,7 +39,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
                 std::string& tile_type_name = tile_data[i];
                 TileType *tile_type = game->tile_types[tile_type_name];
                 TileView& tile_view = game_view->level_view.tile_views[tile_pos];
-                TileViewDef *view_def = game_view->level_view.resources->get_tile_view_def(tile_type->name);
+                TileViewDef *view_def = resources->get_tile_view_def(tile_type->name);
                 tile_view.view_def = view_def;
                 tile_view.variation = rand();
                 tile_view.phase = rand();
@@ -94,7 +94,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             }
 
             UnitStackView stack_view(stack, view_def);
-            game_view->level_view.unit_stack_views[stack->id] = stack_view;
+            game_view->unit_stack_views[stack->id] = stack_view;
         } break;
 
         case CreateUnit: {
@@ -107,7 +107,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             if (stack->units.empty())
                 return;
 
-            UnitStackView *stack_view = &game_view->level_view.unit_stack_views[upd->data1];
+            UnitStackView *stack_view = &game_view->unit_stack_views[upd->data1];
 
             UnitType *unit_type = stack->units[0]->type;
             UnitViewDef *view_def = resources->get_unit_view_def(unit_type->name);
@@ -125,31 +125,31 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
 
             UnitStack *stack = game->get_stack(upd->data1);
             if (stack == NULL) {
-                game_view->level_view.unit_stack_views.erase(upd->data1);
-                game_view->level_view.selected_stack = NULL;
-                game_view->level_view.set_drawn_path(Path());
+                game_view->unit_stack_views.erase(upd->data1);
+                game_view->selected_stack = NULL;
+                game_view->set_drawn_path(Path());
             }
 
             if (upd->data4 == 0) {
                 UnitStack *stack = game->get_stack(upd->data1);
-                UnitStackView *stack_view = &game_view->level_view.unit_stack_views[stack->id];
+                UnitStackView *stack_view = &game_view->unit_stack_views[stack->id];
                 stack_view->path = Path();
-                if (game_view->level_view.selected_stack == stack) {
-                    game_view->level_view.set_drawn_path(stack_view->path);
+                if (game_view->selected_stack == stack) {
+                    game_view->set_drawn_path(stack_view->path);
                 }
                 if (stack_view->view_def != NULL && upd->data3.size() > 1) {
                     Ghost ghost(stack, upd->data3, 0);
-                    game_view->level_view.ghosts.push_back(ghost);
+                    game_view->ghosts.push_back(ghost);
                     stack_view->moving = true;
                     game_view->level_view.visibility.mask(stack);
                     game_view->level_view.visibility.rebuild();
                 }
             } else {
                 UnitStack *stack = game->get_stack(upd->data4);
-                UnitStackView *stack_view = &game_view->level_view.unit_stack_views[stack->id];
+                UnitStackView *stack_view = &game_view->unit_stack_views[stack->id];
                 if (stack_view->view_def != NULL && upd->data3.size() > 1) {
                     Ghost ghost(stack, upd->data3, 0);
-                    game_view->level_view.ghosts.push_back(ghost);
+                    game_view->ghosts.push_back(ghost);
                     //TODO target stack should be visible but not movable
                     //stack_view->moving = true;
                 }

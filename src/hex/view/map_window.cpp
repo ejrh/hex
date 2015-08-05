@@ -62,7 +62,7 @@ void MapWindow::draw() {
             graphics->fill_rectangle(r,g,b, px, py, 4, 4);
         }
 
-    for (std::map<int, UnitStackView>::iterator iter = view->level_view.unit_stack_views.begin(); iter != view->level_view.unit_stack_views.end(); iter++) {
+    for (std::map<int, UnitStackView>::iterator iter = view->unit_stack_views.begin(); iter != view->unit_stack_views.end(); iter++) {
         UnitStack *stack = iter->second.stack;
         if (iter->second.moving || !view->level_view.check_visibility(stack->position))
             continue;
@@ -77,7 +77,7 @@ void MapWindow::draw() {
         graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, px, py, 4, 4);
     }
 
-    for (std::vector<Ghost>::iterator iter = view->level_view.ghosts.begin(); iter != view->level_view.ghosts.end(); iter++) {
+    for (std::vector<Ghost>::iterator iter = view->ghosts.begin(); iter != view->ghosts.end(); iter++) {
         Ghost& ghost = *iter;
         UnitStack *stack = ghost.stack;
         if (!view->level_view.check_visibility(ghost.position))
