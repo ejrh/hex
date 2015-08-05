@@ -40,7 +40,9 @@ set(srcs
         graphics/font.h
         graphics/graphics.cpp
         graphics/graphics.h
+        graphics/hss.cpp
         graphics/ilb.cpp
+        graphics/ilb.h
         graphics/load_image.cpp
         messaging/event_pusher.cpp
         messaging/event_pusher.h

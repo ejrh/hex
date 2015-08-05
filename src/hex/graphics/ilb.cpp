@@ -2,215 +2,134 @@
 
 #include "hex/basics/error.h"
 #include "hex/graphics/graphics.h"
-
-#define ILB_MAGIC 0x424C4904
-#define ILB_VERSION_3 0x40400000
-#define ILB_VERSION_4 0x40800000
-#define ILB_EOF_ID (int) 0xFFFFFFFF
-
-#define ILB_TYPE_RLESPRITE08 2
-#define ILB_TYPE_PICTURE16 16
-#define ILB_TYPE_RLESPRITE16 17
-#define ILB_TYPE_TRANSPARENT_RLESPRITE16 18
-#define ILB_TYPE_SPRITE16 22
-
-#define ILB_SHOW_OPAQUE 0
-#define ILB_SHOW_TRANSPARENT 1
-#define ILB_SHOW_BLENDED 2
-
-#define ILB_BLEND_USER 0
-#define ILB_BLEND_ALPHA 1
-#define ILB_BLEND_BRIGHTEN 2
-#define ILB_BLEND_INTENSITY 3
-#define ILB_BLEND_SHADOW 4
-#define ILB_BLEND_LINEAR_ALPHA 5
-
-#define ILB_FORMAT_565 0x56509310
+#include "hex/graphics/ilb.h"
 
 #define MAX_NAME_LENGTH 100
 
-class Reader {
-private:
-    std::istream& file;
-public:
-    Reader(std::istream& file): file(file) { }
-    virtual ~Reader() { }
+long Reader::current_position() {
+    return (long) file.tellg();
+}
 
-    long current_position() {
-        return (long) file.tellg();
-    }
+void Reader::set_position(long new_position) {
+    file.seekg(new_position, std::ios_base::beg);
+}
 
-    void set_position(int new_position) {
-        file.seekg(new_position, std::ios_base::beg);
-    }
+long Reader::size() {
+    std::streamoff pos = file.tellg();
+    file.seekg (0, file.end);
+    std::streamoff size = file.tellg();
+    file.seekg(pos, file.beg);
+    return (long) size;
+}
 
-    unsigned char read_byte() {
-        char buffer[1];
+unsigned char Reader::read_byte() {
+    char buffer[1];
 
-        file.read(buffer, 1);
+    file.read(buffer, 1);
 
-        return (unsigned char) buffer[0];
-    }
+    return (unsigned char) buffer[0];
+}
 
-    int read_short() {
-        unsigned char buffer[2];
+int Reader::read_short() {
+    unsigned char buffer[2];
 
-        file.read((char *) buffer, 2);
+    file.read((char *) buffer, 2);
 
-        unsigned int a = buffer[0];
-        unsigned int b = buffer[1];
+    unsigned int a = buffer[0];
+    unsigned int b = buffer[1];
 
-        return (short) (a | (b << 8));
-    }
+    return (short) (a | (b << 8));
+}
 
-    int read_int() {
-        unsigned char buffer[4];
+int Reader::read_int() {
+    unsigned char buffer[4];
 
-        file.read((char *) buffer, 4);
+    file.read((char *) buffer, 4);
 
-        unsigned int a = buffer[0];
-        unsigned int b = buffer[1];
-        unsigned int c = buffer[2];
-        unsigned int d = buffer[3];
+    unsigned int a = buffer[0];
+    unsigned int b = buffer[1];
+    unsigned int c = buffer[2];
+    unsigned int d = buffer[3];
 
-        return (signed int) (a | (b << 8) | (c << 16) | (d << 24));
-    }
+    return (signed int) (a | (b << 8) | (c << 16) | (d << 24));
+}
 
-    float read_float() {
-        unsigned char buffer[4];
+float Reader::read_float() {
+    unsigned char buffer[4];
 
-        file.read((char *) buffer, 4);
+    file.read((char *) buffer, 4);
 
-        return *(float *) buffer;
-    }
+    return *(float *) buffer;
+}
 
-    void read_data(char *target, int target_size) {
-        file.read(target, target_size);
-    }
+void Reader::read_data(char *target, int target_size) {
+    file.read(target, target_size);
+}
 
-    void read_RLE8(int expected_size, unsigned char transparent, unsigned char *target, int target_size) {
-        while (expected_size > 0) {
-            int scanline_len = read_int() - 4;
-            expected_size -= 4;
-            expected_size -= scanline_len;
-            while (scanline_len > 0) {
-                unsigned char value = read_byte();
+void Reader::read_RLE8(int expected_size, unsigned char transparent, unsigned char *target, int target_size) {
+    while (expected_size > 0) {
+        int scanline_len = read_int() - 4;
+        expected_size -= 4;
+        expected_size -= scanline_len;
+        while (scanline_len > 0) {
+            unsigned char value = read_byte();
+            scanline_len--;
+
+            unsigned char skip;
+            if (value == transparent) {
+                skip = read_byte();
                 scanline_len--;
+            } else {
+                skip = 1;
+            }
 
-                unsigned char skip;
-                if (value == transparent) {
-                    skip = read_byte();
-                    scanline_len--;
-                } else {
-                    skip = 1;
-                }
-
-                while (skip > 0 && target_size > 0) {
-                    skip--;
-                    *target = value;
-                    target++;
-                    target_size--;
-                }
+            while (skip > 0 && target_size > 0) {
+                skip--;
+                *target = value;
+                target++;
+                target_size--;
             }
         }
     }
+}
 
-    void read_RLE16(int expected_size, unsigned short transparent, unsigned short *target, int target_size) {
-        while (expected_size > 0) {
-            int scanline_len = (read_int() - 4) / 2;
-            bool skip_extra_one = (scanline_len % 2 != 0);
-            if (scanline_len > 1000) {
-                throw Error("Scanline length of %d is excessive", scanline_len);
-            }
-            expected_size -= 4;
-            expected_size -= 2 * scanline_len;
-            while (scanline_len > 0) {
-                unsigned short value = (unsigned short ) read_short();
+void Reader::read_RLE16(int expected_size, unsigned short transparent, unsigned short *target, int target_size) {
+    while (expected_size > 0) {
+        int scanline_len = (read_int() - 4) / 2;
+        bool skip_extra_one = (scanline_len % 2 != 0);
+        if (scanline_len > 1000) {
+            throw Error("Scanline length of %d is excessive", scanline_len);
+        }
+        expected_size -= 4;
+        expected_size -= 2 * scanline_len;
+        while (scanline_len > 0) {
+            unsigned short value = (unsigned short ) read_short();
+            scanline_len--;
+
+            unsigned short skip;
+            if (value == transparent) {
+                skip = (unsigned short ) (read_short() / 2);
                 scanline_len--;
-
-                unsigned short skip;
-                if (value == transparent) {
-                    skip = (unsigned short ) (read_short() / 2);
-                    scanline_len--;
-                } else {
-                    skip = 1;
-                }
-
-                while (skip > 0 && target_size > 0) {
-                    skip--;
-                    *target = value;
-                    target++;
-                    target_size -= 2;
-                }
-                if (skip != 0) {
-                    throw Error("RLE16 data exceeded allocated size");
-                }
+            } else {
+                skip = 1;
             }
-            if (skip_extra_one) {
-                read_short();
-                expected_size -= 2;
+
+            while (skip > 0 && target_size > 0) {
+                skip--;
+                *target = value;
+                target++;
+                target_size -= 2;
+            }
+            if (skip != 0) {
+                throw Error("RLE16 data exceeded allocated size");
             }
         }
-    }
-};
-
-struct HeaderData {
-    int magic;
-    int version;
-    int header_length;
-    int image_directory_length;
-    int file_length;
-    int num_palettes;
-};
-
-struct ImageData {
-    int id;
-    int type;
-    unsigned char info_byte;
-    std::string name;
-    int width, height;
-    int x_offset, y_offset;
-    int sub_id;
-    int data_size;
-    int data_offset;
-    int offset_width, offset_height;
-    int palette_num;
-    int clip_width, clip_height;
-    int clip_x_offset, clip_y_offset;
-    int transparency_index;
-    int transparency_colour;
-    unsigned char show_mode, blend_mode;
-    int blend_value;
-    int pixel_format;
-
-    int get_pixel_size() {
-        return clip_height * clip_width * (type == ILB_TYPE_RLESPRITE08 ? 1 : 2);
-    }
-};
-
-class ILBReader: protected Reader {
-public:
-    ILBReader(std::istream &file, Graphics *graphics): Reader(file), graphics(graphics) { };
-    virtual ~ILBReader() {
-        for (std::vector<SDL_Palette *>::iterator i = palettes.begin(); i != palettes.end(); i++) {
-            SDL_FreePalette(*i);
+        if (skip_extra_one) {
+            read_short();
+            expected_size -= 2;
         }
     }
-    void read(ImageMap& image_set);
-
-private:
-    void read_header(HeaderData &header);
-    void read_palette(SDL_Color *palette_data);
-    void read_pixel_format(ImageData &image);
-    void read_clip_info(ImageData &image);
-    char *read_pixel_data(ImageData &image);
-    bool read_image(bool &composite, ImageData &image);
-    Image *create_image(char *pixel_data, ImageData &image);
-
-    HeaderData header;
-    std::vector<SDL_Palette *> palettes;
-    Graphics *graphics;
-};
+}
 
 void ILBReader::read_header(HeaderData &header) {
     header.magic = read_int();
@@ -435,7 +354,7 @@ Image *ILBReader::create_image(char *pixel_data, ImageData &image) {
     return im;
 }
 
-void ILBReader::read(ImageMap& image_set) {
+void ILBReader::read(ImageMap& image_set, const std::string& prefix) {
     read_header(header);
     if (header.magic != ILB_MAGIC)
         throw Error("ILB magic number missing, was: %08x", header.magic);
@@ -472,8 +391,12 @@ void ILBReader::read(ImageMap& image_set) {
 
             if (im != NULL) {
                 std::ostringstream ss;
-                ss << image.name << "/" << image.id;
+                ss << prefix << image.name << "/" << image.id << "-" << image.sub_id;
                 std::string name = ss.str();
+                if (image_set.find(name) != image_set.end()) {
+                    warn("Overwriting previously loaded image: %s", name.c_str());
+                }
+                //trace("Loaded image: %s", name.c_str());
                 image_set[name] = im;
             }
         }
