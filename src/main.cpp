@@ -25,6 +25,7 @@
 #include "hex/view/level_window.h"
 #include "hex/view/map_window.h"
 #include "hex/view/stack_window.h"
+#include "hex/view/player.h"
 #include "hex/view/view.h"
 #include "hex/view/view_updater.h"
 
@@ -90,6 +91,9 @@ void create_game(Game& game, Updater& updater) {
     updater.receive(create_message(CreateFaction, 2, "orcs", "Orc Hegemony"));
     updater.receive(create_message(CreateFaction, 3, "drow", "Great Drow Empire"));
 
+    updater.receive(create_message(GrantFactionView, 0, 2, true));
+    updater.receive(create_message(GrantFactionControl, 0, 2, true));
+
     for (int i = 1; i <= 40; i++) {
         UnitTypeMap::iterator item = game.unit_types.begin();
         std::advance(item, rand() % game.unit_types.size());
@@ -146,6 +150,8 @@ void run(Options& options) {
 
     Client client(&event_pusher);
 
+    Player player(0, std::string("player"));
+
     Game game;
     Updater updater(1000);
     GameArbiter arbiter(&game, &updater);
@@ -154,7 +160,7 @@ void run(Options& options) {
     GameUpdater game_updater(&game);
     updater.subscribe(&game_updater);
 
-    GameView game_view(&game, &resources, &dispatcher);
+    GameView game_view(&game, &player, &resources, &dispatcher);
     ViewUpdater view_updater(&game, &game_view, &resources);
     updater.subscribe(&view_updater);
 

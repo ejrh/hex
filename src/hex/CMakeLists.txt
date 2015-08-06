@@ -75,6 +75,8 @@ set(srcs
         view/level_window.h
         view/map_window.cpp
         view/map_window.h
+        view/player.cpp
+        view/player.h
         view/stack_window.cpp
         view/stack_window.h
         view/view.h

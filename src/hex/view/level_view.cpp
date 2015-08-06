@@ -8,6 +8,7 @@
 #include "hex/game/pathfinding.h"
 #include "hex/messaging/message.h"
 #include "hex/resources/view_def.h"
+#include "hex/view/player.h"
 #include "hex/view/view.h"
 
 

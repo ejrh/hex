@@ -58,7 +58,7 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
 }
 
 void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
-    if (!view->level_view.visibility.check(tile_pos))
+    if (!view->level_view.check_visibility(tile_pos))
         return;
 
     Tile &tile = level->tiles[tile_pos];

@@ -36,6 +36,9 @@ MSG_TYPE(CreateFaction, WM3(int, std::string, std::string))
 MSG_TYPE(CreateStack, WM3(int, Point, int))
 MSG_TYPE(CreateUnit, WM2(int, std::string))
 
+MSG_TYPE(GrantFactionView, WM3(int, int, bool))
+MSG_TYPE(GrantFactionControl, WM3(int, int, bool))
+
 MSG_TYPE(FactionReady, WM2(int, bool))
 MSG_TYPE(Chat, WM(std::string))
 MSG_TYPE(TurnEnd, WM(int))

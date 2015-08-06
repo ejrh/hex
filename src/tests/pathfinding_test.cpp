@@ -37,7 +37,7 @@ UnitStack party(0, source, NULL);
 class PathfindingView: public GameView {
 public:
     PathfindingView(Game *game):
-            GameView(game, &::resources, NULL), pathfinder(&game->level, &movement_model), brush_radius(2) {
+            GameView(game, NULL, &::resources, NULL), pathfinder(&game->level, &movement_model), brush_radius(2) {
         level_view.discovered.fill();
     }
 

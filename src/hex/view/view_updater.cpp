@@ -4,6 +4,7 @@
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/messaging/message.h"
+#include "hex/view/player.h"
 #include "hex/view/view.h"
 #include "hex/view/view_updater.h"
 
@@ -113,8 +114,25 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             UnitViewDef *view_def = resources->get_unit_view_def(unit_type->name);
             stack_view->view_def = view_def;
 
-            game_view->level_view.visibility.rebuild();
-            game_view->level_view.discovered.update();
+            if (game_view->player->has_view(stack->owner)) {
+                game_view->update_visibility();
+            }
+        } break;
+
+        case GrantFactionView: {
+            boost::shared_ptr<GrantFactionViewMessage> upd = boost::dynamic_pointer_cast<GrantFactionViewMessage>(update);
+            if (upd->data1 == game_view->player->id) {
+                Faction *faction = game->get_faction(upd->data2);
+                game_view->player->grant_view(faction, upd->data3);
+            }
+        } break;
+
+        case GrantFactionControl: {
+            boost::shared_ptr<GrantFactionControlMessage> upd = boost::dynamic_pointer_cast<GrantFactionControlMessage>(update);
+            if (upd->data1 == game_view->player->id) {
+                Faction *faction = game->get_faction(upd->data2);
+                game_view->player->grant_control(faction, upd->data3);
+            }
         } break;
 
         case TurnEnd: {
@@ -141,8 +159,9 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
                     Ghost ghost(stack, upd->data3, 0);
                     game_view->ghosts.push_back(ghost);
                     stack_view->moving = true;
-                    game_view->level_view.visibility.mask(stack);
-                    game_view->level_view.visibility.rebuild();
+                    if (game_view->player->has_view(ghost.stack->owner)) {
+                        game_view->update_visibility();
+                    }
                 }
             } else {
                 UnitStack *stack = game->get_stack(upd->data4);

@@ -63,9 +63,11 @@ private:
     friend class LevelView;
     friend class LevelWindow;
     friend class MapWindow;
+    friend class ViewUpdater;
 };
 
 class MessageReceiver;
+class Player;
 
 class LevelView {
 public:
@@ -85,19 +87,22 @@ public:
     VisibilityMap ghost_visibility;
 };
 
+
 class GameView {
 public:
-    GameView(Game *game, Resources *resources, MessageReceiver *dispatcher);
+    GameView(Game *game, Player *player, Resources *resources, MessageReceiver *dispatcher);
 
     void update();
     void left_click_tile(const Point& tile_pos);
     void right_click_tile(const Point& tile_pos);
     void set_drawn_path(const Path& path);
+    void update_visibility();
     UnitStackView *get_unit_stack_view(const UnitStack &stack);
     TileView *get_tile_view(const Point tile_pos);
 
 public:
     Game *game;
+    Player *player;
     LevelView level_view;
     Resources *resources;
     MessageReceiver *dispatcher;
