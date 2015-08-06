@@ -38,6 +38,8 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
                 std::string& tile_type_name = tile_data[i];
                 TileType *tile_type = game->tile_types[tile_type_name];
                 game->level.tiles[tile_pos].type = tile_type;
+                if (tile_type->has_property(Roadable) && rand() % 2)
+                    game->level.tiles[tile_pos].road = true;
             }
         } break;
 

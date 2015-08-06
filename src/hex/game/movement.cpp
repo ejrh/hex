@@ -19,7 +19,10 @@ int MovementModel::cost_to(const UnitStack *party, const Tile *tile) const {
     Unit *unit = *party->units.begin();
 
     if (tile->has_property(Walkable) && unit->has_ability(Walking)) {
-        return 30;
+        if (tile->road)
+            return 20;
+        else
+            return 30;
     }
 
     if (tile->has_property(Swimmable) && unit->has_ability(Swimming)) {

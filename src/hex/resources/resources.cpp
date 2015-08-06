@@ -25,6 +25,7 @@ void Resources::resolve_references() {
         for (int i = 0; i < 3; i++) {
             resolve_image_series(def->transitions[i]);
         }
+        resolve_image_series(def->roads);
     }
 }
 

@@ -60,6 +60,11 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
             last_tile_view_def->transitions[2] = upd->data3;
         } break;
 
+        case TileRoads: {
+            boost::shared_ptr<TileRoadsMessage> upd = boost::dynamic_pointer_cast<TileRoadsMessage>(msg);
+            last_tile_view_def->roads = upd->data;
+        } break;
+
         case CreateUnitView: {
             boost::shared_ptr<WrapperMessage<UnitViewDef> > upd = boost::dynamic_pointer_cast<WrapperMessage<UnitViewDef> >(msg);
             UnitViewDef *def = new UnitViewDef(upd->data);

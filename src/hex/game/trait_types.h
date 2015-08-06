@@ -7,6 +7,7 @@
 TRAIT_TYPE(Walkable)
 TRAIT_TYPE(Swimmable)
 TRAIT_TYPE(Flyable)
+TRAIT_TYPE(Roadable)
 
 // Unit abilities
 TRAIT_TYPE(Walking)

@@ -1,5 +1,5 @@
 # CreateTileType(name, properties)
 CreateTileType("outside", {})
 CreateTileType("water", {"Swimmable", "Flyable"})
-CreateTileType("grass", {"Walkable", "Flyable"})
-CreateTileType("desert", {"Walkable", "Flyable"})
+CreateTileType("grass", {"Walkable", "Flyable", "Roadable"})
+CreateTileType("desert", {"Walkable", "Flyable", "Roadable"})

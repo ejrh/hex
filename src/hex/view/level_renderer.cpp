@@ -43,6 +43,14 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
         }
     }
 
+    for (int i = 0; i < 6; i++) {
+        Image *road = tile_view.road[i];
+        if (road != NULL) {
+            int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
+            graphics->blit(road, x - 6, y - 12, SDL_BLENDMODE_BLEND, alpha);
+        }
+    }
+
     if (tile_view.highlighted) {
         Image *highlight1 = cursor_images[0].image;
         if (highlight1 != NULL)

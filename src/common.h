@@ -22,6 +22,7 @@
 #include <boost/heap/priority_queue.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/array.hpp>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>

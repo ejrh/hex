@@ -106,8 +106,8 @@ typedef std::map<std::string, TileType *> TileTypeMap;
 
 class Tile {
 public:
-    Tile(): type(NULL), stack(NULL) { }
-    Tile(TileType *type): type(type), stack(NULL) { }
+    Tile(): type(NULL), stack(NULL), road(false) { }
+    Tile(TileType *type): type(type), stack(NULL), road(false) { }
 
     bool has_property(TraitType trait) const {
         return type->has_property(trait);
@@ -116,6 +116,7 @@ public:
 public:
     TileType *type;
     UnitStack *stack;
+    bool road;
 };
 
 class Level {

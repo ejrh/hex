@@ -35,6 +35,7 @@ public:
     int r, g, b;
     AnimationDef animation;
     ImageSeries transitions[3];
+    ImageSeries roads;
 };
 
 typedef std::map<std::string, TileViewDef *> TileViewDefMap;

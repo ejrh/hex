@@ -54,15 +54,34 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
 
                 TileView& tile_view = game_view->level_view.tile_views[tile_pos];
                 TileViewDef *view_def = tile_view.view_def;
+                Tile& tile = game->level.tiles[tile_pos];
 
                 for (int j = 0; j < 3; j++) {
                     int dir = (j + 5) % 6;
                     Point neighbour;
                     get_neighbour(tile_pos, dir, &neighbour);
-                    if (game->level.contains(neighbour) && game_view->level_view.tile_views[neighbour].view_def != view_def) {
-                        tile_view.transition[j] = choose_image(view_def->transitions[j], tile_view.phase * (j + 2) / 1000);
+                    if (game->level.contains(neighbour)) {
+                        TileView& neighbour_view = game_view->level_view.tile_views[neighbour];
+                        Tile& neighbour_tile = game->level.tiles[neighbour];
+
+                        if (view_def != neighbour_view.view_def) {
+                            tile_view.transition[j] = choose_image(view_def->transitions[j], tile_view.phase * (j + 2) / 1000);
+                        } else {
+                            tile_view.transition[j] = NULL;
+                        }
+
+                        int opp_dir = (dir + 3) % 6;
+
+                        if (tile.road && neighbour_tile.road) {
+                            tile_view.road[dir] = view_def->roads[dir].image;
+                            neighbour_view.road[opp_dir] = neighbour_view.view_def->roads[opp_dir].image;
+                        } else {
+                            tile_view.road[dir] = NULL;
+                            neighbour_view.road[opp_dir] = NULL;
+                        }
                     } else {
                         tile_view.transition[j] = NULL;
+                        tile_view.road[dir] = NULL;
                     }
                 }
             }

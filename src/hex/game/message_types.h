@@ -21,6 +21,8 @@ MSG_TYPE(ImageSet, WM2(std::string, ImageSeries))
 MSG_TYPE(CreateTileView, WM(TileViewDef))
 MSG_TYPE(TileAnimation, WM2(int, ImageSeries))
 MSG_TYPE(TileTransition, WM3(ImageSeries, ImageSeries, ImageSeries))
+MSG_TYPE(TileRoads, WM(ImageSeries))
+
 MSG_TYPE(CreateUnitView, WM(UnitViewDef))
 MSG_TYPE(UnitHoldAnimation, WM3(int, int, ImageSeries))
 MSG_TYPE(UnitMoveAnimation, WM3(int, int, ImageSeries))
