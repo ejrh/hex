@@ -110,7 +110,8 @@ void TilePainter::paint_roads(const Point& tile_pos) {
         if (!neighbour_tile.road)
             continue;
 
-        tile_view.roads.push_back(view_def->roads[dir].image);
+        if (view_def->roads.size() > dir)
+            tile_view.roads.push_back(view_def->roads[dir].image);
     }
 }
 
@@ -121,23 +122,8 @@ void TilePainter::paint_mountains(const Point& tile_pos) {
 
     Tile& tile = game->level.tiles[tile_pos];
 
-    switch (tile.mountain) {
-        case 1:
-            tile_view.mountain = tile_view.view_def->mountains[0].image;
-            break;
-        case 2:
-            tile_view.mountain = tile_view.view_def->mountains[1].image;
-            break;
-        case 3:
-            tile_view.mountain = tile_view.view_def->mountains[2].image;
-            break;
-        case 4:
-            tile_view.mountain = tile_view.view_def->mountains[3].image;
-            break;
-        case 5:
-            tile_view.mountain = tile_view.view_def->mountains[4].image;
-            break;
-        default:
-            tile_view.mountain = NULL;
-    }
+    if (tile.mountain > 0 && tile_view.view_def->mountains.size() >= tile.mountain)
+        tile_view.mountain = tile_view.view_def->mountains[tile.mountain - 1].image;
+    else
+        tile_view.mountain = NULL;
 }
