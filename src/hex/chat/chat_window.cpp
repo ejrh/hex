@@ -10,6 +10,20 @@ ChatWindow::ChatWindow(int width, int height, Resources *resources, Graphics *gr
         UiWindow(0, 0, width, height), graphics(graphics), dispatcher(dispatcher), open(false) {
 }
 
+bool ChatWindow::receive_event(SDL_Event *evt) {
+    if (evt->type == SDL_KEYDOWN)
+        return keypress(evt->key.keysym.sym);
+    else if (evt->type == SDL_TEXTINPUT) {
+        return type(&evt->text);
+    }
+
+    return false;
+}
+
+bool ChatWindow::contains(int px, int py) {
+    return false;
+}
+
 void ChatWindow::draw() {
     int first_line = chat_history.size() - 10;
     if (first_line < 0)
@@ -30,7 +44,7 @@ void ChatWindow::draw() {
     }
 }
 
-void ChatWindow::keypress(SDL_Keycode key) {
+bool ChatWindow::keypress(SDL_Keycode key) {
     if (open) {
         if (key == SDLK_RETURN) {
             if (chat_line.size() > 0) {
@@ -38,21 +52,26 @@ void ChatWindow::keypress(SDL_Keycode key) {
                 chat_line.clear();
             }
             open = false;
+            return true;
         } else if (key == SDLK_BACKSPACE && chat_line.size() > 0) {
             chat_line.erase(chat_line.size() - 1);
+            return true;
         }
     } else {
         if (key == SDLK_RETURN) {
             open = true;
+            return true;
         }
     }
+    return false;
 }
 
-void ChatWindow::type(SDL_TextInputEvent *evt) {
+bool ChatWindow::type(SDL_TextInputEvent *evt) {
     if (!open)
-        return;
+        return false;
 
     chat_line.append(evt->text);
+    return true;
 }
 
 void ChatWindow::add_to_history(const std::string& line) {

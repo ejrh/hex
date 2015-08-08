@@ -22,6 +22,7 @@ public:
     void left_click(int x, int y);
     void right_click(int x, int y);
 
+    bool receive_event(SDL_Event *evt);
     void draw();
     void draw_level(LevelRenderer::RenderMethod render);
     void draw_ghost(Ghost *ghost);

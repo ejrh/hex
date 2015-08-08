@@ -132,6 +132,23 @@ void LevelWindow::right_click(int x, int y) {
     view->right_click_tile(tile_pos);
 }
 
+bool LevelWindow::receive_event(SDL_Event *evt) {
+    if (evt->type == SDL_MOUSEMOTION) {
+        set_mouse_position(evt->motion.x, evt->motion.y);
+        return true;
+    } else if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_LEFT) {
+        left_click(evt->button.x, evt->button.y);
+        return true;
+    } else if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_RIGHT) {
+        right_click(evt->button.x, evt->button.y);
+        return true;
+    } else if (evt->type == drag_event_type) {
+        shift(evt->motion.xrel, evt->motion.yrel);
+    }
+
+    return false;
+}
+
 void LevelWindow::draw() {
     level_renderer->clear(x, y, width, height);
     draw_level(&LevelRenderer::render_tile);

@@ -138,6 +138,67 @@ void save_game(const std::string& filename, Game *game) {
     game_writer.write(game);
 }
 
+class BackgroundWindow: public UiWindow {
+public:
+    BackgroundWindow(UiLoop *loop, Options *options, Game *game, GameView *game_view, Ai *independent_ai, EventPusher *event_pusher, GameArbiter *arbiter, Updater *updater):
+        UiWindow(0, 0, 0, 0), loop(loop), options(options), game(game), game_view(game_view), independent_ai(independent_ai), event_pusher(event_pusher), arbiter(arbiter), updater(updater) { }
+
+    bool receive_event(SDL_Event *evt) {
+        if (evt->type == SDL_QUIT
+            || (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_ESCAPE)) {
+            loop->running = false;
+            return true;
+        } else if (evt->type == event_pusher->event_type) {
+            boost::shared_ptr<Message> msg = event_pusher->get_message(*evt);
+            if (options->server_mode) {
+                arbiter->receive(msg);
+            } else if (options->client_mode) {
+                updater->receive(msg);
+            }
+            return true;
+        }
+
+        if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_F2) {
+            save_game("save.txt", game);
+            return true;
+        }
+
+        return false;
+    }
+
+    bool contains(int px, int py) {
+        return true;
+    }
+
+    void draw() {
+        game_view->update();
+        independent_ai->update();
+    }
+
+private:
+    UiLoop *loop;
+    Options *options;
+    Game *game;
+    GameView *game_view;
+    Ai *independent_ai;
+    EventPusher *event_pusher;
+    GameArbiter *arbiter;
+    Updater *updater;
+};
+
+class TopWindow: public UiWindow {
+public:
+    TopWindow(Graphics *graphics, Audio *audio): UiWindow(0, 0, 0, 0), graphics(graphics), audio(audio) { }
+
+    void draw() {
+        graphics->update();
+        audio->update();
+    }
+
+private:
+    Graphics *graphics;
+    Audio *audio;
+};
 
 void run(Options& options) {
     Graphics graphics;
@@ -194,85 +255,16 @@ void run(Options& options) {
 
     Audio audio(&resources);
 
-    int down_pos_x = 0, down_pos_y = 0;
-    bool dragging = false;
-
-    bool running = true;
-    unsigned int last_tick = 0;
-    while (running) {
-        SDL_Event evt;
-        while (SDL_PollEvent(&evt)) {
-            if (evt.type == SDL_QUIT
-                || (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_ESCAPE))
-                running = false;
-
-            if (evt.type == SDL_MOUSEMOTION) {
-                level_window.set_mouse_position(evt.motion.x, evt.motion.y);
-            }
-
-            if (evt.type == SDL_MOUSEBUTTONDOWN && evt.button.button == SDL_BUTTON_LMASK) {
-                down_pos_x = evt.motion.x;
-                down_pos_y = evt.motion.y;
-            } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_LMASK) {
-                if (!dragging) {
-                    if (level_window.contains(evt.button.x, evt.button.y)) {
-                        level_window.left_click(evt.button.x, evt.button.y);
-                    } else if (map_window.contains(evt.button.x, evt.button.y)) {
-                        map_window.left_click(evt.button.x, evt.button.y);
-                    }
-                }
-                dragging = false;
-            } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == 3) {
-                if (!dragging) {
-                    level_window.right_click(evt.button.x, evt.button.y);
-                }
-                dragging = false;
-            } else if (evt.type == SDL_MOUSEMOTION && dragging) {
-                level_window.shift(evt.motion.xrel, evt.motion.yrel);
-            } else if (evt.type == SDL_MOUSEMOTION) {
-                if (evt.motion.state == SDL_BUTTON_LMASK &&  abs(evt.motion.x - down_pos_x) > 4 && abs(evt.motion.y - down_pos_y) > 4)
-                    dragging = true;
-            }
-
-            if (evt.type == SDL_KEYDOWN)
-                chat_window.keypress(evt.key.keysym.sym);
-
-            if (evt.type == SDL_TEXTINPUT) {
-                chat_window.type(&evt.text);
-            }
-
-            if (evt.type == event_pusher.event_type) {
-                boost::shared_ptr<Message> msg = event_pusher.get_message(evt);
-                if (options.server_mode) {
-                    arbiter.receive(msg);
-                } else if (options.client_mode) {
-                    updater.receive(msg);
-                }
-            }
-
-            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_F2) {
-                save_game("save.txt", &game);
-            }
-        }
-
-        game_view.update();
-        independent_ai.update();
-
-        level_window.draw();
-        stack_window.draw();
-        chat_window.draw();
-        map_window.draw();
-        graphics.update();
-        audio.update();
-
-        unsigned int tick = SDL_GetTicks();
-        unsigned int tick_diff = tick - last_tick;
-        unsigned int sleep_time = 40 - tick_diff;
-        if (sleep_time > 25)
-            sleep_time = 25;
-        SDL_Delay(sleep_time);
-        last_tick = tick;
-    }
+    UiLoop loop(25);
+    BackgroundWindow bw(&loop, &options, &game, &game_view, &independent_ai, &event_pusher, &arbiter, &updater);
+    loop.add_window(&bw);
+    loop.add_window(&level_window);
+    loop.add_window(&map_window);
+    loop.add_window(&stack_window);
+    loop.add_window(&chat_window);
+    TopWindow tw(&graphics, &audio);
+    loop.add_window(&tw);
+    loop.run();
 
     server.stop();
     client.disconnect();

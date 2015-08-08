@@ -67,6 +67,7 @@ set(srcs
         resources/resources.h
         resources/view_def.h
         resources/view_def_serialisation.h
+        ui/loop.cpp
         ui/ui.h
         ui/ui_window.cpp
         view/game_view.cpp

@@ -19,6 +19,7 @@ public:
     void left_click(int x, int y);
     void right_click(int x, int y);
 
+    bool receive_event(SDL_Event *evt);
     void draw();
 
 public:

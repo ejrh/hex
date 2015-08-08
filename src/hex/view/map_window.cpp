@@ -37,6 +37,18 @@ void MapWindow::left_click(int x, int y) {
 void MapWindow::right_click(int x, int y) {
 }
 
+bool MapWindow::receive_event(SDL_Event *evt) {
+    if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_LEFT) {
+        left_click(evt->button.x, evt->button.y);
+        return true;
+    } else if (evt->type == drag_event_type) {
+        left_click(evt->motion.x, evt->motion.y);
+        return true;
+    }
+
+    return false;
+}
+
 void MapWindow::draw() {
     graphics->fill_rectangle(75,75,50, x, y, width, height);
 

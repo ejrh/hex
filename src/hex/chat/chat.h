@@ -13,9 +13,12 @@ class ChatWindow: public UiWindow {
 public:
     ChatWindow(int width, int height, Resources *resources, Graphics *graphics, MessageReceiver *dispatcher);
 
+    virtual bool receive_event(SDL_Event *evt);
+    virtual bool contains(int px, int py);
     void draw();
-    void keypress(SDL_Keycode key);
-    void type(SDL_TextInputEvent *evt);
+
+    bool keypress(SDL_Keycode key);
+    bool type(SDL_TextInputEvent *evt);
     void add_to_history(const std::string& line);
 
 private:
