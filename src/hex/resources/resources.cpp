@@ -22,8 +22,8 @@ void Resources::resolve_references() {
     for (TileViewDefMap::iterator def_iter = tile_view_defs.begin(); def_iter != tile_view_defs.end(); def_iter++) {
         TileViewDef *def = def_iter->second;
         resolve_image_series(def->animation.images);
-        for (int i = 0; i < 3; i++) {
-            resolve_image_series(def->transitions[i]);
+        for (std::vector<TransitionDef>::iterator trans_iter = def->transitions.begin(); trans_iter != def->transitions.end(); trans_iter++) {
+            resolve_image_series(trans_iter->images);
         }
         resolve_image_series(def->roads);
     }

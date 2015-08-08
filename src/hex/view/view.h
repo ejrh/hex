@@ -17,10 +17,7 @@ public:
 
 class TileView {
 public:
-    TileView(): view_def(NULL), highlighted(false), path_dir(-1), variation(0), phase(0) {
-        transition.fill(NULL);
-        road.fill(NULL);
-    }
+    TileView(): view_def(NULL), highlighted(false), path_dir(-1), variation(0), phase(0) { }
     ~TileView() { }
 
 public:
@@ -29,8 +26,8 @@ public:
     int path_dir;
     unsigned int variation;
     unsigned int phase;
-    boost::array<Image *,3> transition;
-    boost::array<Image *,6> road;
+    std::vector<Image *> transitions;
+    std::vector<Image *> roads;
 };
 
 class UnitStackView {

@@ -25,6 +25,15 @@ public:
 
 typedef std::map<std::string, FactionViewDef *> FactionViewDefMap;
 
+class TransitionDef {
+public:
+    TransitionDef() { }
+
+    std::set<int> dirs;
+    std::set<std::string> type_names;
+    ImageSeries images;
+};
+
 class TileViewDef {
 public:
     TileViewDef() { }
@@ -34,7 +43,7 @@ public:
     std::string name;
     int r, g, b;
     AnimationDef animation;
-    ImageSeries transitions[3];
+    std::vector<TransitionDef> transitions;
     ImageSeries roads;
 };
 

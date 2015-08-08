@@ -152,6 +152,8 @@ bool LevelWindow::receive_event(SDL_Event *evt) {
 void LevelWindow::draw() {
     level_renderer->clear(x, y, width, height);
     draw_level(&LevelRenderer::render_tile);
+    draw_level(&LevelRenderer::render_tile_transitions);
+    draw_level(&LevelRenderer::render_structure);
     draw_level(&LevelRenderer::render_unit_stack);
     draw_level(&LevelRenderer::render_path_arrow);
     for (std::vector<Ghost>::iterator iter = view->ghosts.begin(); iter != view->ghosts.end(); iter++) {

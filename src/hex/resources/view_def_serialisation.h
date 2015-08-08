@@ -25,6 +25,16 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, TileViewDef& d) {
     return deserialiser;
 }
 
+inline Serialiser& operator<<(Serialiser& serialiser, const TransitionDef& d) {
+    serialiser << d.dirs << d.type_names << d.images;
+    return serialiser;
+}
+
+inline Deserialiser& operator>>(Deserialiser& deserialiser, TransitionDef& d) {
+    deserialiser >> d.dirs >> d.type_names >> d.images;
+    return deserialiser;
+}
+
 inline Serialiser& operator<<(Serialiser& serialiser, const UnitViewDef& d) {
     serialiser << d.name << d.move_speed;
     return serialiser;

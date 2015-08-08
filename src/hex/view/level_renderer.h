@@ -24,6 +24,8 @@ public:
 protected:
     void clear(int x, int y, int width, int height);
     virtual void render_tile(int x, int y, Point tile_pos);
+    virtual void render_tile_transitions(int x, int y, Point tile_pos);
+    virtual void render_structure(int x, int y, Point tile_pos);
     virtual void render_unit_stack(int x, int y, Point tile_pos);
     virtual void draw_unit_stack(int x, int y, UnitStackView &stack_view);
     virtual void draw_unit(int x, int y, Unit &unit, UnitViewDef *view_def);

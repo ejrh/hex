@@ -23,7 +23,6 @@ void LevelRenderer::clear(int x, int y, int width, int height) {
 }
 
 void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
-
     TileView& tile_view = view->level_view.tile_views[tile_pos];
     TileViewDef *def = tile_view.view_def;
     if (def == NULL)
@@ -34,50 +33,65 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
         int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
         graphics->blit(ground, x - ground->width / 2, y - ground->height / 2, SDL_BLENDMODE_BLEND, alpha);
     }
+}
 
-    for (int i = 0; i < 3; i++) {
-        Image *trans = tile_view.transition[i];
+void LevelRenderer::render_tile_transitions(int x, int y, Point tile_pos) {
+    TileView& tile_view = view->level_view.tile_views[tile_pos];
+
+    for (std::vector<Image *>::iterator iter = tile_view.transitions.begin(); iter != tile_view.transitions.end(); iter++) {
+        Image *trans = *iter;
         if (trans != NULL) {
             int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
-            graphics->blit(trans, x - trans->width / 2, y - trans->height / 2, SDL_BLENDMODE_BLEND, alpha);
+            int trans_x = x - trans->width / 2;
+            int trans_y = y - trans->height / 2 - 6;
+            graphics->blit(trans, trans_x, trans_y, SDL_BLENDMODE_BLEND, alpha);
         }
     }
+}
 
-    for (int i = 0; i < 6; i++) {
-        Image *road = tile_view.road[i];
+void LevelRenderer::render_structure(int x, int y, Point tile_pos) {
+    TileView& tile_view = view->level_view.tile_views[tile_pos];
+
+    for (std::vector<Image *>::iterator iter = tile_view.roads.begin(); iter != tile_view.roads.end(); iter++) {
+        Image *road = *iter;
         if (road != NULL) {
             int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
             graphics->blit(road, x - road->width / 2, y - road->width / 2, SDL_BLENDMODE_BLEND, alpha);
         }
     }
+}
 
+void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
+    bool draw_it = true;
+    if (!view->level_view.check_visibility(tile_pos))
+        return;
+
+    Tile &tile = level->tiles[tile_pos];
+    UnitStack *stack = tile.stack;
+    UnitStackView *stack_view;
+    if (!stack) {
+        draw_it = false;
+    } else {
+        stack_view = view->get_unit_stack_view(*stack);
+        if (stack_view->moving)
+            draw_it = false;
+    }
+
+    TileView& tile_view = view->level_view.tile_views[tile_pos];
     if (tile_view.highlighted) {
         Image *highlight1 = cursor_images[0].image;
         if (highlight1 != NULL)
             graphics->blit(highlight1, x - highlight1->width / 2, y - highlight1->height / 2 - 16, SDL_BLENDMODE_ADD, 128);
     }
 
+    if (draw_it)
+        draw_unit_stack(x, y, *stack_view);
+
     if (tile_view.highlighted && cursor_images.size() >= 2) {
         Image *highlight2 = cursor_images[1].image;
         if (highlight2 != NULL)
             graphics->blit(highlight2, x - highlight2->width / 2, y - highlight2->height / 2 - 16, SDL_BLENDMODE_ADD, 128);
     }
-}
-
-void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
-    if (!view->level_view.check_visibility(tile_pos))
-        return;
-
-    Tile &tile = level->tiles[tile_pos];
-    UnitStack *stack = tile.stack;
-    if (!stack)
-        return;
-
-    UnitStackView& stack_view = *view->get_unit_stack_view(*stack);
-    if (stack_view.moving)
-        return;
-
-    draw_unit_stack(x, y, stack_view);
 }
 
 void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
