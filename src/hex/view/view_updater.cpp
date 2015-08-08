@@ -1,10 +1,10 @@
 #include "common.h"
 
-#include "hex/basics/hexgrid.h"
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/messaging/message.h"
 #include "hex/view/player.h"
+#include "hex/view/tile_painter.h"
 #include "hex/view/view.h"
 #include "hex/view/view_updater.h"
 
@@ -30,61 +30,9 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         case SetLevelData: {
             boost::shared_ptr<WrapperMessage2<Point, std::vector<std::string> > > upd = boost::dynamic_pointer_cast<WrapperMessage2<Point, std::vector<std::string> > >(update);
             Point offset = upd->data1;
-            std::vector<std::string>& tile_data = upd->data2;
-            for (unsigned int i = 0; i < tile_data.size(); i++) {
-                Point tile_pos(offset.x + i, offset.y);
-                if (!game->level.contains(tile_pos)) {
-                    continue;
-                }
-
-                std::string& tile_type_name = tile_data[i];
-                TileType *tile_type = game->tile_types[tile_type_name];
-                TileView& tile_view = game_view->level_view.tile_views[tile_pos];
-                TileViewDef *view_def = resources->get_tile_view_def(tile_type->name);
-                tile_view.view_def = view_def;
-                tile_view.variation = rand();
-                tile_view.phase = rand();
-            }
-
-            for (unsigned int i = 0; i < tile_data.size(); i++) {
-                Point tile_pos(offset.x + i, offset.y);
-                if (!game->level.contains(tile_pos)) {
-                    continue;
-                }
-
-                TileView& tile_view = game_view->level_view.tile_views[tile_pos];
-                TileViewDef *view_def = tile_view.view_def;
-                Tile& tile = game->level.tiles[tile_pos];
-
-                for (int j = 0; j < 3; j++) {
-                    int dir = (j + 5) % 6;
-                    Point neighbour;
-                    get_neighbour(tile_pos, dir, &neighbour);
-                    if (game->level.contains(neighbour)) {
-                        TileView& neighbour_view = game_view->level_view.tile_views[neighbour];
-                        Tile& neighbour_tile = game->level.tiles[neighbour];
-
-                        if (view_def != neighbour_view.view_def) {
-                            tile_view.transition[j] = choose_image(view_def->transitions[j], tile_view.phase * (j + 2) / 1000);
-                        } else {
-                            tile_view.transition[j] = NULL;
-                        }
-
-                        int opp_dir = (dir + 3) % 6;
-
-                        if (tile.road && neighbour_tile.road) {
-                            tile_view.road[dir] = view_def->roads[dir].image;
-                            neighbour_view.road[opp_dir] = neighbour_view.view_def->roads[opp_dir].image;
-                        } else {
-                            tile_view.road[dir] = NULL;
-                            neighbour_view.road[opp_dir] = NULL;
-                        }
-                    } else {
-                        tile_view.transition[j] = NULL;
-                        tile_view.road[dir] = NULL;
-                    }
-                }
-            }
+            int len = upd->data2.size();
+            TilePainter painter(game, game_view, resources);
+            painter.repaint(offset, len);
         } break;
 
         case CreateTileType:
