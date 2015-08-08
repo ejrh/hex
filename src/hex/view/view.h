@@ -28,6 +28,7 @@ public:
     unsigned int phase;
     std::vector<Image *> transitions;
     std::vector<Image *> roads;
+    Image *mountain;
 };
 
 class UnitStackView {

@@ -46,6 +46,7 @@ void TilePainter::repaint(Point offset, int len) {
             Point tile_pos(j, i);
             paint_transitions(tile_pos);
             paint_roads(tile_pos);
+            paint_mountains(tile_pos);
         }
     }
 }
@@ -92,6 +93,9 @@ void TilePainter::paint_roads(const Point& tile_pos) {
     TileView& tile_view = view->level_view.tile_views[tile_pos];
 
     tile_view.roads.clear();
+    TileViewDef *view_def = tile_view.view_def;
+    if (view_def == NULL)
+        return;
     Tile& tile = game->level.tiles[tile_pos];
     if (!tile.road)
         return;
@@ -106,7 +110,34 @@ void TilePainter::paint_roads(const Point& tile_pos) {
         if (!neighbour_tile.road)
             continue;
 
-        TileViewDef *view_def = tile_view.view_def;
         tile_view.roads.push_back(view_def->roads[dir].image);
+    }
+}
+
+void TilePainter::paint_mountains(const Point& tile_pos) {
+    TileView& tile_view = view->level_view.tile_views[tile_pos];
+    if (tile_view.view_def == NULL)
+        return;
+
+    Tile& tile = game->level.tiles[tile_pos];
+
+    switch (tile.mountain) {
+        case 1:
+            tile_view.mountain = tile_view.view_def->mountains[0].image;
+            break;
+        case 2:
+            tile_view.mountain = tile_view.view_def->mountains[1].image;
+            break;
+        case 3:
+            tile_view.mountain = tile_view.view_def->mountains[2].image;
+            break;
+        case 4:
+            tile_view.mountain = tile_view.view_def->mountains[3].image;
+            break;
+        case 5:
+            tile_view.mountain = tile_view.view_def->mountains[4].image;
+            break;
+        default:
+            tile_view.mountain = NULL;
     }
 }

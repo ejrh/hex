@@ -106,8 +106,8 @@ typedef std::map<std::string, TileType *> TileTypeMap;
 
 class Tile {
 public:
-    Tile(): type(NULL), stack(NULL), road(false) { }
-    Tile(TileType *type): type(type), stack(NULL), road(false) { }
+    Tile(): type(NULL), stack(NULL), road(false), mountain(0) { }
+    Tile(TileType *type): type(type), stack(NULL), road(false), mountain(0) { }
 
     bool has_property(TraitType trait) const {
         return type->has_property(trait);
@@ -117,6 +117,7 @@ public:
     TileType *type;
     UnitStack *stack;
     bool road;
+    int mountain;
 };
 
 class Level {
@@ -139,6 +140,7 @@ public:
     Game(): game_id(0), message_id(0), level(0, 0) { }
     ~Game() { }
 
+    void set_level_data(const Point& offset, const std::vector<std::string>& tile_data);
     TileType *create_tile_type(TileType& tile_type);
     UnitType *create_unit_type(UnitType& unit_type);
     Faction *create_faction(int id, const std::string& type_name, const std::string& name);

@@ -26,6 +26,7 @@ void Resources::resolve_references() {
             resolve_image_series(trans_iter->images);
         }
         resolve_image_series(def->roads);
+        resolve_image_series(def->mountains);
     }
 }
 

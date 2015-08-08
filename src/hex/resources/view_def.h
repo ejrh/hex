@@ -45,6 +45,7 @@ public:
     AnimationDef animation;
     std::vector<TransitionDef> transitions;
     ImageSeries roads;
+    ImageSeries mountains;
 };
 
 typedef std::map<std::string, TileViewDef *> TileViewDefMap;

@@ -44,8 +44,9 @@ void generate_level(Level &level, TileType *outside, TileType *water, TileType *
 
     for (int i = 0; i < level.height; i++) {
         for (int j = 0; j < level.width; j++) {
+            Tile& tile = level.tiles[i][j];
             if (i == 0 || i == level.height - 1 || j == 0 || j == level.width - 1) {
-                level.tiles[i][j].type = outside;
+                tile.type = outside;
                 continue;
             }
 
@@ -56,11 +57,22 @@ void generate_level(Level &level, TileType *outside, TileType *water, TileType *
 
             float value = (noise.value(px, py) + noise2.value(py, px))/6.0f;
             if (value < 0.0f)
-                level.tiles[i][j].type = water;
+                tile.type = water;
             else if (value < 0.5f)
-                level.tiles[i][j].type = desert;
-            else
-                level.tiles[i][j].type = grass;
+                tile.type = desert;
+            else {
+                tile.type = grass;
+                if (value > 1.45f) {
+                    tile.mountain = 5;
+                } else if (value > 1.4f) {
+                    tile.mountain = 4;
+                } else if (value > 1.2f && rand() % 2) {
+                    tile.mountain = 1;
+                }
+            }
+
+            if (tile.type->has_property(Roadable) && tile.mountain == 0 && rand() % 2)
+                tile.road = true;
         }
     }
 }
@@ -82,8 +94,15 @@ void create_game(Game& game, Updater& updater) {
         Point origin(0, i);
         std::vector<std::string> data;
         for (int j = 0; j < game.level.width; j++) {
-            TileType *tile_type = game.level.tiles[i][j].type;
-            data.push_back(tile_type->name);
+            Tile& tile = game.level.tiles[i][j];
+            std::ostringstream data_ss;
+            TileType *tile_type = tile.type;
+            data_ss << tile_type->name;
+            if (tile.road)
+                data_ss << "/r";
+            if (tile.mountain > 0)
+                data_ss << "/m" << tile.mountain;
+            data.push_back(data_ss.str());
         }
         updater.receive(boost::make_shared<WrapperMessage2<Point, std::vector<std::string> > >(SetLevelData, origin, data));
     }

@@ -47,6 +47,13 @@ void LevelRenderer::render_tile_transitions(int x, int y, Point tile_pos) {
             graphics->blit(trans, trans_x, trans_y, SDL_BLENDMODE_BLEND, alpha);
         }
     }
+
+    if (tile_view.mountain != NULL) {
+        int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
+        int mnt_x = x - tile_view.mountain->width / 2;
+        int mnt_y = y - tile_view.mountain->height / 2 - 6;
+        graphics->blit(tile_view.mountain, mnt_x, mnt_y, SDL_BLENDMODE_BLEND, alpha);
+    }
 }
 
 void LevelRenderer::render_structure(int x, int y, Point tile_pos) {

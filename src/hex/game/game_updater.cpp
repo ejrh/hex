@@ -29,18 +29,7 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
             boost::shared_ptr<WrapperMessage2<Point, std::vector<std::string> > > upd = boost::dynamic_pointer_cast<WrapperMessage2<Point, std::vector<std::string> > >(update);
             Point offset = upd->data1;
             std::vector<std::string>& tile_data = upd->data2;
-            for (unsigned int i = 0; i < tile_data.size(); i++) {
-                Point tile_pos(offset.x + i, offset.y);
-                if (!game->level.contains(tile_pos)) {
-                    std::cerr << "Tile coordinate " << tile_pos << " is outside the level" << std::endl;
-                    continue;
-                }
-                std::string& tile_type_name = tile_data[i];
-                TileType *tile_type = game->tile_types[tile_type_name];
-                game->level.tiles[tile_pos].type = tile_type;
-                if (tile_type->has_property(Roadable) && rand() % 2)
-                    game->level.tiles[tile_pos].road = true;
-            }
+            game->set_level_data(offset, tile_data);
         } break;
 
         case CreateTileType: {

@@ -4,6 +4,37 @@
 #include "hex/game/game.h"
 
 
+void Game::set_level_data(const Point& offset, const std::vector<std::string>& tile_data) {
+    for (unsigned int i = 0; i < tile_data.size(); i++) {
+        Point tile_pos(offset.x + i, offset.y);
+        if (!level.contains(tile_pos)) {
+            std::cerr << "Tile coordinate " << tile_pos << " is outside the level" << std::endl;
+            continue;
+        }
+
+        std::vector<std::string> parts;
+        boost::split(parts, tile_data[i], boost::is_any_of("/"));
+        std::string& tile_type_name = parts[0];
+
+        TileType *tile_type = tile_types[tile_type_name];
+        Tile& tile = level.tiles[tile_pos];
+        tile.type = tile_type;
+        tile.road = false;
+
+        for (unsigned int j = 1; j < parts.size(); j++) {
+            if (parts[j] == "r") {
+                tile.road = true;
+            } else if (parts[j][0] == 'm') {
+                std::istringstream ss(parts[j]);
+                char c;
+                int m;
+                ss >> c >> m;
+                tile.mountain = m;
+            }
+        }
+    }
+}
+
 TileType *Game::create_tile_type(TileType& tile_type) {
     if (tile_types.find(tile_type.name) != tile_types.end()) {
         warn("Tile type already exists: %s", tile_type.name.c_str());
@@ -29,6 +60,7 @@ UnitType *Game::create_unit_type(UnitType& unit_type) {
 
     return new_unit_type;
 }
+
 
 Faction *Game::create_faction(int id, const std::string& type_name, const std::string& name) {
     if (factions.find(id) != factions.end()) {
