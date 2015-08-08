@@ -58,6 +58,8 @@ void MapWindow::draw() {
                 continue;
 
             TileView& tile_view = view->level_view.tile_views[i][j];
+            if (tile_view.view_def == NULL)
+                continue;
 
             int r = tile_view.view_def->r;
             int g = tile_view.view_def->g;
@@ -105,11 +107,9 @@ void MapWindow::draw() {
         graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, px, py, 4, 4);
     }
 
-    Point point1, point2;
-    int px1, py1, px2, py2;
-    level_window->mouse_to_tile(0, 0, &point1);
-    tile_to_pixel(point1, &px1, &py1);
-    level_window->mouse_to_tile(level_window->width, level_window->height, &point2);
-    tile_to_pixel(point2, &px2, &py2);
-    graphics->draw_rectangle(255,255,255, px1, py1, px2 - px1, py2 - py1);
+    int px = this->x + 4 * level_window->shift_x / 32 + 4;
+    int py = this->y + 4 * level_window->shift_y / 32 + 4;
+    int w = 4 * level_window->width / 32;
+    int h = 4 * level_window->height / 32;
+    graphics->draw_rectangle(255,255,255, px, py, w, h);
 }

@@ -37,6 +37,7 @@ protected:
     int x_spacing, y_spacing;
 
     friend class LevelRenderer;
+    friend class MapWindow;
 };
 
 #endif
