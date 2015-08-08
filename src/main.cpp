@@ -8,6 +8,7 @@
 #include "hex/noise.h"
 #include "hex/ai/ai.h"
 #include "hex/ai/ai_updater.h"
+#include "hex/audio/audio.h"
 #include "hex/basics/error.h"
 #include "hex/chat/chat.h"
 #include "hex/game/game.h"
@@ -137,6 +138,7 @@ void save_game(const std::string& filename, Game *game) {
     game_writer.write(game);
 }
 
+
 void run(Options& options) {
     Graphics graphics;
 
@@ -189,6 +191,8 @@ void run(Options& options) {
 
     MapWindow map_window(graphics.width - StackWindow::window_width, 0, StackWindow::window_width, 200, &game_view, &level_window, &graphics, &resources);
     StackWindow stack_window(graphics.width - StackWindow::window_width, 200, StackWindow::window_width, StackWindow::window_height, &resources, &graphics, &game_view, &level_renderer);
+
+    Audio audio(&resources);
 
     int down_pos_x = 0, down_pos_y = 0;
     bool dragging = false;
@@ -259,6 +263,7 @@ void run(Options& options) {
         chat_window.draw();
         map_window.draw();
         graphics.update();
+        audio.update();
 
         unsigned int tick = SDL_GetTicks();
         unsigned int tick_diff = tick - last_tick;

@@ -26,6 +26,7 @@ public:
     TileViewDefMap tile_view_defs;
     UnitViewDefMap unit_view_defs;
     FactionViewDefMap faction_view_defs;
+    std::set<std::string> songs;
 
     friend class ResourceLoader;
 };
@@ -52,6 +53,7 @@ public:
     void load(const std::string& filename);
     void include(const std::string& filename, bool skip_missing = false);
     void load_image(const std::string& filename);
+    void load_song(const std::string& filename);
 
 private:
     Resources *resources;

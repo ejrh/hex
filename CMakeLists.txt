@@ -12,7 +12,7 @@ find_package(Boost REQUIRED COMPONENTS system thread program_options filesystem)
 
 find_package(Threads)
 
-set(gen_libs SDL2 SDL2_ttf SDL2_image SDL2main ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+set(gen_libs SDL2 SDL2_ttf SDL2_image SDL2main ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} mikmod)
 
 # Set general options
 if(MSVC)

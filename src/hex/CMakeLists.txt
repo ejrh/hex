@@ -5,6 +5,8 @@ set(srcs
         ai/ai.h
         ai/ai_updater.cpp
         ai/ai_updater.h
+        audio/audio.cpp
+        audio/audio.h
         basics/error.cpp
         basics/error.h
         basics/hexgrid.cpp
@@ -85,16 +87,17 @@ set(srcs
 )
 
 source_group(Sources REGULAR_EXPRESSION cpp|h)
-source_group(Sources\\ai REGULAR_EXPRESSION ai)
-source_group(Sources\\basics REGULAR_EXPRESSION basics)
-source_group(Sources\\chat REGULAR_EXPRESSION chat)
-source_group(Sources\\game REGULAR_EXPRESSION game)
-source_group(Sources\\graphics REGULAR_EXPRESSION graphics)
-source_group(Sources\\messaging REGULAR_EXPRESSION messaging)
-source_group(Sources\\networking REGULAR_EXPRESSION networking)
-source_group(Sources\\resources REGULAR_EXPRESSION resources)
-source_group(Sources\\ui REGULAR_EXPRESSION ui)
-source_group(Sources\\view REGULAR_EXPRESSION view)
+source_group(Sources\\ai REGULAR_EXPRESSION /ai/)
+source_group(Sources\\audio REGULAR_EXPRESSION /audio/)
+source_group(Sources\\basics REGULAR_EXPRESSION /basics/)
+source_group(Sources\\chat REGULAR_EXPRESSION /chat/)
+source_group(Sources\\game REGULAR_EXPRESSION /game/)
+source_group(Sources\\graphics REGULAR_EXPRESSION /graphics/)
+source_group(Sources\\messaging REGULAR_EXPRESSION /messaging/)
+source_group(Sources\\networking REGULAR_EXPRESSION /networking/)
+source_group(Sources\\resources REGULAR_EXPRESSION /resources/)
+source_group(Sources\\ui REGULAR_EXPRESSION /ui/)
+source_group(Sources\\view REGULAR_EXPRESSION /view/)
 add_library(hex ${srcs})
 target_compile_options(hex PUBLIC ${gen_opts})
 

@@ -26,7 +26,10 @@ MSG_TYPE(TileRoads, WM(ImageSeries))
 MSG_TYPE(CreateUnitView, WM(UnitViewDef))
 MSG_TYPE(UnitHoldAnimation, WM3(int, int, ImageSeries))
 MSG_TYPE(UnitMoveAnimation, WM3(int, int, ImageSeries))
+
 MSG_TYPE(CreateFactionView, WM(FactionViewDef))
+
+MSG_TYPE(LoadSong, WM(std::string))
 
 MSG_TYPE(CreateUnitType, WM(UnitType))
 MSG_TYPE(CreateTileType, WM(TileType))

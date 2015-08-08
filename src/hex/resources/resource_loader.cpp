@@ -86,6 +86,11 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
             last_unit_view_def->move_animations[facing].images = upd->data3;
         } break;
 
+        case LoadSong: {
+            boost::shared_ptr<LoadSongMessage> upd = boost::dynamic_pointer_cast<LoadSongMessage>(msg);
+            load_song(upd->data);
+        } break;
+
         default: {
             warn("Don't know how to read resources from message type: %s", get_message_type_name(msg->type).c_str());
         }
@@ -126,4 +131,12 @@ void ResourceLoader::load_image(const std::string& filename) {
     std::string relative_filename = path.string();
 
     image_loader->load(relative_filename);
+}
+
+void ResourceLoader::load_song(const std::string& filename) {
+    boost::filesystem::path path = boost::filesystem::path(current_files.back()).parent_path();
+    path /= boost::filesystem::path(filename);
+    std::string relative_filename = path.string();
+
+    resources->songs.insert(relative_filename);
 }
