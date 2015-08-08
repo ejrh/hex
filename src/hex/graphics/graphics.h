@@ -8,7 +8,8 @@ public:
 
 public:
     int id;
-    int x_offset, y_offset;
+    int clip_x_offset, clip_y_offset;
+    int clip_width, clip_height;
     int width, height;
 
 private:

@@ -24,7 +24,7 @@ void StackWindow::draw() {
             graphics->fill_rectangle(50,50,50, px, py, StackWindow::unit_width, StackWindow::unit_height);
             Unit *unit = *iter;
             UnitViewDef *view_def = resources->get_unit_view_def(unit->type->name);
-            renderer->draw_unit(px+4, py+32, *unit, view_def);
+            renderer->draw_unit(px + StackWindow::unit_width / 2, py + StackWindow::unit_height / 2, *unit, view_def);
             px += StackWindow::unit_width + StackWindow::padding;
             i++;
             if (i % 4 == 0) {

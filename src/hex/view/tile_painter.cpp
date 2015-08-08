@@ -61,7 +61,7 @@ void TilePainter::repaint(Point offset, int len) {
 
                 int opp_dir = (dir + 3) % 6;
 
-                if (tile.road && neighbour_tile.road) {
+                if (tile.road && neighbour_tile.road && view_def->roads.size() > dir) {
                     tile_view.road[dir] = view_def->roads[dir].image;
                     neighbour_view.road[opp_dir] = neighbour_view.view_def->roads[opp_dir].image;
                 } else {

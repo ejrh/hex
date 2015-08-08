@@ -349,8 +349,10 @@ Image *ILBReader::create_image(char *pixel_data, ImageData &image) {
     }
 
     Image *im = new Image(image.id, texture);
-    im->x_offset = image.clip_x_offset;
-    im->y_offset = image.clip_y_offset;
+    im->clip_x_offset = image.clip_x_offset;
+    im->clip_y_offset = image.clip_y_offset;
+    im->width = image.width;
+    im->height = image.height;
     return im;
 }
 

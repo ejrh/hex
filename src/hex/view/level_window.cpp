@@ -181,8 +181,8 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
 
     for (int i = min_pos.y; i < max_pos.y; i++) {
         for (int j = min_pos.x; j < max_pos.x; j += 2) {
-            int xpos = j*x_spacing - shift_x;
-            int ypos = i*y_spacing - shift_y;
+            int xpos = j*x_spacing - shift_x + TILE_WIDTH / 2;
+            int ypos = i*y_spacing - shift_y + Y_SPACING / 2;
             Point tile_pos(j, i);
             if (!view->level_view.discovered.check(tile_pos))
                 continue;
@@ -191,8 +191,8 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
 
         for (int j = min_pos.x + 1; j < max_pos.x; j += 2) {
             int y_offset = y_spacing / 2;
-            int xpos = j*x_spacing - shift_x;
-            int ypos = i*y_spacing + y_offset - shift_y;
+            int xpos = j*x_spacing - shift_x + TILE_WIDTH / 2;
+            int ypos = i*y_spacing + y_offset - shift_y + Y_SPACING / 2;
             Point tile_pos(j, i);
             if (!view->level_view.discovered.check(tile_pos))
                 continue;
@@ -224,6 +224,6 @@ void LevelWindow::draw_ghost(Ghost *ghost) {
     int py = (py1 * (1000 - f) + py2 * f) / 1000;
     bool selected = stack_view->selected;
     stack_view->selected = false;
-    level_renderer->draw_unit_stack(px, py, *stack_view);
+    level_renderer->draw_unit_stack(px + TILE_WIDTH / 2, py + Y_SPACING / 2, *stack_view);
     stack_view->selected = selected;
 }

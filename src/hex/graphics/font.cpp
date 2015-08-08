@@ -108,8 +108,8 @@ Image *TextFormat::write_to_image(const std::string& text) {
 
     Image *image = new Image(0, text_texture);
     if (centered) {
-        image->x_offset -= image->width/2;
-        image->y_offset -= image->height/2;
+        image->clip_x_offset -= image->width/2;
+        image->clip_y_offset -= image->height/2;
     }
     return image;
 }

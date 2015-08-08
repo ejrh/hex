@@ -4,10 +4,12 @@
 #include "hex/graphics/graphics.h"
 
 Image::Image(int id, SDL_Texture *texture):
-    id(id), x_offset(0), y_offset(0), texture(texture) {
+    id(id), clip_x_offset(0), clip_y_offset(0), texture(texture) {
         Uint32 format;
         int access;
-        SDL_QueryTexture(texture, &format, &access, &width, &height);
+        SDL_QueryTexture(texture, &format, &access, &clip_width, &clip_height);
+        width = clip_width;
+        height = clip_height;
 }
 
 Image::~Image() {
@@ -39,14 +41,14 @@ void Graphics::stop() {
 }
 
 void Graphics::blit(Image *im, int x, int y, SDL_BlendMode mode, int alpha_mod, int mod_r, int mod_g, int mod_b) {
-    x += im->x_offset;
-    y += im->y_offset;
+    x += im->clip_x_offset;
+    y += im->clip_y_offset;
 
     SDL_SetTextureBlendMode(im->texture, mode);
     SDL_SetTextureAlphaMod(im->texture, alpha_mod);
     SDL_SetTextureColorMod(im->texture, mod_r, mod_g, mod_b);
 
-    SDL_Rect destrect = { x, y, im->width, im->height };
+    SDL_Rect destrect = { x, y, im->clip_width, im->clip_height };
     if (SDL_RenderCopy(renderer, im->texture, NULL, &destrect) != 0)
         warn("SDL error: %s", SDL_GetError());
 }

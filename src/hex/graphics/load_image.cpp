@@ -20,8 +20,8 @@ void load_image(const std::string& filename, Graphics *graphics, ImageMap& image
     SDL_FreeSurface(surface);
 
     Image *im = new Image(0, texture);
-    im->x_offset = 0;
-    im->y_offset = 0;
+    im->clip_x_offset = 0;
+    im->clip_y_offset = 0;
 
     size_t pos = filename.find_last_of("/");
     std::string key(filename);

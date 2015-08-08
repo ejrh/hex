@@ -32,14 +32,14 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
     Image *ground = choose_image(def->animation.images, tile_view.phase / 1000);
     if (ground != NULL) {
         int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
-        graphics->blit(ground, x, y, SDL_BLENDMODE_BLEND, alpha);
+        graphics->blit(ground, x - ground->width / 2, y - ground->height / 2, SDL_BLENDMODE_BLEND, alpha);
     }
 
     for (int i = 0; i < 3; i++) {
         Image *trans = tile_view.transition[i];
         if (trans != NULL) {
             int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
-            graphics->blit(trans, x - 6, y - 12, SDL_BLENDMODE_BLEND, alpha);
+            graphics->blit(trans, x - trans->width / 2, y - trans->height / 2, SDL_BLENDMODE_BLEND, alpha);
         }
     }
 
@@ -47,22 +47,21 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
         Image *road = tile_view.road[i];
         if (road != NULL) {
             int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
-            graphics->blit(road, x - 6, y - 12, SDL_BLENDMODE_BLEND, alpha);
+            graphics->blit(road, x - road->width / 2, y - road->width / 2, SDL_BLENDMODE_BLEND, alpha);
         }
     }
 
     if (tile_view.highlighted) {
         Image *highlight1 = cursor_images[0].image;
         if (highlight1 != NULL)
-            graphics->blit(highlight1, x, y);
-            //graphics->blit(highlight1, x, y - 32);
+            graphics->blit(highlight1, x - highlight1->width / 2, y - highlight1->height / 2 - 16, SDL_BLENDMODE_ADD, 128);
     }
 
-    /*if (tile_view.highlighted) {
+    if (tile_view.highlighted && cursor_images.size() >= 2) {
         Image *highlight2 = cursor_images[1].image;
         if (highlight2 != NULL)
-            graphics->blit(highlight2, x, y - 32);
-    }*/
+            graphics->blit(highlight2, x - highlight2->width / 2, y - highlight2->height / 2 - 16, SDL_BLENDMODE_ADD, 128);
+    }
 }
 
 void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
@@ -97,17 +96,15 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
     Image *unit = animation.images[(stack_view.phase / 1000) % animation.images.size()].image;
     if (unit == NULL) {
         const std::string& label = view_def->name.substr(0, 3);
-        TextFormat tf(graphics, SmallFont14, true, 255,255,255, 128,128,128);
+        TextFormat tf(graphics, SmallFont14, false, 255,255,255, 128,128,128);
         unit = tf.write_to_image(label);
         if (unit != NULL) {
-            unit->x_offset = 24 - unit->width / 2 + 6;
-            unit->y_offset = 16 - unit->height / 2 + 32;
             animation.images[(stack_view.phase / 1000) % animation.images.size()].image = unit;
         }
     }
 
     if (unit != NULL) {
-        graphics->blit(unit, x - 8, y - 32, SDL_BLENDMODE_BLEND);
+        graphics->blit(unit, x - unit->width / 2, y - unit->height + 6, SDL_BLENDMODE_BLEND);
     }
 
     if (stack_view.selected && !stack_view.moving) {
@@ -119,14 +116,14 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
             if (add_phase > 255)
                 add_phase = 255;
         }
-        graphics->blit(unit, x - 8, y - 32, SDL_BLENDMODE_ADD, add_phase);
+        graphics->blit(unit, x - unit->width / 2, y - unit->height + 6, SDL_BLENDMODE_ADD, add_phase);
     }
 
     Faction *owner = stack_view.stack->owner;
     FactionView *faction_view = view->faction_views[owner->id];
     FactionViewDef *faction_view_def = faction_view->view_def;
 
-    graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, x+32, y-12, 8, 12);
+    graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, x+16, y-20, 8, 12);
 }
 
 void LevelRenderer::draw_unit(int x, int y, Unit &unit, UnitViewDef *view_def) {
@@ -137,23 +134,33 @@ void LevelRenderer::draw_unit(int x, int y, Unit &unit, UnitViewDef *view_def) {
     Image *image = image_series[0].image;
     if (image == NULL) {
         const std::string& label = view_def->name.substr(0, 3);
-        TextFormat tf(graphics, SmallFont14, true, 255,255,255, 128,128,128);
+        TextFormat tf(graphics, SmallFont14, false, 255,255,255, 128,128,128);
         image = tf.write_to_image(label);
-        image->x_offset = 24 - image->width / 2 + 6;
-        image->y_offset = 16 - image->height / 2 + 32;
         image_series[0].image = image;
     }
 
-    graphics->blit(image, x - 8, y - 32, SDL_BLENDMODE_BLEND);
+    x -= image->clip_x_offset + image->clip_width / 2;
+    y -= image->clip_y_offset + image->clip_height / 2;
+
+    graphics->blit(image, x, y, SDL_BLENDMODE_BLEND);
 }
 
 void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {
     TileView &tile_view = view->level_view.tile_views[tile_pos];
 
+    switch (tile_view.path_dir) {
+        case 0: y -= 16; break;
+        case 1: x += 16; y -= 8; break;
+        case 2: x += 16; y += 8; break;
+        case 3: y += 16; break;
+        case 4: x -= 16; y += 8; break;
+        case 5: x -= 16; y -= 8; break;
+    }
+
     if (tile_view.path_dir >= 0 && tile_view.path_dir < 6) {
         Image *path_arrow = arrow_images[tile_view.path_dir].image;
 
         if (path_arrow != NULL)
-            graphics->blit(path_arrow, x, y - 8, SDL_BLENDMODE_BLEND);
+            graphics->blit(path_arrow, x - path_arrow->width / 2, y - path_arrow->height / 2 - 6, SDL_BLENDMODE_BLEND);
     }
 }
