@@ -30,6 +30,11 @@ void Resources::resolve_references() {
             resolve_image_series(feat_iter->images);
         }
     }
+
+    for (StructureViewDefMap::iterator def_iter = structure_view_defs.begin(); def_iter != structure_view_defs.end(); def_iter++) {
+        StructureViewDef *def = def_iter->second;
+        resolve_image_series(def->animation.images);
+    }
 }
 
 void Resources::resolve_image_series(std::vector<ImageRef>& image_series) {
@@ -60,6 +65,12 @@ TileViewDef *Resources::create_tile_view(const TileViewDef& data) {
     return def;
 }
 
+StructureViewDef *Resources::create_structure_view(const StructureViewDef& data) {
+    StructureViewDef *def = new StructureViewDef(data);
+    structure_view_defs[def->name] = def;
+    return def;
+}
+
 TileViewDef *Resources::get_tile_view_def(const std::string& name) const {
     TileViewDefMap::const_iterator iter = tile_view_defs.find(name);
     return (iter != tile_view_defs.end()) ? iter->second : NULL;
@@ -74,6 +85,14 @@ UnitViewDef *Resources::get_unit_view_def(const std::string& name) {
     UnitViewDef *view_def = new UnitViewDef(name);
     unit_view_defs[name] = view_def;
     return view_def;
+}
+
+StructureViewDef *Resources::get_structure_view_def(const std::string& name) const {
+    StructureViewDefMap::const_iterator iter = structure_view_defs.find(name);
+    if (iter != structure_view_defs.end())
+        return iter->second;
+
+    return NULL;
 }
 
 FactionViewDef *Resources::get_faction_view_def(const std::string& name) {

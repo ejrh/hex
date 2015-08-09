@@ -118,6 +118,7 @@ void create_game(Game& game, Updater& updater) {
 
     replay_messages("data/tile_types.txt", updater);
     replay_messages("data/unit_types.txt", updater);
+    replay_messages("data/structure_types.txt", updater);
 
     game.level.width = width;
     game.level.height = height;
@@ -174,6 +175,33 @@ void create_game(Game& game, Updater& updater) {
             }
         }
     };
+
+    // Add towers
+    for (int i = 0; i < game.level.height; i++) {
+        for (int j = 0; j < game.level.width; j++) {
+            Point tile_pos(j, i);
+            Tile& tile = game.level.tiles[tile_pos];
+            if (!tile.type->has_property(Roadable))
+                continue;
+            Point neighbour_pos[6];
+            get_neighbours(tile_pos, neighbour_pos);
+            int water_count = 0;
+            for (int i = 0; i < 6; i++) {
+                if (!game.level.contains(neighbour_pos[i]))
+                    continue;
+                Tile& neighbour = game.level.tiles[neighbour_pos[i]];
+                if (neighbour.type == game.tile_types["water"])
+                    water_count++;
+            }
+            if (water_count >= 3 && rand() % 4 == 0) {
+                std::map<int, Faction *>::iterator faction_iter = game.factions.begin();
+                std::advance(faction_iter, rand() % game.factions.size());
+                int faction = faction_iter->second->id;
+
+                updater.receive(create_message(CreateStructure, tile_pos, "tower", faction));
+            }
+        }
+    }
 }
 
 void load_resources(Resources *resources, Graphics *graphics) {

@@ -86,6 +86,24 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             }
         } break;
 
+        case CreateStructure: {
+            boost::shared_ptr<CreateStructureMessage> upd = boost::dynamic_pointer_cast<CreateStructureMessage>(update);
+            Structure *structure = game->get_structure(upd->data1);
+            if (structure == NULL) {
+                return;
+            }
+            StructureType *structure_type = structure->type;
+            StructureViewDef *view_def = resources->get_structure_view_def(structure_type->name);
+            StructureView *structure_view = new StructureView();
+            game_view->level_view.tile_views[upd->data1].structure_view = structure_view;
+            structure_view->structure = structure;
+            structure_view->view_def = view_def;
+
+            if (game_view->player->has_view(structure->owner)) {
+                game_view->update_visibility();
+            }
+        } break;
+
         case GrantFactionView: {
             boost::shared_ptr<GrantFactionViewMessage> upd = boost::dynamic_pointer_cast<GrantFactionViewMessage>(update);
             if (upd->data1 == game_view->player->id) {

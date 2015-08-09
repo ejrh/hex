@@ -64,6 +64,16 @@ void MapWindow::draw() {
             int r = tile_view.view_def->r;
             int g = tile_view.view_def->g;
             int b = tile_view.view_def->b;
+
+            if (tile_view.structure_view != NULL) {
+                Faction *owner = tile_view.structure_view->structure->owner;
+                FactionView *faction_view = view->faction_views[owner->id];
+                FactionViewDef *faction_view_def = faction_view->view_def;
+                r = faction_view_def->r;
+                g = faction_view_def->g;
+                b = faction_view_def->b;
+            }
+
             if (!view->level_view.check_visibility(Point(j, i))) {
                 r = (r + 75) / 2;
                 g = (g + 75) / 2;

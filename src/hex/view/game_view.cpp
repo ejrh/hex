@@ -168,6 +168,20 @@ void GameView::update_visibility() {
             level_view.visibility.draw(stack->position, stack->sight(), true);
         }
     }
+
+    for (int i = 0; i < level_view.level->height; i++) {
+        for (int j = 0; j < level_view.level->width; j++) {
+            Point tile_pos(j, i);
+            TileView& tile_view = level_view.tile_views[tile_pos];
+            if (tile_view.structure_view == NULL)
+                continue;
+            Structure *structure = tile_view.structure_view->structure;
+            if (player->has_view(structure->owner)) {
+                level_view.discovered.draw(tile_pos, structure->sight(), true);
+                level_view.visibility.draw(tile_pos, structure->sight(), true);
+            }
+        }
+    }
 }
 
 UnitStackView *GameView::get_unit_stack_view(const UnitStack &stack) {

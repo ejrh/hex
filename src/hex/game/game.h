@@ -88,6 +88,36 @@ public:
     std::vector<Unit *> units;
 };
 
+class StructureType {
+public:
+    StructureType() { }
+    bool has_ability(TraitType ability) const {
+        if (abilities.count(ability) == 1)
+            return true;
+        return false;
+    }
+
+public:
+    std::string name;
+    TraitSet abilities;
+    int sight;
+};
+
+typedef std::map<std::string, StructureType *> StructureTypeMap;
+
+class Structure {
+public:
+    Structure();
+    Structure(const Point& position, StructureType *type, Faction *owner): position(position), type(type), owner(owner) { };
+
+    int sight() { return type->has_ability(LongSight) ? 7 : 3; }
+
+public:
+    Point position;
+    StructureType *type;
+    Faction *owner;
+};
+
 class TileType {
 public:
     TileType() { }
@@ -106,8 +136,8 @@ typedef std::map<std::string, TileType *> TileTypeMap;
 
 class Tile {
 public:
-    Tile(): type(NULL), stack(NULL), road(false) { }
-    Tile(TileType *type): type(type), stack(NULL), road(false) { }
+    Tile(): type(NULL), stack(NULL), structure(NULL), road(false) { }
+    Tile(TileType *type): type(type), stack(NULL), structure(NULL), road(false) { }
 
     bool has_property(TraitType trait) const {
         return type->has_property(trait);
@@ -116,6 +146,7 @@ public:
 public:
     TileType *type;
     UnitStack *stack;
+    Structure *structure;
     bool road;
 };
 
@@ -142,17 +173,23 @@ public:
     void set_level_data(const Point& offset, const std::vector<std::string>& tile_data);
     TileType *create_tile_type(TileType& tile_type);
     UnitType *create_unit_type(UnitType& unit_type);
+    StructureType *create_structure_type(StructureType& structure_type);
+
     Faction *create_faction(int id, const std::string& type_name, const std::string& name);
     UnitStack *create_unit_stack(int id, const Point position, int owner_id);
     Unit *create_unit(int stack_id, const std::string& type_name);
     void destroy_unit_stack(int stack_id);
 
+    Structure *create_structure(const Point& position, const std::string& type_name, int owner_id);
+
     Faction *get_faction(int id);
     UnitStack *get_stack(int id);
+    Structure *get_structure(const Point& position);
 
 public:
     TileTypeMap tile_types;
     UnitTypeMap unit_types;
+    StructureTypeMap structure_types;
 
     int game_id;
     int message_id;

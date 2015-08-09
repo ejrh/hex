@@ -73,4 +73,15 @@ public:
 
 typedef std::map<std::string, UnitViewDef *> UnitViewDefMap;
 
+class StructureViewDef {
+public:
+    StructureViewDef() { }
+
+    std::string name;
+    int centre_x, centre_y;
+    AnimationDef animation;
+};
+
+typedef std::map<std::string, StructureViewDef *> StructureViewDefMap;
+
 #endif

@@ -87,6 +87,19 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
             last_unit_view_def->move_animations[facing].images = upd->data3;
         } break;
 
+        case CreateStructureView: {
+            boost::shared_ptr<CreateStructureViewMessage> upd = boost::dynamic_pointer_cast<CreateStructureViewMessage>(msg);
+            last_structure_view_def = resources->create_structure_view(upd->data);
+        } break;
+
+        case StructureAnimation: {
+            boost::shared_ptr<StructureAnimationMessage> upd = boost::dynamic_pointer_cast<StructureAnimationMessage>(msg);
+            last_structure_view_def->centre_x = upd->data1;
+            last_structure_view_def->centre_y = upd->data2;
+            last_structure_view_def->animation.bpm = upd->data3;
+            last_structure_view_def->animation.images = upd->data4;
+        } break;
+
         case LoadSong: {
             boost::shared_ptr<LoadSongMessage> upd = boost::dynamic_pointer_cast<LoadSongMessage>(msg);
             load_song(upd->data);

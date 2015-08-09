@@ -63,8 +63,24 @@ void LevelRenderer::render_structure(int x, int y, Point tile_pos) {
         Image *road = *iter;
         if (road != NULL) {
             int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
-            graphics->blit(road, x - road->width / 2, y - road->width / 2, SDL_BLENDMODE_BLEND, alpha);
+            graphics->blit(road, x - road->width / 2, y - road->height / 2, SDL_BLENDMODE_BLEND, alpha);
         }
+    }
+
+    if (tile_view.structure_view != NULL) {
+        StructureViewDef *view_def = tile_view.structure_view->view_def;
+        AnimationDef& animation = view_def->animation;
+        if (animation.images.size() == 0)
+            animation.images.push_back(ImageRef("missing"));
+        Image *structure = animation.images[(tile_view.phase / 1000) % animation.images.size()].image;
+        int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
+        graphics->blit(structure, x - view_def->centre_x, y - view_def->centre_y, SDL_BLENDMODE_BLEND, alpha);
+
+        Faction *owner = tile_view.structure_view->structure->owner;
+        FactionView *faction_view = view->faction_views[owner->id];
+        FactionViewDef *faction_view_def = faction_view->view_def;
+
+        graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, x+16, y-20, 8, 12);
     }
 }
 

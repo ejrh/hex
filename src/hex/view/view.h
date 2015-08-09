@@ -15,9 +15,15 @@ public:
     FactionViewDef *view_def;
 };
 
+class StructureView {
+public:
+    Structure *structure;
+    StructureViewDef *view_def;
+};
+
 class TileView {
 public:
-    TileView(): view_def(NULL), highlighted(false), path_dir(-1), variation(0), phase(0) { }
+    TileView(): view_def(NULL), highlighted(false), path_dir(-1), variation(0), phase(0), feature(NULL), structure_view(NULL) { }
     ~TileView() { }
 
 public:
@@ -30,6 +36,7 @@ public:
     std::vector<Image *> roads;
     Image *feature;
     int feature_x, feature_y;
+    StructureView *structure_view;
 };
 
 class UnitStackView {

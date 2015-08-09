@@ -55,6 +55,16 @@ UnitType *Game::create_unit_type(UnitType& unit_type) {
     return new_unit_type;
 }
 
+StructureType *Game::create_structure_type(StructureType& structure_type) {
+    if (structure_types.find(structure_type.name) != structure_types.end()) {
+        warn("Structure type already exists: %s", structure_type.name.c_str());
+        return NULL;
+    }
+
+    StructureType *new_structure_type = new StructureType(structure_type);
+    structure_types[structure_type.name] = new_structure_type;
+    return new_structure_type;
+}
 
 Faction *Game::create_faction(int id, const std::string& type_name, const std::string& name) {
     if (factions.find(id) != factions.end()) {
@@ -114,6 +124,31 @@ Unit *Game::create_unit(int stack_id, const std::string& type_name) {
     return new_unit;
 }
 
+Structure *Game::create_structure(const Point& position, const std::string& type_name, int owner_id) {
+    Faction *owner = get_faction(owner_id);
+    if (owner == NULL) {
+        warn("No faction with id: %d", owner_id);
+        return NULL;
+    }
+
+    StructureType *type = structure_types[type_name];
+    if (type == NULL) {
+        warn("No structure type: %s", type_name.c_str());
+        return NULL;
+    }
+
+    Tile& tile = level.tiles[position];
+    if (tile.structure != NULL) {
+        warn("Structure already exists at: %d,%d", position.x, position.y);
+        return NULL;
+    }
+
+    Structure *new_structure = new Structure(position, type, owner);
+    tile.structure = new_structure;
+
+    return new_structure;
+}
+
 void Game::destroy_unit_stack(int stack_id) {
     UnitStack *stack = stacks[stack_id];
     stacks.erase(stack_id);
@@ -130,4 +165,8 @@ UnitStack *Game::get_stack(int id) {
     if (stacks.find(id) != stacks.end())
         return stacks[id];
     return NULL;
+}
+
+Structure *Game::get_structure(const Point& position) {
+    return level.tiles[position].structure;
 }

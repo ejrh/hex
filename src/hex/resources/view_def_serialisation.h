@@ -55,4 +55,14 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, UnitViewDef& d) {
     return deserialiser;
 }
 
+inline Serialiser& operator<<(Serialiser& serialiser, const StructureViewDef& d) {
+    serialiser << d.name;
+    return serialiser;
+}
+
+inline Deserialiser& operator>>(Deserialiser& deserialiser, StructureViewDef& d) {
+    deserialiser >> d.name;
+    return deserialiser;
+}
+
 #endif

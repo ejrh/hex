@@ -28,12 +28,16 @@ MSG_TYPE(CreateUnitView, WM(UnitViewDef))
 MSG_TYPE(UnitHoldAnimation, WM3(int, int, ImageSeries))
 MSG_TYPE(UnitMoveAnimation, WM3(int, int, ImageSeries))
 
+MSG_TYPE(CreateStructureView, WM(StructureViewDef))
+MSG_TYPE(StructureAnimation, WM4(int, int, int, ImageSeries))
+
 MSG_TYPE(CreateFactionView, WM(FactionViewDef))
 
 MSG_TYPE(LoadSong, WM(std::string))
 
 MSG_TYPE(CreateUnitType, WM(UnitType))
 MSG_TYPE(CreateTileType, WM(TileType))
+MSG_TYPE(CreateStructureType, WM(StructureType))
 
 MSG_TYPE(SetLevel, WM2(int, int))
 MSG_TYPE(SetLevelData, WM2(Point, std::vector<std::string>))
@@ -41,6 +45,8 @@ MSG_TYPE(CreateFaction, WM3(int, std::string, std::string))
 
 MSG_TYPE(CreateStack, WM3(int, Point, int))
 MSG_TYPE(CreateUnit, WM2(int, std::string))
+
+MSG_TYPE(CreateStructure, WM3(Point, std::string, int))
 
 MSG_TYPE(GrantFactionView, WM3(int, int, bool))
 MSG_TYPE(GrantFactionControl, WM3(int, int, bool))

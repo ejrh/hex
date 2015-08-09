@@ -42,6 +42,17 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, UnitType& d) {
 }
 
 
+inline Serialiser& operator<<(Serialiser& serialiser, const StructureType& d) {
+    serialiser << d.name << d.abilities;
+    return serialiser;
+}
+
+inline Deserialiser& operator>>(Deserialiser& deserialiser, StructureType& d) {
+    deserialiser >> d.name >> d.abilities;
+    return deserialiser;
+}
+
+
 inline Serialiser& operator<<(Serialiser& serialiser, const TraitType& t) {
     serialiser << get_trait_type_name(t);
     return serialiser;

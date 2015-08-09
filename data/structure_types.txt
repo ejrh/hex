@@ -1,0 +1,2 @@
+# CreateStructureType(name, properties)
+CreateStructureType("tower", {"LongSight"})

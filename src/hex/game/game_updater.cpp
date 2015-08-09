@@ -57,6 +57,16 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
             game->create_unit(upd->data1, upd->data2);
         } break;
 
+        case CreateStructureType: {
+            boost::shared_ptr<CreateStructureTypeMessage> upd = boost::dynamic_pointer_cast<CreateStructureTypeMessage>(update);
+            game->create_structure_type(upd->data);
+        } break;
+
+        case CreateStructure: {
+            boost::shared_ptr<CreateStructureMessage> upd = boost::dynamic_pointer_cast<CreateStructureMessage>(update);
+            game->create_structure(upd->data1, upd->data2, upd->data3);
+        } break;
+
         case FactionReady: {
             boost::shared_ptr<FactionReadyMessage> upd = boost::dynamic_pointer_cast<FactionReadyMessage>(update);
             Faction *faction = game->get_faction(upd->data1);
