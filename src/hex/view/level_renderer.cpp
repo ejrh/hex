@@ -76,6 +76,18 @@ void LevelRenderer::render_structure(int x, int y, Point tile_pos) {
         int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
         graphics->blit(structure, x - view_def->centre_x, y - view_def->centre_y, SDL_BLENDMODE_BLEND, alpha);
 
+        if (tile_view.structure_view->selected) {
+            int add_phase = (view->phase / 1000) % 32;
+            if (add_phase < 16)
+                add_phase = add_phase*16;
+            else {
+                add_phase = (32 - add_phase)*16;
+                if (add_phase > 255)
+                    add_phase = 255;
+            }
+            graphics->blit(structure, x - view_def->centre_x, y - view_def->centre_y, SDL_BLENDMODE_ADD, add_phase);
+        }
+
         Faction *owner = tile_view.structure_view->structure->owner;
         FactionView *faction_view = view->faction_views[owner->id];
         FactionViewDef *faction_view_def = faction_view->view_def;

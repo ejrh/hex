@@ -18,7 +18,7 @@ Ghost::Ghost(UnitStack *stack, Path path, int progress): stack(stack), path(path
 
 GameView::GameView(Game *game, Player *player, Resources *resources, MessageReceiver *dispatcher):
         game(game), player(player), level_view(&game->level), resources(resources), dispatcher(dispatcher),
-        last_update(0), phase(0), selected_stack(NULL) {
+        last_update(0), phase(0), selected_stack(NULL), selected_structure(NULL) {
 }
 
 // Assumes 1000 increments between frames
@@ -84,7 +84,9 @@ void GameView::update() {
 }
 
 void GameView::left_click_tile(const Point& tile_pos) {
-    if (level_view.level->contains(tile_pos) && level_view.level->tiles[tile_pos].stack != NULL) {
+    TileView& tile_view = level_view.tile_views[tile_pos];
+    Tile& tile = level_view.level->tiles[tile_pos];
+    if (tile.stack != NULL && tile.stack != selected_stack) {
         if (selected_stack != NULL) {
             //TileView *current_view = &tile_views[selected_stack->tile_y][selected_stack->tile_x];
             UnitStackView *current_stack_view = &unit_stack_views[selected_stack->id];
@@ -98,11 +100,30 @@ void GameView::left_click_tile(const Point& tile_pos) {
         for (unsigned int i = 0; i < stack->units.size(); i++) {
             selected_units.insert(i);
         }
+        if (selected_structure != NULL) {
+            StructureView *structure_view = level_view.tile_views[selected_structure->position].structure_view;
+            structure_view->selected = false;
+        }
+        selected_structure = NULL;
 
         if (player->has_view(stack->owner))
             set_drawn_path(stack_view->path);
         else
             set_drawn_path(Path());
+    } else if (tile.structure != NULL) {
+        if (selected_stack != NULL) {
+            UnitStackView *stack_view = get_unit_stack_view(*selected_stack);
+            stack_view->selected = false;
+        }
+        if (selected_structure != NULL) {
+            StructureView *structure_view = level_view.tile_views[selected_structure->position].structure_view;
+            structure_view->selected = false;
+        }
+        selected_stack = NULL;
+        selected_structure = tile.structure;
+        set_drawn_path(Path());
+        StructureView *structure_view = level_view.tile_views[selected_structure->position].structure_view;
+        structure_view->selected = true;
     }
 }
 

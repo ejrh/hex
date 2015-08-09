@@ -123,14 +123,16 @@ void LevelWindow::left_click(int x, int y) {
     Point tile_pos;
 
     mouse_to_tile(x, y, &tile_pos);
-    view->left_click_tile(tile_pos);
+    if (view->level_view.level->contains(tile_pos))
+        view->left_click_tile(tile_pos);
 }
 
 void LevelWindow::right_click(int x, int y) {
     Point tile_pos;
 
     mouse_to_tile(x, y, &tile_pos);
-    view->right_click_tile(tile_pos);
+    if (view->level_view.level->contains(tile_pos))
+        view->right_click_tile(tile_pos);
 }
 
 bool LevelWindow::receive_event(SDL_Event *evt) {

@@ -17,8 +17,13 @@ public:
 
 class StructureView {
 public:
+    StructureView(Structure *structure, StructureViewDef *view_def):
+      structure(structure), view_def(view_def), selected(false) { }
+
+public:
     Structure *structure;
     StructureViewDef *view_def;
+    bool selected;
 };
 
 class TileView {
@@ -123,6 +128,7 @@ public:
     std::vector<Ghost> ghosts;
     UnitStack *selected_stack;
     std::set<int> selected_units;
+    Structure *selected_structure;
     Path drawn_path;
 };
 

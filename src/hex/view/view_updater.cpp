@@ -94,10 +94,8 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             }
             StructureType *structure_type = structure->type;
             StructureViewDef *view_def = resources->get_structure_view_def(structure_type->name);
-            StructureView *structure_view = new StructureView();
+            StructureView *structure_view = new StructureView(structure, view_def);
             game_view->level_view.tile_views[upd->data1].structure_view = structure_view;
-            structure_view->structure = structure;
-            structure_view->view_def = view_def;
 
             if (game_view->player->has_view(structure->owner)) {
                 game_view->update_visibility();
