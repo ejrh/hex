@@ -24,12 +24,6 @@ void Game::set_level_data(const Point& offset, const std::vector<std::string>& t
         for (unsigned int j = 1; j < parts.size(); j++) {
             if (parts[j] == "r") {
                 tile.road = true;
-            } else if (parts[j][0] == 'm') {
-                std::istringstream ss(parts[j]);
-                char c;
-                int m;
-                ss >> c >> m;
-                tile.mountain = m;
             }
         }
     }

@@ -46,7 +46,7 @@ void TilePainter::repaint(Point offset, int len) {
             Point tile_pos(j, i);
             paint_transitions(tile_pos);
             paint_roads(tile_pos);
-            paint_mountains(tile_pos);
+            paint_features(tile_pos);
         }
     }
 }
@@ -115,15 +115,16 @@ void TilePainter::paint_roads(const Point& tile_pos) {
     }
 }
 
-void TilePainter::paint_mountains(const Point& tile_pos) {
+void TilePainter::paint_features(const Point& tile_pos) {
     TileView& tile_view = view->level_view.tile_views[tile_pos];
-    if (tile_view.view_def == NULL)
+    tile_view.feature = NULL;
+    TileViewDef *view_def = tile_view.view_def;
+    if (view_def == NULL)
         return;
 
-    Tile& tile = game->level.tiles[tile_pos];
-
-    if (tile.mountain > 0 && tile_view.view_def->mountains.size() >= tile.mountain)
-        tile_view.mountain = tile_view.view_def->mountains[tile.mountain - 1].image;
-    else
-        tile_view.mountain = NULL;
+    for (std::vector<FeatureDef>::iterator iter = view_def->features.begin(); iter != view_def->features.end(); iter++) {
+        tile_view.feature = choose_image(iter->images, tile_view.variation);
+        tile_view.feature_x = iter->centre_x;
+        tile_view.feature_y = iter->centre_y;
+    }
 }

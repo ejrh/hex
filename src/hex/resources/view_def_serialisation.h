@@ -35,6 +35,16 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, TransitionDef& d) {
     return deserialiser;
 }
 
+inline Serialiser& operator<<(Serialiser& serialiser, const FeatureDef& d) {
+    serialiser << d.centre_x << d.centre_y << d.images;
+    return serialiser;
+}
+
+inline Deserialiser& operator>>(Deserialiser& deserialiser, FeatureDef& d) {
+    deserialiser >> d.centre_x >> d.centre_y >> d.images;
+    return deserialiser;
+}
+
 inline Serialiser& operator<<(Serialiser& serialiser, const UnitViewDef& d) {
     serialiser << d.name << d.move_speed;
     return serialiser;

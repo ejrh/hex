@@ -26,7 +26,9 @@ void Resources::resolve_references() {
             resolve_image_series(trans_iter->images);
         }
         resolve_image_series(def->roads);
-        resolve_image_series(def->mountains);
+        for (std::vector<FeatureDef>::iterator feat_iter = def->features.begin(); feat_iter != def->features.end(); feat_iter++) {
+            resolve_image_series(feat_iter->images);
+        }
     }
 }
 
@@ -44,6 +46,18 @@ bool Resources::resolve_image_ref(ImageRef& image_ref) {
     }
     image_ref.image = images[image_name];
     return true;
+}
+
+TileViewDef *Resources::create_tile_view(const TileViewDef& data) {
+    TileViewDef *def = new TileViewDef(data);
+    tile_view_defs[def->name] = def;
+
+    TileViewDef *base = find_base(*def);
+    if (base != NULL) {
+        def->animation = base->animation;
+        def->transitions = base->transitions;
+    }
+    return def;
 }
 
 TileViewDef *Resources::get_tile_view_def(const std::string& name) const {
@@ -67,5 +81,18 @@ FactionViewDef *Resources::get_faction_view_def(const std::string& name) {
     if (iter != faction_view_defs.end())
         return iter->second;
 
+    return NULL;
+}
+
+TileViewDef *Resources::find_base(const TileViewDef& def) const {
+    for (TileViewDefMap::const_iterator iter = tile_view_defs.begin(); iter != tile_view_defs.end(); iter++) {
+        if (iter->second->name == def.name)
+            continue;
+
+        std::pair<std::string::const_iterator,std::string::const_iterator> res = std::mismatch(iter->second->name.begin(), iter->second->name.end(), def.name.begin());
+        if (res.first == iter->second->name.end()) {
+            return iter->second;
+        }
+    }
     return NULL;
 }

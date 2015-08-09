@@ -16,9 +16,13 @@ public:
     void resolve_image_series(std::vector<ImageRef>& image_series);
     bool resolve_image_ref(ImageRef& image_ref);
 
+    TileViewDef *create_tile_view(const TileViewDef& def);
     TileViewDef *get_tile_view_def(const std::string& name) const;
     UnitViewDef *get_unit_view_def(const std::string& name);
     FactionViewDef *get_faction_view_def(const std::string& name);
+
+private:
+    TileViewDef *find_base(const TileViewDef& def) const;
 
 public:
     ImageMap images;

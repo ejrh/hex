@@ -34,6 +34,14 @@ public:
     ImageSeries images;
 };
 
+class FeatureDef {
+public:
+    FeatureDef() { }
+
+    int centre_x, centre_y;
+    ImageSeries images;
+};
+
 class TileViewDef {
 public:
     TileViewDef() { }
@@ -45,7 +53,7 @@ public:
     AnimationDef animation;
     std::vector<TransitionDef> transitions;
     ImageSeries roads;
-    ImageSeries mountains;
+    std::vector<FeatureDef> features;
 };
 
 typedef std::map<std::string, TileViewDef *> TileViewDefMap;

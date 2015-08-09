@@ -42,9 +42,7 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
 
         case CreateTileView: {
             boost::shared_ptr<WrapperMessage<TileViewDef> > upd = boost::dynamic_pointer_cast<WrapperMessage<TileViewDef> >(msg);
-            TileViewDef *def = new TileViewDef(upd->data);
-            resources->tile_view_defs[def->name] = def;
-            last_tile_view_def = def;
+            last_tile_view_def = resources->create_tile_view(upd->data);
         } break;
 
         case TileAnimation: {
@@ -63,9 +61,9 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
             last_tile_view_def->roads = upd->data;
         } break;
 
-        case TileMountains: {
-            boost::shared_ptr<TileMountainsMessage> upd = boost::dynamic_pointer_cast<TileMountainsMessage>(msg);
-            last_tile_view_def->mountains = upd->data;
+        case TileFeature: {
+            boost::shared_ptr<TileFeatureMessage> upd = boost::dynamic_pointer_cast<TileFeatureMessage>(msg);
+            last_tile_view_def->features.push_back(upd->data);
         } break;
 
         case CreateUnitView: {

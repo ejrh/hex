@@ -14,7 +14,7 @@ public:
     void repaint(Point offset, int len);
     void paint_transitions(const Point& tile_pos);
     void paint_roads(const Point& tile_pos);
-    void paint_mountains(const Point& tile_pos);
+    void paint_features(const Point& tile_pos);
 
 private:
     Game *game;

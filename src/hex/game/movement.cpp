@@ -21,6 +21,8 @@ int MovementModel::cost_to(const UnitStack *party, const Tile *tile) const {
     if (tile->has_property(Walkable) && unit->has_ability(Walking)) {
         if (tile->road)
             return 20;
+        else if (tile->has_property(SlowWalking))
+            return 40;
         else
             return 30;
     }
@@ -30,7 +32,10 @@ int MovementModel::cost_to(const UnitStack *party, const Tile *tile) const {
     }
 
     if (tile->has_property(Flyable) && unit->has_ability(Flying)) {
-        return 40;
+        if (tile->has_property(SlowFlying))
+            return 50;
+        else
+            return 40;
     }
 
     return INT_MAX;
