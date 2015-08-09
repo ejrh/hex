@@ -16,7 +16,8 @@
 LevelWindow::LevelWindow(int width, int height, GameView *view, LevelRenderer *level_renderer, Resources *resources):
         UiWindow(0, 0, width, height),
         view(view), level_renderer(level_renderer), resources(resources),
-        shift_x(SLOPE_WIDTH), shift_y(SLOPE_HEIGHT), x_spacing(X_SPACING), y_spacing(Y_SPACING) {
+        shift_x(SLOPE_WIDTH), shift_y(SLOPE_HEIGHT), x_spacing(X_SPACING), y_spacing(Y_SPACING),
+        scroll_up(false), scroll_down(false), scroll_left(false), scroll_right(false) {
     shift(0, 0);
 }
 
@@ -144,12 +145,45 @@ bool LevelWindow::receive_event(SDL_Event *evt) {
         return true;
     } else if (evt->type == drag_event_type) {
         shift(evt->motion.xrel, evt->motion.yrel);
+    } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_UP) {
+        scroll_up = true;
+    } else if (evt->type == SDL_KEYUP && evt->key.keysym.sym == SDLK_UP) {
+        scroll_up = false;
+    } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_DOWN) {
+        scroll_down = true;
+    } else if (evt->type == SDL_KEYUP && evt->key.keysym.sym == SDLK_DOWN) {
+        scroll_down = false;
+    } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_LEFT) {
+        scroll_left = true;
+    } else if (evt->type == SDL_KEYUP && evt->key.keysym.sym == SDLK_LEFT) {
+        scroll_left = false;
+    } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_RIGHT) {
+        scroll_right = true;
+    } else if (evt->type == SDL_KEYUP && evt->key.keysym.sym == SDLK_RIGHT) {
+        scroll_right = false;
     }
 
     return false;
 }
 
 void LevelWindow::draw() {
+    int scroll_x = 0;
+    int scroll_y = 0;
+    if (scroll_up) {
+        scroll_y += 20;
+    }
+    if (scroll_down) {
+        scroll_y -= 20;
+    }
+    if (scroll_left) {
+        scroll_x += 20;
+    }
+    if (scroll_right) {
+        scroll_x -= 20;
+    }
+    if (scroll_x != 0 || scroll_y != 0)
+        shift(scroll_x, scroll_y);
+
     level_renderer->clear(x, y, width, height);
     draw_level(&LevelRenderer::render_tile);
     draw_level(&LevelRenderer::render_tile_transitions);

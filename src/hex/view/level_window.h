@@ -35,6 +35,7 @@ protected:
     Resources *resources;
     int shift_x, shift_y;
     int x_spacing, y_spacing;
+    bool scroll_up, scroll_down, scroll_left, scroll_right;
 
     friend class LevelRenderer;
     friend class MapWindow;
