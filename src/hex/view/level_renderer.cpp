@@ -73,6 +73,14 @@ void LevelRenderer::render_structure(int x, int y, Point tile_pos) {
         if (animation.images.size() == 0)
             animation.images.push_back(ImageRef("missing"));
         Image *structure = animation.images[(tile_view.phase / 1000) % animation.images.size()].image;
+        if (structure == NULL) {
+            const std::string& label = view_def->name.substr(0, 3);
+            TextFormat tf(graphics, SmallFont14, false, 255,255,255, 128,128,128);
+            structure = tf.write_to_image(label);
+            if (structure != NULL) {
+                animation.images[(tile_view.phase / 1000) % animation.images.size()].image = structure;
+            }
+        }
         int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
         graphics->blit(structure, x - view_def->centre_x, y - view_def->centre_y, SDL_BLENDMODE_BLEND, alpha);
 

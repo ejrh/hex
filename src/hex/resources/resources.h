@@ -20,7 +20,7 @@ public:
     StructureViewDef *create_structure_view(const StructureViewDef& data);
     TileViewDef *get_tile_view_def(const std::string& name) const;
     UnitViewDef *get_unit_view_def(const std::string& name);
-    StructureViewDef *get_structure_view_def(const std::string& name) const;
+    StructureViewDef *get_structure_view_def(const std::string& name);
     FactionViewDef *get_faction_view_def(const std::string& name);
 
 private:

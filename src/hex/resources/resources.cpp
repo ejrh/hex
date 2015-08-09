@@ -87,12 +87,15 @@ UnitViewDef *Resources::get_unit_view_def(const std::string& name) {
     return view_def;
 }
 
-StructureViewDef *Resources::get_structure_view_def(const std::string& name) const {
+StructureViewDef *Resources::get_structure_view_def(const std::string& name) {
     StructureViewDefMap::const_iterator iter = structure_view_defs.find(name);
     if (iter != structure_view_defs.end())
         return iter->second;
 
-    return NULL;
+    warn("No structure view def for: %s", name.c_str());
+    StructureViewDef *view_def = new StructureViewDef(name);
+    structure_view_defs[name] = view_def;
+    return view_def;
 }
 
 FactionViewDef *Resources::get_faction_view_def(const std::string& name) {

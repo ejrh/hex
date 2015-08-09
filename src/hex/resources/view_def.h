@@ -76,6 +76,7 @@ typedef std::map<std::string, UnitViewDef *> UnitViewDefMap;
 class StructureViewDef {
 public:
     StructureViewDef() { }
+    StructureViewDef(const std::string& name): name(name), centre_x(0), centre_y(0) { }
 
     std::string name;
     int centre_x, centre_y;
