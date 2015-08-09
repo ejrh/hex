@@ -9,11 +9,14 @@ public:
     Audio(Resources *resources);
     ~Audio();
 
+    void start();
+    void stop();
     void play(const std::string& filename);
     void update();
 
 private:
     Resources *resources;
+    bool started;
     MODULE *module;
 };
 

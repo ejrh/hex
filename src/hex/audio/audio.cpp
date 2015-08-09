@@ -4,22 +4,40 @@
 #include "hex/basics/error.h"
 #include "hex/resources/resources.h"
 
-Audio::Audio(Resources *resources): resources(resources), module(NULL) {
+Audio::Audio(Resources *resources): resources(resources), started(false), module(NULL) {
+}
+
+Audio::~Audio() {
+    stop();
+}
+
+void Audio::start() {
+    if (started)
+        return;
+
     MikMod_RegisterAllDrivers();
     MikMod_RegisterAllLoaders();
     if (MikMod_Init((char *) "")) {
         throw Error("Couldn't initialise sound: %s", MikMod_strerror(MikMod_errno));
     }
+    started = true;
 }
 
-Audio::~Audio() {
+void Audio::stop() {
+    if (!started)
+        return;
+
     Player_Stop();
     if (module != NULL)
         Player_Free(module);
     MikMod_Exit();
+    started = false;
 }
 
 void Audio::play(const std::string& filename) {
+    if (!started)
+        return;
+
     if (module != NULL) {
         Player_Free(module);
     }
@@ -30,11 +48,15 @@ void Audio::play(const std::string& filename) {
         return;
     }
 
+    module->loop = 0;
     trace("Playing: %s", filename.c_str());
     Player_Start(module);
 }
 
 void Audio::update() {
+    if (!started)
+        return;
+
     if (!Player_Active() && resources->songs.size() > 0) {
         std::set<std::string>::iterator song_iter = resources->songs.begin();
         std::advance(song_iter, rand() % resources->songs.size());

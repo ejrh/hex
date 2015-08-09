@@ -273,6 +273,7 @@ void run(Options& options) {
     StackWindow stack_window(graphics.width - StackWindow::window_width, 200, StackWindow::window_width, StackWindow::window_height, &resources, &graphics, &game_view, &level_renderer);
 
     Audio audio(&resources);
+    audio.start();
 
     UiLoop loop(25);
     BackgroundWindow bw(&loop, &options, &game, &game_view, &independent_ai, &event_pusher, &arbiter, &updater);
@@ -288,6 +289,7 @@ void run(Options& options) {
     server.stop();
     client.disconnect();
 
+    audio.stop();
     graphics.stop();
 }
 
