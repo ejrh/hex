@@ -14,9 +14,11 @@ public:
 private:
     void write_unit_types(Game *game);
     void write_tile_types(Game *game);
+    void write_structure_types(Game *game);
     void write_factions(Game *game);
     void write_levels(Game *game);
     void write_unit_stacks(Game *game);
+    void write_structures(Game *game);
 
     void emit(boost::shared_ptr<Message> message);
 
