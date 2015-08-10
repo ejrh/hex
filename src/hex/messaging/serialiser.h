@@ -124,7 +124,7 @@ public:
         if (expect_seperator)
             skip_separator();
         int ch = in.get();
-        x = (ch == 'y' || ch == 'Y' || ch == '1');
+        x = (ch == 'y' || ch == 'Y' || ch == '1' || ch == 't' || ch == 'T');
         expect_seperator = true;
         return *this;
     }
