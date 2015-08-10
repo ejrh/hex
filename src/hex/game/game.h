@@ -58,22 +58,11 @@ public:
 
 class UnitStack {
 public:
+    UnitStack(const Point position, Faction *owner): id(0), owner(owner), position(position) { };
     UnitStack(int id, const Point position, Faction *owner): id(id), owner(owner), position(position) { };
     ~UnitStack() { };
 
-    void absorb(UnitStack *other, std::set<int> selected_units) {
-        std::vector<Unit *>::iterator iter = other->units.begin();
-        int i = 0;
-        while (iter != other->units.end()) {
-            if (selected_units.find(i) != selected_units.end()) {
-                units.push_back(*iter);
-                iter = other->units.erase(iter);
-            } else {
-                i++;
-                iter++;
-            }
-        }
-    }
+    void transfer_units(std::set<int> unit_selection, UnitStack *target_stack);
 
     static int sight_func(int max1, const Unit *unit) {
         int max2 = unit->type->sight;
@@ -178,13 +167,13 @@ public:
     Faction *create_faction(int id, const std::string& type_name, const std::string& name);
     UnitStack *create_unit_stack(int id, const Point position, int owner_id);
     Unit *create_unit(int stack_id, const std::string& type_name);
-    void destroy_unit_stack(int stack_id);
-
     Structure *create_structure(const Point& position, const std::string& type_name, int owner_id);
-
+    void destroy_unit_stack(int stack_id);
+    void transfer_units(int stack_id, std::set<int> selected_units, Path path, int target_id);
     Faction *get_faction(int id);
     UnitStack *get_stack(int id);
     Structure *get_structure(const Point& position);
+    int get_free_stack_id();
 
 public:
     TileTypeMap tile_types;

@@ -12,7 +12,7 @@
 #include "hex/view/view.h"
 
 
-Ghost::Ghost(UnitStack *stack, Path path, int progress): stack(stack), path(path), progress(progress) {
+Ghost::Ghost(UnitStack *target, Path path): target(target), path(path), progress(0) {
 }
 
 
@@ -57,14 +57,15 @@ void GameView::update() {
     while (iter != ghosts.end()) {
         Ghost& ghost = *iter;
 
-        UnitStackView *stack_view = get_unit_stack_view(*ghost.stack);
-        UnitViewDef *view_def = stack_view->view_def;
+        UnitStackView *target_view = get_unit_stack_view(*ghost.target);
+        UnitViewDef *view_def = target_view->view_def;
         ghost.progress += frame_incr(view_def->move_speed, update_ms);
         unsigned int step = ghost.progress / 1000;
         if (step >= ghost.path.size() - 1) {
-            stack_view->moving = false;
-            if (player->has_view(ghost.stack->owner)) {
-                level_view.visibility.unmask(ghost.stack);
+            target_view->locked = false;
+            target_view->moving = false;
+            if (player->has_view(ghost.target->owner)) {
+                level_view.visibility.unmask(ghost.target);
                 update_visibility();
             }
             iter = ghosts.erase(iter);
@@ -72,11 +73,11 @@ void GameView::update() {
             Point &prev_pos = ghost.path[step];
             Point &next_pos = ghost.path[step + 1];
             ghost.position = next_pos;
-            stack_view->facing = get_direction(next_pos, prev_pos);
-            stack_view->phase += frame_incr(view_def->move_animations[stack_view->facing].bpm, update_ms);
-            if (player->has_view(ghost.stack->owner)) {
-                level_view.discovered.draw(next_pos, ghost.stack->sight(), true);
-                level_view.ghost_visibility.draw(next_pos, ghost.stack->sight(), true);
+            target_view->facing = get_direction(next_pos, prev_pos);
+            target_view->phase += frame_incr(view_def->move_animations[target_view->facing].bpm, update_ms);
+            if (player->has_view(ghost.target->owner)) {
+                level_view.discovered.draw(next_pos, ghost.target->sight(), true);
+                level_view.ghost_visibility.draw(next_pos, ghost.target->sight(), true);
             }
             iter++;
         }
@@ -84,15 +85,13 @@ void GameView::update() {
 }
 
 void GameView::left_click_tile(const Point& tile_pos) {
-    TileView& tile_view = level_view.tile_views[tile_pos];
     Tile& tile = level_view.level->tiles[tile_pos];
     if (tile.stack != NULL && tile.stack != selected_stack) {
         if (selected_stack != NULL) {
-            //TileView *current_view = &tile_views[selected_stack->tile_y][selected_stack->tile_x];
             UnitStackView *current_stack_view = &unit_stack_views[selected_stack->id];
             current_stack_view->selected = false;
         }
-        UnitStack *stack = level_view.level->tiles[tile_pos].stack;
+        UnitStack *stack = tile.stack;
         UnitStackView *stack_view = &unit_stack_views[stack->id];
         stack_view->selected = true;
         selected_stack = stack;
@@ -132,7 +131,7 @@ void GameView::right_click_tile(const Point& tile_pos) {
     if (selected_stack == NULL)  // or dead or whatever
         return;
     UnitStackView *current_stack_view = &unit_stack_views[selected_stack->id];
-    if (current_stack_view->moving)
+    if (current_stack_view->locked)
         return;
 
     if (level_view.level->contains(tile_pos) && player->has_control(selected_stack->owner)) {
@@ -219,4 +218,41 @@ TileView *GameView::get_tile_view(const Point tile_pos) {
     }
 
     return NULL;
+}
+
+void GameView::transfer_units(int stack_id, std::set<int> selected_units, Path path, int target_id) {
+    /* By the time we get here, the units have already moved in the game state. */
+
+    UnitStack *stack = game->get_stack(stack_id);
+    if (stack == NULL) {
+        warn("No stack with id %d", stack_id);
+        return;
+    }
+    UnitStack *target_stack = game->get_stack(target_id);
+    if (target_stack == NULL) {
+        warn("No stack with id %d", target_id);
+        return;
+    }
+
+    if (path.size() < 2)
+        return;
+
+    bool new_target = selected_units.size() == target_stack->units.size();
+
+    UnitStackView *stack_view = &unit_stack_views[stack->id];
+    stack_view->path = Path();
+    if (selected_stack == stack) {
+        set_drawn_path(stack_view->path);
+        selected_stack = NULL;
+    }
+
+    UnitStackView *target_view = &unit_stack_views[target_stack->id];
+    target_view->locked = true;
+    if (new_target)
+        target_view->moving = true;
+    Ghost ghost(target_stack, path);
+    ghosts.push_back(ghost);
+    if (player->has_view(ghost.target->owner)) {
+        update_visibility();
+    }
 }

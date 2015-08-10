@@ -35,11 +35,6 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             painter.repaint(offset, len);
         } break;
 
-        case CreateTileType:
-        case CreateUnitType:
-            // Ignore
-            break;
-
         case CreateFaction: {
             boost::shared_ptr<CreateFactionMessage> upd = boost::dynamic_pointer_cast<CreateFactionMessage>(update);
             Faction *faction = game->get_faction(upd->data1);
@@ -86,6 +81,20 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             }
         } break;
 
+        case TransferUnits: {
+            boost::shared_ptr<UnitMoveMessage> upd = boost::dynamic_pointer_cast<UnitMoveMessage>(update);
+            game_view->transfer_units(upd->data1, upd->data2, upd->data3, upd->data4);
+        } break;
+
+        case DestroyStack: {
+            boost::shared_ptr<DestroyStackMessage> upd = boost::dynamic_pointer_cast<DestroyStackMessage>(update);
+            if (game_view->selected_stack != NULL && game_view->selected_stack->id == upd->data) {
+                game_view->selected_stack = NULL;
+                game_view->set_drawn_path(Path());
+            }
+            game_view->unit_stack_views.erase(upd->data);
+        } break;
+
         case CreateStructure: {
             boost::shared_ptr<CreateStructureMessage> upd = boost::dynamic_pointer_cast<CreateStructureMessage>(update);
             Structure *structure = game->get_structure(upd->data1);
@@ -119,43 +128,6 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         } break;
 
         case TurnEnd: {
-        } break;
-
-        case UnitMove: {
-            boost::shared_ptr<UnitMoveMessage> upd = boost::dynamic_pointer_cast<UnitMoveMessage>(update);
-
-            UnitStack *stack = game->get_stack(upd->data1);
-            if (stack == NULL) {
-                game_view->unit_stack_views.erase(upd->data1);
-                game_view->selected_stack = NULL;
-                game_view->set_drawn_path(Path());
-            }
-
-            if (upd->data4 == 0) {
-                UnitStack *stack = game->get_stack(upd->data1);
-                UnitStackView *stack_view = &game_view->unit_stack_views[stack->id];
-                stack_view->path = Path();
-                if (game_view->selected_stack == stack) {
-                    game_view->set_drawn_path(stack_view->path);
-                }
-                if (stack_view->view_def != NULL && upd->data3.size() > 1) {
-                    Ghost ghost(stack, upd->data3, 0);
-                    game_view->ghosts.push_back(ghost);
-                    stack_view->moving = true;
-                    if (game_view->player->has_view(ghost.stack->owner)) {
-                        game_view->update_visibility();
-                    }
-                }
-            } else {
-                UnitStack *stack = game->get_stack(upd->data4);
-                UnitStackView *stack_view = &game_view->unit_stack_views[stack->id];
-                if (stack_view->view_def != NULL && upd->data3.size() > 1) {
-                    Ghost ghost(stack, upd->data3, 0);
-                    game_view->ghosts.push_back(ghost);
-                    //TODO target stack should be visible but not movable
-                    //stack_view->moving = true;
-                }
-            }
         } break;
 
         default:

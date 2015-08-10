@@ -45,6 +45,8 @@ MSG_TYPE(CreateFaction, WM3(int, std::string, std::string))
 
 MSG_TYPE(CreateStack, WM3(int, Point, int))
 MSG_TYPE(CreateUnit, WM2(int, std::string))
+MSG_TYPE(TransferUnits, WM4(int, std::set<int>, Path, int))
+MSG_TYPE(DestroyStack, WM(int))
 
 MSG_TYPE(CreateStructure, WM3(Point, std::string, int))
 

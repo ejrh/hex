@@ -151,8 +151,33 @@ Structure *Game::create_structure(const Point& position, const std::string& type
 
 void Game::destroy_unit_stack(int stack_id) {
     UnitStack *stack = stacks[stack_id];
+    level.tiles[stack->position].stack = NULL;
     stacks.erase(stack_id);
     delete stack;
+}
+
+void Game::transfer_units(int stack_id, std::set<int> selected_units, Path path, int target_id) {
+    UnitStack *stack = get_stack(stack_id);
+    if (stack == NULL) {
+        warn("No stack with id %d", stack_id);
+        return;
+    }
+    UnitStack *target_stack = get_stack(target_id);
+    if (target_stack == NULL) {
+        warn("No stack with id %d", target_id);
+        return;
+    }
+
+    //TODO: party moves across level tile by tile
+
+    Point& new_pos = path.back();
+    if (stack == target_stack) {
+        level.tiles[stack->position].stack = NULL;
+        stack->position = new_pos;
+        level.tiles[new_pos].stack = stack;
+    } else {
+        stack->transfer_units(selected_units, target_stack);
+    }
 }
 
 Faction *Game::get_faction(int id) {
@@ -169,4 +194,8 @@ UnitStack *Game::get_stack(int id) {
 
 Structure *Game::get_structure(const Point& position) {
     return level.tiles[position].structure;
+}
+
+int Game::get_free_stack_id() {
+    return stacks.rbegin()->second->id + 1;
 }

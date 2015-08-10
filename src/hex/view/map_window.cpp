@@ -103,7 +103,7 @@ void MapWindow::draw() {
 
     for (std::vector<Ghost>::iterator iter = view->ghosts.begin(); iter != view->ghosts.end(); iter++) {
         Ghost& ghost = *iter;
-        UnitStack *stack = ghost.stack;
+        UnitStack *stack = ghost.target;
         if (!view->level_view.check_visibility(ghost.position))
             continue;
 

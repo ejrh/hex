@@ -49,7 +49,7 @@ public:
     UnitStackView(): stack(NULL) { }
     UnitStackView(UnitStack *stack, UnitViewDef *view_def):
         stack(stack), view_def(view_def),
-        facing(rand() % 6), variation(rand()), phase(rand()), selected(false), moving(false), move_steps(0) { }
+        facing(rand() % 6), variation(rand()), phase(rand()), selected(false), moving(false), locked(false), move_steps(0) { }
     ~UnitStackView() { }
 
 public:
@@ -59,17 +59,17 @@ public:
     unsigned int variation;
     unsigned int phase;
     bool selected;
-    bool moving;
+    bool moving, locked;
     Path path;
     int move_steps;
 };
 
 class Ghost {
 public:
-    Ghost(UnitStack *stack, Path path, int progress);
+    Ghost(UnitStack *target, Path path);
 
 private:
-    UnitStack *stack;
+    UnitStack *target;
     Point position;
     Path path;
     int progress;
@@ -114,6 +114,7 @@ public:
     void update_visibility();
     UnitStackView *get_unit_stack_view(const UnitStack &stack);
     TileView *get_tile_view(const Point tile_pos);
+    void transfer_units(int stack_id, std::set<int> selected_units, Path path, int target_id);
 
 public:
     Game *game;

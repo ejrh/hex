@@ -36,6 +36,7 @@ set(srcs
         game/trait_types.h
         game/traits.cpp
         game/traits.h
+        game/unit_stack.cpp
         game/visibility_map.cpp
         game/visibility_map.h
         graphics/font.cpp

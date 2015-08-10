@@ -57,6 +57,16 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
             game->create_unit(upd->data1, upd->data2);
         } break;
 
+        case TransferUnits: {
+            boost::shared_ptr<TransferUnitsMessage> upd = boost::dynamic_pointer_cast<TransferUnitsMessage>(update);
+            game->transfer_units(upd->data1, upd->data2, upd->data3, upd->data4);
+        } break;
+
+        case DestroyStack: {
+            boost::shared_ptr<DestroyStackMessage> upd = boost::dynamic_pointer_cast<DestroyStackMessage>(update);
+            game->destroy_unit_stack(upd->data);
+        } break;
+
         case CreateStructureType: {
             boost::shared_ptr<CreateStructureTypeMessage> upd = boost::dynamic_pointer_cast<CreateStructureTypeMessage>(update);
             game->create_structure_type(upd->data);
@@ -78,34 +88,6 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
         case TurnEnd: {
             boost::shared_ptr<TurnEndMessage> upd = boost::dynamic_pointer_cast<TurnEndMessage>(update);
             game->turn_number = upd->data;
-        } break;
-
-        case UnitMove: {
-            boost::shared_ptr<UnitMoveMessage> upd = boost::dynamic_pointer_cast<UnitMoveMessage>(update);
-
-            // check unit can move
-            UnitStack *stack = game->stacks[upd->data1];
-            if (stack == NULL) {
-                warn("No stack with id %d", upd->data1);
-                return;
-            }
-
-            Point& new_pos = upd->data3.back();
-            UnitStack *target_stack = game->level.tiles[new_pos].stack;
-
-            // TODO but not if some units were left behind
-            game->level.tiles[stack->position].stack = NULL;
-
-            if (target_stack != NULL) {
-                target_stack->absorb(stack, upd->data2);
-            }
-
-            if (stack->units.size() == 0) {
-                game->destroy_unit_stack(stack->id);
-            } else {
-                stack->position = new_pos;
-                game->level.tiles[stack->position].stack = stack;
-            }
         } break;
 
         default:

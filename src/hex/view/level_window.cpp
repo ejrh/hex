@@ -240,7 +240,7 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
 }
 
 void LevelWindow::draw_ghost(Ghost *ghost) {
-    UnitStackView *stack_view = view->get_unit_stack_view(*ghost->stack);
+    UnitStackView *stack_view = view->get_unit_stack_view(*ghost->target);
     if (stack_view == NULL)
         return;
 
