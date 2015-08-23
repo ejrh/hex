@@ -109,6 +109,32 @@ void generate_level(Level &level, TileTypeMap& types) {
                 neighbour0.type = types["grass_mountain0"];
                 neighbour1.type = types["grass_mountain0"];
             }
+
+            if (tile.type == types["grass_mountain2"]) {
+                Point neighbour_pos[6];
+                get_neighbours(tile_pos, neighbour_pos);
+                Point neighbour_pos_l[6];
+                get_neighbours(neighbour_pos[4], neighbour_pos_l);
+                Point neighbour_pos_r[6];
+                get_neighbours(neighbour_pos[2], neighbour_pos_r);
+                if (!level.contains(neighbour_pos[3]) || !level.contains(neighbour_pos_l[5]) || !level.contains(neighbour_pos_r[1]))
+                    continue;
+                Tile& neighbourl5 = level.tiles[neighbour_pos_l[5]];
+                Tile& neighbour4 = level.tiles[neighbour_pos[4]];
+                Tile& neighbour3 = level.tiles[neighbour_pos[3]];
+                Tile& neighbour2 = level.tiles[neighbour_pos[2]];
+                Tile& neighbourr1 = level.tiles[neighbour_pos_r[1]];
+                if (neighbourl5.type != types["grass_mountain1"] || neighbour4.type != types["grass_mountain1"] || neighbour3.type != types["grass_mountain1"]
+                        || neighbour2.type != types["grass_mountain1"] || neighbourr1.type != types["grass_mountain1"])
+                    continue;
+
+                tile.type = types["grass_mountain3"];
+                neighbourl5.type = types["grass_mountain0"];
+                neighbour4.type = types["grass_mountain0"];
+                neighbour3.type = types["grass_mountain0"];
+                neighbour2.type = types["grass_mountain0"];
+                neighbourr1.type = types["grass_mountain0"];
+            }
         }
     }
 }
