@@ -41,7 +41,7 @@ void HSSReader::read(ImageMap& image_set) {
         pos++;
     }
 
-    delete buffer;
+    delete[] buffer;
 }
 
 void load_hss(const std::string& filename, Graphics *graphics, ImageMap& image_set) {

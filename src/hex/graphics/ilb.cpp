@@ -163,6 +163,8 @@ void ILBReader::read_pixel_format(ImageData &image) {
             image.blend_mode = ILB_BLEND_USER;
         }
         image.blend_value = read_int();
+    } else {
+        image.blend_mode = ILB_BLEND_USER;
     }
     image.pixel_format = read_int();
 }
