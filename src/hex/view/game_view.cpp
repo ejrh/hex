@@ -256,3 +256,13 @@ void GameView::transfer_units(int stack_id, std::set<int> selected_units, Path p
         update_visibility();
     }
 }
+
+void GameView::mark_ready() {
+    for (std::map<int, FactionView *>::const_iterator iter = faction_views.begin(); iter != faction_views.end(); iter++) {
+        int faction_id = iter->first;
+        FactionView *faction_view =iter->second;
+        if (player->has_control(faction_view->faction)) {
+            dispatcher->receive(create_message(FactionReady, faction_id, true));
+        }
+    }
+}

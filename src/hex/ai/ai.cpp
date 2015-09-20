@@ -27,6 +27,10 @@ void Ai::update() {
             update_unit_stack(stack);
         }
     }
+
+    if (!faction->ready) {
+        dispatcher->receive(create_message(FactionReady, faction->id, true));
+    }
 }
 
 void Ai::update_unit_stack(UnitStack *stack) {

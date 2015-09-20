@@ -170,6 +170,12 @@ public:
     Structure *create_structure(const Point& position, const std::string& type_name, int owner_id);
     void destroy_unit_stack(int stack_id);
     void transfer_units(int stack_id, std::set<int> selected_units, Path path, int target_id);
+
+    bool mark_faction_ready(int faction_id, bool ready);
+    bool all_factions_ready();
+    void begin_turn(int turn_number);
+    void end_turn();
+
     Faction *get_faction(int id);
     UnitStack *get_stack(int id);
     Structure *get_structure(const Point& position);
@@ -183,6 +189,7 @@ public:
     int game_id;
     int message_id;
     int turn_number;
+    bool in_turn;
     Level level;
     std::map<int, Faction *> factions;
     std::map<int, UnitStack *> stacks;

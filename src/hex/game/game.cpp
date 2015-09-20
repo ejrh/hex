@@ -180,6 +180,45 @@ void Game::transfer_units(int stack_id, std::set<int> selected_units, Path path,
     }
 }
 
+bool Game::mark_faction_ready(int faction_id, bool ready) {
+    Faction *faction = get_faction(faction_id);
+    if (faction == NULL) {
+        warn("Invalid faction: %d", faction_id);
+        return false;
+    }
+    if (faction->ready == ready) {
+        return false;
+    }
+    faction->ready = ready;
+    return true;
+}
+
+bool Game::all_factions_ready() {
+    for (std::map<int, Faction *>::const_iterator iter = factions.begin(); iter != factions.end(); iter++) {
+        Faction *faction = iter->second;
+        if (!faction->ready)
+            return false;
+    }
+
+    return true;
+}
+
+void Game::begin_turn(int turn_number) {
+    for (std::map<int, Faction *>::const_iterator iter = factions.begin(); iter != factions.end(); iter++) {
+        Faction *faction = iter->second;
+        faction->ready = false;
+    }
+
+    trace("Start of turn %d", turn_number);
+    this->turn_number = turn_number;
+    in_turn = true;
+}
+
+void Game::end_turn() {
+    trace("End of turn %d", turn_number);
+    in_turn = false;
+}
+
 Faction *Game::get_faction(int id) {
     if (factions.find(id) != factions.end())
         return factions[id];

@@ -175,6 +175,8 @@ void create_game(Game& game, Updater& updater) {
     updater.receive(create_message(GrantFactionView, 0, 2, true));
     updater.receive(create_message(GrantFactionControl, 0, 2, true));
 
+    updater.receive(create_message(GrantFactionControl, 0, 3, true));
+
     for (int i = 1; i <= 40; i++) {
         UnitTypeMap::iterator item = game.unit_types.begin();
         std::advance(item, rand() % game.unit_types.size());
@@ -229,6 +231,9 @@ void create_game(Game& game, Updater& updater) {
             }
         }
     }
+
+    game.turn_number = 1;
+    updater.receive(create_message(TurnBegin, game.turn_number));
 }
 
 void load_resources(Resources *resources, Graphics *graphics) {
@@ -272,6 +277,10 @@ public:
             game_view->debug_mode = !game_view->debug_mode;
             level_renderer->show_hexagons = game_view->debug_mode;
             return true;
+        }
+
+        if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_F12) {
+            game_view->mark_ready();
         }
 
         return false;

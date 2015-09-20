@@ -53,10 +53,11 @@ MSG_TYPE(CreateStructure, WM3(Point, std::string, int))
 MSG_TYPE(GrantFactionView, WM3(int, int, bool))
 MSG_TYPE(GrantFactionControl, WM3(int, int, bool))
 
-MSG_TYPE(FactionReady, WM2(int, bool))
 MSG_TYPE(Chat, WM(std::string))
-MSG_TYPE(TurnEnd, WM(int))
+
+MSG_TYPE(FactionReady, WM2(int, bool))
 MSG_TYPE(TurnBegin, WM(int))
+MSG_TYPE(TurnEnd, Message)
 
 MSG_TYPE(UnitMove, WM4(int, std::set<int>, Path, int))
 

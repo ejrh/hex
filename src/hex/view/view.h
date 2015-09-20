@@ -115,6 +115,7 @@ public:
     UnitStackView *get_unit_stack_view(const UnitStack &stack);
     TileView *get_tile_view(const Point tile_pos);
     void transfer_units(int stack_id, std::set<int> selected_units, Path path, int target_id);
+    void mark_ready();
 
 public:
     Game *game;

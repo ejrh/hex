@@ -51,3 +51,24 @@ Attacking
 ---------
 
 TODO
+
+Turn end
+--------
+
+A faction indicates it is ready for turn end with a message to the arbiter:
+
+    FactionReady(faction_id, ready)
+
+Factions indicate their readiness by setting the boolean ready flag and can change it as many
+times as they like before turn end is announced.  The arbiter broadcasts FactionReady messages
+as updates.
+
+When the arbiter receives a FactionReady message that marks all factions as ready, a TurnEnd
+update is sent.  During turn end, most commands are ignored.
+
+    TurnEnd()
+
+The arbiter computes and sends all turn end updates, such as recovered health
+for units, and income from structures.  Finally a TurnBegin message is sent.
+
+    TurnBegin(turn_number)

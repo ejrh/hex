@@ -85,9 +85,13 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
             }
         } break;
 
+        case TurnBegin: {
+            boost::shared_ptr<TurnBeginMessage> upd = boost::dynamic_pointer_cast<TurnBeginMessage>(update);
+            game->begin_turn(upd->data);
+        } break;
+
         case TurnEnd: {
-            boost::shared_ptr<TurnEndMessage> upd = boost::dynamic_pointer_cast<TurnEndMessage>(update);
-            game->turn_number = upd->data;
+            game->end_turn();
         } break;
 
         default:

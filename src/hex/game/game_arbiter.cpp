@@ -57,6 +57,22 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
             }
         } break;
 
+        case FactionReady: {
+            boost::shared_ptr<FactionReadyMessage> cmd = boost::dynamic_pointer_cast<FactionReadyMessage>(command);
+            int faction_id = cmd->data1;
+            bool ready = cmd->data2;
+            if (game->mark_faction_ready(faction_id, ready)) {
+                emit(create_message(FactionReady, faction_id, ready));
+            }
+
+            if (game->all_factions_ready()) {
+                emit(create_message(TurnEnd));
+                // process turn end
+                game->turn_number++;
+                emit(create_message(TurnBegin, game->turn_number));
+            }
+        } break;
+
         case Chat: {
             boost::shared_ptr<WrapperMessage<std::string> > chat_msg = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(command);
             emit(create_message(Chat, chat_msg->data));
