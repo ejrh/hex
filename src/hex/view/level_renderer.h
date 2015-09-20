@@ -31,6 +31,9 @@ protected:
     virtual void draw_unit(int x, int y, Unit &unit, UnitViewDef *view_def);
     virtual void render_path_arrow(int x, int y, Point tile_pos);
 
+public:
+    bool show_hexagons;
+
 protected:
     Graphics *graphics;
     Resources *resources;

@@ -222,7 +222,7 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
             int xpos = j*x_spacing - shift_x + TILE_WIDTH / 2;
             int ypos = i*y_spacing - shift_y + Y_SPACING / 2;
             Point tile_pos(j, i);
-            if (!view->level_view.discovered.check(tile_pos))
+            if (!view->debug_mode && !view->level_view.discovered.check(tile_pos))
                 continue;
             (*level_renderer.*render)(xpos, ypos, tile_pos);
         }
@@ -232,7 +232,7 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
             int xpos = j*x_spacing - shift_x + TILE_WIDTH / 2;
             int ypos = i*y_spacing + y_offset - shift_y + Y_SPACING / 2;
             Point tile_pos(j, i);
-            if (!view->level_view.discovered.check(tile_pos))
+            if (!view->debug_mode && !view->level_view.discovered.check(tile_pos))
                 continue;
             (*level_renderer.*render)(xpos, ypos, tile_pos);
         }
@@ -248,7 +248,7 @@ void LevelWindow::draw_ghost(Ghost *ghost) {
     Point prev_pos = ghost->path[step];
     Point next_pos = ghost->path[step + 1];
 
-    if (!view->level_view.check_visibility(prev_pos) && !view->level_view.check_visibility(next_pos))
+    if (!view->debug_mode && !view->level_view.check_visibility(prev_pos) && !view->level_view.check_visibility(next_pos))
         return;
 
     int f = ghost->progress % 1000;

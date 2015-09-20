@@ -131,6 +131,8 @@ public:
     std::set<int> selected_units;
     Structure *selected_structure;
     Path drawn_path;
+
+    bool debug_mode;
 };
 
 #endif

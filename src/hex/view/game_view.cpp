@@ -18,7 +18,7 @@ Ghost::Ghost(UnitStack *target, Path path): target(target), path(path), progress
 
 GameView::GameView(Game *game, Player *player, Resources *resources, MessageReceiver *dispatcher):
         game(game), player(player), level_view(&game->level), resources(resources), dispatcher(dispatcher),
-        last_update(0), phase(0), selected_stack(NULL), selected_structure(NULL) {
+        last_update(0), phase(0), selected_stack(NULL), selected_structure(NULL), debug_mode(false) {
 }
 
 // Assumes 1000 increments between frames

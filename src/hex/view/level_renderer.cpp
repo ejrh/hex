@@ -10,7 +10,7 @@
 
 
 LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *level, GameView *view):
-        graphics(graphics), resources(resources), level(level), view(view) {
+        graphics(graphics), resources(resources), level(level), view(view), show_hexagons(false) {
     cursor_images = resources->image_series["CURSORS"];
     arrow_images = resources->image_series["ARROWS"];
 }
@@ -104,7 +104,28 @@ void LevelRenderer::render_structure(int x, int y, Point tile_pos) {
     }
 }
 
+#define TILE_WIDTH 48
+#define TILE_HEIGHT 32
+#define X_SPACING 32
+#define Y_SPACING 32
+#define SLOPE_WIDTH (TILE_WIDTH - X_SPACING)
+#define SLOPE_HEIGHT (Y_SPACING/2)
+
 void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
+    if (show_hexagons) {
+        int p1 = SLOPE_WIDTH;
+        int p2 = TILE_WIDTH - SLOPE_WIDTH;
+        int p3 = TILE_WIDTH;
+        int p4 = SLOPE_HEIGHT;
+        int p5 = TILE_HEIGHT;
+        SDL_Point points[7] = { {p1,0}, {p2,0}, {p3,p4}, {p2,p5}, {p1,p5}, {0,p4}, {p1,0} };
+        for (int i = 0; i < 7; i++) {
+            points[i].x += x - TILE_WIDTH/2;
+            points[i].y += y - TILE_HEIGHT/2;
+        }
+        graphics->draw_lines(100,100,200, points, 7);
+    }
+
     bool draw_it = true;
     if (!view->level_view.check_visibility(tile_pos))
         return;

@@ -83,6 +83,8 @@ set(srcs
         view/player.h
         view/stack_window.cpp
         view/stack_window.h
+        view/status_window.cpp
+        view/status_window.h
         view/tile_painter.cpp
         view/tile_painter.h
         view/view.h

@@ -27,6 +27,7 @@
 #include "hex/view/level_window.h"
 #include "hex/view/map_window.h"
 #include "hex/view/stack_window.h"
+#include "hex/view/status_window.h"
 #include "hex/view/player.h"
 #include "hex/view/view.h"
 #include "hex/view/view_updater.h"
@@ -220,8 +221,8 @@ void save_game(const std::string& filename, Game *game) {
 
 class BackgroundWindow: public UiWindow {
 public:
-    BackgroundWindow(UiLoop *loop, Options *options, Game *game, GameView *game_view, Ai *independent_ai, EventPusher *event_pusher, GameArbiter *arbiter, Updater *updater):
-        UiWindow(0, 0, 0, 0), loop(loop), options(options), game(game), game_view(game_view), independent_ai(independent_ai), event_pusher(event_pusher), arbiter(arbiter), updater(updater) { }
+    BackgroundWindow(UiLoop *loop, Options *options, Game *game, GameView *game_view, Ai *independent_ai, EventPusher *event_pusher, GameArbiter *arbiter, Updater *updater, LevelRenderer *level_renderer):
+        UiWindow(0, 0, 0, 0), loop(loop), options(options), game(game), game_view(game_view), independent_ai(independent_ai), event_pusher(event_pusher), arbiter(arbiter), updater(updater), level_renderer(level_renderer) { }
 
     bool receive_event(SDL_Event *evt) {
         if (evt->type == SDL_QUIT
@@ -240,6 +241,10 @@ public:
 
         if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_F2) {
             save_game("save.txt", game);
+            return true;
+        } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_F5) {
+            game_view->debug_mode = !game_view->debug_mode;
+            level_renderer->show_hexagons = game_view->debug_mode;
             return true;
         }
 
@@ -264,6 +269,7 @@ private:
     EventPusher *event_pusher;
     GameArbiter *arbiter;
     Updater *updater;
+    LevelRenderer *level_renderer;
 };
 
 class TopWindow: public UiWindow {
@@ -325,23 +331,25 @@ void run(Options& options) {
     }
 
     LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view);
-    LevelWindow level_window(graphics.width - StackWindow::window_width, graphics.height, &game_view, &level_renderer, &resources);
+    LevelWindow level_window(graphics.width - StackWindow::window_width, graphics.height - StatusWindow::window_height, &game_view, &level_renderer, &resources);
     ChatWindow chat_window(200, graphics.height, &resources, &graphics, &dispatcher);
     ChatUpdater chat_updater(&chat_window);
     updater.subscribe(&chat_updater);
 
     MapWindow map_window(graphics.width - StackWindow::window_width, 0, StackWindow::window_width, 200, &game_view, &level_window, &graphics, &resources);
     StackWindow stack_window(graphics.width - StackWindow::window_width, 200, StackWindow::window_width, StackWindow::window_height, &resources, &graphics, &game_view, &level_renderer);
+    StatusWindow status_window(0, level_window.height, graphics.width, StatusWindow::window_height, &resources, &graphics, &game_view);
 
     Audio audio(&resources);
     audio.start();
 
     UiLoop loop(25);
-    BackgroundWindow bw(&loop, &options, &game, &game_view, &independent_ai, &event_pusher, &arbiter, &updater);
+    BackgroundWindow bw(&loop, &options, &game, &game_view, &independent_ai, &event_pusher, &arbiter, &updater, &level_renderer);
     loop.add_window(&bw);
     loop.add_window(&level_window);
     loop.add_window(&map_window);
     loop.add_window(&stack_window);
+    loop.add_window(&status_window);
     loop.add_window(&chat_window);
     TopWindow tw(&graphics, &audio);
     loop.add_window(&tw);
