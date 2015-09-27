@@ -32,7 +32,7 @@ inline std::ostream& operator<<(std::ostream& os, const Point& p) {
 typedef std::vector<Point> Path;
 
 
-/*inline std::ostream& operator<<(std::ostream& os, const std::vector<Point> &path) {
+inline std::ostream& operator<<(std::ostream& os, const std::vector<Point> &path) {
     os << "[";
     bool first = true;
     for (std::vector<Point>::const_iterator i = path.begin(); i != path.end(); i++) {
@@ -43,7 +43,7 @@ typedef std::vector<Point> Path;
         os << *i;
     }
     return os << "]";
-}*/
+}
 
 
 #endif

@@ -3,6 +3,7 @@
 #include "hex/game/game.h"
 #include "hex/game/game_arbiter.h"
 #include "hex/game/game_messages.h"
+#include "hex/game/movement/movement.h"
 #include "hex/messaging/updater.h"
 
 
@@ -17,31 +18,39 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
     switch (command->type) {
         case UnitMove: {
             boost::shared_ptr<UnitMoveMessage> cmd = boost::dynamic_pointer_cast<UnitMoveMessage>(command);
+            int stack_id = cmd->data1;
+            std::set<int>& units = cmd->data2;
+            Path& path = cmd->data3;
+            int target_id = cmd->data4;
 
-            if (cmd->data2.size() == 0)
+            if (units.size() == 0)
                 return;
 
-            // TODO check that move is allowed, refuse if not
-            Point end_pos = cmd->data3.back();
+            /* Check that the move is allowed; shorten it if necessary */
+            Point end_pos = path.back();
             UnitStack *end_stack = game->level.tiles[end_pos].stack;
             int end_stack_id = (end_stack != NULL) ? end_stack->id : 0;
-            if (end_stack_id != cmd->data4) {
-                cmd->data3.pop_back();
-                cmd->data4 = 0;
+            if (end_stack_id != target_id) {
+                path.pop_back();
+                target_id = 0;
             }
 
-            if (cmd->data3.size() < 2)
+            UnitStack *stack = game->get_stack(stack_id);
+            MovementModel movement(&game->level);
+            int allowed_steps = movement.check_path(stack, path);
+            path.resize(allowed_steps + 1);
+
+            if (path.size() < 2)
                 return;
 
-            UnitStack *stack = game->get_stack(cmd->data1);
+            /* Generate updates. */
             Faction *faction = stack->owner;
-            bool move = cmd->data2.size() == stack->units.size() && cmd->data4 == 0;
-            bool split = cmd->data2.size() < stack->units.size() && cmd->data4 == 0;
-            bool merge = cmd->data2.size() == stack->units.size() && cmd->data4 != 0;
+            bool move = units.size() == stack->units.size() && target_id == 0;
+            bool split = units.size() < stack->units.size() && target_id == 0;
+            bool merge = units.size() == stack->units.size() && target_id != 0;
 
-            int target_id = cmd->data4;
             if (move)
-                target_id = cmd->data1;
+                target_id = stack_id;
             if (split)
                 target_id = game->get_free_stack_id();
 
@@ -50,10 +59,10 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
                 emit(create_message(CreateStack, target_id, end_pos, faction->id));
             }
             // Send the update
-            emit(create_message(TransferUnits, cmd->data1, cmd->data2, cmd->data3, target_id));
+            emit(create_message(TransferUnits, stack_id, units, path, target_id));
             // If the whole stack merged with an existing one, destroy it
             if (merge) {
-                emit(create_message(DestroyStack, cmd->data1));
+                emit(create_message(DestroyStack, stack_id));
             }
         } break;
 

@@ -4,8 +4,8 @@
 #include "hex/basics/error.h"
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
-#include "hex/game/movement.h"
-#include "hex/game/pathfinding.h"
+#include "hex/game/movement/movement.h"
+#include "hex/game/movement/pathfinding.h"
 #include "hex/messaging/receiver.h"
 
 
@@ -34,7 +34,7 @@ void Ai::update() {
 }
 
 void Ai::update_unit_stack(UnitStack *stack) {
-    MovementModel movement_model;
+    MovementModel movement_model(&game->level);
     Pathfinder pathfinder(&game->level, &movement_model);
     Point tile_pos(rand() % game->level.width, rand() % game->level.height);
     pathfinder.start(stack, stack->position, tile_pos);

@@ -29,10 +29,10 @@ set(srcs
         game/game_writer.h
         game/level.cpp
         game/message_types.h
-        game/movement.cpp
-        game/movement.h
-        game/pathfinding.cpp
-        game/pathfinding.h
+        game/movement/movement.cpp
+        game/movement/movement.h
+        game/movement/pathfinding.cpp
+        game/movement/pathfinding.h
         game/trait_types.h
         game/traits.cpp
         game/traits.h

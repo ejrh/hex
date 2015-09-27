@@ -17,7 +17,7 @@
 #include "hex/game/game_messages.h"
 #include "hex/game/game_updater.h"
 #include "hex/game/game_writer.h"
-#include "hex/game/movement.h"
+#include "hex/game/movement/movement.h"
 #include "hex/graphics/graphics.h"
 #include "hex/messaging/event_pusher.h"
 #include "hex/messaging/message.h"
@@ -185,7 +185,7 @@ void create_game(Game& game, Updater& updater) {
         std::advance(faction_iter, rand() % game.factions.size());
         int faction = faction_iter->second->id;
 
-        MovementModel movement_model;
+        MovementModel movement_model(&game.level);
         Point p(-1, -1);
         for (int j = 0; j < 10; j++) {
             int tx = rand() % game.level.width;

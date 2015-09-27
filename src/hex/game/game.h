@@ -6,6 +6,7 @@
 #include "hex/game/traits.h"
 #include "hex/game/visibility_map.h"
 
+#define MOVE_SCALE 1
 
 class Faction {
 public:
@@ -50,7 +51,7 @@ public:
 
 public:
     UnitType *type;
-    int health;
+    int moves;
     TraitSet abilities;
 };
 

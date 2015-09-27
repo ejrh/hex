@@ -6,8 +6,8 @@
 #include "hex/graphics/font.h"
 #include "hex/graphics/graphics.h"
 #include "hex/game/game.h"
-#include "hex/game/movement.h"
-#include "hex/game/pathfinding.h"
+#include "hex/game/movement/movement.h"
+#include "hex/game/movement/pathfinding.h"
 #include "hex/view/level_renderer.h"
 #include "hex/view/level_window.h"
 #include "hex/view/view.h"
@@ -30,14 +30,12 @@ static Resources resources;
 static TileType open_tile;
 static TileType closed_tile;
 
-MovementModel movement_model;
-
 UnitStack party(0, source, NULL);
 
 class PathfindingView: public GameView {
 public:
     PathfindingView(Game *game):
-            GameView(game, NULL, &::resources, NULL), pathfinder(&game->level, &movement_model), brush_radius(2) {
+            GameView(game, NULL, &::resources, NULL), movement_model(&game->level), pathfinder(&game->level, &movement_model), brush_radius(2) {
         level_view.discovered.fill();
     }
 
@@ -94,6 +92,7 @@ public:
         }
     }
 
+    MovementModel movement_model;
     Pathfinder pathfinder;
     int brush_radius;
 };

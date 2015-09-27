@@ -4,8 +4,8 @@
 #include "hex/basics/hexgrid.h"
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
-#include "hex/game/movement.h"
-#include "hex/game/pathfinding.h"
+#include "hex/game/movement/movement.h"
+#include "hex/game/movement/pathfinding.h"
 #include "hex/messaging/message.h"
 #include "hex/resources/view_def.h"
 #include "hex/view/player.h"
@@ -135,7 +135,7 @@ void GameView::right_click_tile(const Point& tile_pos) {
         return;
 
     if (level_view.level->contains(tile_pos) && player->has_control(selected_stack->owner)) {
-        MovementModel movement_model;
+        MovementModel movement_model(level_view.level);
         Pathfinder pathfinder(level_view.level, &movement_model);
         pathfinder.start(selected_stack, selected_stack->position, tile_pos);
         pathfinder.complete();
@@ -220,7 +220,7 @@ TileView *GameView::get_tile_view(const Point tile_pos) {
     return NULL;
 }
 
-void GameView::transfer_units(int stack_id, std::set<int> selected_units, Path path, int target_id) {
+    void GameView::transfer_units(int stack_id, std::set<int> selected_units, Path path, int target_id) {
     /* By the time we get here, the units have already moved in the game state. */
 
     UnitStack *stack = game->get_stack(stack_id);

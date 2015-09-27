@@ -1,4 +1,4 @@
 # CreateUnitType(name, abilities, moves, sight)
-CreateUnitType("dragon", {"Flying"}, 20, 4)
-CreateUnitType("drow_archer", {"Walking"}, 20, 3)
-CreateUnitType("boat", {"Swimming"}, 20, 3)
+CreateUnitType("dragon", {"Flying"}, 32, 4)
+CreateUnitType("drow_archer", {"Walking"}, 28, 3)
+CreateUnitType("boat", {"Swimming"}, 24, 3)

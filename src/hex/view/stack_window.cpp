@@ -1,6 +1,7 @@
 #include "common.h"
 
 #include "hex/game/game.h"
+#include "hex/graphics/font.h"
 #include "hex/graphics/graphics.h"
 #include "hex/view/level_renderer.h"
 #include "hex/view/stack_window.h"
@@ -20,11 +21,19 @@ void StackWindow::draw() {
         int px = x + StackWindow::border;
         int py = y + StackWindow::border;
         int i = 0;
+
+        TextFormat tf(graphics, SmallFont10, true, 255,255,255);
+
         for (std::vector<Unit *>::iterator iter = stack->units.begin(); iter != stack->units.end(); iter++) {
             graphics->fill_rectangle(50,50,50, px, py, StackWindow::unit_width, StackWindow::unit_height);
             Unit *unit = *iter;
             UnitViewDef *view_def = resources->get_unit_view_def(unit->type->name);
             renderer->draw_unit(px + StackWindow::unit_width / 2, py + StackWindow::unit_height / 2, *unit, view_def);
+
+            std::ostringstream ss;
+            ss << unit->moves / MOVE_SCALE;
+            tf.write_text(ss.str(), px + StackWindow::unit_width, py + StackWindow::unit_height);
+
             px += StackWindow::unit_width + StackWindow::padding;
             i++;
             if (i % 4 == 0) {

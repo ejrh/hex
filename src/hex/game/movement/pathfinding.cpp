@@ -2,8 +2,8 @@
 
 #include "hex/basics/hexgrid.h"
 #include "hex/game/game.h"
-#include "hex/game/movement.h"
-#include "hex/game/pathfinding.h"
+#include "hex/game/movement/movement.h"
+#include "hex/game/movement/pathfinding.h"
 
 
 Pathfinder::Pathfinder(Level *level, MovementModel *movement): level(level), movement(movement) {
@@ -74,7 +74,6 @@ void Pathfinder::step() {
         state = FINISHED;
         return;
     }
-
 
     PathfinderQueueEntry next_node = queue.top();
     queue.pop();

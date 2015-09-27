@@ -2,6 +2,7 @@
 
 #include "hex/basics/error.h"
 #include "hex/game/game.h"
+#include "hex/game/movement/movement.h"
 
 
 void Game::set_level_data(const Point& offset, const std::vector<std::string>& tile_data) {
@@ -168,7 +169,11 @@ void Game::transfer_units(int stack_id, std::set<int> selected_units, Path path,
         return;
     }
 
-    //TODO: party moves across level tile by tile
+    MovementModel movement(&level);
+    for (Path::const_iterator iter = path.begin() + 1; iter != path.end(); iter++) {
+        Point pos = *iter;
+        movement.move(stack, &level.tiles[pos], pos);
+    }
 
     Point& new_pos = path.back();
     if (stack == target_stack) {
@@ -204,6 +209,15 @@ bool Game::all_factions_ready() {
 }
 
 void Game::begin_turn(int turn_number) {
+    for (std::map<int, UnitStack *>::iterator iter = stacks.begin(); iter != stacks.end(); iter++) {
+        UnitStack *stack = iter->second;
+        for (std::vector<Unit *>::iterator unit_iter = stack->units.begin(); unit_iter != stack->units.end(); unit_iter++) {
+            Unit *unit = *unit_iter;
+            UnitType *type = unit->type;
+            unit->moves = type->moves;
+        }
+    }
+
     for (std::map<int, Faction *>::const_iterator iter = factions.begin(); iter != factions.end(); iter++) {
         Faction *faction = iter->second;
         faction->ready = false;
