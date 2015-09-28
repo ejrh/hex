@@ -243,7 +243,7 @@ TileView *GameView::get_tile_view(const Point tile_pos) {
     stack_view->path = Path();
     if (selected_stack == stack) {
         set_drawn_path(stack_view->path);
-        selected_stack = NULL;
+        //selected_stack = NULL;
     }
 
     UnitStackView *target_view = &unit_stack_views[target_stack->id];
