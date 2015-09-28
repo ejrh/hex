@@ -127,6 +127,13 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             }
         } break;
 
+        case TurnBegin: {
+            boost::shared_ptr<TurnBeginMessage> upd = boost::dynamic_pointer_cast<TurnBeginMessage>(update);
+            std::ostringstream ss;
+            ss << "Day " << upd->data;
+            game_view->messages.push_back(InfoMessage(ss.str()));
+        } break;
+
         case TurnEnd: {
         } break;
 

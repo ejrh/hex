@@ -103,6 +103,13 @@ public:
 };
 
 
+class InfoMessage {
+public:
+    InfoMessage(const std::string text): text(text) { }
+public:
+    std::string text;
+};
+
 class GameView {
 public:
     GameView(Game *game, Player *player, Resources *resources, MessageReceiver *dispatcher);
@@ -120,6 +127,7 @@ public:
 public:
     Game *game;
     Player *player;
+    std::vector<InfoMessage> messages;
     LevelView level_view;
     Resources *resources;
     MessageReceiver *dispatcher;

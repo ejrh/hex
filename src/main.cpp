@@ -26,6 +26,7 @@
 #include "hex/view/level_renderer.h"
 #include "hex/view/level_window.h"
 #include "hex/view/map_window.h"
+#include "hex/view/message_window.h"
 #include "hex/view/stack_window.h"
 #include "hex/view/status_window.h"
 #include "hex/view/player.h"
@@ -365,15 +366,23 @@ void run(Options& options) {
         create_game(game, updater);
     }
 
+    int sidebar_width = StackWindow::window_width;
+    int sidebar_position = graphics.width - sidebar_width;
+    int map_window_height = 200;
+    int stack_window_height = StackWindow::window_height;
+    int status_window_height = StatusWindow::window_height;
+    int message_window_height = graphics.height - map_window_height - stack_window_height - status_window_height;
+
     LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view);
-    LevelWindow level_window(graphics.width - StackWindow::window_width, graphics.height - StatusWindow::window_height, &game_view, &level_renderer, &resources);
+    LevelWindow level_window(graphics.width - sidebar_width, graphics.height - StatusWindow::window_height, &game_view, &level_renderer, &resources);
     ChatWindow chat_window(200, graphics.height, &resources, &graphics, &dispatcher);
     ChatUpdater chat_updater(&chat_window);
     updater.subscribe(&chat_updater);
 
-    MapWindow map_window(graphics.width - StackWindow::window_width, 0, StackWindow::window_width, 200, &game_view, &level_window, &graphics, &resources);
-    StackWindow stack_window(graphics.width - StackWindow::window_width, 200, StackWindow::window_width, StackWindow::window_height, &resources, &graphics, &game_view, &level_renderer);
-    StatusWindow status_window(0, level_window.height, graphics.width, StatusWindow::window_height, &resources, &graphics, &game_view);
+    MapWindow map_window(sidebar_position, 0, sidebar_width, map_window_height, &game_view, &level_window, &graphics, &resources);
+    StackWindow stack_window(sidebar_position, 200, sidebar_width, StackWindow::window_height, &resources, &graphics, &game_view, &level_renderer);
+    MessageWindow message_window(sidebar_position, map_window_height + stack_window_height, sidebar_width, message_window_height, &resources, &graphics, &game_view);
+    StatusWindow status_window(0, level_window.height, graphics.width, status_window_height, &resources, &graphics, &game_view);
 
     Audio audio(&resources);
     audio.start();
@@ -384,6 +393,7 @@ void run(Options& options) {
     loop.add_window(&level_window);
     loop.add_window(&map_window);
     loop.add_window(&stack_window);
+    loop.add_window(&message_window);
     loop.add_window(&status_window);
     loop.add_window(&chat_window);
     TopWindow tw(&graphics, &audio);
