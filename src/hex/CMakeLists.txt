@@ -1,4 +1,6 @@
 set(srcs
+        generate.cpp
+        generate.h
         noise.cpp
         noise.h
         ai/ai.cpp
