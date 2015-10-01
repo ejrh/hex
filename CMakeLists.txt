@@ -8,7 +8,7 @@ include(cotire OPTIONAL)
 # Find dependencies
 set(BOOST_ROOT D:/lib/boost_1_58_0)
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost REQUIRED COMPONENTS system thread program_options filesystem)
+find_package(Boost REQUIRED COMPONENTS system log thread program_options filesystem)
 
 find_package(Threads)
 

@@ -267,7 +267,7 @@ public:
 
         va_end(args);
 
-        warn(buffer);
+        //warn(buffer);
     }
 
 private:

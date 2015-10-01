@@ -9,7 +9,7 @@ void Game::set_level_data(const Point& offset, const std::vector<std::string>& t
     for (unsigned int i = 0; i < tile_data.size(); i++) {
         Point tile_pos(offset.x + i, offset.y);
         if (!level.contains(tile_pos)) {
-            std::cerr << "Tile coordinate " << tile_pos << " is outside the level" << std::endl;
+            BOOST_LOG_TRIVIAL(warning) << "Tile coordinate " << tile_pos << " is outside the level";
             continue;
         }
 
@@ -32,7 +32,7 @@ void Game::set_level_data(const Point& offset, const std::vector<std::string>& t
 
 TileType *Game::create_tile_type(TileType& tile_type) {
     if (tile_types.find(tile_type.name) != tile_types.end()) {
-        warn("Tile type already exists: %s", tile_type.name.c_str());
+        BOOST_LOG_TRIVIAL(warning) << "Tile type already exists: " << tile_type.name;
         return NULL;
     }
 
@@ -45,7 +45,7 @@ TileType *Game::create_tile_type(TileType& tile_type) {
 
 UnitType *Game::create_unit_type(UnitType& unit_type) {
     if (unit_types.find(unit_type.name) != unit_types.end()) {
-        warn("Unit type already exists: %s", unit_type.name.c_str());
+        BOOST_LOG_TRIVIAL(warning) << "Unit type already exists: " << unit_type.name;
         return NULL;
     }
 
@@ -58,7 +58,7 @@ UnitType *Game::create_unit_type(UnitType& unit_type) {
 
 StructureType *Game::create_structure_type(StructureType& structure_type) {
     if (structure_types.find(structure_type.name) != structure_types.end()) {
-        warn("Structure type already exists: %s", structure_type.name.c_str());
+        BOOST_LOG_TRIVIAL(warning) << "Structure type already exists: " << structure_type.name;
         return NULL;
     }
 
@@ -69,7 +69,7 @@ StructureType *Game::create_structure_type(StructureType& structure_type) {
 
 Faction *Game::create_faction(int id, const std::string& type_name, const std::string& name) {
     if (factions.find(id) != factions.end()) {
-        warn("Faction already exists with id %d", id);
+        BOOST_LOG_TRIVIAL(warning) << "Faction already exists with id " << id;
         return NULL;
     }
 
@@ -82,17 +82,17 @@ UnitStack *Game::create_unit_stack(int id, const Point position, int owner_id) {
     Faction *owner = get_faction(owner_id);
 
     if (owner == NULL) {
-        warn("No faction with id %d", owner_id);
+        BOOST_LOG_TRIVIAL(warning) << "No faction with id " << owner_id;
         return NULL;
     }
 
     if (level.tiles[position].stack != NULL) {
-        warn("Stack already exists at position %d,%d", position.x, position.y);
+        BOOST_LOG_TRIVIAL(warning) << "Stack already exists at: " << position;
         return NULL;
     }
 
     if (stacks.find(id) != stacks.end()) {
-        warn("Stack already exists with id %d", id);
+        BOOST_LOG_TRIVIAL(warning) << "Stack already exists with id " << id;
         return NULL;
     }
 
@@ -107,13 +107,13 @@ UnitStack *Game::create_unit_stack(int id, const Point position, int owner_id) {
 Unit *Game::create_unit(int stack_id, const std::string& type_name) {
     UnitType *type = unit_types[type_name];
     if (type == NULL) {
-        warn("No unit type: %s", type_name.c_str());
+        BOOST_LOG_TRIVIAL(warning) << "No unit type: " << type_name;
         return NULL;
     }
 
     UnitStack *stack = get_stack(stack_id);
     if (stack == NULL) {
-        warn("No stack: %d", stack_id);
+        BOOST_LOG_TRIVIAL(warning) << "No stack: " << stack_id;
         return NULL;
     }
 
@@ -128,19 +128,19 @@ Unit *Game::create_unit(int stack_id, const std::string& type_name) {
 Structure *Game::create_structure(const Point& position, const std::string& type_name, int owner_id) {
     Faction *owner = get_faction(owner_id);
     if (owner == NULL) {
-        warn("No faction with id: %d", owner_id);
+        BOOST_LOG_TRIVIAL(warning) << "No faction with id: " << owner_id;
         return NULL;
     }
 
     StructureType *type = structure_types[type_name];
     if (type == NULL) {
-        warn("No structure type: %s", type_name.c_str());
+        BOOST_LOG_TRIVIAL(warning) << "No structure type: " << type_name;
         return NULL;
     }
 
     Tile& tile = level.tiles[position];
     if (tile.structure != NULL) {
-        warn("Structure already exists at: %d,%d", position.x, position.y);
+        BOOST_LOG_TRIVIAL(warning) << "Structure already exists at: " << position;
         return NULL;
     }
 
@@ -160,12 +160,12 @@ void Game::destroy_unit_stack(int stack_id) {
 void Game::transfer_units(int stack_id, std::set<int> selected_units, Path path, int target_id) {
     UnitStack *stack = get_stack(stack_id);
     if (stack == NULL) {
-        warn("No stack with id %d", stack_id);
+        BOOST_LOG_TRIVIAL(warning) << "No stack with id " << stack_id;
         return;
     }
     UnitStack *target_stack = get_stack(target_id);
     if (target_stack == NULL) {
-        warn("No stack with id %d", target_id);
+        BOOST_LOG_TRIVIAL(warning) << "No stack with id " << target_id;
         return;
     }
 
@@ -188,7 +188,7 @@ void Game::transfer_units(int stack_id, std::set<int> selected_units, Path path,
 bool Game::mark_faction_ready(int faction_id, bool ready) {
     Faction *faction = get_faction(faction_id);
     if (faction == NULL) {
-        warn("Invalid faction: %d", faction_id);
+        BOOST_LOG_TRIVIAL(warning) << "Invalid faction: " << faction_id;
         return false;
     }
     if (faction->ready == ready) {
@@ -223,13 +223,13 @@ void Game::begin_turn(int turn_number) {
         faction->ready = false;
     }
 
-    trace("Start of turn %d", turn_number);
+    BOOST_LOG_TRIVIAL(debug) << "Start of turn " << turn_number;
     this->turn_number = turn_number;
     in_turn = true;
 }
 
 void Game::end_turn() {
-    trace("End of turn %d", turn_number);
+    BOOST_LOG_TRIVIAL(debug) << "End of turn " << turn_number;
     in_turn = false;
 }
 

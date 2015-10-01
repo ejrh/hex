@@ -15,7 +15,7 @@ public:
         Serialiser writer(ss);
         writer << msg.get();
         std::string msg_str(ss.str());
-        trace("Received: %s", msg_str.c_str());
+        BOOST_LOG_TRIVIAL(info) << "Received: " << msg_str;
     }
 };
 
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     try {
         run();
     } catch (Error &ex) {
-        std::cerr << "Failed with: " << ex.what() << std::endl;
+        BOOST_LOG_TRIVIAL(fatal) << "Failed with: " << ex.what();
     }
 
     return 0;

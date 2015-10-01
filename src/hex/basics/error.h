@@ -11,7 +11,4 @@ private:
     std::string message;
 };
 
-extern void warn(const char *fmt, ...);
-extern void trace(const char *fmt, ...);
-
 #endif

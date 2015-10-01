@@ -236,7 +236,7 @@ bool ILBReader::read_image(bool &composite, ImageData &image) {
             }
             image.palette_num = read_int();
             if (image.palette_num < 0 || image.palette_num >= header.num_palettes)
-                warn("Palette number out of range: %d", image.palette_num);
+                BOOST_LOG_TRIVIAL(warning) << "Palette number out of range: " << image.palette_num;
             read_clip_info(image);
             image.transparency_index = read_int();
             read_int(); // unknown
@@ -302,7 +302,7 @@ char *ILBReader::read_pixel_data(ImageData &image) {
     } else if (image.type == ILB_TYPE_SPRITE16) {
         read_data(pixel_data, pixel_data_size);
     } else {
-        warn("Don't know how to read data for ILB image type %d", image.type);
+        BOOST_LOG_TRIVIAL(warning) << "Don't know how to read data for ILB image type " << image.type;
     }
 
     set_position(saved_position);
@@ -328,12 +328,12 @@ Image *ILBReader::create_image(char *pixel_data, ImageData &image) {
         surface = SDL_CreateRGBSurfaceFrom(pixel_data, image.clip_width, image.clip_height, 16, image.clip_width*2, 0x0000f800,0x000007e0,0x0000001f,0);
         SDL_SetColorKey(surface, SDL_TRUE, image.transparency_colour);
     } else {
-        warn("Don't know how to create surface for ILB image type %d with pixel format %08x", image.type, image.pixel_format);
+        BOOST_LOG_TRIVIAL(warning) << "Don't know how to create surface for ILB image type " << image.type << " with pixel format " << image.pixel_format;
         return NULL;
     }
 
     if (surface == NULL) {
-        warn("SDL Error: %s", SDL_GetError());
+        BOOST_LOG_TRIVIAL(warning) << "SDL Error while creating image: " << SDL_GetError();
         return NULL;
     }
 
@@ -398,9 +398,9 @@ void ILBReader::read(ImageMap& image_set, const std::string& prefix) {
                 ss << prefix << image.name << "/" << image.id << "-" << image.sub_id;
                 std::string name = ss.str();
                 if (image_set.find(name) != image_set.end()) {
-                    warn("Overwriting previously loaded image: %s", name.c_str());
+                    BOOST_LOG_TRIVIAL(warning) << "Overwriting previously loaded image: " << name;
                 }
-                //trace("Loaded image: %s", name.c_str());
+                BOOST_LOG_TRIVIAL(trace) << "Loaded image: " << name;
                 image_set[name] = im;
             }
         }

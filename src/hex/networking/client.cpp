@@ -53,7 +53,7 @@ void Client::receive_from_network(boost::shared_ptr<Message> msg) {
         boost::shared_ptr<WrapperMessage2<int, int> > state = boost::dynamic_pointer_cast<WrapperMessage2<int, int> >(msg);
         game_id = state->data1;
         last_received_id = state->data2;
-        trace("Received state for game %d up to message %d", game_id, last_received_id);
+        BOOST_LOG_TRIVIAL(debug) << "Received state for game " << game_id << " up to message " << last_received_id;
     }
 
     receiver->receive(msg);
@@ -65,7 +65,7 @@ void Client::run_thread() {
 
 void Client::handle_connect(const boost::system::error_code& error, tcp::resolver::iterator iterator) {
     if (error) {
-        trace("Error in handle_connect: %s\n", error.message().c_str());
+        BOOST_LOG_TRIVIAL(error) << "Error in handle_connect: " << error.message();
         return;
     }
 

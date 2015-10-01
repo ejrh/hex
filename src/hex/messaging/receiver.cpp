@@ -30,6 +30,6 @@ void replay_messages(const std::string& filename, MessageReceiver& receiver) {
             line_no++;
         }
     } catch (Error err) {
-        warn("Error in %s:%d: %s", filename.c_str(), line_no, err.what());
+        BOOST_LOG_TRIVIAL(error) << boost::format("Error in %s:%d: %s") % filename % line_no % err.what();
     }
 }

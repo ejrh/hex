@@ -22,7 +22,7 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
 
         case ImageFile: {
             if (image_loader == NULL) {
-                warn("Image loader is not defined");
+                BOOST_LOG_TRIVIAL(error) << "Image loader is not defined";
                 return;
             }
             boost::shared_ptr<WrapperMessage<std::string> > upd = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(msg);
@@ -106,13 +106,13 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
         } break;
 
         default: {
-            warn("Don't know how to read resources from message type: %s", get_message_type_name(msg->type).c_str());
+            BOOST_LOG_TRIVIAL(warning) << "Don't know how to read resources from message type: " << get_message_type_name(msg->type);
         }
     }
 }
 
 void ResourceLoader::load(const std::string& filename) {
-    trace("Loading resources from: %s", filename.c_str());
+    BOOST_LOG_TRIVIAL(warning) << "Loading resources from: " << filename;
     current_files.push_back(filename);
     replay_messages(filename, *this);
     current_files.pop_back();
@@ -124,16 +124,16 @@ void ResourceLoader::include(const std::string& filename, bool skip_missing) {
     std::string relative_filename = path.string();
 
     if (std::find(current_files.begin(), current_files.end(), relative_filename) != current_files.end()) {
-        warn("Self-inclusion of resource file will be ignored: %s", relative_filename.c_str());
+        BOOST_LOG_TRIVIAL(warning) << "Self-inclusion of resource file will be ignored: %s" << relative_filename;
         return;
     }
 
     if (skip_missing && !boost::filesystem::exists(boost::filesystem::path(relative_filename))) {
-        trace("Skipping missing resource: %s", relative_filename.c_str());
+        BOOST_LOG_TRIVIAL(warning) << "Skipping missing resource: " << relative_filename;
         return;
     }
 
-    trace("Including resources from: %s", filename.c_str());
+    BOOST_LOG_TRIVIAL(debug) << "Including resources from: " << filename;
     current_files.push_back(relative_filename);
     replay_messages(relative_filename, *this);
     current_files.pop_back();

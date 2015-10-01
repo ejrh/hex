@@ -31,7 +31,7 @@ void Server::receive(boost::shared_ptr<Message> msg) {
 
 void Server::broadcast(boost::shared_ptr<Message> msg) {
     if (msg->id <= last_message_id) {
-        warn("Message with id %d has already been sent");
+        BOOST_LOG_TRIVIAL(warning) << "Message with id " << msg->id << " has already been sent";
     }
 
     message_backlog[msg->id] = msg;
@@ -55,25 +55,25 @@ void Server::receive_from_network(boost::shared_ptr<Message> msg) {
         bool full_state = false;
 
         if (client_game_id != game_id) {
-            trace("Expected game id %d but got %d", game_id, client_game_id);
+            BOOST_LOG_TRIVIAL(warning) << boost::format("Expected game id %d but got %d") % game_id % client_game_id;
             full_state = true;
         }
 
         if (msg_id < last_dropped_id) {
-            trace("Message replay requested from %d but last dropped was %d", msg_id, last_dropped_id);
+            BOOST_LOG_TRIVIAL(warning) << boost::format("Message replay requested from %d but last dropped was %d") % msg_id % last_dropped_id;
             full_state = true;
         }
 
         if (msg_id > last_message_id) {
-            warn("Message replay requested from %d but latest message is only %d", msg_id, message_backlog.end()->second->id);
+            BOOST_LOG_TRIVIAL(warning) << boost::format("Message replay requested from %d but latest message is only %d") % msg_id % message_backlog.end()->second->id;
             full_state = true;
         }
 
         if (full_state) {
-            trace("Sending full state");
+            BOOST_LOG_TRIVIAL(debug) << "Sending full state";
             //TODO
         } else {
-            trace("Replaying up to %d messages", message_backlog.size());
+            BOOST_LOG_TRIVIAL(debug) << "Replaying up to " << message_backlog.size() << " messages";
             for (std::map<int, boost::shared_ptr<Message> >::iterator iter = message_backlog.begin(); iter != message_backlog.end(); iter++) {
                 if (iter->first > msg_id) {
                     source_connection->send_message(iter->second);

@@ -23,7 +23,7 @@ public:
         std::ostringstream buf;
         Serialiser writer2(buf);
         writer2 << update.get();
-        std::cerr << "Recorded: " << buf.str();
+        BOOST_LOG_TRIVIAL(info) << "Recorded: " << buf.str();
     }
 
 private:
@@ -40,7 +40,7 @@ public:
         std::ostringstream buf;
         Serialiser writer(buf);
         writer << update.get();
-        std::cout << "Applied: " << buf.str();
+        BOOST_LOG_TRIVIAL(info) << "Applied: " << buf.str();
     }
 };
 

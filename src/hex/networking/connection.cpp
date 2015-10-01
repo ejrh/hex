@@ -47,11 +47,11 @@ void Connection::continue_writing() {
 
 void Connection::handle_write(const boost::system::error_code& error, size_t bytes_transferred) {
     if (error) {
-        trace("Error in handle_write: %s\n", error.message().c_str());
+        BOOST_LOG_TRIVIAL(error) << "Error in handle_write: " << error.message();
         return;
     }
 
-    trace("Connection %d send %s", id, out_message.c_str());
+    BOOST_LOG_TRIVIAL(debug) << boost::format("Connection %d send %s") % id % out_message;
 
     send_queue.pop_front();
     if (!send_queue.empty())
@@ -60,7 +60,7 @@ void Connection::handle_write(const boost::system::error_code& error, size_t byt
 
 void Connection::handle_read(const boost::system::error_code& error, size_t bytes_transferred) {
     if (error) {
-        trace("Error in handle_read: %s\n", error.message().c_str());
+        BOOST_LOG_TRIVIAL(error) << "Error in handle_read: " << error.message();
         return;
     }
 
@@ -70,11 +70,11 @@ void Connection::handle_read(const boost::system::error_code& error, size_t byte
     try {
         reader >> msg_ptr;
         if (msg_ptr == NULL) {
-            trace("Message not read");
+            BOOST_LOG_TRIVIAL(warning) << "Message not read";
             return;
         }
     } catch (Error &ex) {
-        std::cerr << "Failed reading message from network with: " << ex.what() << std::endl;
+        BOOST_LOG_TRIVIAL(error) << "Failed reading message from network with: " << ex.what();
         return;
     }
 
@@ -86,7 +86,7 @@ void Connection::handle_read(const boost::system::error_code& error, size_t byte
         Serialiser writer(ss);
         writer << msg.get();
         std::string in_message(ss.str());
-        trace("Connection %d recv %s", id, in_message.c_str());
+        BOOST_LOG_TRIVIAL(debug) << boost::format("Connection %d recv %s") % id % in_message;
     }
 
     iface->receive_from_network(msg);

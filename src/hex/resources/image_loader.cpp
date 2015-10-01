@@ -12,12 +12,12 @@ void ImageLoader::load(const std::string& filename) {
     if (filename.rfind(".png") == filename.size() - 4) {
         load_image(filename, graphics, resources->images);
     } else if (filename.rfind(".ILB") == filename.size() - 4) {
-        trace("Loading images from: %s", filename.c_str());
+        BOOST_LOG_TRIVIAL(warning) << "Loading images from: " << filename;
         load_ilb(filename, graphics, resources->images);
     } else if (filename.rfind(".hss") == filename.size() - 4) {
-        trace("Loading images from: %s", filename.c_str());
+        BOOST_LOG_TRIVIAL(warning) << "Loading images from: " << filename;
         load_hss(filename, graphics, resources->images);
     } else {
-        warn("Don't know how to load images from: %s", filename.c_str());
+        BOOST_LOG_TRIVIAL(warning) << "Don't know how to load images from: " << filename;
     }
 }

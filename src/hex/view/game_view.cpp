@@ -225,12 +225,12 @@ TileView *GameView::get_tile_view(const Point tile_pos) {
 
     UnitStack *stack = game->get_stack(stack_id);
     if (stack == NULL) {
-        warn("No stack with id %d", stack_id);
+        BOOST_LOG_TRIVIAL(warning) << "No stack with id " << stack_id;
         return;
     }
     UnitStack *target_stack = game->get_stack(target_id);
     if (target_stack == NULL) {
-        warn("No stack with id %d", target_id);
+        BOOST_LOG_TRIVIAL(warning) << "No stack with id " << target_id;
         return;
     }
 

@@ -46,7 +46,7 @@ void Resources::resolve_image_series(std::vector<ImageRef>& image_series) {
 bool Resources::resolve_image_ref(ImageRef& image_ref) {
     std::string image_name = image_ref.name;
     if (images.find(image_name) == images.end()) {
-        warn("No image for reference to: %s", image_name.c_str());
+        BOOST_LOG_TRIVIAL(warning) << "No image for reference to: " << image_name;
         return false;
     }
     image_ref.image = images[image_name];
@@ -81,7 +81,7 @@ UnitViewDef *Resources::get_unit_view_def(const std::string& name) {
     if (iter != unit_view_defs.end())
         return iter->second;
 
-    warn("No unit view def for: %s", name.c_str());
+    BOOST_LOG_TRIVIAL(warning) << "No unit view def for: " << name;
     UnitViewDef *view_def = new UnitViewDef(name);
     unit_view_defs[name] = view_def;
     return view_def;
@@ -92,7 +92,7 @@ StructureViewDef *Resources::get_structure_view_def(const std::string& name) {
     if (iter != structure_view_defs.end())
         return iter->second;
 
-    warn("No structure view def for: %s", name.c_str());
+    BOOST_LOG_TRIVIAL(warning) << "No structure view def for: " << name;
     StructureViewDef *view_def = new StructureViewDef(name);
     structure_view_defs[name] = view_def;
     return view_def;

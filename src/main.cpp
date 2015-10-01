@@ -449,7 +449,7 @@ int main(int argc, char *argv[]) {
         if (parse_options(argc, argv, options))
             run(options);
     } catch (Error &ex) {
-        std::cerr << "Failed with: " << ex.what() << std::endl;
+        BOOST_LOG_TRIVIAL(fatal) << "Failed with: " << ex.what();
     }
 
     return 0;

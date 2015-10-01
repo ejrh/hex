@@ -44,12 +44,12 @@ void Audio::play(const std::string& filename) {
 
     module = Player_Load((char *) filename.c_str(), 64, 0);
     if (!module) {
-        warn("Couldn't load song: %s", MikMod_strerror(MikMod_errno));
+        BOOST_LOG_TRIVIAL(warning) << "Couldn't load song: " << MikMod_strerror(MikMod_errno);
         return;
     }
 
     module->loop = 0;
-    trace("Playing: %s", filename.c_str());
+    BOOST_LOG_TRIVIAL(debug) << "Playing: " << filename;
     Player_Start(module);
 }
 

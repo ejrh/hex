@@ -50,7 +50,7 @@ void Graphics::blit(Image *im, int x, int y, SDL_BlendMode mode, int alpha_mod, 
 
     SDL_Rect destrect = { x, y, im->clip_width, im->clip_height };
     if (SDL_RenderCopy(renderer, im->texture, NULL, &destrect) != 0)
-        warn("SDL error: %s", SDL_GetError());
+        BOOST_LOG_TRIVIAL(error) << "SDL error while blitting image: " << SDL_GetError();
 }
 
 void Graphics::draw_lines(Uint8 R, Uint8 G, Uint8 B, SDL_Point *points, int count) {

@@ -39,7 +39,7 @@ TTF_Font *FontCache::lookup_font(FontId font_id) {
     if (!font)
         font = TTF_OpenFont(FONT_PATH_2, size);
     if (!font) {
-        warn("TTF error while opening font: %s", TTF_GetError());
+        BOOST_LOG_TRIVIAL(error) << "TTF error while opening font: " << TTF_GetError();
         return NULL;
     }
     cache[font_id] = font;
@@ -51,7 +51,7 @@ void TextFormat::write_text(const std::string& text, int x, int y) {
     SDL_Color colour = {R, G, B};
     SDL_Surface *text_surface = TTF_RenderText_Solid(font, text.c_str(), colour);
     if (text_surface == NULL) {
-        warn("TTF error while rendering text: %s", TTF_GetError());
+        BOOST_LOG_TRIVIAL(error) << "TTF error while rendering text: " << TTF_GetError();
         return;
     }
     SDL_Texture *text_texture = SDL_CreateTextureFromSurface(graphics->renderer, text_surface);
@@ -67,7 +67,7 @@ Image *TextFormat::write_to_image(const std::string& text) {
     SDL_Color colour = {R, G, B};
     SDL_Surface *text_surface = TTF_RenderText_Solid(font, text.c_str(), colour);
     if (text_surface == NULL) {
-        warn("TTF error while rendering text: %s", TTF_GetError());
+        BOOST_LOG_TRIVIAL(error) << "TTF error while rendering text: " << TTF_GetError();
         return NULL;
     }
 
@@ -75,13 +75,13 @@ Image *TextFormat::write_to_image(const std::string& text) {
         SDL_Color outline_colour = {outline_R, outline_G, outline_B};
         SDL_Surface *outline_surface = TTF_RenderText_Solid(font, text.c_str(), outline_colour);
         if (outline_surface == NULL) {
-            warn("TTF error while rendering text: %s", TTF_GetError());
+            BOOST_LOG_TRIVIAL(error) << "TTF error while rendering text: " << TTF_GetError();
             return NULL;
         }
 
         SDL_Surface *combined_surface = SDL_CreateRGBSurface(0, text_surface->w+2, text_surface->h+2, 32, 0,0,0,0);
         if (combined_surface == NULL) {
-            warn("SDL error while rendering text: %s", SDL_GetError());
+            BOOST_LOG_TRIVIAL(error) << "SDL error while rendering text: " << SDL_GetError();
             return NULL;
         }
 
