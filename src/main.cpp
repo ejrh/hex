@@ -54,8 +54,8 @@ void save_game(const std::string& filename, Game *game) {
 
 class BackgroundWindow: public UiWindow {
 public:
-    BackgroundWindow(UiLoop *loop, Options *options, Game *game, GameView *game_view, Ai *independent_ai, EventPusher *event_pusher, GameArbiter *arbiter, Updater *updater, LevelRenderer *level_renderer):
-        UiWindow(0, 0, 0, 0), loop(loop), options(options), game(game), game_view(game_view), independent_ai(independent_ai), event_pusher(event_pusher), arbiter(arbiter), updater(updater), level_renderer(level_renderer) { }
+    BackgroundWindow(UiLoop *loop, Options *options, Game *game, GameView *game_view, std::vector<Ai *> ais, EventPusher *event_pusher, GameArbiter *arbiter, Updater *updater, LevelRenderer *level_renderer):
+        UiWindow(0, 0, 0, 0), loop(loop), options(options), game(game), game_view(game_view), ais(ais), event_pusher(event_pusher), arbiter(arbiter), updater(updater), level_renderer(level_renderer) { }
 
     bool receive_event(SDL_Event *evt) {
         if (evt->type == SDL_QUIT
@@ -94,7 +94,9 @@ public:
 
     void draw() {
         game_view->update();
-        independent_ai->update();
+        for (std::vector<Ai *>::iterator iter = ais.begin(); iter != ais.end(); iter++) {
+            (*iter)->update();
+        }
     }
 
 private:
@@ -102,7 +104,7 @@ private:
     Options *options;
     Game *game;
     GameView *game_view;
-    Ai *independent_ai;
+    std::vector<Ai *> ais;
     EventPusher *event_pusher;
     GameArbiter *arbiter;
     Updater *updater;
@@ -150,8 +152,7 @@ void run(Options& options) {
     ViewUpdater view_updater(&game, &game_view, &resources);
     updater.subscribe(&view_updater);
 
-    Ai independent_ai(&game, std::string("independent"), &dispatcher);
-    AiUpdater independent_ai_updater(&independent_ai);
+    std::vector<Ai *> ais;
 
     if (options.server_mode) {
         server.start();
@@ -162,8 +163,12 @@ void run(Options& options) {
         client.connect(options.host_addr);
         dispatcher.subscribe(&client);
     } else {
+        Ai *independent_ai = new Ai(&game, std::string("independent"), &dispatcher);
+        AiUpdater *independent_ai_updater = new AiUpdater(independent_ai);
+        ais.push_back(independent_ai);
+
         dispatcher.subscribe(&arbiter);
-        updater.subscribe(&independent_ai_updater);
+        updater.subscribe(independent_ai_updater);
         create_game(game, updater);
     }
 
@@ -189,7 +194,7 @@ void run(Options& options) {
     audio.start();
 
     UiLoop loop(25);
-    BackgroundWindow bw(&loop, &options, &game, &game_view, &independent_ai, &event_pusher, &arbiter, &updater, &level_renderer);
+    BackgroundWindow bw(&loop, &options, &game, &game_view, ais, &event_pusher, &arbiter, &updater, &level_renderer);
     loop.add_window(&bw);
     loop.add_window(&level_window);
     loop.add_window(&map_window);
