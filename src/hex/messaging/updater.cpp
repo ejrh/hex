@@ -21,6 +21,11 @@ void Updater::subscribe(MessageReceiver *subscriber) {
     subscribers.push_back(subscriber);
 }
 
+void Updater::unsubscribe(MessageReceiver *subscriber) {
+    std::vector<MessageReceiver *>::iterator iter = std::find(subscribers.begin(), subscribers.end(), subscriber);
+    subscribers.erase(iter);
+}
+
 void Updater::send_update_to_subscribers(boost::shared_ptr<Message> update) {
     for (std::vector<MessageReceiver *>::iterator iter = subscribers.begin(); iter != subscribers.end(); iter++) {
         MessageReceiver *subscriber = *iter;

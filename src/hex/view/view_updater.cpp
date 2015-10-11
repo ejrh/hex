@@ -116,6 +116,10 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             if (upd->data1 == game_view->player->id) {
                 Faction *faction = game->get_faction(upd->data2);
                 game_view->player->grant_view(faction, upd->data3);
+
+                if (game_view->player->has_view(faction)) {
+                    game_view->update_visibility();
+                }
             }
         } break;
 

@@ -4,6 +4,7 @@
 #include "hex/basics/hexgrid.h"
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
+#include "hex/game/game_updater.h"
 #include "hex/game/movement/movement.h"
 #include "hex/messaging/updater.h"
 
@@ -106,7 +107,11 @@ void generate_level(Level &level, TileTypeMap& types) {
     }
 }
 
-void create_game(Game& game, Updater& updater) {
+void create_game(Updater& updater) {
+    Game game;
+    GameUpdater game_updater(&game);
+    updater.subscribe(&game_updater);
+
     int width = 57;
     int height = 48;
 
@@ -138,11 +143,6 @@ void create_game(Game& game, Updater& updater) {
     updater.receive(create_message(CreateFaction, 1, "independent", "Independent"));
     updater.receive(create_message(CreateFaction, 2, "orcs", "Orc Hegemony"));
     updater.receive(create_message(CreateFaction, 3, "drow", "Great Drow Empire"));
-
-    updater.receive(create_message(GrantFactionView, 0, 2, true));
-    updater.receive(create_message(GrantFactionControl, 0, 2, true));
-
-    updater.receive(create_message(GrantFactionControl, 0, 3, true));
 
     for (int i = 1; i <= 40; i++) {
         UnitTypeMap::iterator item = game.unit_types.begin();
@@ -201,4 +201,6 @@ void create_game(Game& game, Updater& updater) {
 
     game.turn_number = 1;
     updater.receive(create_message(TurnBegin, game.turn_number));
+
+    updater.unsubscribe(&game_updater);
 }

@@ -36,6 +36,7 @@ struct Options {
     bool client_mode;
     std::string host_name;
     std::string host_addr;
+    std::string load_filename;
 };
 
 void load_resources(Resources *resources, Graphics *graphics) {
@@ -43,6 +44,10 @@ void load_resources(Resources *resources, Graphics *graphics) {
     ResourceLoader loader(resources, &image_loader);
     loader.load(std::string("data/resources.txt"));
     resources->resolve_references();
+}
+
+void load_game(const std::string& filename, Updater& updater) {
+    replay_messages(filename, updater);
 }
 
 void save_game(const std::string& filename, Game *game) {
@@ -169,7 +174,15 @@ void run(Options& options) {
 
         dispatcher.subscribe(&arbiter);
         updater.subscribe(independent_ai_updater);
-        create_game(game, updater);
+        if (options.load_filename.empty()) {
+            create_game(updater);
+        } else {
+            load_game(options.load_filename, updater);
+        }
+
+        updater.receive(create_message(GrantFactionView, 0, 2, true));
+        updater.receive(create_message(GrantFactionControl, 0, 2, true));
+        updater.receive(create_message(GrantFactionControl, 0, 3, true));
     }
 
     int sidebar_width = StackWindow::window_width;
@@ -222,6 +235,7 @@ bool parse_options(int argc, char *argv[], Options& options) {
         ("help", "produce help message")
         ("server", "run in server mode")
         ("connect", po::value<std::string>(), "connect to server")
+        ("load", po::value<std::string>(), "load game file")
     ;
 
     po::variables_map vm;
@@ -244,6 +258,10 @@ bool parse_options(int argc, char *argv[], Options& options) {
         options.host_addr = vm["connect"].as<std::string>();
     } else {
         options.client_mode = false;
+    }
+
+    if (vm.count("load")) {
+        options.load_filename = vm["load"].as<std::string>();
     }
 
     return true;

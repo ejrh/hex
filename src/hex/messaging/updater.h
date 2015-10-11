@@ -10,6 +10,7 @@ public:
     virtual ~Updater();
 
     void subscribe(MessageReceiver *receiver);
+    void unsubscribe(MessageReceiver *receiver);
     virtual void receive(boost::shared_ptr<Message> msg);
 
 private:

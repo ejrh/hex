@@ -19,6 +19,7 @@ private:
     void write_levels(Game *game);
     void write_unit_stacks(Game *game);
     void write_structures(Game *game);
+    void write_turn(Game *game);
 
     void emit(boost::shared_ptr<Message> message);
 

@@ -15,6 +15,7 @@ void GameWriter::write(Game *game) {
     write_levels(game);
     write_unit_stacks(game);
     write_structures(game);
+    write_turn(game);
 }
 
 void GameWriter::write_unit_types(Game *game) {
@@ -75,6 +76,10 @@ void GameWriter::write_structures(Game *game) {
             emit(create_message(CreateStructure, tile_pos, structure->type->name, structure->owner->id));
         }
     }
+}
+
+void GameWriter::write_turn(Game *game) {
+    emit(create_message(TurnBegin, game->turn_number));
 }
 
 void GameWriter::emit(boost::shared_ptr<Message> message) {
