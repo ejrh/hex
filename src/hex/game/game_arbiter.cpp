@@ -49,6 +49,9 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
             bool split = units.size() < stack->units.size() && target_id == 0;
             bool merge = units.size() == stack->units.size() && target_id != 0;
 
+            UnitStack *target = game->get_stack(target_id);
+            bool attack = target != NULL && (target->owner != stack->owner);
+
             if (move)
                 target_id = stack_id;
             if (split)
@@ -63,6 +66,10 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
             // If the whole stack merged with an existing one, destroy it
             if (merge) {
                 emit(create_message(DestroyStack, stack_id));
+            }
+
+            if (attack) {
+                BOOST_LOG_TRIVIAL(debug) << "Attack!";
             }
         } break;
 

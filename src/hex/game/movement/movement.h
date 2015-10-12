@@ -34,15 +34,16 @@ class MovementModel {
 public:
     MovementModel(Level *level);
 
-    int cost_to(const UnitStack *unit, const Tile *tile) const;
-    int cost_to(const Unit *unit, const Tile *tile) const;
+    int cost_to(const UnitStack *unit, const Point& tile_pos) const;
+    int cost_to(const Unit *unit, const Point& tile_pos) const;
     int admits(const UnitType *unit_type, const TileType *tile_type) const;
-    void move(UnitStack *party, const Tile *tile, const Point& tile_pos) const;
+    void move(UnitStack *party, const Point& tile_pos) const;
     int check_path(const UnitStack *stack, const Path& path) const;
     bool check_step(const UnitStack *stack, StackMovePoints *points, const Path& path, int step_num) const;
 
 private:
     Level *level;
+    Point target_pos;
 };
 
 #endif

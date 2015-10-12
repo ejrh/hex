@@ -172,7 +172,7 @@ void Game::transfer_units(int stack_id, std::set<int> selected_units, Path path,
     MovementModel movement(&level);
     for (Path::const_iterator iter = path.begin() + 1; iter != path.end(); iter++) {
         Point pos = *iter;
-        movement.move(stack, &level.tiles[pos], pos);
+        movement.move(stack, pos);
     }
 
     Point& new_pos = path.back();
