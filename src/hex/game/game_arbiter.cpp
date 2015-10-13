@@ -23,8 +23,10 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
             Path& path = cmd->data3;
             int target_id = cmd->data4;
 
-            if (units.size() == 0)
+            UnitStack *stack = game->get_stack(stack_id);
+            if (units.size() == 0 || path.size() < 2 || stack == NULL) {
                 return;
+            }
 
             /* Check that the move is allowed; shorten it if necessary */
             Point end_pos = path.back();
@@ -35,13 +37,13 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
                 target_id = 0;
             }
 
-            UnitStack *stack = game->get_stack(stack_id);
             MovementModel movement(&game->level);
             int allowed_steps = movement.check_path(stack, path);
             path.resize(allowed_steps + 1);
 
-            if (path.size() < 2)
+            if (path.size() < 2) {
                 return;
+            }
 
             /* Generate updates. */
             Faction *faction = stack->owner;

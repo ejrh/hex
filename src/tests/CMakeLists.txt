@@ -17,6 +17,11 @@ target_link_libraries(hexgrid_test hex)
 target_link_libraries(hexgrid_test ${gen_libs})
 target_compile_options(hexgrid_test PUBLIC ${gen_opts})
 
+add_executable(movement_test movement_test.cpp)
+target_link_libraries(movement_test hex)
+target_link_libraries(movement_test ${gen_libs})
+target_compile_options(movement_test PUBLIC ${gen_opts})
+
 add_executable(networking_test networking_test.cpp)
 target_link_libraries(networking_test hex)
 target_link_libraries(networking_test ${gen_libs})

@@ -63,7 +63,7 @@ public:
     UnitStack(int id, const Point position, Faction *owner): id(id), owner(owner), position(position) { };
     ~UnitStack() { };
 
-    void transfer_units(std::set<int> unit_selection, UnitStack *target_stack);
+    void transfer_units(const std::set<int>& unit_selection, UnitStack *target_stack);
 
     static int sight_func(int max1, const Unit *unit) {
         int max2 = unit->type->sight;
