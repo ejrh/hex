@@ -13,6 +13,7 @@ set(srcs
         basics/error.h
         basics/hexgrid.cpp
         basics/hexgrid.h
+        basics/intset.h
         basics/point.h
         basics/vector2.h
         chat/chat.h

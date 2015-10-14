@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "hex/basics/intset.h"
 #include "hex/basics/point.h"
 #include "hex/basics/vector2.h"
 #include "hex/game/traits.h"
@@ -63,7 +64,7 @@ public:
     UnitStack(int id, const Point position, Faction *owner): id(id), owner(owner), position(position) { };
     ~UnitStack() { };
 
-    void transfer_units(const std::set<int>& unit_selection, UnitStack *target_stack);
+    void transfer_units(const IntSet unit_selection, UnitStack *target_stack);
 
     static int sight_func(int max1, const Unit *unit) {
         int max2 = unit->type->sight;
@@ -170,7 +171,7 @@ public:
     Unit *create_unit(int stack_id, const std::string& type_name);
     Structure *create_structure(const Point& position, const std::string& type_name, int owner_id);
     void destroy_unit_stack(int stack_id);
-    void transfer_units(int stack_id, std::set<int> selected_units, Path path, int target_id);
+    void transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id);
 
     bool mark_faction_ready(int faction_id, bool ready);
     bool all_factions_ready();

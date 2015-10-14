@@ -220,7 +220,7 @@ TileView *GameView::get_tile_view(const Point tile_pos) {
     return NULL;
 }
 
-    void GameView::transfer_units(int stack_id, std::set<int> selected_units, Path path, int target_id) {
+    void GameView::transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id) {
     /* By the time we get here, the units have already moved in the game state. */
 
     UnitStack *stack = game->get_stack(stack_id);

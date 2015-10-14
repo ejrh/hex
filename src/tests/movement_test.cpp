@@ -84,7 +84,7 @@ BOOST_FIXTURE_TEST_SUITE(s, Fixture)
 
 BOOST_AUTO_TEST_CASE(simple_movement) {
     int stack_id = 1;
-    std::set<int> selected_units;
+    IntSet selected_units;
     selected_units.insert(0);
     selected_units.insert(1);
     Path path;
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(simple_movement) {
 
 BOOST_AUTO_TEST_CASE(split_movement) {
     int stack_id = 1;
-    std::set<int> selected_units;
+    IntSet selected_units;
     selected_units.insert(0);
     Path path;
     path.push_back(Point(2,2));
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(split_movement) {
 
 BOOST_AUTO_TEST_CASE(merge_movement) {
     int stack_id = 1;
-    std::set<int> selected_units;
+    IntSet selected_units;
     selected_units.insert(1);
     Path path;
     path.push_back(Point(2,2));
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(merge_movement) {
 
 BOOST_AUTO_TEST_CASE(full_merge_movement) {
     int stack_id = 1;
-    std::set<int> selected_units;
+    IntSet selected_units;
     selected_units.insert(0);
     selected_units.insert(1);
     Path path;

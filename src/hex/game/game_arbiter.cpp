@@ -19,7 +19,7 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
         case UnitMove: {
             boost::shared_ptr<UnitMoveMessage> cmd = boost::dynamic_pointer_cast<UnitMoveMessage>(command);
             int stack_id = cmd->data1;
-            std::set<int>& units = cmd->data2;
+            IntSet units = cmd->data2;
             Path& path = cmd->data3;
             int target_id = cmd->data4;
 

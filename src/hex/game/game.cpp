@@ -157,7 +157,7 @@ void Game::destroy_unit_stack(int stack_id) {
     delete stack;
 }
 
-void Game::transfer_units(int stack_id, std::set<int> selected_units, Path path, int target_id) {
+void Game::transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id) {
     UnitStack *stack = get_stack(stack_id);
     if (stack == NULL) {
         BOOST_LOG_TRIVIAL(warning) << "No stack with id " << stack_id;

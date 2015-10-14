@@ -45,7 +45,7 @@ MSG_TYPE(CreateFaction, WM3(int, std::string, std::string))
 
 MSG_TYPE(CreateStack, WM3(int, Point, int))
 MSG_TYPE(CreateUnit, WM2(int, std::string))
-MSG_TYPE(TransferUnits, WM4(int, std::set<int>, Path, int))
+MSG_TYPE(TransferUnits, WM4(int, IntSet, Path, int))
 MSG_TYPE(DestroyStack, WM(int))
 
 MSG_TYPE(CreateStructure, WM3(Point, std::string, int))
@@ -59,7 +59,7 @@ MSG_TYPE(FactionReady, WM2(int, bool))
 MSG_TYPE(TurnBegin, WM(int))
 MSG_TYPE(TurnEnd, Message)
 
-MSG_TYPE(UnitMove, WM4(int, std::set<int>, Path, int))
+MSG_TYPE(UnitMove, WM4(int, IntSet, Path, int))
 
 MSG_TYPE(StreamOpen, WM(std::string))
 MSG_TYPE(StreamClose, Message)

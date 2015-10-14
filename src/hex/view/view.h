@@ -121,7 +121,7 @@ public:
     void update_visibility();
     UnitStackView *get_unit_stack_view(const UnitStack &stack);
     TileView *get_tile_view(const Point tile_pos);
-    void transfer_units(int stack_id, std::set<int> selected_units, Path path, int target_id);
+    void transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id);
     void mark_ready();
 
 public:
@@ -137,7 +137,7 @@ public:
     std::map<int, UnitStackView> unit_stack_views;
     std::vector<Ghost> ghosts;
     UnitStack *selected_stack;
-    std::set<int> selected_units;
+    IntSet selected_units;
     Structure *selected_structure;
     Path drawn_path;
 

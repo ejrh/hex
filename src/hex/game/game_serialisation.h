@@ -5,6 +5,20 @@
 #include "hex/messaging/serialiser.h"
 
 
+inline Serialiser& operator<<(Serialiser& serialiser, const IntSet& s) {
+    std::set<int> set(s);
+    serialiser << set;
+    return serialiser;
+}
+
+inline Deserialiser& operator>>(Deserialiser& deserialiser, IntSet& s) {
+    std::set<int> set;
+    deserialiser >> set;
+    s = IntSet(set);
+    return deserialiser;
+}
+
+
 inline Serialiser& operator<<(Serialiser& serialiser, const Point& p) {
     serialiser.begin_tuple();
     serialiser << p.x << p.y;

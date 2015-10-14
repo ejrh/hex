@@ -50,7 +50,7 @@ void Ai::update_unit_stack(UnitStack *stack) {
         return;
     }
 
-    std::set<int> selected_units;
+    IntSet selected_units;
     for (unsigned int i = 0; i < stack->units.size(); i++) {
         selected_units.insert(i);
     }

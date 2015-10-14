@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
 
         updater.receive(create_message(CreateFaction, 1, "orcs", "Alice"));
 
-        updater.receive(create_message(UnitMove, 0, std::set<int>(), path, 0));
+        updater.receive(create_message(UnitMove, 0, IntSet(), path, 0));
 
         updater.receive(create_message(FactionReady, 1, true));
 
