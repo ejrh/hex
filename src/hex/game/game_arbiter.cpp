@@ -24,7 +24,7 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
             int target_id = cmd->data4;
 
             UnitStack *stack = game->get_stack(stack_id);
-            if (units.size() == 0 || path.size() < 2 || stack == NULL) {
+            if (stack == NULL || units.empty() || !stack->has_units(units) || path.size() < 2) {
                 return;
             }
 

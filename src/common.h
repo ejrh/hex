@@ -25,6 +25,7 @@
 #include <boost/array.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/format.hpp>
+#include <boost/crc.hpp>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>

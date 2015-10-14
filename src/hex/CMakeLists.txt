@@ -50,6 +50,8 @@ set(srcs
         graphics/ilb.cpp
         graphics/ilb.h
         graphics/load_image.cpp
+        messaging/checksum.cpp
+        messaging/checksum.h
         messaging/event_pusher.cpp
         messaging/event_pusher.h
         messaging/message.cpp

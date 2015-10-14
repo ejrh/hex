@@ -72,6 +72,8 @@ public:
     }
     int sight() { return std::accumulate(units.begin(), units.end(), 0, sight_func); }
 
+    bool has_units(const IntSet unit_selection) const;
+
 public:
     int id;
     Faction *owner;

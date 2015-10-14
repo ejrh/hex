@@ -15,3 +15,10 @@ void UnitStack::transfer_units(const IntSet unit_selection, UnitStack *target_st
         i++;
     }
 }
+
+bool UnitStack::has_units(const IntSet unit_selection) const {
+    if (unit_selection.last() >= units.size())
+        return false;
+
+    return true;
+}
