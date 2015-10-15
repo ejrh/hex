@@ -66,13 +66,14 @@ public:
 
 class Ghost {
 public:
-    Ghost(UnitStack *target, Path path);
+    Ghost(int target_id, Point position, Path path);
 
 private:
-    UnitStack *target;
+    int target_id;
     Point position;
     Path path;
-    int progress;
+    unsigned int step;
+    unsigned int progress;
 
     friend class GameView;
     friend class LevelView;
@@ -115,9 +116,11 @@ public:
     GameView(Game *game, Player *player, Resources *resources, MessageReceiver *dispatcher);
 
     void update();
+    bool update_ghost(Ghost& ghost, unsigned int update_ms);
     void left_click_tile(const Point& tile_pos);
     void right_click_tile(const Point& tile_pos);
-    void set_drawn_path(const Path& path);
+    void set_drawn_path(const Point& start, const Path& path);
+    void clear_drawn_path();
     void update_visibility();
     UnitStackView *get_stack_view(int stack_id);
     TileView *get_tile_view(const Point tile_pos);

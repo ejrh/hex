@@ -127,10 +127,10 @@ void Pathfinder::build_path(Path& path) {
     while (true) {
         Point pred = node->predecessor;
 
-        path.push_back(point);
-
         if (point == pred)
             break;
+
+        path.push_back(point);
 
         node = &nodes[pred];
         point = pred;

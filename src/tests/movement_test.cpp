@@ -87,11 +87,9 @@ struct Fixture {
         create_game(updater);
         updater.subscribe(&writer);
 
-        path_to_empty.push_back(STACK1_POS);
         path_to_empty.push_back(STEP_POS);
         path_to_empty.push_back(EMPTY_POS);
 
-        path_to_stack2.push_back(STACK1_POS);
         path_to_stack2.push_back(STEP_POS);
         path_to_stack2.push_back(STACK2_POS);
     }

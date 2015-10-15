@@ -83,13 +83,13 @@ void MovementModel::move(UnitStack *party, const Point& tile_pos) const {
 
 int MovementModel::check_path(const UnitStack *stack, const Path& path) const {
     StackMovePoints points(stack);
-    unsigned int step_num = 1;
+    unsigned int step_num = 0;
     while (step_num < path.size()) {
         if (!check_step(stack, &points, path, step_num))
             break;
         step_num++;
     }
-    return step_num - 1;
+    return step_num;
 }
 
 bool MovementModel::check_step(const UnitStack *stack, StackMovePoints *points, const Path& path, int step_num) const {

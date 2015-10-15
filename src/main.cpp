@@ -27,6 +27,7 @@
 #include "hex/view/stack_window.h"
 #include "hex/view/status_window.h"
 #include "hex/view/player.h"
+#include "hex/view/pre_updater.h"
 #include "hex/view/view.h"
 #include "hex/view/view_updater.h"
 
@@ -150,10 +151,13 @@ void run(Options& options) {
     GameArbiter arbiter(&game, &updater);
     Updater dispatcher(1000);
 
+    GameView game_view(&game, &player, &resources, &dispatcher);
+    PreUpdater pre_updater(&game, &game_view);
+    updater.subscribe(&pre_updater);
+
     GameUpdater game_updater(&game);
     updater.subscribe(&game_updater);
 
-    GameView game_view(&game, &player, &resources, &dispatcher);
     ViewUpdater view_updater(&game, &game_view, &resources);
     updater.subscribe(&view_updater);
 

@@ -240,26 +240,22 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
 }
 
 void LevelWindow::draw_ghost(Ghost *ghost) {
-    UnitStackView *stack_view = view->get_stack_view(ghost->target->id);
+    UnitStackView *stack_view = view->get_stack_view(ghost->target_id);
     if (stack_view == NULL)
         return;
 
-    int step = ghost->progress / 1000;
-    Point prev_pos = ghost->path[step];
-    Point next_pos = ghost->path[step + 1];
+    Point prev_pos = ghost->position;
+    Point next_pos = ghost->path[ghost->step];
 
     if (!view->debug_mode && !view->level_view.check_visibility(prev_pos) && !view->level_view.check_visibility(next_pos))
         return;
 
-    int f = ghost->progress % 1000;
-
     int px1, py1, px2, py2;
-
     tile_to_pixel(prev_pos, &px1, &py1);
     tile_to_pixel(next_pos, &px2, &py2);
 
-    int px = (px1 * (1000 - f) + px2 * f) / 1000;
-    int py = (py1 * (1000 - f) + py2 * f) / 1000;
+    int px = (px1 * (1000 - ghost->progress) + px2 * ghost->progress) / 1000;
+    int py = (py1 * (1000 - ghost->progress) + py2 * ghost->progress) / 1000;
     bool selected = stack_view->selected;
     stack_view->selected = false;
     level_renderer->draw_unit_stack(px + TILE_WIDTH / 2, py + Y_SPACING / 2, *stack_view);

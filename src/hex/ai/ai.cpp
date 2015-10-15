@@ -45,6 +45,9 @@ void Ai::update_unit_stack(UnitStack *stack) {
     if (new_path.size() > 10)
         new_path.resize(10);
 
+    if (new_path.empty())
+        return;
+
     UnitStack *target_stack = game->level.tiles[new_path.back()].stack;
     if (target_stack != NULL) {
         return;

@@ -34,18 +34,18 @@ initiated (see below).
 
 Updates to the game state are instantaneous.  Movement should be animated in the view, however.
 
-When the view updater receives a TransferUnit message, the change has been completely applied to the
-game state, and no other changes have been applied.  In case 2, the CreateStack message was already
-processed.  In case 3, DestroyStack has *not* been processed.
+The TransferUnit message is first handled by the view's pre-updater.  When it is received here,
+the change has not yet been applied to the game.  The view will use the stack's existing state to
+create a ghost object.  The target stack is locked so that it cannot be selected or altered.
 
-Units aborbed into a stack are always appended.  The view updater can determine that the units
-involved in the move are the last N units in the target stack, where N is the size
-of the units parameter.
+The ghost is animated over the map, updating the visible/discovered
+state of the view as it progresses.  When the ghost reaches its destination, the target stack
+is unlocked and its view updated.
 
-The view will create a ghost object and animate it along the path, masking the target stack where
-appropriate.  Selecting the target stack will also be disabled.  The ghost will also update the
-visible/discovered state of the view as it progresses.  When the ghost reaches its destination,
-the target stack will return to normal.
+When the main view updater receives a TransferUnit message, the change has already been applied
+to the game state.  If there is an active ghost for the target then the target's view is not
+updated.
+
 
 Attacking
 ---------

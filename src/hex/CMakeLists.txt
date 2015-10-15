@@ -88,6 +88,8 @@ set(srcs
         view/message_window.h
         view/player.cpp
         view/player.h
+        view/pre_updater.cpp
+        view/pre_updater.h
         view/stack_window.cpp
         view/stack_window.h
         view/status_window.cpp

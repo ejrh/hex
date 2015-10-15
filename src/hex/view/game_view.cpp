@@ -12,7 +12,7 @@
 #include "hex/view/view.h"
 
 
-Ghost::Ghost(UnitStack *target, Path path): target(target), path(path), progress(0) {
+Ghost::Ghost(int target_id, Point position, Path path): target_id(target_id), position(position), path(path), step(0), progress(0) {
 }
 
 
@@ -57,37 +57,48 @@ void GameView::update() {
     while (iter != ghosts.end()) {
         Ghost& ghost = *iter;
 
-        UnitStackView *target_view = get_stack_view(ghost.target->id);
-        UnitViewDef *view_def = target_view->view_def;
-        ghost.progress += frame_incr(view_def->move_speed, update_ms);
-        unsigned int step = ghost.progress / 1000;
-        if (step >= ghost.path.size() - 1) {
-            target_view->locked = false;
-            target_view->moving = false;
-            if (player->has_view(ghost.target->owner)) {
-                level_view.visibility.unmask(ghost.target);
-                update_visibility();
-            }
+        int finished = update_ghost(ghost, update_ms);
+        if (finished)
             iter = ghosts.erase(iter);
-        } else {
-            Point &prev_pos = ghost.path[step];
-            Point &next_pos = ghost.path[step + 1];
-            ghost.position = next_pos;
-            target_view->facing = get_direction(next_pos, prev_pos);
-            target_view->phase += frame_incr(view_def->move_animations[target_view->facing].bpm, update_ms);
-            if (player->has_view(ghost.target->owner)) {
-                level_view.discovered.draw(next_pos, ghost.target->sight(), true);
-                level_view.ghost_visibility.draw(next_pos, ghost.target->sight(), true);
-            }
+        else
             iter++;
+    }
+}
+
+bool GameView::update_ghost(Ghost& ghost, unsigned int update_ms) {
+    UnitStack *target = game->get_stack(ghost.target_id);
+    UnitStackView *target_view = get_stack_view(ghost.target_id);
+    UnitViewDef *view_def = target_view->view_def;
+    ghost.progress += frame_incr(view_def->move_speed, update_ms);
+    if (ghost.progress > 1000) {
+        ghost.position = ghost.path[ghost.step];
+        ghost.step++;
+        ghost.progress -= 1000;
+    }
+    if (ghost.step >= ghost.path.size()) {
+        target_view->locked = false;
+        target_view->moving = false;
+        if (player->has_view(target->owner)) {
+            level_view.visibility.unmask(target);
+            update_visibility();
         }
+        return true;
+    } else {
+        Point next_pos = ghost.path[ghost.step];
+        target_view->facing = get_direction(next_pos, ghost.position);
+        target_view->phase += frame_incr(view_def->move_animations[target_view->facing].bpm, update_ms);
+        if (player->has_view(target->owner)) {
+            level_view.discovered.draw(next_pos, target->sight(), true);
+            level_view.ghost_visibility.draw(next_pos, target->sight(), true);
+        }
+        return false;
     }
 }
 
 void GameView::left_click_tile(const Point& tile_pos) {
     Tile& tile = level_view.level->tiles[tile_pos];
     if (tile.stack != NULL && tile.stack->id != selected_stack_id) {
-        if (selected_stack_id) {
+        if (selected_stack_id != 0) {
             UnitStackView *current_stack_view = get_stack_view(selected_stack_id);
             current_stack_view->selected = false;
         }
@@ -106,9 +117,9 @@ void GameView::left_click_tile(const Point& tile_pos) {
         selected_structure = NULL;
 
         if (player->has_view(stack->owner))
-            set_drawn_path(stack_view->path);
+            set_drawn_path(stack->position, stack_view->path);
         else
-            set_drawn_path(Path());
+            clear_drawn_path();
     } else if (tile.structure != NULL) {
         if (selected_stack_id) {
             UnitStackView *stack_view = get_stack_view(selected_stack_id);
@@ -120,47 +131,54 @@ void GameView::left_click_tile(const Point& tile_pos) {
         }
         selected_stack_id = 0;
         selected_structure = tile.structure;
-        set_drawn_path(Path());
+        clear_drawn_path();
         StructureView *structure_view = level_view.tile_views[selected_structure->position].structure_view;
         structure_view->selected = true;
     }
 }
 
 void GameView::right_click_tile(const Point& tile_pos) {
-    UnitStack *current_stack = game->get_stack(selected_stack_id);
-    UnitStackView *current_stack_view = get_stack_view(selected_stack_id);
-    if (current_stack == NULL || current_stack_view == NULL || current_stack_view->locked)
+
+    UnitStack *stack = game->get_stack(selected_stack_id);
+    UnitStackView *stack_view = get_stack_view(selected_stack_id);
+    if (stack == NULL || stack_view == NULL || stack_view->locked)
         return;
 
-    if (level_view.level->contains(tile_pos) && player->has_control(current_stack->owner)) {
+    if (level_view.level->contains(tile_pos) && player->has_control(stack->owner)) {
         MovementModel movement_model(level_view.level);
         Pathfinder pathfinder(level_view.level, &movement_model);
-        pathfinder.start(current_stack, current_stack->position, tile_pos);
+        pathfinder.start(stack, stack->position, tile_pos);
         pathfinder.complete();
         Path new_path;
         pathfinder.build_path(new_path);
-
-        UnitStackView *stack_view = get_stack_view(selected_stack_id);
 
         if (stack_view->path == new_path) {
             int target_id = 0;
             UnitStack *target_stack = level_view.level->tiles[new_path.back()].stack;
             if (target_stack != NULL) {
-                if (target_stack->owner == current_stack->owner) {
-                    if (target_stack->units.size() + current_stack->units.size() > MAX_UNITS)
+                if (target_stack->owner == stack->owner) {
+                    if (target_stack->units.size() + stack->units.size() > MAX_UNITS)
                         return;
                 }
                 target_id = target_stack->id;
             }
-            dispatcher->receive(create_message(UnitMove, current_stack->id, selected_units, new_path, target_id));
+            dispatcher->receive(create_message(UnitMove, stack->id, selected_units, new_path, target_id));
         } else {
             stack_view->path = new_path;
-            set_drawn_path(stack_view->path);
+            set_drawn_path(stack->position, stack_view->path);
         }
     }
 }
 
-void GameView::set_drawn_path(const Path& path) {
+void GameView::clear_drawn_path() {
+    for (std::vector<Point>::const_iterator iter = drawn_path.begin(); iter != drawn_path.end(); iter++) {
+        level_view.tile_views[*iter].path_dir = -1;
+    }
+
+    drawn_path.clear();
+}
+
+void GameView::set_drawn_path(const Point& start, const Path& path) {
     // Erase existing path
     for (std::vector<Point>::const_iterator iter = drawn_path.begin(); iter != drawn_path.end(); iter++) {
         level_view.tile_views[*iter].path_dir = -1;
@@ -169,10 +187,9 @@ void GameView::set_drawn_path(const Path& path) {
     drawn_path = path;
 
     // Draw new path
-    Point last(-1,-1);
+    Point last = start;
     for (std::vector<Point>::const_iterator iter = drawn_path.begin(); iter != drawn_path.end(); iter++) {
-        if (last.x != -1)
-            level_view.tile_views[*iter].path_dir = get_direction(last, *iter);
+        level_view.tile_views[*iter].path_dir = get_direction(last, *iter);
         last = *iter;
     }
 }
@@ -218,9 +235,7 @@ TileView *GameView::get_tile_view(const Point tile_pos) {
     return NULL;
 }
 
-    void GameView::transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id) {
-    /* By the time we get here, the units have already moved in the game state. */
-
+void GameView::transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id) {
     UnitStack *stack = game->get_stack(stack_id);
     if (stack == NULL) {
         BOOST_LOG_TRIVIAL(warning) << "No stack with id " << stack_id;
@@ -232,26 +247,23 @@ TileView *GameView::get_tile_view(const Point tile_pos) {
         return;
     }
 
-    if (path.size() < 2)
+    if (path.empty())
         return;
 
     bool new_target = selected_units.size() == target_stack->units.size();
 
-    UnitStackView *stack_view = &unit_stack_views[stack->id];
+    UnitStackView *stack_view = get_stack_view(stack->id);
     stack_view->path = Path();
     if (selected_stack_id == stack->id) {
-        set_drawn_path(stack_view->path);
+        set_drawn_path(stack->position, stack_view->path);
     }
 
-    UnitStackView *target_view = &unit_stack_views[target_stack->id];
+    UnitStackView *target_view = get_stack_view(target_stack->id);
     target_view->locked = true;
     if (new_target)
         target_view->moving = true;
-    Ghost ghost(target_stack, path);
+    Ghost ghost(target_stack->id, stack->position, path);
     ghosts.push_back(ghost);
-    if (player->has_view(ghost.target->owner)) {
-        update_visibility();
-    }
 }
 
 void GameView::mark_ready() {

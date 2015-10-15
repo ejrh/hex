@@ -24,7 +24,7 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
             int target_id = cmd->data4;
 
             UnitStack *stack = game->get_stack(stack_id);
-            if (stack == NULL || units.empty() || !stack->has_units(units) || path.size() < 2) {
+            if (stack == NULL || units.empty() || !stack->has_units(units) || path.empty()) {
                 return;
             }
 
@@ -39,9 +39,9 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
 
             MovementModel movement(&game->level);
             int allowed_steps = movement.check_path(stack, path);
-            path.resize(allowed_steps + 1);
+            path.resize(allowed_steps);
 
-            if (path.size() < 2) {
+            if (path.empty()) {
                 return;
             }
 
