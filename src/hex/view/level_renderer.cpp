@@ -10,7 +10,7 @@
 
 
 LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *level, GameView *view):
-        graphics(graphics), resources(resources), level(level), view(view), show_hexagons(false) {
+        show_hexagons(false), graphics(graphics), resources(resources), level(level), view(view) {
     cursor_images = resources->image_series["CURSORS"];
     arrow_images = resources->image_series["ARROWS"];
 }
@@ -136,7 +136,7 @@ void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
     if (!stack) {
         draw_it = false;
     } else {
-        stack_view = view->get_unit_stack_view(*stack);
+        stack_view = view->get_stack_view(stack->id);
         if (stack_view->moving)
             draw_it = false;
     }

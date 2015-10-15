@@ -16,7 +16,7 @@ StackWindow::StackWindow(int x, int y, int width, int height, Resources *resourc
 void StackWindow::draw() {
     graphics->fill_rectangle(100,150,100, x, y, width, height);
 
-    UnitStack *stack = view->selected_stack;
+    UnitStack *stack = view->game->get_stack(view->selected_stack_id);
     if (stack != NULL) {
         int px = x + StackWindow::border;
         int py = y + StackWindow::border;

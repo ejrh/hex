@@ -119,7 +119,7 @@ public:
     void right_click_tile(const Point& tile_pos);
     void set_drawn_path(const Path& path);
     void update_visibility();
-    UnitStackView *get_unit_stack_view(const UnitStack &stack);
+    UnitStackView *get_stack_view(int stack_id);
     TileView *get_tile_view(const Point tile_pos);
     void transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id);
     void mark_ready();
@@ -136,7 +136,7 @@ public:
     std::map<int, FactionView *> faction_views;
     std::map<int, UnitStackView> unit_stack_views;
     std::vector<Ghost> ghosts;
-    UnitStack *selected_stack;
+    int selected_stack_id;
     IntSet selected_units;
     Structure *selected_structure;
     Path drawn_path;

@@ -88,8 +88,8 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
 
         case DestroyStack: {
             boost::shared_ptr<DestroyStackMessage> upd = boost::dynamic_pointer_cast<DestroyStackMessage>(update);
-            if (game_view->selected_stack != NULL && game_view->selected_stack->id == upd->data) {
-                game_view->selected_stack = NULL;
+            if (game_view->selected_stack_id == upd->data) {
+                game_view->selected_stack_id = 0;
                 game_view->set_drawn_path(Path());
             }
             game_view->unit_stack_views.erase(upd->data);
