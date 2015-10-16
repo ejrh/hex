@@ -241,10 +241,10 @@ public:
     void skip_expected(int ch) {
         int x = in.get();
         if (x == std::char_traits<char>::eof()) {
-            throw Error("Expected character: %c (%x) but got EOF", ch, ch);
+            throw Error() << " " << boost::format("Expected character: %c (%x) but got EOF") % ch % ch;
         }
         if (x != ch) {
-            throw Error("Expected character: %c (%x) but got: %c (%x)", ch, ch, x, x);
+            throw Error() << boost::format("Expected character: %c (%x) but got: %c (%x)") % ch % ch % x % x;
         }
     }
 

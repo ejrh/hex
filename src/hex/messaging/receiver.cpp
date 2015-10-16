@@ -8,7 +8,7 @@
 void replay_messages(const std::string& filename, MessageReceiver& receiver) {
     std::ifstream file(filename.c_str(), std::ios::in | std::ios::binary);
     if (file.fail())
-        throw Error("Could not open file: %s", filename.c_str());
+        throw Error() << "Could not open file: " << filename;
 
     Deserialiser reader(file);
 
@@ -24,7 +24,7 @@ void replay_messages(const std::string& filename, MessageReceiver& receiver) {
             Message *update_ptr;
             reader >> update_ptr;
             if (update_ptr == NULL)
-                throw Error("Error attempting to deserialise message");
+                throw Error() << "Error attempting to deserialise message";
             boost::shared_ptr<Message> update(update_ptr);
             receiver.receive(update);
             line_no++;

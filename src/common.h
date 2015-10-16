@@ -1,6 +1,5 @@
 #include <climits>
 #include <cmath>
-#include <cstdarg>
 #include <cstdio>
 #include <exception>
 #include <limits>

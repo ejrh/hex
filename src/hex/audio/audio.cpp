@@ -18,7 +18,7 @@ void Audio::start() {
     MikMod_RegisterAllDrivers();
     MikMod_RegisterAllLoaders();
     if (MikMod_Init((char *) "")) {
-        throw Error("Couldn't initialise sound: %s", MikMod_strerror(MikMod_errno));
+        throw Error() << "Couldn't initialise sound: " << MikMod_strerror(MikMod_errno);
     }
     started = true;
 }

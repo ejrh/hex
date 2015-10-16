@@ -6,7 +6,7 @@
 void load_image(const std::string& filename, Graphics *graphics, ImageMap& image_set) {
     SDL_Surface *surface = IMG_Load(filename.c_str());
     if (surface == NULL) {
-        throw Error("Could not load image: %s", filename.c_str());
+        throw Error() << "Could not load image: " << filename;
     }
 
     Uint32 pf = SDL_GetWindowPixelFormat(graphics->window);

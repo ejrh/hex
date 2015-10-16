@@ -98,7 +98,7 @@ void Reader::read_RLE16(int expected_size, unsigned short transparent, unsigned 
         int scanline_len = (read_int() - 4) / 2;
         bool skip_extra_one = (scanline_len % 2 != 0);
         if (scanline_len > 1000) {
-            throw Error("Scanline length of %d is excessive", scanline_len);
+            throw Error() << boost::format("Scanline length of %d is excessive") % scanline_len;
         }
         expected_size -= 4;
         expected_size -= 2 * scanline_len;
@@ -121,7 +121,7 @@ void Reader::read_RLE16(int expected_size, unsigned short transparent, unsigned 
                 target_size -= 2;
             }
             if (skip != 0) {
-                throw Error("RLE16 data exceeded allocated size");
+                throw Error() << "RLE16 data exceeded allocated size";
             }
         }
         if (skip_extra_one) {
@@ -200,7 +200,7 @@ bool ILBReader::read_image(bool &composite, ImageData &image) {
 
     int name_length = read_int();
     if (name_length < 0 || name_length > MAX_NAME_LENGTH)
-        throw Error("Abnormal image name length: %d", name_length);
+        throw Error() << "Abnormal image name length: " <<  name_length;
 
     char buffer[MAX_NAME_LENGTH + 1];
     read_data(buffer, name_length);
@@ -269,7 +269,7 @@ bool ILBReader::read_image(bool &composite, ImageData &image) {
             break;
 
         default:
-            throw Error("Unknown image type: %d", image.type);
+            throw Error() << "Unknown image type: " << image.type;
     }
 
     if (image.info_byte == 1) {
@@ -279,7 +279,7 @@ bool ILBReader::read_image(bool &composite, ImageData &image) {
     if (!composite) {
         int end_int = read_int();
         if (end_int != ILB_EOF_ID)
-            throw Error("Missing image end symbol");
+            throw Error() << "Missing image end symbol";
     }
 
     return true;
@@ -361,10 +361,10 @@ Image *ILBReader::create_image(char *pixel_data, ImageData &image) {
 void ILBReader::read(ImageMap& image_set, const std::string& prefix) {
     read_header(header);
     if (header.magic != ILB_MAGIC)
-        throw Error("ILB magic number missing, was: %08x", header.magic);
+        throw Error() << boost::format("ILB magic number missing, was: %08x") % header.magic;
 
     if (header.version != ILB_VERSION_3 && header.version != ILB_VERSION_4)
-        throw Error("ILB version not recognised: %0.1f", header.version);
+        throw Error() << boost::format("ILB version not recognised: %0.1f") % header.version;
 
     for (int i = 0; i < header.num_palettes; i++) {
         SDL_Color palette_data[256];
@@ -410,7 +410,7 @@ void ILBReader::read(ImageMap& image_set, const std::string& prefix) {
 void load_ilb(const std::string& filename, Graphics *graphics, ImageMap& image_set) {
     std::ifstream file(filename.c_str(), std::ios::in | std::ios::binary);
     if (file.fail())
-        throw Error("Could not open file: %s", filename.c_str());
+        throw Error() << "Could not open file: " << filename;
 
     ILBReader reader(file, graphics);
     reader.read(image_set);

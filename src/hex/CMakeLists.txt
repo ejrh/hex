@@ -9,7 +9,6 @@ set(srcs
         ai/ai_updater.h
         audio/audio.cpp
         audio/audio.h
-        basics/error.cpp
         basics/error.h
         basics/hexgrid.cpp
         basics/hexgrid.h

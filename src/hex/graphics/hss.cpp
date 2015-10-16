@@ -47,7 +47,7 @@ void HSSReader::read(ImageMap& image_set) {
 void load_hss(const std::string& filename, Graphics *graphics, ImageMap& image_set) {
     std::ifstream file(filename.c_str(), std::ios::in | std::ios::binary);
     if (file.fail())
-        throw Error("Could not open file: %s", filename.c_str());
+        throw Error() << "Could not open file: " << filename;
 
     HSSReader reader(file, graphics);
     reader.read(image_set);
