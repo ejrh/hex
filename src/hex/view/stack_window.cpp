@@ -16,22 +16,22 @@ StackWindow::StackWindow(int x, int y, int width, int height, Resources *resourc
 void StackWindow::draw() {
     graphics->fill_rectangle(100,150,100, x, y, width, height);
 
-    UnitStack *stack = view->game->get_stack(view->selected_stack_id);
-    if (stack != NULL) {
+    UnitStack::pointer stack = view->game->stacks.find(view->selected_stack_id);
+    if (stack) {
         int px = x + StackWindow::border;
         int py = y + StackWindow::border;
         int i = 0;
 
         TextFormat tf(graphics, SmallFont10, true, 255,255,255);
 
-        for (std::vector<Unit *>::iterator iter = stack->units.begin(); iter != stack->units.end(); iter++) {
+        for (std::vector<Unit::pointer>::iterator iter = stack->units.begin(); iter != stack->units.end(); iter++) {
             graphics->fill_rectangle(50,50,50, px, py, StackWindow::unit_width, StackWindow::unit_height);
-            Unit *unit = *iter;
-            UnitViewDef *view_def = resources->get_unit_view_def(unit->type->name);
-            renderer->draw_unit(px + StackWindow::unit_width / 2, py + StackWindow::unit_height / 2, *unit, view_def);
+            Unit& unit = **iter;
+            UnitViewDef& view_def = *resources->get_unit_view_def(unit.type->name);
+            renderer->draw_unit(px + StackWindow::unit_width / 2, py + StackWindow::unit_height / 2, unit, view_def);
 
             std::ostringstream ss;
-            ss << unit->moves / MOVE_SCALE;
+            ss << unit.moves / MOVE_SCALE;
             tf.write_text(ss.str(), px + StackWindow::unit_width, py + StackWindow::unit_height);
 
             px += StackWindow::unit_width + StackWindow::padding;

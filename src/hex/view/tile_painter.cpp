@@ -27,9 +27,9 @@ void TilePainter::repaint(Point offset, int len) {
     for (int i = 0; i < len; i++) {
         Point tile_pos(offset.x + i, offset.y);
 
-        TileType *tile_type = game->level.tiles[tile_pos].type;
+        TileType& tile_type = *game->level.tiles[tile_pos].type;
         TileView& tile_view = view->level_view.tile_views[tile_pos];
-        TileViewDef *view_def = resources->get_tile_view_def(tile_type->name);
+        TileViewDef::pointer view_def = resources->get_tile_view_def(tile_type.name);
         tile_view.view_def = view_def;
         tile_view.variation = rand();
         tile_view.phase = rand();
@@ -56,8 +56,8 @@ void TilePainter::paint_transitions(const Point& tile_pos) {
 
     tile_view.transitions.clear();
 
-    TileViewDef *view_def = tile_view.view_def;
-    if (view_def == NULL)
+    TileViewDef::pointer view_def = tile_view.view_def;
+    if (!view_def)
         return;
 
     for (std::vector<TransitionDef>::iterator iter = view_def->transitions.begin(); iter != view_def->transitions.end(); iter++) {
@@ -70,8 +70,8 @@ void TilePainter::paint_transitions(const Point& tile_pos) {
                 match = false;
                 continue;
             }
-            TileViewDef *neighbour_def = view->level_view.tile_views[neighbour_pos].view_def;
-            if (neighbour_def == NULL) {
+            TileViewDef::pointer neighbour_def = view->level_view.tile_views[neighbour_pos].view_def;
+            if (!neighbour_def) {
                 match = false;
                 continue;
             }
@@ -93,14 +93,14 @@ void TilePainter::paint_roads(const Point& tile_pos) {
     TileView& tile_view = view->level_view.tile_views[tile_pos];
 
     tile_view.roads.clear();
-    TileViewDef *view_def = tile_view.view_def;
-    if (view_def == NULL)
+    TileViewDef::pointer view_def = tile_view.view_def;
+    if (!view_def)
         return;
     Tile& tile = game->level.tiles[tile_pos];
     if (!tile.road)
         return;
 
-    for (int dir = 0; dir < 6; dir++) {
+    for (unsigned int dir = 0; dir < 6; dir++) {
         Point neighbour;
         get_neighbour(tile_pos, dir, &neighbour);
         if (!game->level.contains(neighbour))
@@ -118,8 +118,8 @@ void TilePainter::paint_roads(const Point& tile_pos) {
 void TilePainter::paint_features(const Point& tile_pos) {
     TileView& tile_view = view->level_view.tile_views[tile_pos];
     tile_view.feature = NULL;
-    TileViewDef *view_def = tile_view.view_def;
-    if (view_def == NULL)
+    TileViewDef::pointer view_def = tile_view.view_def;
+    if (!view_def)
         return;
 
     for (std::vector<FeatureDef>::iterator iter = view_def->features.begin(); iter != view_def->features.end(); iter++) {

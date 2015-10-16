@@ -41,14 +41,14 @@ public:
     Pathfinder(Level *level, MovementModel *movement);
     virtual ~Pathfinder();
     virtual void clear();
-    virtual void start(const UnitStack *party, const Point start_point, const Point target_point);
+    virtual void start(const UnitStack& party, const Point start_point, const Point target_point);
     virtual void step();
     virtual void complete();
     virtual void build_path(Path& path);
 
 public:
     PathfinderState state;
-    const UnitStack *party;
+    UnitStack::const_pointer party;
     PathfinderQueueEntry source;
     PathfinderQueueEntry target;
     PathfinderQueueEntry path_head;

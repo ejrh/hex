@@ -23,4 +23,7 @@ private:
 class Error: public BaseError<Error> {
 };
 
+class DataError: public BaseError<DataError> {
+};
+
 #endif

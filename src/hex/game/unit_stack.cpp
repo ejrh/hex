@@ -2,12 +2,12 @@
 
 #include "hex/game/game.h"
 
-void UnitStack::transfer_units(const IntSet unit_selection, UnitStack *target_stack) {
-    std::vector<Unit *>::iterator iter = units.begin();
+void UnitStack::transfer_units(const IntSet unit_selection, UnitStack& target_stack) {
+    std::vector<Unit::pointer>::iterator iter = units.begin();
     int i = 0;
     while (iter != units.end()) {
         if (unit_selection.contains(i)) {
-            target_stack->units.push_back(*iter);
+            target_stack.units.push_back(*iter);
             iter = units.erase(iter);
         } else {
             iter++;

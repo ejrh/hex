@@ -14,8 +14,12 @@ GameUpdater::~GameUpdater() {
 }
 
 void GameUpdater::receive(boost::shared_ptr<Message> update) {
-    game->message_id = update->id;
-    apply_update(update);
+    try {
+        game->message_id = update->id;
+        apply_update(update);
+    } catch (const DataError& err) {
+        BOOST_LOG_TRIVIAL(error) << "Invalid update received; " << err.what();
+    }
 }
 
 void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
@@ -79,8 +83,8 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
 
         case FactionReady: {
             boost::shared_ptr<FactionReadyMessage> upd = boost::dynamic_pointer_cast<FactionReadyMessage>(update);
-            Faction *faction = game->get_faction(upd->data1);
-            if (faction != NULL) {
+            Faction::pointer faction = game->factions.get(upd->data1);
+            if (faction) {
                 faction->ready = upd->data2;
             }
         } break;

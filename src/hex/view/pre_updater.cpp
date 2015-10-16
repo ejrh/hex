@@ -14,7 +14,11 @@ PreUpdater::~PreUpdater() {
 }
 
 void PreUpdater::receive(boost::shared_ptr<Message> update) {
-    apply_update(update);
+    try {
+        apply_update(update);
+    } catch (const DataError& err) {
+        BOOST_LOG_TRIVIAL(error) << "Invalid update received; " << err.what();
+    }
 }
 
 void PreUpdater::apply_update(boost::shared_ptr<Message> update) {

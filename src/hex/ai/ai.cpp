@@ -21,9 +21,9 @@ void Ai::update() {
 
     last_update = ticks;
 
-    for (std::map<int, UnitStack*>::iterator iter = game->stacks.begin(); iter != game->stacks.end(); iter++) {
-        UnitStack *stack = iter->second;
-        if (stack->owner == faction) {
+    for (IntMap<UnitStack>::iterator iter = game->stacks.begin(); iter != game->stacks.end(); iter++) {
+        UnitStack& stack = *iter->second;
+        if (stack.owner == faction) {
             update_unit_stack(stack);
         }
     }
@@ -33,11 +33,11 @@ void Ai::update() {
     }
 }
 
-void Ai::update_unit_stack(UnitStack *stack) {
+void Ai::update_unit_stack(UnitStack& stack) {
     MovementModel movement_model(&game->level);
     Pathfinder pathfinder(&game->level, &movement_model);
     Point tile_pos(rand() % game->level.width, rand() % game->level.height);
-    pathfinder.start(stack, stack->position, tile_pos);
+    pathfinder.start(stack, stack.position, tile_pos);
     pathfinder.complete();
     Path new_path;
     pathfinder.build_path(new_path);
@@ -48,15 +48,15 @@ void Ai::update_unit_stack(UnitStack *stack) {
     if (new_path.empty())
         return;
 
-    UnitStack *target_stack = game->level.tiles[new_path.back()].stack;
-    if (target_stack != NULL) {
+    UnitStack::pointer target_stack = game->level.tiles[new_path.back()].stack;
+    if (target_stack) {
         return;
     }
 
     IntSet selected_units;
-    for (unsigned int i = 0; i < stack->units.size(); i++) {
+    for (unsigned int i = 0; i < stack.units.size(); i++) {
         selected_units.insert(i);
     }
 
-    dispatcher->receive(create_message(UnitMove, stack->id, selected_units, new_path, 0));
+    dispatcher->receive(create_message(UnitMove, stack.id, selected_units, new_path, 0));
 }

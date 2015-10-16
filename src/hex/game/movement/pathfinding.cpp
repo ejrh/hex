@@ -27,8 +27,8 @@ void Pathfinder::clear() {
     state = CLEAR;
 }
 
-void Pathfinder::start(const UnitStack *party, const Point start_point, const Point target_point) {
-    this->party = party;
+void Pathfinder::start(const UnitStack& party, const Point start_point, const Point target_point) {
+    this->party = party.shared_from_this();
 
     source.point = start_point.constrain(0, 0, nodes.width - 1, nodes.height - 1);
     source.node = &nodes[source.point];
@@ -60,7 +60,7 @@ void Pathfinder::get_neighbours(const PathfinderQueueEntry& entry, PathfinderQue
 }
 
 int Pathfinder::cost_between(const PathfinderQueueEntry& entry1, const PathfinderQueueEntry& entry2) {
-    int cost = movement->cost_to(party, entry2.point);
+    int cost = movement->cost_to(*party, entry2.point);
     return cost;
 }
 

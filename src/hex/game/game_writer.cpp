@@ -19,27 +19,27 @@ void GameWriter::write(Game *game) {
 }
 
 void GameWriter::write_unit_types(Game *game) {
-    for (UnitTypeMap::iterator iter = game->unit_types.begin(); iter != game->unit_types.end(); iter++) {
+    for (StrMap<UnitType>::iterator iter = game->unit_types.begin(); iter != game->unit_types.end(); iter++) {
         emit(create_message(CreateUnitType, *iter->second));
     }
 }
 
 void GameWriter::write_tile_types(Game *game) {
-    for (TileTypeMap::iterator iter = game->tile_types.begin(); iter != game->tile_types.end(); iter++) {
+    for (StrMap<TileType>::iterator iter = game->tile_types.begin(); iter != game->tile_types.end(); iter++) {
         emit(create_message(CreateTileType, *iter->second));
     }
 }
 
 void GameWriter::write_structure_types(Game *game) {
-    for (StructureTypeMap::iterator iter = game->structure_types.begin(); iter != game->structure_types.end(); iter++) {
+    for (StrMap<StructureType>::iterator iter = game->structure_types.begin(); iter != game->structure_types.end(); iter++) {
         emit(create_message(CreateStructureType, *iter->second));
     }
 }
 
 void GameWriter::write_factions(Game *game) {
-    for (std::map<int, Faction *>::iterator iter = game->factions.begin(); iter != game->factions.end(); iter++) {
-        Faction *faction = iter->second;
-        emit(create_message(CreateFaction, faction->id, faction->type_name, faction->name));
+    for (IntMap<Faction>::iterator iter = game->factions.begin(); iter != game->factions.end(); iter++) {
+        Faction& faction = *iter->second;
+        emit(create_message(CreateFaction, faction.id, faction.type_name, faction.name));
     }
 }
 
@@ -56,12 +56,12 @@ void GameWriter::write_levels(Game *game) {
 }
 
 void GameWriter::write_unit_stacks(Game *game) {
-    for (std::map<int, UnitStack *>::iterator iter = game->stacks.begin(); iter != game->stacks.end(); iter++) {
-        UnitStack *stack = iter->second;
-        emit(create_message(CreateStack, stack->id, stack->position, stack->owner->id));
-        for (std::vector<Unit *>::iterator unit_iter = stack->units.begin(); unit_iter != stack->units.end(); unit_iter++) {
-            Unit *unit = *unit_iter;
-            emit(create_message(CreateUnit, stack->id, unit->type->name));
+    for (IntMap<UnitStack>::iterator iter = game->stacks.begin(); iter != game->stacks.end(); iter++) {
+        UnitStack& stack = *iter->second;
+        emit(create_message(CreateStack, stack.id, stack.position, stack.owner->id));
+        for (std::vector<Unit::pointer>::iterator unit_iter = stack.units.begin(); unit_iter != stack.units.end(); unit_iter++) {
+            Unit& unit = **unit_iter;
+            emit(create_message(CreateUnit, stack.id, unit.type->name));
         }
     }
 }
@@ -70,8 +70,8 @@ void GameWriter::write_structures(Game *game) {
     for (int i = 0; i < game->level.height; i++) {
         for (int j = 0; j < game->level.width; j++) {
             Point tile_pos(j, i);
-            Structure *structure = game->level.tiles[tile_pos].structure;
-            if (structure == NULL)
+            Structure::pointer structure = game->level.tiles[tile_pos].structure;
+            if (!structure)
                 continue;
             emit(create_message(CreateStructure, tile_pos, structure->type->name, structure->owner->id));
         }

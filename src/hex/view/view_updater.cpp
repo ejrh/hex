@@ -16,7 +16,11 @@ ViewUpdater::~ViewUpdater() {
 }
 
 void ViewUpdater::receive(boost::shared_ptr<Message> update) {
-    apply_update(update);
+    try {
+        apply_update(update);
+    } catch (const DataError& err) {
+        BOOST_LOG_TRIVIAL(error) << "Invalid update received; " << err.what();
+    }
 }
 
 void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
@@ -37,43 +41,36 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
 
         case CreateFaction: {
             boost::shared_ptr<CreateFactionMessage> upd = boost::dynamic_pointer_cast<CreateFactionMessage>(update);
-            Faction *faction = game->get_faction(upd->data1);
-            FactionViewDef *view_def = resources->get_faction_view_def(upd->data2);
-            game_view->faction_views[upd->data1] = new FactionView(faction, view_def);
+            Faction::pointer faction = game->factions.get(upd->data1);
+            FactionViewDef::pointer view_def = resources->get_faction_view_def(upd->data2);
+            game_view->faction_views.put(upd->data1, boost::make_shared<FactionView>(faction, view_def));
         } break;
 
         case CreateStack: {
             boost::shared_ptr<CreateStackMessage> upd = boost::dynamic_pointer_cast<CreateStackMessage>(update);
-            UnitStack *stack = game->get_stack(upd->data1);
-            if (stack == NULL) {
-                return;
-                //return false;
-            }
+            UnitStack::pointer stack = game->stacks.get(upd->data1);
 
-            UnitViewDef *view_def = NULL;
+            UnitViewDef::pointer view_def;
             if (!stack->units.empty()) {
-                UnitType *unit_type = stack->units[0]->type;
-                view_def = resources->get_unit_view_def(unit_type->name);
+                UnitType& unit_type = *stack->units[0]->type;
+                view_def = resources->get_unit_view_def(unit_type.name);
             }
 
-            UnitStackView stack_view(stack, view_def);
-            game_view->unit_stack_views[stack->id] = stack_view;
+            UnitStackView::pointer stack_view = boost::make_shared<UnitStackView>(stack, view_def);
+            game_view->unit_stack_views.put(stack->id, stack_view);
         } break;
 
         case CreateUnit: {
             boost::shared_ptr<CreateUnitMessage> upd = boost::dynamic_pointer_cast<CreateUnitMessage>(update);
-            UnitStack *stack = game->get_stack(upd->data1);
-            if (stack == NULL)
-                return;
-                //return false;
+            UnitStack::pointer stack = game->stacks.get(upd->data1);
 
             if (stack->units.empty())
                 return;
 
-            UnitStackView *stack_view = &game_view->unit_stack_views[upd->data1];
+            UnitStackView::pointer stack_view = game_view->unit_stack_views.get(upd->data1);
 
-            UnitType *unit_type = stack->units[0]->type;
-            UnitViewDef *view_def = resources->get_unit_view_def(unit_type->name);
+            UnitType& unit_type = *stack->units[0]->type;
+            UnitViewDef::pointer view_def = resources->get_unit_view_def(unit_type.name);
             stack_view->view_def = view_def;
 
             if (game_view->player->has_view(stack->owner)) {
@@ -87,18 +84,18 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
                 game_view->selected_stack_id = 0;
                 game_view->clear_drawn_path();
             }
-            game_view->unit_stack_views.erase(upd->data);
+            game_view->unit_stack_views.remove(upd->data);
         } break;
 
         case CreateStructure: {
             boost::shared_ptr<CreateStructureMessage> upd = boost::dynamic_pointer_cast<CreateStructureMessage>(update);
-            Structure *structure = game->get_structure(upd->data1);
-            if (structure == NULL) {
+            Structure::pointer structure = game->level.tiles[upd->data1].structure;
+            if (!structure) {
                 return;
             }
-            StructureType *structure_type = structure->type;
-            StructureViewDef *view_def = resources->get_structure_view_def(structure_type->name);
-            StructureView *structure_view = new StructureView(structure, view_def);
+            StructureType::pointer structure_type = structure->type;
+            StructureViewDef::pointer view_def = resources->get_structure_view_def(structure_type->name);
+            StructureView::pointer structure_view = boost::make_shared<StructureView>(structure, view_def);
             game_view->level_view.tile_views[upd->data1].structure_view = structure_view;
 
             if (game_view->player->has_view(structure->owner)) {
@@ -109,7 +106,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         case GrantFactionView: {
             boost::shared_ptr<GrantFactionViewMessage> upd = boost::dynamic_pointer_cast<GrantFactionViewMessage>(update);
             if (upd->data1 == game_view->player->id) {
-                Faction *faction = game->get_faction(upd->data2);
+                Faction::pointer faction = game->factions.get(upd->data2);
                 game_view->player->grant_view(faction, upd->data3);
 
                 if (game_view->player->has_view(faction)) {
@@ -121,7 +118,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         case GrantFactionControl: {
             boost::shared_ptr<GrantFactionControlMessage> upd = boost::dynamic_pointer_cast<GrantFactionControlMessage>(update);
             if (upd->data1 == game_view->player->id) {
-                Faction *faction = game->get_faction(upd->data2);
+                Faction::pointer faction = game->factions.get(upd->data2);
                 game_view->player->grant_control(faction, upd->data3);
             }
         } break;

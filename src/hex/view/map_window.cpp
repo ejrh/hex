@@ -58,17 +58,17 @@ void MapWindow::draw() {
                 continue;
 
             TileView& tile_view = view->level_view.tile_views[i][j];
-            if (tile_view.view_def == NULL)
+            if (!tile_view.view_def)
                 continue;
 
             int r = tile_view.view_def->r;
             int g = tile_view.view_def->g;
             int b = tile_view.view_def->b;
 
-            if (tile_view.structure_view != NULL) {
-                Faction *owner = tile_view.structure_view->structure->owner;
-                FactionView *faction_view = view->faction_views[owner->id];
-                FactionViewDef *faction_view_def = faction_view->view_def;
+            if (tile_view.structure_view) {
+                Faction::pointer owner = tile_view.structure_view->structure->owner;
+                FactionView::pointer faction_view = view->faction_views.get(owner->id);
+                FactionViewDef::pointer faction_view_def = faction_view->view_def;
                 r = faction_view_def->r;
                 g = faction_view_def->g;
                 b = faction_view_def->b;
@@ -86,33 +86,33 @@ void MapWindow::draw() {
             graphics->fill_rectangle(r,g,b, px, py, 4, 4);
         }
 
-    for (std::map<int, UnitStackView>::iterator iter = view->unit_stack_views.begin(); iter != view->unit_stack_views.end(); iter++) {
-        UnitStack *stack = iter->second.stack;
-        if (iter->second.moving || !view->level_view.check_visibility(stack->position))
+    for (IntMap<UnitStackView>::iterator iter = view->unit_stack_views.begin(); iter != view->unit_stack_views.end(); iter++) {
+        UnitStack::pointer stack = iter->second->stack;
+        if (iter->second->moving || !view->level_view.check_visibility(stack->position))
             continue;
 
         int px, py;
         tile_to_pixel(stack->position, &px, &py);
 
-        Faction *owner = stack->owner;
-        FactionView *faction_view = view->faction_views[owner->id];
-        FactionViewDef *faction_view_def = faction_view->view_def;
+        Faction::pointer owner = stack->owner;
+        FactionView::pointer faction_view = view->faction_views.get(owner->id);
+        FactionViewDef::pointer faction_view_def = faction_view->view_def;
 
         graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, px, py, 4, 4);
     }
 
     for (std::vector<Ghost>::iterator iter = view->ghosts.begin(); iter != view->ghosts.end(); iter++) {
         Ghost& ghost = *iter;
-        UnitStack *stack = view->game->get_stack(ghost.target_id);
-        if (!view->level_view.check_visibility(ghost.position))
+        UnitStack::pointer stack = view->game->stacks.get(ghost.target_id);
+        if (!stack || !view->level_view.check_visibility(ghost.position))
             continue;
 
         int px, py;
         tile_to_pixel(ghost.position, &px, &py);
 
-        Faction *owner = stack->owner;
-        FactionView *faction_view = view->faction_views[owner->id];
-        FactionViewDef *faction_view_def = faction_view->view_def;
+        Faction::pointer owner = stack->owner;
+        FactionView::pointer faction_view = view->faction_views.get(owner->id);
+        FactionViewDef::pointer faction_view_def = faction_view->view_def;
 
         graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, px, py, 4, 4);
     }

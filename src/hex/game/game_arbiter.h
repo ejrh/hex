@@ -15,6 +15,7 @@ public:
     virtual void receive(boost::shared_ptr<Message> update);
 
 private:
+    void process_command(boost::shared_ptr<Message> update);
     void emit(boost::shared_ptr<Message> update);
 
 private:

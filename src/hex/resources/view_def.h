@@ -14,16 +14,16 @@ public:
     ImageSeries images;
 };
 
-class FactionViewDef {
+class FactionViewDef: public boost::enable_shared_from_this<FactionViewDef> {
 public:
-    FactionViewDef() { }
-    FactionViewDef(std::string name, int r, int g, int b): name(name), r(r), g(g), b(b) { }
+    typedef boost::shared_ptr<FactionViewDef> pointer;
 
+    FactionViewDef() { }
+    FactionViewDef(std::string name): name(name) { }
+    FactionViewDef(std::string name, int r, int g, int b): name(name), r(r), g(g), b(b) { }
     std::string name;
     int r, g, b;
 };
-
-typedef std::map<std::string, FactionViewDef *> FactionViewDefMap;
 
 class TransitionDef {
 public:
@@ -42,8 +42,10 @@ public:
     ImageSeries images;
 };
 
-class TileViewDef {
+class TileViewDef: public boost::enable_shared_from_this<TileViewDef> {
 public:
+    typedef boost::shared_ptr<TileViewDef> pointer;
+
     TileViewDef() { }
     TileViewDef(std::string name): name(name) { }
     ~TileViewDef() { }
@@ -56,11 +58,10 @@ public:
     std::vector<FeatureDef> features;
 };
 
-typedef std::map<std::string, TileViewDef *> TileViewDefMap;
-
-
-class UnitViewDef {
+class UnitViewDef: public boost::enable_shared_from_this<UnitViewDef> {
 public:
+    typedef boost::shared_ptr<UnitViewDef> pointer;
+
     UnitViewDef(): hold_animations(6), move_animations(6), move_speed(60) { }
     UnitViewDef(std::string name): name(name), hold_animations(6), move_animations(6), move_speed(60) { }
     ~UnitViewDef() { }
@@ -71,10 +72,10 @@ public:
     int move_speed; // tiles per minute
 };
 
-typedef std::map<std::string, UnitViewDef *> UnitViewDefMap;
-
-class StructureViewDef {
+class StructureViewDef: public boost::enable_shared_from_this<StructureViewDef> {
 public:
+    typedef boost::shared_ptr<StructureViewDef> pointer;
+
     StructureViewDef() { }
     StructureViewDef(const std::string& name): name(name), centre_x(0), centre_y(0) { }
 
@@ -82,7 +83,5 @@ public:
     int centre_x, centre_y;
     AnimationDef animation;
 };
-
-typedef std::map<std::string, StructureViewDef *> StructureViewDefMap;
 
 #endif

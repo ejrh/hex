@@ -36,8 +36,8 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
 
         case CreateFactionView: {
             boost::shared_ptr<WrapperMessage<FactionViewDef> > upd = boost::dynamic_pointer_cast<WrapperMessage<FactionViewDef> >(msg);
-            FactionViewDef *def = new FactionViewDef(upd->data);
-            resources->faction_view_defs[def->name] = def;
+            FactionViewDef::pointer def = boost::make_shared<FactionViewDef>(upd->data);
+            resources->faction_view_defs.put_and_warn(def->name, def);
         } break;
 
         case CreateTileView: {
@@ -68,8 +68,8 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
 
         case CreateUnitView: {
             boost::shared_ptr<WrapperMessage<UnitViewDef> > upd = boost::dynamic_pointer_cast<WrapperMessage<UnitViewDef> >(msg);
-            UnitViewDef *def = new UnitViewDef(upd->data);
-            resources->unit_view_defs[def->name] = def;
+            UnitViewDef::pointer def = boost::make_shared<UnitViewDef>(upd->data);
+            resources->unit_view_defs.put_and_warn(def->name, def);
             last_unit_view_def = def;
         } break;
 

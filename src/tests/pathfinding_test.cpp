@@ -27,10 +27,10 @@ static Point target(17,12);
 
 static Resources resources;
 
-static TileType open_tile;
-static TileType closed_tile;
+static TileType::pointer open_tile(boost::make_shared<TileType>());
+static TileType::pointer closed_tile(boost::make_shared<TileType>());
 
-UnitStack party(0, source, NULL);
+UnitStack party(0, source, Faction::pointer());
 
 class PathfindingView: public GameView {
 public:
@@ -43,7 +43,7 @@ public:
         source = level_view.highlight_tile;
         if (level_view.level->contains(source) && level_view.level->contains(target)) {
             pathfinder.clear();
-            pathfinder.start(&party, source, target);
+            pathfinder.start(party, source, target);
         }
     }
 
@@ -51,7 +51,7 @@ public:
         target = level_view.highlight_tile;
         if (level_view.level->contains(source) && level_view.level->contains(target)) {
             pathfinder.clear();
-            pathfinder.start(&party, source, target);
+            pathfinder.start(party, source, target);
         }
     }
 
@@ -60,11 +60,11 @@ public:
         if (!level_view.level->contains(tile_pos))
             return;
 
-        TileType *paint;
-        if (level_view.level->tiles[tile_pos].type == &closed_tile)
-            paint = &open_tile;
+        TileType::pointer paint;
+        if (level_view.level->tiles[tile_pos].type == closed_tile)
+            paint = open_tile;
         else
-            paint = &closed_tile;
+            paint = closed_tile;
 
         int num_scanlines = 2 * brush_radius + 1;
         std::vector<int> scanlines(num_scanlines);
@@ -124,7 +124,7 @@ void PathfindingRenderer::render_tile(int x, int y, Point tile_pos) {
     Pathfinder &pathfinder = (static_cast<PathfindingView *>(view))->pathfinder;
     PathfinderNode &node = pathfinder.nodes[tile_pos];
 
-    if (tile.type == &closed_tile) {
+    if (tile.type == closed_tile) {
         SDL_Rect rect = { x + 16, y + 8, TILE_WIDTH - 32, TILE_HEIGHT - 16 };
         SDL_SetRenderDrawColor(graphics->renderer, 100,200,200, 255);
         SDL_RenderFillRect(graphics->renderer, &rect);
@@ -168,22 +168,22 @@ void generate_level(Level &level) {
 
             float value = (noise.value(px, py) + noise2.value(py, px))/6.0f;
             if (value < 0.0f)
-                level.tiles[i][j].type = &closed_tile;
+                level.tiles[i][j].type = closed_tile;
             else
-                level.tiles[i][j].type = &open_tile;
+                level.tiles[i][j].type = open_tile;
         }
     }
 }
 
 
 void run() {
-    open_tile.properties.insert(Walkable);
+    open_tile->properties.insert(Walkable);
 
-    UnitType type;
-    type.abilities.insert(Walking);
-    Unit unit;
-    unit.type = &type;
-    party.units.push_back(&unit);
+    UnitType::pointer type = boost::make_shared<UnitType>();
+    type->abilities.insert(Walking);
+    Unit::pointer unit = boost::make_shared<Unit>();
+    unit->type = type;
+    party.units.push_back(unit);
 
     Graphics graphics;
     graphics.start();

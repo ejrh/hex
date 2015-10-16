@@ -31,13 +31,13 @@ void VisibilityMap::rebuild() {
 
     for (int i = 0; i < level->tiles.height; i++)
         for (int j = 0; j < level->tiles.width; j++) {
-            UnitStack *stack = level->tiles[i][j].stack;
-            if (stack == NULL || masked_stacks.find(stack->id) != masked_stacks.end())
+            UnitStack::pointer stack = level->tiles[i][j].stack;
+            if (!stack || masked_stacks.find(stack->id) != masked_stacks.end())
                 continue;
-            apply(stack, true);
+            apply(*stack, true);
         }
 
-    //for (std::vector<UnitStack *>::iterator iter = unit_stacks.begin(); iter != unit_stacks.end(); iter++) {
+    //for (std::vector<UnitStack::pointer>::iterator iter = unit_stacks.begin(); iter != unit_stacks.end(); iter++) {
     //}
 }
 
@@ -46,33 +46,33 @@ void VisibilityMap::update() {
 
     for (int i = 0; i < level->tiles.height; i++)
         for (int j = 0; j < level->tiles.width; j++) {
-            UnitStack *stack = level->tiles[i][j].stack;
-            if (stack == NULL || masked_stacks.find(stack->id) != masked_stacks.end())
+            UnitStack::pointer stack = level->tiles[i][j].stack;
+            if (!stack || masked_stacks.find(stack->id) != masked_stacks.end())
                 continue;
-            apply(stack, true);
+            apply(*stack, true);
         }
 
-    //for (std::vector<UnitStack *>::iterator iter = unit_stacks.begin(); iter != unit_stacks.end(); iter++) {
+    //for (std::vector<UnitStack::pointer>::iterator iter = unit_stacks.begin(); iter != unit_stacks.end(); iter++) {
     //}
 }
 
-void VisibilityMap::apply(UnitStack *stack, bool visible)
+void VisibilityMap::apply(UnitStack& stack, bool visible)
 {
-    draw(stack->position, stack->sight(), visible);
+    draw(stack.position, stack.sight(), visible);
 }
 
-void VisibilityMap::mask(UnitStack *stack) {
-    masked_stacks.insert(stack->id);
+void VisibilityMap::mask(UnitStack& stack) {
+    masked_stacks.insert(stack.id);
 }
 
-void VisibilityMap::unmask(UnitStack *stack) {
-    masked_stacks.erase(stack->id);
+void VisibilityMap::unmask(UnitStack& stack) {
+    masked_stacks.erase(stack.id);
 }
 
-void VisibilityMap::overlay(UnitStack *stack) {
+void VisibilityMap::overlay(UnitStack& stack) {
 }
 
-void VisibilityMap::draw(const Point &point, int sight, bool visible)
+void VisibilityMap::draw(const Point& point, int sight, bool visible)
 {
     int num_scanlines = 2 * sight + 1;
     std::vector<int> scanlines(num_scanlines);

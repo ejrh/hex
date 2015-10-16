@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "hex/basics/intset.h"
+#include "hex/basics/objmap.h"
 #include "hex/basics/point.h"
 #include "hex/basics/vector2.h"
 #include "hex/game/traits.h"
@@ -9,8 +10,10 @@
 
 #define MOVE_SCALE 1
 
-class Faction {
+class Faction: public boost::enable_shared_from_this<Faction> {
 public:
+    typedef boost::shared_ptr<Faction> pointer;
+
     Faction(int id, const std::string& type_name, const std::string& name): id(id), type_name(type_name), name(name), ready(false) { }
     ~Faction() { }
 
@@ -21,8 +24,10 @@ public:
     bool ready;
 };
 
-class UnitType {
+class UnitType: public boost::enable_shared_from_this<UnitType> {
 public:
+    typedef boost::shared_ptr<UnitType> pointer;
+
     UnitType() { }
     ~UnitType() { }
     bool has_ability(TraitType ability) const {
@@ -38,10 +43,10 @@ public:
     int sight;
 };
 
-typedef std::map<std::string, UnitType *> UnitTypeMap;
-
-class Unit {
+class Unit: public boost::enable_shared_from_this<Unit> {
 public:
+    typedef boost::shared_ptr<Unit> pointer;
+
     Unit() { }
     ~Unit() { }
     bool has_ability(TraitType ability) const {
@@ -51,22 +56,25 @@ public:
     }
 
 public:
-    UnitType *type;
+    UnitType::pointer type;
     int moves;
     TraitSet abilities;
 };
 
 #define MAX_UNITS 12
 
-class UnitStack {
+class UnitStack: public boost::enable_shared_from_this<UnitStack> {
 public:
-    UnitStack(const Point position, Faction *owner): id(0), owner(owner), position(position) { };
-    UnitStack(int id, const Point position, Faction *owner): id(id), owner(owner), position(position) { };
+    typedef boost::shared_ptr<UnitStack> pointer;
+    typedef boost::shared_ptr<const UnitStack> const_pointer;
+
+    UnitStack(const Point position, Faction::pointer owner): id(0), owner(owner), position(position) { };
+    UnitStack(int id, const Point position, Faction::pointer owner): id(id), owner(owner), position(position) { };
     ~UnitStack() { };
 
-    void transfer_units(const IntSet unit_selection, UnitStack *target_stack);
+    void transfer_units(const IntSet unit_selection, UnitStack& target_stack);
 
-    static int sight_func(int max1, const Unit *unit) {
+    static int sight_func(int max1, Unit::pointer unit) {
         int max2 = unit->type->sight;
         return std::max(max1, max2);
     }
@@ -76,13 +84,15 @@ public:
 
 public:
     int id;
-    Faction *owner;
+    Faction::pointer owner;
     Point position;
-    std::vector<Unit *> units;
+    std::vector<Unit::pointer> units;
 };
 
-class StructureType {
+class StructureType: public boost::enable_shared_from_this<StructureType> {
 public:
+    typedef boost::shared_ptr<StructureType> pointer;
+
     StructureType() { }
     bool has_ability(TraitType ability) const {
         if (abilities.count(ability) == 1)
@@ -96,23 +106,25 @@ public:
     int sight;
 };
 
-typedef std::map<std::string, StructureType *> StructureTypeMap;
-
-class Structure {
+class Structure: public boost::enable_shared_from_this<Structure> {
 public:
+    typedef boost::shared_ptr<Structure> pointer;
+
     Structure();
-    Structure(const Point& position, StructureType *type, Faction *owner): position(position), type(type), owner(owner) { };
+    Structure(const Point& position, StructureType::pointer type, Faction::pointer owner): position(position), type(type), owner(owner) { };
 
     int sight() { return type->has_ability(LongSight) ? 7 : 3; }
 
 public:
     Point position;
-    StructureType *type;
-    Faction *owner;
+    StructureType::pointer type;
+    Faction::pointer owner;
 };
 
-class TileType {
+class TileType: public boost::enable_shared_from_this<TileType> {
 public:
+    typedef boost::shared_ptr<TileType> pointer;
+
     TileType() { }
     ~TileType() { }
 
@@ -125,21 +137,19 @@ public:
     TraitSet properties;
 };
 
-typedef std::map<std::string, TileType *> TileTypeMap;
-
 class Tile {
 public:
-    Tile(): type(NULL), stack(NULL), structure(NULL), road(false) { }
-    Tile(TileType *type): type(type), stack(NULL), structure(NULL), road(false) { }
+    Tile(): type(), stack(), structure(), road(false) { }
+    Tile(TileType::pointer type): type(type), stack(), structure(), road(false) { }
 
     bool has_property(TraitType trait) const {
         return type->has_property(trait);
     }
 
 public:
-    TileType *type;
-    UnitStack *stack;
-    Structure *structure;
+    TileType::pointer type;
+    UnitStack::pointer stack;
+    Structure::pointer structure;
     bool road;
 };
 
@@ -160,18 +170,20 @@ std::ostream& operator<<(std::ostream &strm, const Level& level);
 
 class Game {
 public:
-    Game(): game_id(0), message_id(0), level(0, 0) { }
+    Game(): tile_types("tile types"), unit_types("unit types"), structure_types("structure types"),
+            game_id(0), message_id(0), level(0, 0),
+            factions("factions"), stacks("stacks") { }
     ~Game() { }
 
     void set_level_data(const Point& offset, const std::vector<std::string>& tile_data);
-    TileType *create_tile_type(TileType& tile_type);
-    UnitType *create_unit_type(UnitType& unit_type);
-    StructureType *create_structure_type(StructureType& structure_type);
+    TileType::pointer create_tile_type(const TileType& tile_type);
+    UnitType::pointer create_unit_type(const UnitType& unit_type);
+    StructureType::pointer create_structure_type(StructureType& structure_type);
 
-    Faction *create_faction(int id, const std::string& type_name, const std::string& name);
-    UnitStack *create_unit_stack(int id, const Point position, int owner_id);
-    Unit *create_unit(int stack_id, const std::string& type_name);
-    Structure *create_structure(const Point& position, const std::string& type_name, int owner_id);
+    Faction::pointer create_faction(int id, const std::string& type_name, const std::string& name);
+    UnitStack::pointer create_unit_stack(int id, const Point position, int owner_id);
+    Unit::pointer create_unit(int stack_id, const std::string& type_name);
+    Structure::pointer create_structure(const Point& position, const std::string& type_name, int owner_id);
     void destroy_unit_stack(int stack_id);
     void transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id);
 
@@ -180,23 +192,20 @@ public:
     void begin_turn(int turn_number);
     void end_turn();
 
-    Faction *get_faction(int id);
-    UnitStack *get_stack(int id);
-    Structure *get_structure(const Point& position);
     int get_free_stack_id();
 
 public:
-    TileTypeMap tile_types;
-    UnitTypeMap unit_types;
-    StructureTypeMap structure_types;
+    StrMap<TileType> tile_types;
+    StrMap<UnitType> unit_types;
+    StrMap<StructureType> structure_types;
 
     int game_id;
     int message_id;
     int turn_number;
     bool in_turn;
     Level level;
-    std::map<int, Faction *> factions;
-    std::map<int, UnitStack *> stacks;
+    IntMap<Faction> factions;
+    IntMap<UnitStack> stacks;
 };
 
 #endif

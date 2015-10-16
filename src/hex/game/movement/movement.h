@@ -10,10 +10,10 @@ class TileType;
 
 class StackMovePoints {
 public:
-    StackMovePoints(const UnitStack *stack) {
-        points.resize(stack->units.size());
-        for (unsigned int i = 0; i < stack->units.size(); i++) {
-            points[i] = stack->units[i]->moves;
+    StackMovePoints(const UnitStack& stack) {
+        points.resize(stack.units.size());
+        for (unsigned int i = 0; i < stack.units.size(); i++) {
+            points[i] = stack.units[i]->moves;
         }
     }
     bool exhausted() const {
@@ -34,12 +34,12 @@ class MovementModel {
 public:
     MovementModel(Level *level);
 
-    int cost_to(const UnitStack *unit, const Point& tile_pos) const;
-    int cost_to(const Unit *unit, const Point& tile_pos) const;
-    int admits(const UnitType *unit_type, const TileType *tile_type) const;
-    void move(UnitStack *party, const Point& tile_pos) const;
-    int check_path(const UnitStack *stack, const Path& path) const;
-    bool check_step(const UnitStack *stack, StackMovePoints *points, const Path& path, int step_num) const;
+    int cost_to(const UnitStack& party, const Point& tile_pos) const;
+    int cost_to(const Unit& unit, const Point& tile_pos) const;
+    int admits(const UnitType& unit_type, const TileType& tile_type) const;
+    void move(UnitStack& party, const Point& tile_pos) const;
+    int check_path(const UnitStack& stack, const Path& path) const;
+    bool check_step(const UnitStack& stack, StackMovePoints *points, const Path& path, int step_num) const;
 
 private:
     Level *level;

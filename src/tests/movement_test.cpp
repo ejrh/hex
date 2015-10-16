@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(simple_movement) {
     unsigned long post_checksum = game_checksum(game);
 
     BOOST_CHECK_NE(pre_checksum, post_checksum);
-    BOOST_CHECK_EQUAL(game.stacks[1]->position, Point(1,3));
+    BOOST_CHECK_EQUAL(game.stacks.get(1)->position, Point(1,3));
 }
 
 BOOST_AUTO_TEST_CASE(split_movement) {
@@ -134,10 +134,10 @@ BOOST_AUTO_TEST_CASE(split_movement) {
     unsigned long post_checksum = game_checksum(game);
 
     BOOST_CHECK_NE(pre_checksum, post_checksum);
-    BOOST_CHECK_EQUAL(game.stacks[1]->position, Point(2,2));
-    BOOST_CHECK_EQUAL(game.stacks[1]->units.size(), 1);
-    BOOST_CHECK_EQUAL(game.stacks[3]->position, Point(1,3));
-    BOOST_CHECK_EQUAL(game.stacks[3]->units.size(), 1);
+    BOOST_CHECK_EQUAL(game.stacks.get(1)->position, Point(2,2));
+    BOOST_CHECK_EQUAL(game.stacks.get(1)->units.size(), 1);
+    BOOST_CHECK_EQUAL(game.stacks.get(3)->position, Point(1,3));
+    BOOST_CHECK_EQUAL(game.stacks.get(3)->units.size(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(split_and_merge_movement_0) {
@@ -152,10 +152,10 @@ BOOST_AUTO_TEST_CASE(split_and_merge_movement_0) {
     unsigned long post_checksum = game_checksum(game);
 
     BOOST_CHECK_NE(pre_checksum, post_checksum);
-    BOOST_CHECK_EQUAL(game.stacks[1]->position, Point(2,2));
-    BOOST_CHECK_EQUAL(game.stacks[1]->units.size(), 1);
-    BOOST_CHECK_EQUAL(game.stacks[2]->position, Point(2,4));
-    BOOST_CHECK_EQUAL(game.stacks[2]->units.size(), 2);
+    BOOST_CHECK_EQUAL(game.stacks.get(1)->position, Point(2,2));
+    BOOST_CHECK_EQUAL(game.stacks.get(1)->units.size(), 1);
+    BOOST_CHECK_EQUAL(game.stacks.get(2)->position, Point(2,4));
+    BOOST_CHECK_EQUAL(game.stacks.get(2)->units.size(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(split_and_merge_movement_1) {
@@ -170,10 +170,10 @@ BOOST_AUTO_TEST_CASE(split_and_merge_movement_1) {
     unsigned long post_checksum = game_checksum(game);
 
     BOOST_CHECK_NE(pre_checksum, post_checksum);
-    BOOST_CHECK_EQUAL(game.stacks[1]->position, Point(2,2));
-    BOOST_CHECK_EQUAL(game.stacks[1]->units.size(), 1);
-    BOOST_CHECK_EQUAL(game.stacks[2]->position, Point(2,4));
-    BOOST_CHECK_EQUAL(game.stacks[2]->units.size(), 2);
+    BOOST_CHECK_EQUAL(game.stacks.get(1)->position, Point(2,2));
+    BOOST_CHECK_EQUAL(game.stacks.get(1)->units.size(), 1);
+    BOOST_CHECK_EQUAL(game.stacks.get(2)->position, Point(2,4));
+    BOOST_CHECK_EQUAL(game.stacks.get(2)->units.size(), 2);
 }
 
 BOOST_AUTO_TEST_CASE(merge_movement) {
@@ -189,9 +189,9 @@ BOOST_AUTO_TEST_CASE(merge_movement) {
     unsigned long post_checksum = game_checksum(game);
 
     BOOST_CHECK_NE(pre_checksum, post_checksum);
-    BOOST_CHECK(game.get_stack(1) == NULL);
-    BOOST_CHECK_EQUAL(game.stacks[2]->position, Point(2,4));
-    BOOST_CHECK_EQUAL(game.stacks[2]->units.size(), 3);
+    BOOST_CHECK(!game.stacks.find(1));
+    BOOST_CHECK_EQUAL(game.stacks.get(2)->position, Point(2,4));
+    BOOST_CHECK_EQUAL(game.stacks.get(2)->units.size(), 3);
 }
 
 BOOST_AUTO_TEST_CASE(invalid_stack) {

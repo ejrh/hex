@@ -8,7 +8,7 @@
 #include "hex/game/movement/movement.h"
 #include "hex/messaging/updater.h"
 
-void generate_level(Level &level, TileTypeMap& types) {
+void generate_level(Level &level, std::map<std::string, TileType::pointer>& types) {
     PerlinNoise noise(5, 5);
     PerlinNoise noise2(10, 10);
 
@@ -122,7 +122,8 @@ void create_game(Updater& updater) {
     game.level.width = width;
     game.level.height = height;
     game.level.tiles.resize(width, height);
-    generate_level(game.level, game.tile_types);
+    std::map<std::string, TileType::pointer> tile_type_map = game.tile_types;
+    generate_level(game.level, tile_type_map);
 
     updater.receive(boost::make_shared<WrapperMessage2<int, int> >(SetLevel, game.level.width, game.level.height));
     for (int i = 0; i < game.level.height; i++) {
@@ -131,7 +132,7 @@ void create_game(Updater& updater) {
         for (int j = 0; j < game.level.width; j++) {
             Tile& tile = game.level.tiles[i][j];
             std::ostringstream data_ss;
-            TileType *tile_type = tile.type;
+            TileType::pointer tile_type = tile.type;
             data_ss << tile_type->name;
             if (tile.road)
                 data_ss << "/r";
@@ -145,10 +146,10 @@ void create_game(Updater& updater) {
     updater.receive(create_message(CreateFaction, 3, "drow", "Great Drow Empire"));
 
     for (int i = 1; i <= 40; i++) {
-        UnitTypeMap::iterator item = game.unit_types.begin();
+        StrMap<UnitType>::iterator item = game.unit_types.begin();
         std::advance(item, rand() % game.unit_types.size());
 
-        std::map<int, Faction *>::iterator faction_iter = game.factions.begin();
+        IntMap<Faction>::iterator faction_iter = game.factions.begin();
         std::advance(faction_iter, rand() % game.factions.size());
         int faction = faction_iter->second->id;
 
@@ -157,7 +158,7 @@ void create_game(Updater& updater) {
         for (int j = 0; j < 10; j++) {
             int tx = rand() % game.level.width;
             int ty = rand() % game.level.height;
-            if (movement_model.admits(item->second, game.level.tiles[ty][tx].type)) {
+            if (movement_model.admits(*item->second, *game.level.tiles[ty][tx].type)) {
                 p = Point(tx, ty);
                 break;
             }
@@ -186,11 +187,11 @@ void create_game(Updater& updater) {
                 if (!game.level.contains(neighbour_pos[i]))
                     continue;
                 Tile& neighbour = game.level.tiles[neighbour_pos[i]];
-                if (neighbour.type == game.tile_types["water"])
+                if (neighbour.type == tile_type_map["water"])
                     water_count++;
             }
             if (water_count >= 3 && rand() % 4 == 0) {
-                std::map<int, Faction *>::iterator faction_iter = game.factions.begin();
+                IntMap<Faction>::iterator faction_iter = game.factions.begin();
                 std::advance(faction_iter, rand() % game.factions.size());
                 int faction = faction_iter->second->id;
 
