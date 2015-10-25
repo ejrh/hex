@@ -31,6 +31,7 @@ public:
     void draw_lines(Uint8 R, Uint8 G, Uint8 B, SDL_Point *points, int count);
     void draw_rectangle(Uint8 R, Uint8 G, Uint8 B, int x, int y, int w, int h);
     void fill_rectangle(Uint8 R, Uint8 G, Uint8 B, int x, int y, int w, int h);
+    void fill_rectangle(Uint8 R, Uint8 G, Uint8 B, SDL_Rect& rect);
     void update();
     int get_width() { return width; }
     int get_height() { return height; }

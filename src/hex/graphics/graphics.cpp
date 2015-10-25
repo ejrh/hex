@@ -70,6 +70,11 @@ void Graphics::fill_rectangle(Uint8 R, Uint8 G, Uint8 B, int x, int y, int w, in
     SDL_RenderFillRect(renderer, &rect);
 }
 
+void Graphics::fill_rectangle(Uint8 R, Uint8 G, Uint8 B, SDL_Rect& rect) {
+    SDL_SetRenderDrawColor(renderer, R, G, B, 255);
+    SDL_RenderFillRect(renderer, &rect);
+}
+
 void Graphics::update() {
     SDL_RenderPresent(renderer);
 }

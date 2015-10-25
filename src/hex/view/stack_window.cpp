@@ -10,7 +10,20 @@
 
 StackWindow::StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view, LevelRenderer *renderer):
         UiWindow(x, y, width, height), resources(resources), graphics(graphics), view(view), renderer(renderer) {
+    int px = x + StackWindow::border;
+    int py = y + StackWindow::border;
 
+    unit_rectangles.resize(MAX_UNITS);
+    for (unsigned int i = 0; i < MAX_UNITS; i++) {
+        SDL_Rect r = { px, py, StackWindow::unit_width, StackWindow::unit_height };
+        unit_rectangles[i] = r;
+
+        px += StackWindow::unit_width + StackWindow::padding;
+        if ((i+1) % 4 == 0) {
+            px = x + StackWindow::border;
+            py += StackWindow::unit_height + StackWindow::padding;
+        }
+    }
 }
 
 void StackWindow::draw() {
@@ -18,28 +31,21 @@ void StackWindow::draw() {
 
     UnitStack::pointer stack = view->game->stacks.find(view->selected_stack_id);
     if (stack) {
-        int px = x + StackWindow::border;
-        int py = y + StackWindow::border;
-        int i = 0;
-
         TextFormat tf(graphics, SmallFont10, true, 255,255,255);
 
-        for (std::vector<Unit::pointer>::iterator iter = stack->units.begin(); iter != stack->units.end(); iter++) {
-            graphics->fill_rectangle(50,50,50, px, py, StackWindow::unit_width, StackWindow::unit_height);
-            Unit& unit = **iter;
+        for (unsigned int i = 0; i < stack->units.size(); i++) {
+            graphics->fill_rectangle(50,50,50, unit_rectangles[i]);
+            Unit& unit = *stack->units[i];
             UnitViewDef& view_def = *resources->get_unit_view_def(unit.type->name);
-            renderer->draw_unit(px + StackWindow::unit_width / 2, py + StackWindow::unit_height / 2, unit, view_def);
+            int px = unit_rectangles[i].x + StackWindow::unit_width / 2;
+            int py = unit_rectangles[i].y + StackWindow::unit_height / 2;
+            renderer->draw_unit(px, py, unit, view_def);
 
             std::ostringstream ss;
             ss << unit.moves / MOVE_SCALE;
-            tf.write_text(ss.str(), px + StackWindow::unit_width, py + StackWindow::unit_height);
-
-            px += StackWindow::unit_width + StackWindow::padding;
-            i++;
-            if (i % 4 == 0) {
-                px = x + StackWindow::border;
-                py += StackWindow::unit_height + StackWindow::padding;
-            }
+            px = unit_rectangles[i].x + StackWindow::unit_width;
+            py = unit_rectangles[i].y + StackWindow::unit_height;
+            tf.write_text(ss.str(), px, py);
         }
     }
 }

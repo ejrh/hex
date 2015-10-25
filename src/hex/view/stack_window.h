@@ -28,6 +28,8 @@ private:
     Graphics *graphics;
     GameView *view;
     LevelRenderer *renderer;
+
+    std::vector<SDL_Rect> unit_rectangles;
 };
 
 #endif
