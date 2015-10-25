@@ -1,7 +1,6 @@
 #ifndef VIEW_DATA_H
 #define VIEW_DATA_H
 
-#include "hex/graphics/graphics.h"
 #include "hex/resources/image_ref.h"
 
 

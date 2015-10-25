@@ -26,6 +26,10 @@ public:
         val |= (1 << i);
     }
 
+    void toggle(unsigned int i) {
+        val ^= (1 << i);
+    }
+
     void clear() {
         val = 0;
     }

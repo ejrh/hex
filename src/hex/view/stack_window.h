@@ -12,6 +12,7 @@ class LevelRenderer;
 class StackWindow: public UiWindow {
 public:
     StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view, LevelRenderer *renderer);
+    bool receive_event(SDL_Event *evt);
     void draw();
 
     static const int units_across = 4;

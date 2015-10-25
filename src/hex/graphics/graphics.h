@@ -43,4 +43,8 @@ public:
     int height;
 };
 
+inline bool rect_contains(const SDL_Rect& rect, int px, int py) {
+    return px >= rect.x && py >= rect.y && px < rect.x + rect.w && py < rect.y + rect.h;
+}
+
 #endif

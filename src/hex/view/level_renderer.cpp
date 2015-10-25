@@ -204,7 +204,7 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
     graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, x+16, y-20, 8, 12);
 }
 
-void LevelRenderer::draw_unit(int x, int y, Unit &unit, UnitViewDef& view_def) {
+void LevelRenderer::draw_unit(int x, int y, Unit &unit, UnitViewDef& view_def, int highlight) {
     int facing = 2;
     std::vector<ImageRef>& image_series = view_def.hold_animations[facing].images;
     if (image_series.size() == 0)
@@ -221,6 +221,8 @@ void LevelRenderer::draw_unit(int x, int y, Unit &unit, UnitViewDef& view_def) {
     y -= image->clip_y_offset + image->clip_height / 2;
 
     graphics->blit(image, x, y, SDL_BLENDMODE_BLEND);
+    if (highlight != 0)
+        graphics->blit(image, x, y, SDL_BLENDMODE_ADD, highlight);
 }
 
 void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {
