@@ -12,19 +12,12 @@
 #include "hex/view/view.h"
 
 
-Ghost::Ghost(int target_id, Point position, Path path): target_id(target_id), position(position), path(path), step(0), progress(0) {
-}
-
-
 GameView::GameView(Game *game, Player *player, Resources *resources, MessageReceiver *dispatcher):
         game(game), player(player), level_view(&game->level), resources(resources), dispatcher(dispatcher),
         last_update(0), phase(0),
         faction_views("faction_views"), unit_stack_views("unit_stack_views"),
         selected_stack_id(0), selected_structure(), debug_mode(false) {
 }
-
-// Assumes 1000 increments between frames
-#define frame_incr(bpm, update_ms) ((bpm) * (update_ms) / 60)
 
 void GameView::update() {
     unsigned int ticks = SDL_GetTicks();
@@ -60,41 +53,11 @@ void GameView::update() {
     while (iter != ghosts.end()) {
         Ghost& ghost = *iter;
 
-        int finished = update_ghost(ghost, update_ms);
-        if (finished)
+        ghost.update(update_ms);
+        if (ghost.finished)
             iter = ghosts.erase(iter);
         else
             iter++;
-    }
-}
-
-bool GameView::update_ghost(Ghost& ghost, unsigned int update_ms) {
-    UnitStack::pointer target = game->stacks.get(ghost.target_id);
-    UnitStackView::pointer target_view = get_stack_view(ghost.target_id);
-    UnitViewDef::pointer view_def = target_view->view_def;
-    ghost.progress += frame_incr(view_def->move_speed, update_ms);
-    if (ghost.progress > 1000) {
-        ghost.position = ghost.path[ghost.step];
-        ghost.step++;
-        ghost.progress -= 1000;
-    }
-    if (ghost.step >= ghost.path.size()) {
-        target_view->locked = false;
-        target_view->moving = false;
-        if (player->has_view(target->owner)) {
-            level_view.visibility.unmask(*target);
-            update_visibility();
-        }
-        return true;
-    } else {
-        Point next_pos = ghost.path[ghost.step];
-        target_view->facing = get_direction(next_pos, ghost.position);
-        target_view->phase += frame_incr(view_def->move_animations[target_view->facing].bpm, update_ms);
-        if (player->has_view(target->owner)) {
-            level_view.discovered.draw(next_pos, target->sight(), true);
-            level_view.ghost_visibility.draw(next_pos, target->sight(), true);
-        }
-        return false;
     }
 }
 
@@ -263,7 +226,7 @@ void GameView::transfer_units(int stack_id, const IntSet selected_units, Path pa
     target_view->locked = true;
     if (new_target)
         target_view->moving = true;
-    Ghost ghost(target_stack->id, stack->position, path);
+    Ghost ghost(this, target_stack->id, stack->position, path);
     ghosts.push_back(ghost);
 }
 

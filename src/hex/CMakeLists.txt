@@ -76,6 +76,7 @@ set(srcs
         ui/ui.h
         ui/ui_window.cpp
         view/game_view.cpp
+        view/ghost.cpp
         view/level_renderer.cpp
         view/level_renderer.h
         view/level_view.cpp

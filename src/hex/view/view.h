@@ -70,11 +70,16 @@ public:
     int move_steps;
 };
 
+class GameView;
+
 class Ghost {
 public:
-    Ghost(int target_id, Point position, Path path);
+    Ghost(GameView *view, int target_id, Point position, Path path);
+    void update(unsigned int update_ms);
 
 private:
+    bool finished;
+    GameView *view;
     int target_id;
     Point position;
     Path path;
@@ -122,7 +127,6 @@ public:
     GameView(Game *game, Player *player, Resources *resources, MessageReceiver *dispatcher);
 
     void update();
-    bool update_ghost(Ghost& ghost, unsigned int update_ms);
     void left_click_tile(const Point& tile_pos);
     void right_click_tile(const Point& tile_pos);
     void set_drawn_path(const Point& start, const Path& path);
@@ -152,5 +156,8 @@ public:
 
     bool debug_mode;
 };
+
+// Assumes 1000 increments between frames
+#define frame_incr(bpm, update_ms) ((bpm) * (update_ms) / 60)
 
 #endif
