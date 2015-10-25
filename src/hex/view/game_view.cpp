@@ -141,6 +141,8 @@ void GameView::left_click_tile(const Point& tile_pos) {
 }
 
 void GameView::right_click_tile(const Point& tile_pos) {
+    if (!selected_stack_id)
+        return;
 
     UnitStack::pointer stack = game->stacks.get(selected_stack_id);
     UnitStackView::pointer stack_view = get_stack_view(selected_stack_id);
