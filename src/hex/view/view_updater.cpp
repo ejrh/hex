@@ -49,14 +49,8 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         case CreateStack: {
             boost::shared_ptr<CreateStackMessage> upd = boost::dynamic_pointer_cast<CreateStackMessage>(update);
             UnitStack::pointer stack = game->stacks.get(upd->data1);
-
-            UnitViewDef::pointer view_def;
-            if (!stack->units.empty()) {
-                UnitType& unit_type = *stack->units[0]->type;
-                view_def = resources->get_unit_view_def(unit_type.name);
-            }
-
-            UnitStackView::pointer stack_view = boost::make_shared<UnitStackView>(stack, view_def);
+            UnitStackView::pointer stack_view = boost::make_shared<UnitStackView>(stack);
+            game_view->set_view_def(*stack_view);
             game_view->unit_stack_views.put(stack->id, stack_view);
         } break;
 
@@ -68,10 +62,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
                 return;
 
             UnitStackView::pointer stack_view = game_view->unit_stack_views.get(upd->data1);
-
-            UnitType& unit_type = *stack->units[0]->type;
-            UnitViewDef::pointer view_def = resources->get_unit_view_def(unit_type.name);
-            stack_view->view_def = view_def;
+            game_view->set_view_def(*stack_view);
 
             if (game_view->player->has_view(stack->owner)) {
                 game_view->update_visibility();

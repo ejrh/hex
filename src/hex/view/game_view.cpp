@@ -201,32 +201,12 @@ TileView *GameView::get_tile_view(const Point tile_pos) {
 
 void GameView::transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id) {
     UnitStack::pointer stack = game->stacks.get(stack_id);
-    if (!stack) {
-        BOOST_LOG_TRIVIAL(warning) << "No stack with id " << stack_id;
-        return;
-    }
     UnitStack::pointer target_stack = game->stacks.get(target_id);
-    if (!target_stack) {
-        BOOST_LOG_TRIVIAL(warning) << "No stack with id " << target_id;
-        return;
-    }
 
     if (path.empty())
         return;
 
-    bool new_target = selected_units.size() == target_stack->units.size();
-
-    UnitStackView::pointer stack_view = get_stack_view(stack->id);
-    stack_view->path = Path();
-    if (selected_stack_id == stack->id) {
-        set_drawn_path(stack->position, stack_view->path);
-    }
-
-    UnitStackView::pointer target_view = get_stack_view(target_stack->id);
-    target_view->locked = true;
-    if (new_target)
-        target_view->moving = true;
-    Ghost ghost(this, target_stack->id, stack->position, path);
+    Ghost ghost(this, stack, selected_units, path, target_stack);
     ghosts.push_back(ghost);
 }
 
@@ -237,5 +217,15 @@ void GameView::mark_ready() {
         if (player->has_control(faction_view.faction)) {
             dispatcher->receive(create_message(FactionReady, faction_id, true));
         }
+    }
+}
+
+void GameView::set_view_def(UnitStackView& stack_view) const {
+    UnitStack::pointer& stack = stack_view.stack;
+    if (!stack->units.empty()) {
+        UnitType& unit_type = *stack->units[0]->type;
+        stack_view.view_def = resources->get_unit_view_def(unit_type.name);
+    } else {
+        stack_view.view_def.reset();
     }
 }

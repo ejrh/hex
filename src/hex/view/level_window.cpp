@@ -240,12 +240,10 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
 }
 
 void LevelWindow::draw_ghost(Ghost *ghost) {
-    UnitStackView::pointer stack_view = view->get_stack_view(ghost->target_id);
-    if (!stack_view)
-        return;
+    UnitStackView::pointer& stack_view = ghost->stack_view;
 
-    Point prev_pos = ghost->position;
-    Point next_pos = ghost->path[ghost->step];
+    Point prev_pos = stack_view->stack->position;
+    Point next_pos = stack_view->path[ghost->step];
 
     if (!view->debug_mode && !view->level_view.check_visibility(prev_pos) && !view->level_view.check_visibility(next_pos))
         return;

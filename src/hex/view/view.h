@@ -52,9 +52,8 @@ class UnitStackView: public boost::enable_shared_from_this<UnitStackView> {
 public:
     typedef boost::shared_ptr<UnitStackView> pointer;
 
-    UnitStackView(): stack() { }
-    UnitStackView(UnitStack::pointer stack, UnitViewDef::pointer view_def):
-        stack(stack), view_def(view_def),
+    UnitStackView(UnitStack::pointer stack):
+        stack(stack),
         facing(rand() % 6), variation(rand()), phase(rand()), selected(false), moving(false), locked(false), move_steps(0) { }
     ~UnitStackView() { }
 
@@ -74,15 +73,16 @@ class GameView;
 
 class Ghost {
 public:
-    Ghost(GameView *view, int target_id, Point position, Path path);
+    Ghost(GameView *view, UnitStack::pointer stack, const IntSet selected_units, Path path, UnitStack::pointer target_stack);
     void update(unsigned int update_ms);
 
-private:
+public:
     bool finished;
     GameView *view;
-    int target_id;
-    Point position;
-    Path path;
+
+private:
+    UnitStackView::pointer target_view;
+    UnitStackView::pointer stack_view;
     unsigned int step;
     unsigned int progress;
 
@@ -136,6 +136,7 @@ public:
     TileView *get_tile_view(const Point tile_pos);
     void transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id);
     void mark_ready();
+    void set_view_def(UnitStackView& stack_view) const;
 
 public:
     Game *game;

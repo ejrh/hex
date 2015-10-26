@@ -72,6 +72,7 @@ public:
     UnitStack(int id, const Point position, Faction::pointer owner): id(id), owner(owner), position(position) { };
     ~UnitStack() { };
 
+    UnitStack::pointer copy_subset(const IntSet unit_selection) const;
     void transfer_units(const IntSet unit_selection, UnitStack& target_stack);
 
     static int sight_func(int max1, Unit::pointer unit) {

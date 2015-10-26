@@ -103,12 +103,10 @@ void MapWindow::draw() {
 
     for (std::vector<Ghost>::iterator iter = view->ghosts.begin(); iter != view->ghosts.end(); iter++) {
         Ghost& ghost = *iter;
-        UnitStack::pointer stack = view->game->stacks.get(ghost.target_id);
-        if (!stack || !view->level_view.check_visibility(ghost.position))
-            continue;
+        UnitStack::pointer& stack = ghost.stack_view->stack;
 
         int px, py;
-        tile_to_pixel(ghost.position, &px, &py);
+        tile_to_pixel(stack->position, &px, &py);
 
         Faction::pointer owner = stack->owner;
         FactionView::pointer faction_view = view->faction_views.get(owner->id);
