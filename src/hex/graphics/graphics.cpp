@@ -17,19 +17,27 @@ Image::~Image() {
         SDL_DestroyTexture(texture);
 }
 
-void Graphics::start() {
-    SDL_Init(SDL_INIT_VIDEO);
+void Graphics::start(const std::string& title, int width, int height, bool fullscreen) {
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+        throw Error() << "SDL error while initialising SDL: " << SDL_GetError();
 
-    window = SDL_CreateWindow("Hex", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, 0);
+    if (width == 0 || height == 0) {
+        window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    } else {
+        window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
+    }
+    if (!window)
+        throw Error() << "SDL error while creating window: " << SDL_GetError();
 
-    SDL_DisplayMode display_mode;
-    SDL_GetWindowDisplayMode(window, &display_mode);
-    width = display_mode.w;
-    height = display_mode.h;
+    SDL_GetWindowSize(window, &this->width, &this->height);
 
     renderer = SDL_CreateRenderer(window, -1, 0);
+    if (!renderer)
+        throw Error() << "SDL error while creating renderer: " << SDL_GetError();
 
     IMG_Init(IMG_INIT_PNG);
+
+    BOOST_LOG_TRIVIAL(info) << boost::format("Window size: %d by %d") % this->width % this->height;
 }
 
 void Graphics::stop() {

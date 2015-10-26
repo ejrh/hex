@@ -38,6 +38,8 @@ struct Options {
     std::string host_name;
     std::string host_addr;
     std::string load_filename;
+    int width, height;
+    bool fullscreen;
 };
 
 void load_resources(Resources *resources, Graphics *graphics) {
@@ -134,7 +136,7 @@ private:
 void run(Options& options) {
     Graphics graphics;
 
-    graphics.start();
+    graphics.start("Hex", options.width, options.height, options.fullscreen);
 
     Resources resources;
     load_resources(&resources, &graphics);
@@ -238,8 +240,11 @@ bool parse_options(int argc, char *argv[], Options& options) {
     desc.add_options()
         ("help", "produce help message")
         ("server", "run in server mode")
-        ("connect", po::value<std::string>(), "connect to server")
-        ("load", po::value<std::string>(), "load game file")
+        ("connect", po::value<std::string>()->value_name("ADDRESS"), "connect to server")
+        ("load", po::value<std::string>()->value_name("FILENAME"), "load game file")
+        ("width", po::value<int>()->value_name("WIDTH"), "screen width")
+        ("height", po::value<int>()->value_name("HEIGHT"), "screen height")
+        ("fullscreen", "fullscreen mode")
     ;
 
     po::variables_map vm;
@@ -268,6 +273,24 @@ bool parse_options(int argc, char *argv[], Options& options) {
         options.load_filename = vm["load"].as<std::string>();
     }
 
+    if (vm.count("fullscreen")) {
+        options.fullscreen = true;
+        options.width = 0;
+        options.height = 0;
+    } else {
+        options.fullscreen = false;
+        options.width = 800;
+        options.height = 600;
+    }
+
+    if (vm.count("width")) {
+        options.width = vm["width"].as<int>();
+    }
+
+    if (vm.count("height")) {
+        options.height = vm["height"].as<int>();
+    }
+
     return true;
 }
 
@@ -278,6 +301,8 @@ int main(int argc, char *argv[]) {
             run(options);
     } catch (Error &ex) {
         BOOST_LOG_TRIVIAL(fatal) << "Failed with: " << ex.what();
+    } catch (boost::program_options::error& ex) {
+        std::cout << "Error: " << ex.what();
     }
 
     return 0;

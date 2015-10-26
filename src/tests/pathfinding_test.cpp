@@ -186,7 +186,7 @@ void run() {
     party.units.push_back(unit);
 
     Graphics graphics;
-    graphics.start();
+    graphics.start("Pathfinding test", 800, 600, false);
 
     Game game;
     game.level.resize(200, 200);

@@ -40,7 +40,7 @@ void draw_noise(Graphics &graphics, PerlinNoise &noise) {
 void run() {
     PerlinNoise noise(8, 6);
     Graphics graphics;
-    graphics.start();
+    graphics.start("Noise test", 800, 600, false);
 
     draw_noise(graphics, noise);
 
