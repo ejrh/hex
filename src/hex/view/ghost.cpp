@@ -16,6 +16,7 @@ Ghost::Ghost(GameView *view, UnitStack::pointer stack, const IntSet selected_uni
     stack_view = boost::make_shared<UnitStackView>(ghost_stack);
     view->set_view_def(*stack_view);
     stack_view->path = path;
+    stack_view->moving = true;
 
     // Lock target
     target_view = view->get_stack_view(target_stack->id);
