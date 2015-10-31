@@ -18,4 +18,5 @@ TRAIT_TYPE(Swimming)
 TRAIT_TYPE(Flying)
 TRAIT_TYPE(Climbing)
 
+TRAIT_TYPE(Capturable)
 TRAIT_TYPE(LongSight)

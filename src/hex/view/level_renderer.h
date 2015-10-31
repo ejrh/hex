@@ -25,11 +25,13 @@ protected:
     void clear(int x, int y, int width, int height);
     virtual void render_tile(int x, int y, Point tile_pos);
     virtual void render_tile_transitions(int x, int y, Point tile_pos);
-    virtual void render_structure(int x, int y, Point tile_pos);
-    virtual void render_unit_stack(int x, int y, Point tile_pos);
+    virtual void render_features(int x, int y, Point tile_pos);
+    virtual void render_objects(int x, int y, Point tile_pos);
     virtual void draw_unit_stack(int x, int y, UnitStackView& stack_view);
     virtual void draw_unit(int x, int y, Unit &unit, UnitViewDef& view_def, int highlight = 0);
     virtual void render_path_arrow(int x, int y, Point tile_pos);
+
+    Image *get_image_or_placeholder(ImageSeries& image_series, int pos, const std::string name);
 
 public:
     bool show_hexagons;

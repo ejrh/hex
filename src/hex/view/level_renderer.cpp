@@ -54,9 +54,17 @@ void LevelRenderer::render_tile_transitions(int x, int y, Point tile_pos) {
         int feature_y = y - tile_view.feature_y;
         graphics->blit(tile_view.feature, feature_x, feature_y, SDL_BLENDMODE_BLEND, alpha);
     }
+
+    for (std::vector<Image *>::iterator iter = tile_view.roads.begin(); iter != tile_view.roads.end(); iter++) {
+        Image *road = *iter;
+        if (road != NULL) {
+            int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
+            graphics->blit(road, x - road->width / 2, y - road->height / 2, SDL_BLENDMODE_BLEND, alpha);
+        }
+    }
 }
 
-void LevelRenderer::render_structure(int x, int y, Point tile_pos) {
+void LevelRenderer::render_features(int x, int y, Point tile_pos) {
     TileView& tile_view = view->level_view.tile_views[tile_pos];
 
     for (std::vector<Image *>::iterator iter = tile_view.roads.begin(); iter != tile_view.roads.end(); iter++) {
@@ -66,21 +74,23 @@ void LevelRenderer::render_structure(int x, int y, Point tile_pos) {
             graphics->blit(road, x - road->width / 2, y - road->height / 2, SDL_BLENDMODE_BLEND, alpha);
         }
     }
+}
+
+#define TILE_WIDTH 48
+#define TILE_HEIGHT 32
+#define X_SPACING 32
+#define Y_SPACING 32
+#define SLOPE_WIDTH (TILE_WIDTH - X_SPACING)
+#define SLOPE_HEIGHT (Y_SPACING/2)
+
+void LevelRenderer::render_objects(int x, int y, Point tile_pos) {
+    TileView& tile_view = view->level_view.tile_views[tile_pos];
 
     if (tile_view.structure_view) {
         StructureViewDef::pointer view_def = tile_view.structure_view->view_def;
         AnimationDef& animation = view_def->animation;
-        if (animation.images.size() == 0)
-            animation.images.push_back(ImageRef("missing"));
-        Image *structure = animation.images[(tile_view.phase / 1000) % animation.images.size()].image;
-        if (!structure) {
-            const std::string& label = view_def->name.substr(0, 3);
-            TextFormat tf(graphics, SmallFont14, false, 255,255,255, 128,128,128);
-            structure = tf.write_to_image(label);
-            if (structure) {
-                animation.images[(tile_view.phase / 1000) % animation.images.size()].image = structure;
-            }
-        }
+        Image *structure = get_image_or_placeholder(animation.images, tile_view.phase / 1000, view_def->name);
+
         int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
         graphics->blit(structure, x - view_def->centre_x, y - view_def->centre_y, SDL_BLENDMODE_BLEND, alpha);
 
@@ -96,22 +106,14 @@ void LevelRenderer::render_structure(int x, int y, Point tile_pos) {
             graphics->blit(structure, x - view_def->centre_x, y - view_def->centre_y, SDL_BLENDMODE_ADD, add_phase);
         }
 
-        Faction::pointer owner = tile_view.structure_view->structure->owner;
-        FactionView::pointer faction_view = view->faction_views.get(owner->id);
-        FactionViewDef::pointer faction_view_def = faction_view->view_def;
-
-        graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, x+16, y-20, 8, 12);
+        Faction::pointer& owner = tile_view.structure_view->structure->owner;
+        if (owner) {
+            FactionView::pointer faction_view = view->faction_views.get(owner->id);
+            FactionViewDef::pointer faction_view_def = faction_view->view_def;
+            graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, x+16, y-20, 8, 12);
+        }
     }
-}
 
-#define TILE_WIDTH 48
-#define TILE_HEIGHT 32
-#define X_SPACING 32
-#define Y_SPACING 32
-#define SLOPE_WIDTH (TILE_WIDTH - X_SPACING)
-#define SLOPE_HEIGHT (Y_SPACING/2)
-
-void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
     if (show_hexagons) {
         int p1 = SLOPE_WIDTH;
         int p2 = TILE_WIDTH - SLOPE_WIDTH;
@@ -141,7 +143,6 @@ void LevelRenderer::render_unit_stack(int x, int y, Point tile_pos) {
             draw_it = false;
     }
 
-    TileView& tile_view = view->level_view.tile_views[tile_pos];
     if (tile_view.highlighted) {
         Image *highlight1 = cursor_images[0].image;
         if (highlight1 != NULL)
@@ -169,21 +170,8 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
         facing = 0;
 
     AnimationDef& animation = stack_view.moving ? view_def->move_animations[facing] : view_def->hold_animations[facing];
-    if (animation.images.size() == 0)
-        animation.images.push_back(ImageRef("missing"));
-    Image *unit = animation.images[(stack_view.phase / 1000) % animation.images.size()].image;
-    if (unit == NULL) {
-        const std::string& label = view_def->name.substr(0, 3);
-        TextFormat tf(graphics, SmallFont14, false, 255,255,255, 128,128,128);
-        unit = tf.write_to_image(label);
-        if (unit != NULL) {
-            animation.images[(stack_view.phase / 1000) % animation.images.size()].image = unit;
-        }
-    }
-
-    if (unit != NULL) {
-        graphics->blit(unit, x - unit->width / 2, y - unit->height + 6, SDL_BLENDMODE_BLEND);
-    }
+    Image *unit = get_image_or_placeholder(animation.images, stack_view.phase / 1000, view_def->name);
+    graphics->blit(unit, x - unit->width / 2, y - unit->height + 6, SDL_BLENDMODE_BLEND);
 
     if (stack_view.selected && !stack_view.moving) {
         int add_phase = (view->phase / 1000) % 32;
@@ -207,15 +195,7 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
 void LevelRenderer::draw_unit(int x, int y, Unit &unit, UnitViewDef& view_def, int highlight) {
     int facing = 2;
     std::vector<ImageRef>& image_series = view_def.hold_animations[facing].images;
-    if (image_series.size() == 0)
-        image_series.push_back(ImageRef("missing"));
-    Image *image = image_series[0].image;
-    if (image == NULL) {
-        const std::string& label = view_def.name.substr(0, 3);
-        TextFormat tf(graphics, SmallFont14, false, 255,255,255, 128,128,128);
-        image = tf.write_to_image(label);
-        image_series[0].image = image;
-    }
+    Image *image = get_image_or_placeholder(image_series, 0, view_def.name);
 
     x -= image->clip_x_offset + image->clip_width / 2;
     y -= image->clip_y_offset + image->clip_height / 2;
@@ -243,4 +223,15 @@ void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {
         if (path_arrow != NULL)
             graphics->blit(path_arrow, x - path_arrow->width / 2, y - path_arrow->height / 2 - 6, SDL_BLENDMODE_BLEND);
     }
+}
+
+Image *LevelRenderer::get_image_or_placeholder(ImageSeries& image_series, int pos, const std::string name) {
+    if (image_series.size() != 0) {
+        return image_series[pos % image_series.size()].image;
+    }
+    const std::string& label = name.substr(0, 3);
+    TextFormat tf(graphics, SmallFont14, true, 255,255,255, 128,128,128);
+    Image *image = tf.write_to_image(label);
+    image_series.push_back(ImageRef("PLACEHOLDER", image));
+    return image;
 }

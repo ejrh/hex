@@ -85,8 +85,10 @@ Structure::pointer Game::create_structure(const Point& position, const std::stri
         throw DataError() << "Structure already exists at: " << position;
     }
 
-    Faction::pointer owner = factions.get(owner_id);
     StructureType::pointer type = structure_types.get(type_name);
+    Faction::pointer owner;
+    if (type->has_ability(Capturable))
+        owner = factions.get(owner_id);
     Structure::pointer new_structure = boost::make_shared<Structure>(position, type, owner);
     tile.structure = new_structure;
     return new_structure;

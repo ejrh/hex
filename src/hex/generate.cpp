@@ -196,6 +196,8 @@ void create_game(Updater& updater) {
                 int faction = faction_iter->second->id;
 
                 updater.receive(create_message(CreateStructure, tile_pos, "tower", faction));
+            } else if (rand() % 100 == 0) {
+                updater.receive(create_message(CreateStructure, tile_pos, "wizard_tower", 0));
             }
         }
     }

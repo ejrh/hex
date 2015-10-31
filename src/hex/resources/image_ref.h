@@ -9,6 +9,7 @@ class Image;
 struct ImageRef {
     ImageRef(): name(), image(NULL) { }
     ImageRef(std::string name): name(name), image(NULL) { }
+    ImageRef(std::string name, Image *image): name(name), image(image) { }
     std::string name;
     Image *image;
 };

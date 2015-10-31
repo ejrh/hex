@@ -1,2 +1,3 @@
 # CreateStructureType(name, properties)
-CreateStructureType("tower", {"LongSight"})
+CreateStructureType("tower", {"Capturable","LongSight"})
+CreateStructureType("wizard_tower", {})
