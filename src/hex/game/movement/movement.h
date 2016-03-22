@@ -33,7 +33,9 @@ private:
 class MovementModel {
 public:
     MovementModel(Level *level);
+    MovementModel(Level *level, const Point& target_pos);
 
+    bool can_enter(const UnitStack& party, const Point& tile_pos) const;
     int cost_to(const UnitStack& party, const Point& tile_pos) const;
     int cost_to(const Unit& unit, const Point& tile_pos) const;
     int admits(const UnitType& unit_type, const TileType& tile_type) const;

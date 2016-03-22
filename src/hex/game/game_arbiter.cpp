@@ -46,38 +46,41 @@ void GameArbiter::process_command(boost::shared_ptr<Message> command) {
             }
 
             MovementModel movement(&game->level);
-            int allowed_steps = movement.check_path(*stack, path);
+            unsigned int allowed_steps = movement.check_path(*stack, path);
+            bool truncated = allowed_steps < path.size();
+            int attack_target_id = target_id;
+            if (truncated)
+                target_id = 0;
             path.resize(allowed_steps);
 
-            if (path.empty()) {
-                return;
+            if (!path.empty()) {
+                /* Generate updates. */
+                Faction::pointer faction = stack->owner;
+                bool move = units.size() == stack->units.size() && target_id == 0;
+                bool split = units.size() < stack->units.size() && target_id == 0;
+                bool merge = units.size() == stack->units.size() && target_id != 0;
+
+                UnitStack::pointer target = game->stacks.find(target_id);
+
+                if (move)
+                    target_id = stack_id;
+                if (split)
+                    target_id = game->get_free_stack_id();
+
+                // If the stack is splitting to a new empty position, create a stack there
+                if (split) {
+                    emit(create_message(CreateStack, target_id, end_pos, faction->id));
+                }
+                // Send the update
+                emit(create_message(TransferUnits, stack_id, units, path, target_id));
+                // If the whole stack merged with an existing one, destroy it
+                if (merge) {
+                    emit(create_message(DestroyStack, stack_id));
+                }
             }
 
-            /* Generate updates. */
-            Faction::pointer faction = stack->owner;
-            bool move = units.size() == stack->units.size() && target_id == 0;
-            bool split = units.size() < stack->units.size() && target_id == 0;
-            bool merge = units.size() == stack->units.size() && target_id != 0;
-
-            UnitStack::pointer target = game->stacks.find(target_id);
-            bool attack = target && (target->owner != stack->owner);
-
-            if (move)
-                target_id = stack_id;
-            if (split)
-                target_id = game->get_free_stack_id();
-
-            // If the stack is splitting to a new empty position, create a stack there
-            if (split) {
-                emit(create_message(CreateStack, target_id, end_pos, faction->id));
-            }
-            // Send the update
-            emit(create_message(TransferUnits, stack_id, units, path, target_id));
-            // If the whole stack merged with an existing one, destroy it
-            if (merge) {
-                emit(create_message(DestroyStack, stack_id));
-            }
-
+            UnitStack::pointer attack_target = game->stacks.find(attack_target_id);
+            bool attack = attack_target && (attack_target->owner != stack->owner);
             if (attack) {
                 BOOST_LOG_TRIVIAL(debug) << "Attack!";
             }

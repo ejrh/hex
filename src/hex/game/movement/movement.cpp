@@ -8,9 +8,11 @@
 
 MovementModel::MovementModel(Level *level): level(level), target_pos(-1, -1) { }
 
-int MovementModel::cost_to(const UnitStack& party, const Point& tile_pos) const {
+MovementModel::MovementModel(Level *level, const Point& target_pos): level(level), target_pos(target_pos) { }
+
+bool MovementModel::can_enter(const UnitStack& party, const Point& tile_pos) const {
     if (party.units.size() == 0)
-        return INT_MAX;
+        return false;
 
     Tile &tile = level->tiles[tile_pos];
 
@@ -18,8 +20,15 @@ int MovementModel::cost_to(const UnitStack& party, const Point& tile_pos) const 
     if (target_stack) {
         // Can't move through enemy stacks
         if (tile_pos != target_pos && target_stack->owner != party.owner)
-            return INT_MAX;
+            return false;
     }
+
+    return true;
+}
+
+int MovementModel::cost_to(const UnitStack& party, const Point& tile_pos) const {
+    if (!can_enter(party, tile_pos))
+    return INT_MAX;
 
     //TODO if one unit is a transport, then the others move for free
 
@@ -93,10 +102,11 @@ int MovementModel::check_path(const UnitStack& stack, const Path& path) const {
 }
 
 bool MovementModel::check_step(const UnitStack& stack, StackMovePoints *points, const Path& path, int step_num) const {
-    if (stack.units.size() == 0)
-        return false;
-
     Point next_step = path[step_num];
+
+    if (!can_enter(stack, next_step))
+    return false;
+
     for (unsigned int i = 0; i < stack.units.size(); i++) {
         Unit& unit = *stack.units[i];
         int cost = cost_to(unit, next_step);

@@ -113,7 +113,7 @@ void GameView::right_click_tile(const Point& tile_pos) {
         return;
 
     if (level_view.level->contains(tile_pos) && player->has_control(stack->owner)) {
-        MovementModel movement_model(level_view.level);
+        MovementModel movement_model(level_view.level, tile_pos);
         Pathfinder pathfinder(level_view.level, &movement_model);
         pathfinder.start(*stack, stack->position, tile_pos);
         pathfinder.complete();
