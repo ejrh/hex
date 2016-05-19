@@ -3,6 +3,7 @@
 
 #include "hex/basics/objmap.h"
 #include "hex/graphics/graphics.h"
+#include "hex/messaging/loader.h"
 #include "hex/messaging/message.h"
 #include "hex/messaging/receiver.h"
 #include "hex/messaging/updater.h"
@@ -53,15 +54,13 @@ private:
 };
 
 
-class ResourceLoader: public MessageReceiver {
+class ResourceLoader: public MessageLoader {
 public:
     ResourceLoader(Resources *resources, ImageLoader *image_loader): resources(resources), image_loader(image_loader),
-            last_tile_view_def(), last_unit_view_def(), last_structure_view_def() { }
+            last_tile_view_def(), last_unit_view_def(), last_structure_view_def(), warned_image_loader(false) { }
 
-    void receive(boost::shared_ptr<Message> msg);
+    void handle_message(boost::shared_ptr<Message> msg);
 
-    void load(const std::string& filename);
-    void include(const std::string& filename, bool skip_missing = false);
     void load_image(const std::string& filename);
     void load_song(const std::string& filename);
 
@@ -71,7 +70,7 @@ private:
     TileViewDef::pointer last_tile_view_def;
     UnitViewDef::pointer last_unit_view_def;
     StructureViewDef::pointer last_structure_view_def;
-    std::vector<std::string> current_files;
+    bool warned_image_loader;
 };
 
 

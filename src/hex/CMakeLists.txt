@@ -53,6 +53,8 @@ set(srcs
         messaging/checksum.h
         messaging/event_pusher.cpp
         messaging/event_pusher.h
+        messaging/loader.cpp
+        messaging/loader.h
         messaging/message.cpp
         messaging/message.h
         messaging/receiver.cpp

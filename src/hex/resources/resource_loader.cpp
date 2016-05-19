@@ -8,21 +8,14 @@
 #include "hex/resources/resources.h"
 
 
-void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
+void ResourceLoader::handle_message(boost::shared_ptr<Message> msg) {
     switch (msg->type) {
-        case IncludeResource: {
-            boost::shared_ptr<WrapperMessage<std::string> > upd = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(msg);
-            include(upd->data);
-        } break;
-
-        case IncludeIfResourceExists: {
-            boost::shared_ptr<WrapperMessage<std::string> > upd = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(msg);
-            include(upd->data, true);
-        } break;
-
         case ImageFile: {
             if (image_loader == NULL) {
-                BOOST_LOG_TRIVIAL(error) << "Image loader is not defined";
+                if (!warned_image_loader) {
+                    BOOST_LOG_TRIVIAL(error) << "Image loader is not defined";
+                    warned_image_loader = true;
+                }
                 return;
             }
             boost::shared_ptr<WrapperMessage<std::string> > upd = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(msg);
@@ -111,36 +104,8 @@ void ResourceLoader::receive(boost::shared_ptr<Message> msg) {
     }
 }
 
-void ResourceLoader::load(const std::string& filename) {
-    BOOST_LOG_TRIVIAL(warning) << "Loading resources from: " << filename;
-    current_files.push_back(filename);
-    replay_messages(filename, *this);
-    current_files.pop_back();
-}
-
-void ResourceLoader::include(const std::string& filename, bool skip_missing) {
-    boost::filesystem::path path = boost::filesystem::path(current_files.back()).parent_path();
-    path /= boost::filesystem::path(filename);
-    std::string relative_filename = path.string();
-
-    if (std::find(current_files.begin(), current_files.end(), relative_filename) != current_files.end()) {
-        BOOST_LOG_TRIVIAL(warning) << "Self-inclusion of resource file will be ignored: %s" << relative_filename;
-        return;
-    }
-
-    if (skip_missing && !boost::filesystem::exists(boost::filesystem::path(relative_filename))) {
-        BOOST_LOG_TRIVIAL(warning) << "Skipping missing resource: " << relative_filename;
-        return;
-    }
-
-    BOOST_LOG_TRIVIAL(debug) << "Including resources from: " << filename;
-    current_files.push_back(relative_filename);
-    replay_messages(relative_filename, *this);
-    current_files.pop_back();
-}
-
 void ResourceLoader::load_image(const std::string& filename) {
-    boost::filesystem::path path = boost::filesystem::path(current_files.back()).parent_path();
+    boost::filesystem::path path = boost::filesystem::path(get_current_file()).parent_path();
     path /= boost::filesystem::path(filename);
     std::string relative_filename = path.string();
 
@@ -148,7 +113,7 @@ void ResourceLoader::load_image(const std::string& filename) {
 }
 
 void ResourceLoader::load_song(const std::string& filename) {
-    boost::filesystem::path path = boost::filesystem::path(current_files.back()).parent_path();
+    boost::filesystem::path path = boost::filesystem::path(get_current_file()).parent_path();
     path /= boost::filesystem::path(filename);
     std::string relative_filename = path.string();
 
