@@ -27,7 +27,7 @@ void MessageLoader::receive(boost::shared_ptr<Message> msg) {
 }
 
 void MessageLoader::load(const std::string& filename) {
-    BOOST_LOG_TRIVIAL(warning) << "Loading resources from: " << filename;
+    BOOST_LOG_TRIVIAL(info) << "Loading resources from: " << filename;
     current_files.push_back(filename);
     replay_messages(filename, *this);
     current_files.pop_back();
@@ -48,7 +48,7 @@ void MessageLoader::include(const std::string& filename, bool skip_missing) {
         return;
     }
 
-    BOOST_LOG_TRIVIAL(debug) << "Including resources from: " << filename;
+    BOOST_LOG_TRIVIAL(info) << "Including resources from: " << filename;
     current_files.push_back(relative_filename);
     replay_messages(relative_filename, *this);
     current_files.pop_back();

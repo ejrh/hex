@@ -6,6 +6,7 @@
 #include "hex/game/game_messages.h"
 #include "hex/game/game_updater.h"
 #include "hex/game/movement/movement.h"
+#include "hex/messaging/loader.h"
 #include "hex/messaging/updater.h"
 
 void generate_level(Level &level, std::map<std::string, TileType::pointer>& types) {
@@ -115,9 +116,8 @@ void create_game(Updater& updater) {
     int width = 57;
     int height = 48;
 
-    replay_messages("data/tile_types.txt", updater);
-    replay_messages("data/unit_types.txt", updater);
-    replay_messages("data/structure_types.txt", updater);
+    ReceiverMessageLoader loader(updater);
+    loader.load("data/game.txt");
 
     game.level.width = width;
     game.level.height = height;

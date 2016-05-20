@@ -21,6 +21,7 @@ TraitType get_trait_type(const std::string& name) {
     std::map<std::string, TraitType>::iterator iter = trait_map.data.find(name);
     if (iter != trait_map.data.end())
         return iter->second;
+    BOOST_LOG_TRIVIAL(warning) << boost::format("Unknown trait type: %s") % name;
     return UnknownTraitType;
 }
 

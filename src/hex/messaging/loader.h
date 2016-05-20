@@ -24,4 +24,16 @@ private:
     std::vector<std::string> current_files;
 };
 
+class ReceiverMessageLoader: public MessageLoader {
+public:
+    ReceiverMessageLoader(MessageReceiver& receiver): receiver(receiver) { }
+
+    void handle_message(boost::shared_ptr<Message> msg) {
+        receiver.receive(msg);
+    };
+
+private:
+    MessageReceiver& receiver;
+};
+
 #endif

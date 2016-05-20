@@ -10,7 +10,7 @@ CreateTileType("grass_hill1", {"Walkable", "SlowWalking", "Flyable"})
 CreateTileType("grass_hill2", {"Walkable", "SlowWalking", "Flyable"})
 CreateTileType("grass_hill3", {"Walkable", "SlowWalking", "Flyable"})
 
-CreateTileType("grass_mountain0", {"Climable", "Flyable", "SlowFlying"})
+CreateTileType("grass_mountain0", {"Climbable", "Flyable", "SlowFlying"})
 CreateTileType("grass_mountain1", {"Climbable", "Flyable"})
 CreateTileType("grass_mountain2", {"Climbable", "Flyable", "SlowFlying"})
 CreateTileType("grass_mountain3", {})
