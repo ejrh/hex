@@ -113,3 +113,20 @@ Image *TextFormat::write_to_image(const std::string& text) {
     }
     return image;
 }
+
+
+void TextCache::write_text(const std::string& text, int x, int y) {
+    Image *image = NULL;
+
+    std::map<std::string, Image *>::iterator iter = cache.find(text);
+    if (iter != cache.end()) {
+        image = iter->second;
+    } else {
+        //TODO discard least-recently-used entry and free its image
+
+        image = format.write_to_image(text);
+        cache[text] = image;
+    }
+
+    format.graphics->blit(image, x, y, SDL_BLENDMODE_BLEND);
+}

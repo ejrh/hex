@@ -45,4 +45,16 @@ public:
     Uint8 outline_R, outline_G, outline_B;
 };
 
+class TextCache {
+public:
+    TextCache(const TextFormat& format, int size): format(format), size(size) { }
+
+    void write_text(const std::string& text, int x, int y);
+
+private:
+    TextFormat format;
+    int size;
+    std::map<std::string, Image *> cache;
+};
+
 #endif

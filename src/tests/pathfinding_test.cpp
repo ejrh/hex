@@ -30,7 +30,7 @@ static Resources resources;
 static TileType::pointer open_tile(boost::make_shared<TileType>());
 static TileType::pointer closed_tile(boost::make_shared<TileType>());
 
-UnitStack party(0, source, Faction::pointer());
+UnitStack::pointer party = boost::make_shared<UnitStack>(0, source, Faction::pointer());
 
 class PathfindingView: public GameView {
 public:
@@ -39,20 +39,26 @@ public:
         level_view.discovered.fill();
     }
 
+    void reset() {
+        for (int i = 0; i < level_view.tile_views.height; i++)
+            for (int j = 0; j < level_view.tile_views.width; j++) {
+                level_view.tile_views[i][j].phase = 0;
+            }
+
+        pathfinder.clear();
+        if (level_view.level->contains(source) && level_view.level->contains(target)) {
+            pathfinder.start(*party, source, target);
+        }
+    }
+
     void left_click() {
         source = level_view.highlight_tile;
-        if (level_view.level->contains(source) && level_view.level->contains(target)) {
-            pathfinder.clear();
-            pathfinder.start(party, source, target);
-        }
+        reset();
     }
 
     void middle_click() {
         target = level_view.highlight_tile;
-        if (level_view.level->contains(source) && level_view.level->contains(target)) {
-            pathfinder.clear();
-            pathfinder.start(party, source, target);
-        }
+        reset();
     }
 
     void right_click() {
@@ -76,18 +82,18 @@ public:
                     level_view.level->tiles[point].type = paint;
             }
         }
+
+        reset();
     }
 
     void update() {
         if (pathfinder.state == RUNNING) {
             pathfinder.step();
-
-            if (pathfinder.state != CLEAR) {
-                Path new_path;
-                pathfinder.build_path(new_path);
-                for (Path::const_iterator iter = new_path.begin(); iter != new_path.end(); iter++) {
-                    level_view.tile_views[iter->y][iter->x].phase = 1;
-                }
+        } else if (pathfinder.state == FINISHED) {
+            Path new_path;
+            pathfinder.build_path(new_path);
+            for (Path::const_iterator iter = new_path.begin(); iter != new_path.end(); iter++) {
+                level_view.tile_views[iter->y][iter->x].phase = 1;
             }
         }
     }
@@ -101,8 +107,14 @@ public:
 class PathfindingRenderer: public LevelRenderer {
 public:
     PathfindingRenderer(Graphics *graphics, Level *level, PathfindingView *view):
-            LevelRenderer(graphics, &::resources, level, view) { }
+            LevelRenderer(graphics, &::resources, level, view),
+            cache1(TextFormat(graphics, SmallFont10, true, 250,50,50), 1000),
+            cache2(TextFormat(graphics, SmallFont10, true, 100,200,50), 1000) { }
     void render_tile(int x, int y, Point tile_pos);
+
+private:
+    TextCache cache1;
+    TextCache cache2;
 };
 
 void PathfindingRenderer::render_tile(int x, int y, Point tile_pos) {
@@ -144,13 +156,15 @@ void PathfindingRenderer::render_tile(int x, int y, Point tile_pos) {
         char buffer[50];
         snprintf(buffer, sizeof(buffer), "%d", node.cost);
         if (node.cost == INT_MAX) snprintf(buffer, sizeof(buffer), "-");
-        TextFormat tf1(graphics, SmallFont10, true, 250,50,50);
-        tf1.write_text(std::string(buffer), x + TILE_WIDTH/2, y + 12);
+        //TextFormat tf1(graphics, SmallFont10, true, 250,50,50);
+        //tf1.write_text(std::string(buffer), x + TILE_WIDTH/2, y + 12);
+        cache1.write_text(std::string(buffer), x + TILE_WIDTH/2, y + 12);
 
         snprintf(buffer, sizeof(buffer), "%d", node.heuristic);
         if (node.heuristic == INT_MIN) snprintf(buffer, sizeof(buffer), "-");
-        TextFormat tf2(graphics, SmallFont10, true, 100,200,50);
-        tf2.write_text(std::string(buffer), x + TILE_WIDTH/2, y + TILE_HEIGHT - 12);
+        //TextFormat tf2(graphics, SmallFont10, true, 100,200,50);
+        //tf2.write_text(std::string(buffer), x + TILE_WIDTH/2, y + TILE_HEIGHT - 12);
+        cache2.write_text(std::string(buffer), x + TILE_WIDTH/2, y + TILE_HEIGHT - 12);
     }
 }
 
@@ -183,7 +197,7 @@ void run() {
     type->properties[Walking] = 1;
     Unit::pointer unit = boost::make_shared<Unit>();
     unit->type = type;
-    party.units.push_back(unit);
+    party->units.push_back(unit);
 
     Graphics graphics;
     graphics.start("Pathfinding test", 800, 600, false);
@@ -203,44 +217,46 @@ void run() {
     SDL_Event evt;
     bool running = true;
     while (running) {
-        SDL_WaitEventTimeout(&evt, 500);
-        if (evt.type == SDL_QUIT
-            || (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_ESCAPE))
-            running = false;
+        while (SDL_PollEvent(&evt)) {
+            SDL_WaitEventTimeout(&evt, 500);
+            if (evt.type == SDL_QUIT
+                || (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_ESCAPE))
+                running = false;
 
-        if (evt.type == SDL_MOUSEMOTION) {
-            level_window.set_mouse_position(evt.motion.x, evt.motion.y);
-        }
+            if (evt.type == SDL_MOUSEMOTION) {
+                level_window.set_mouse_position(evt.motion.x, evt.motion.y);
+            }
 
-        if (evt.type == SDL_MOUSEBUTTONDOWN && evt.button.button == SDL_BUTTON_LMASK) {
-            down_pos_x = evt.motion.x;
-            down_pos_y = evt.motion.y;
-        } else if (evt.type == SDL_MOUSEBUTTONUP && dragging) {
-            dragging = false;
-        } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_LEFT) {
-            view.left_click();
-        } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_MIDDLE) {
-            view.middle_click();
-        } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_RIGHT) {
-            view.right_click();
-        } else if (evt.type == SDL_MOUSEMOTION && dragging) {
-            level_window.shift(evt.motion.xrel, evt.motion.yrel);
-        } else if (evt.type == SDL_MOUSEMOTION) {
-            if (evt.motion.state == SDL_BUTTON_LMASK &&  abs(evt.motion.x - down_pos_x) > 4 && abs(evt.motion.y - down_pos_y) > 4)
-                dragging = true;
-        }
+            if (evt.type == SDL_MOUSEBUTTONDOWN && evt.button.button == SDL_BUTTON_LMASK) {
+                down_pos_x = evt.motion.x;
+                down_pos_y = evt.motion.y;
+            } else if (evt.type == SDL_MOUSEBUTTONUP && dragging) {
+                dragging = false;
+            } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_LEFT) {
+                view.left_click();
+            } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_MIDDLE) {
+                view.middle_click();
+            } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_RIGHT) {
+                view.right_click();
+            } else if (evt.type == SDL_MOUSEMOTION && dragging) {
+                level_window.shift(evt.motion.xrel, evt.motion.yrel);
+            } else if (evt.type == SDL_MOUSEMOTION) {
+                if (evt.motion.state == SDL_BUTTON_LMASK &&  abs(evt.motion.x - down_pos_x) > 4 && abs(evt.motion.y - down_pos_y) > 4)
+                    dragging = true;
+            }
 
-        if (evt.type == SDL_KEYDOWN) {
-            switch (evt.key.keysym.sym) {
-                case SDLK_1: view.brush_radius = 1; break;
-                case SDLK_2: view.brush_radius = 2; break;
-                case SDLK_3: view.brush_radius = 3; break;
-                case SDLK_4: view.brush_radius = 4; break;
-                case SDLK_5: view.brush_radius = 5; break;
-                case SDLK_6: view.brush_radius = 6; break;
-                case SDLK_7: view.brush_radius = 7; break;
-                case SDLK_8: view.brush_radius = 8; break;
-                case SDLK_9: view.brush_radius = 9; break;
+            if (evt.type == SDL_KEYDOWN) {
+                switch (evt.key.keysym.sym) {
+                    case SDLK_1: view.brush_radius = 1; break;
+                    case SDLK_2: view.brush_radius = 2; break;
+                    case SDLK_3: view.brush_radius = 3; break;
+                    case SDLK_4: view.brush_radius = 4; break;
+                    case SDLK_5: view.brush_radius = 5; break;
+                    case SDLK_6: view.brush_radius = 6; break;
+                    case SDLK_7: view.brush_radius = 7; break;
+                    case SDLK_8: view.brush_radius = 8; break;
+                    case SDLK_9: view.brush_radius = 9; break;
+                }
             }
         }
 
