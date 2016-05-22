@@ -177,10 +177,10 @@ void generate_level(Level &level) {
 
 
 void run() {
-    open_tile->properties.insert(Walkable);
+    open_tile->properties[Walkable] = 1;
 
     UnitType::pointer type = boost::make_shared<UnitType>();
-    type->abilities.insert(Walking);
+    type->properties[Walking] = 1;
     Unit::pointer unit = boost::make_shared<Unit>();
     unit->type = type;
     party.units.push_back(unit);

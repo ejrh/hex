@@ -41,6 +41,15 @@ public:
         return *this;
     }
 
+    template <typename K, typename V>
+    Serialiser& operator<<(const std::pair<K, V> p) {
+        if (need_seperator)
+            out << ", ";
+        out << p.first << ": " << p.second;
+        need_seperator = true;
+        return *this;
+    }
+
     template<typename T>
     inline Serialiser& operator<<(const std::vector<T>& vector) {
         begin_vector(vector.size());
@@ -53,11 +62,21 @@ public:
 
     template<typename T>
     inline Serialiser& operator<<(const std::set<T>& set) {
-        begin_set(set.size());
+        begin_map(set.size());
         for (typename std::set<T>::const_iterator iter = set.begin(); iter != set.end(); iter++) {
             *this << *iter;
         }
-        end_set();
+        end_map();
+        return *this;
+    }
+
+    template<typename K, typename V>
+    inline Serialiser& operator<<(const std::map<K, V>& map) {
+        begin_map(map.size());
+        for (typename std::map<K, V>::const_iterator iter = map.begin(); iter != map.end(); iter++) {
+            *this << *iter;
+        }
+        end_map();
         return *this;
     }
 
@@ -80,14 +99,14 @@ public:
         need_seperator = true;
     }
 
-    void begin_set(int size) {
+    void begin_map(int size) {
         if (need_seperator)
             out << ", ";
         out << "{";
         need_seperator = false;
     }
 
-    void end_set() {
+    void end_map() {
         out << "}";
         need_seperator = true;
     }
@@ -113,6 +132,20 @@ private:
     std::ostream &out;
     bool need_seperator;
 };
+
+
+// Technique for return value specialisation, from http://stackoverflow.com/a/15912228/63991
+template<typename V>
+struct default_value_return { typedef V type; };
+
+template<typename V>
+inline typename default_value_return<V>::type default_value() { return V(); }
+
+template<>
+struct default_value_return<int>{ typedef int type; };
+
+template<>
+inline default_value_return<int>::type default_value<int>() { return 1; }
 
 
 class Deserialiser {
@@ -153,6 +186,17 @@ public:
         return *this;
     }
 
+    template<typename K, typename V>
+    Deserialiser& operator>>(std::pair<K, V>& p) {
+        if (expect_seperator)
+            skip_separator();
+        in >> p.first;
+        skip_expected(':');
+        in >> p.second;
+        expect_seperator = true;
+        return *this;
+    }
+
     template<typename T>
     inline Deserialiser& operator>>(std::vector<T>& vector) {
         int size;
@@ -171,7 +215,7 @@ public:
     template<typename T>
     inline Deserialiser& operator>>(std::set<T>& set) {
         int size;
-        begin_set(size);
+        begin_map(size);
         for (int i = 0; i < size; i++) {
             T x;
             if (in.peek() == '}')
@@ -179,7 +223,27 @@ public:
             *this >> x;
             set.insert(x);
         }
-        end_set();
+        end_map();
+        return *this;
+    }
+
+    template<typename K, typename V>
+    inline Deserialiser& operator>>(std::map<K, V>& map) {
+        int size;
+        begin_map(size);
+        for (int i = 0; i < size; i++) {
+            K x;
+            V y = default_value<V>();
+            if (in.peek() == '}')
+                break;
+            *this >> x;
+            if (in.peek() == ':') {
+                skip_separator(':');
+                *this >> y;
+            }
+            map[x] = y;
+        }
+        end_map();
         return *this;
     }
 
@@ -206,7 +270,7 @@ public:
         expect_seperator = true;
     }
 
-    void begin_set(int &size) {
+    void begin_map(int &size) {
         size = INT_MAX;
         if (expect_seperator)
             skip_separator();
@@ -214,7 +278,7 @@ public:
         expect_seperator = false;
     }
 
-    void end_set() {
+    void end_map() {
         skip_expected('}');
         expect_seperator = true;
     }
@@ -241,10 +305,10 @@ public:
     void skip_expected(int ch) {
         int x = in.get();
         if (x == std::char_traits<char>::eof()) {
-            throw Error() << " " << boost::format("Expected character: %c (%x) but got EOF") % ch % ch;
+            throw Error() << " " << boost::format("Expected character: '%c' (%x) but got EOF") % (char) ch % ch;
         }
         if (x != ch) {
-            throw Error() << boost::format("Expected character: %c (%x) but got: %c (%x)") % ch % ch % x % x;
+            throw Error() << boost::format("Expected character: '%c' (%x) but got: '%c' (%x)") % (char) ch % ch % (char) x % x;
         }
     }
 
@@ -252,6 +316,14 @@ public:
         skip_expected(',');
         while (peek() == ' ')
             skip_expected(' ');
+        expect_seperator = false;
+    }
+
+    void skip_separator(int ch) {
+        skip_expected(ch);
+        while (peek() == ' ')
+            skip_expected(' ');
+        expect_seperator = false;
     }
 
     int peek() {

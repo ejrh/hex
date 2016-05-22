@@ -46,36 +46,36 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, TileType& d) {
 
 
 inline Serialiser& operator<<(Serialiser& serialiser, const UnitType& d) {
-    serialiser << d.name << d.abilities << d.moves << d.sight;
+    serialiser << d.name << d.properties;
     return serialiser;
 }
 
 inline Deserialiser& operator>>(Deserialiser& deserialiser, UnitType& d) {
-    deserialiser >> d.name >> d.abilities >> d.moves >> d.sight;
+    deserialiser >> d.name >> d.properties;
     return deserialiser;
 }
 
 
 inline Serialiser& operator<<(Serialiser& serialiser, const StructureType& d) {
-    serialiser << d.name << d.abilities;
+    serialiser << d.name << d.properties;
     return serialiser;
 }
 
 inline Deserialiser& operator>>(Deserialiser& deserialiser, StructureType& d) {
-    deserialiser >> d.name >> d.abilities;
+    deserialiser >> d.name >> d.properties;
     return deserialiser;
 }
 
 
-inline Serialiser& operator<<(Serialiser& serialiser, const TraitType& t) {
-    serialiser << get_trait_type_name(t);
+inline Serialiser& operator<<(Serialiser& serialiser, const PropertyType& t) {
+    serialiser << get_property_type_name(t);
     return serialiser;
 }
 
-inline Deserialiser& operator>>(Deserialiser& deserialiser, TraitType& t) {
+inline Deserialiser& operator>>(Deserialiser& deserialiser, PropertyType& t) {
     std::string name;
     deserialiser >> name;
-    t = get_trait_type(name);
+    t = get_property_type(name);
     return deserialiser;
 }
 

@@ -87,7 +87,7 @@ Structure::pointer Game::create_structure(const Point& position, const std::stri
 
     StructureType::pointer type = structure_types.get(type_name);
     Faction::pointer owner;
-    if (type->has_ability(Capturable))
+    if (type->has_property(Capturable))
         owner = factions.get(owner_id);
     Structure::pointer new_structure = boost::make_shared<Structure>(position, type, owner);
     tile.structure = new_structure;
@@ -149,7 +149,7 @@ void Game::begin_turn(int turn_number) {
         for (std::vector<Unit::pointer>::iterator unit_iter = stack->units.begin(); unit_iter != stack->units.end(); unit_iter++) {
             Unit& unit = **unit_iter;
             UnitType& type = *unit.type;
-            unit.moves = type.moves;
+            unit.properties[Moves] = type.properties[Moves];
         }
     }
 

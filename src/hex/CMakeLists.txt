@@ -35,9 +35,9 @@ set(srcs
         game/movement/movement.h
         game/movement/pathfinding.cpp
         game/movement/pathfinding.h
-        game/trait_types.h
-        game/traits.cpp
-        game/traits.h
+        game/property_types.h
+        game/properties.cpp
+        game/properties.h
         game/unit_stack.cpp
         game/visibility_map.cpp
         game/visibility_map.h

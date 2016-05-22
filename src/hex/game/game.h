@@ -5,7 +5,7 @@
 #include "hex/basics/objmap.h"
 #include "hex/basics/point.h"
 #include "hex/basics/vector2.h"
-#include "hex/game/traits.h"
+#include "hex/game/properties.h"
 #include "hex/game/visibility_map.h"
 
 #define MOVE_SCALE 1
@@ -30,17 +30,20 @@ public:
 
     UnitType() { }
     ~UnitType() { }
-    bool has_ability(TraitType ability) const {
-        if (abilities.count(ability) == 1)
+    bool has_property(PropertyType property) const {
+        if (properties.count(property) > 0)
             return true;
         return false;
+    }
+    int get_property(PropertyType property) const {
+        if (properties.count(property) > 0)
+            return properties.find(property)->second;
+        return 0;
     }
 
 public:
     std::string name;
-    TraitSet abilities;
-    int moves;
-    int sight;
+    Properties properties;
 };
 
 class Unit: public boost::enable_shared_from_this<Unit> {
@@ -49,16 +52,20 @@ public:
 
     Unit() { }
     ~Unit() { }
-    bool has_ability(TraitType ability) const {
-        if (abilities.count(ability) == 1)
+    bool has_property(PropertyType property) const {
+        if (properties.count(property) > 0)
             return true;
-        return type->has_ability(ability);
+        return type->has_property(property);
+    }
+    int get_property(PropertyType property) const {
+        if (properties.count(property) > 0)
+            return properties.find(property)->second;
+        return type->get_property(property);
     }
 
 public:
     UnitType::pointer type;
-    int moves;
-    TraitSet abilities;
+    Properties properties;
 };
 
 #define MAX_UNITS 12
@@ -76,7 +83,7 @@ public:
     void transfer_units(const IntSet unit_selection, UnitStack& target_stack);
 
     static int sight_func(int max1, Unit::pointer unit) {
-        int max2 = unit->type->sight;
+        int max2 = unit->get_property(Sight);
         return std::max(max1, max2);
     }
     int sight() { return std::accumulate(units.begin(), units.end(), 0, sight_func); }
@@ -95,16 +102,20 @@ public:
     typedef boost::shared_ptr<StructureType> pointer;
 
     StructureType() { }
-    bool has_ability(TraitType ability) const {
-        if (abilities.count(ability) == 1)
+    bool has_property(PropertyType property) const {
+        if (properties.count(property) > 0)
             return true;
         return false;
+    }
+    int get_property(PropertyType property) const {
+        if (properties.count(property) > 0)
+            return properties.find(property)->second;
+        return 0;
     }
 
 public:
     std::string name;
-    TraitSet abilities;
-    int sight;
+    Properties properties;
 };
 
 class Structure: public boost::enable_shared_from_this<Structure> {
@@ -114,7 +125,7 @@ public:
     Structure();
     Structure(const Point& position, StructureType::pointer type, Faction::pointer owner): position(position), type(type), owner(owner) { };
 
-    int sight() { return type->has_ability(LongSight) ? 7 : 3; }
+    int sight() { return type->get_property(Sight); }
 
 public:
     Point position;
@@ -129,13 +140,13 @@ public:
     TileType() { }
     ~TileType() { }
 
-    bool has_property(TraitType trait) const {
-        return properties.count(trait) == 1;
+    bool has_property(PropertyType property) const {
+        return properties.count(property) > 0;
     }
 
 public:
     std::string name;
-    TraitSet properties;
+    Properties properties;
 };
 
 class Tile {
@@ -143,8 +154,8 @@ public:
     Tile(): type(), stack(), structure(), road(false) { }
     Tile(TileType::pointer type): type(type), stack(), structure(), road(false) { }
 
-    bool has_property(TraitType trait) const {
-        return type->has_property(trait);
+    bool has_property(PropertyType property) const {
+        return type->has_property(property);
     }
 
 public:

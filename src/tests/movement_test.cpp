@@ -27,7 +27,7 @@
 void create_game(MessageReceiver& updater) {
     TileType grass_type;
     grass_type.name = "grass";
-    grass_type.properties.insert(Walkable);
+    grass_type.properties[Walkable] = 1;
     updater.receive(create_message(CreateTileType, grass_type));
 
     TileType wall_type;
@@ -49,16 +49,16 @@ void create_game(MessageReceiver& updater) {
 
     UnitType cat_type;
     cat_type.name = "cat";
-    cat_type.abilities.insert(Walking);
-    cat_type.moves = 24;
-    cat_type.sight = 5;
+    cat_type.properties[Walking] = 1;
+    cat_type.properties[Moves] = 24;
+    cat_type.properties[Sight] = 5;
     updater.receive(create_message(CreateUnitType, cat_type));
 
     UnitType mouse_type;
     mouse_type.name = "mouse";
-    mouse_type.abilities.insert(Walking);
-    mouse_type.moves = 20;
-    mouse_type.sight = 4;
+    mouse_type.properties[Walking] = 1;
+    mouse_type.properties[Moves] = 20;
+    mouse_type.properties[Sight] = 4;
     updater.receive(create_message(CreateUnitType, mouse_type));
 
     updater.receive(create_message(CreateFaction, 1, "independent", "Independent"));

@@ -68,7 +68,7 @@ void StackWindow::draw() {
             renderer->draw_unit(px, py, unit, view_def, highlight);
 
             std::ostringstream ss;
-            ss << unit.moves / MOVE_SCALE;
+            ss << unit.properties[Moves] / MOVE_SCALE;
             px = unit_rectangles[i].x + StackWindow::unit_width;
             py = unit_rectangles[i].y + StackWindow::unit_height;
             tf.write_text(ss.str(), px, py);

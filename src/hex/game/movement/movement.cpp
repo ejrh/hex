@@ -3,7 +3,6 @@
 #include "hex/basics/error.h"
 #include "hex/game/game.h"
 #include "hex/game/movement/movement.h"
-#include "hex/game/traits.h"
 
 
 MovementModel::MovementModel(Level *level): level(level), target_pos(-1, -1) { }
@@ -49,7 +48,7 @@ int MovementModel::cost_to(const UnitStack& party, const Point& tile_pos) const 
 int MovementModel::cost_to(const Unit& unit, const Point& tile_pos) const {
     Tile &tile = level->tiles[tile_pos];
 
-    if (tile.has_property(Walkable) && unit.has_ability(Walking)) {
+    if (tile.has_property(Walkable) && unit.has_property(Walking)) {
         if (tile.road)
             return 3;
         else if (tile.has_property(SlowWalking))
@@ -58,11 +57,11 @@ int MovementModel::cost_to(const Unit& unit, const Point& tile_pos) const {
             return 4;
     }
 
-    if (tile.has_property(Swimmable) && unit.has_ability(Swimming)) {
+    if (tile.has_property(Swimmable) && unit.has_property(Swimming)) {
         return 4;
     }
 
-    if (tile.has_property(Flyable) && unit.has_ability(Flying)) {
+    if (tile.has_property(Flyable) && unit.has_property(Flying)) {
         if (tile.has_property(SlowFlying))
             return 5;
         else
@@ -73,11 +72,11 @@ int MovementModel::cost_to(const Unit& unit, const Point& tile_pos) const {
 }
 
 int MovementModel::admits(const UnitType& unit_type, const TileType& tile_type) const {
-    if (unit_type.has_ability(Walking) && tile_type.has_property(Walkable))
+    if (unit_type.has_property(Walking) && tile_type.has_property(Walkable))
         return true;
-    else if (unit_type.has_ability(Swimming) && tile_type.has_property(Swimmable))
+    else if (unit_type.has_property(Swimming) && tile_type.has_property(Swimmable))
         return true;
-    if (unit_type.has_ability(Flying) && tile_type.has_property(Flyable))
+    if (unit_type.has_property(Flying) && tile_type.has_property(Flyable))
         return true;
     return false;
 }
@@ -86,7 +85,7 @@ void MovementModel::move(UnitStack& party, const Point& tile_pos) const {
     for (std::vector<Unit::pointer>::iterator iter = party.units.begin(); iter != party.units.end(); iter++) {
         Unit& unit = **iter;
         int cost = cost_to(unit, tile_pos);
-        unit.moves -= cost;
+        unit.properties[Moves] -= cost;
     }
 }
 
