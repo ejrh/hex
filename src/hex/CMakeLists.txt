@@ -31,6 +31,9 @@ set(srcs
         game/game_writer.h
         game/level.cpp
         game/message_types.h
+        game/combat/battle.cpp
+        game/combat/combat.h
+        game/combat/participant.cpp
         game/movement/movement.cpp
         game/movement/movement.h
         game/movement/pathfinding.cpp
@@ -109,6 +112,7 @@ source_group(Sources\\audio REGULAR_EXPRESSION /audio/)
 source_group(Sources\\basics REGULAR_EXPRESSION /basics/)
 source_group(Sources\\chat REGULAR_EXPRESSION /chat/)
 source_group(Sources\\game REGULAR_EXPRESSION /game/)
+source_group(Sources\\game\\combat REGULAR_EXPRESSION /game/combat/)
 source_group(Sources\\game\\movement REGULAR_EXPRESSION /game/movement/)
 source_group(Sources\\graphics REGULAR_EXPRESSION /graphics/)
 source_group(Sources\\messaging REGULAR_EXPRESSION /messaging/)

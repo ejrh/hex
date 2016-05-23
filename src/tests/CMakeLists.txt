@@ -1,3 +1,8 @@
+add_executable(battle_test battle_test.cpp)
+target_link_libraries(battle_test hex)
+target_link_libraries(battle_test ${gen_libs})
+target_compile_options(battle_test PUBLIC ${gen_opts})
+
 add_executable(colour_key_conversion_test colour_key_conversion_test.c)
 target_link_libraries(colour_key_conversion_test ${gen_libs})
 target_compile_options(colour_key_conversion_test PUBLIC ${gen_opts})

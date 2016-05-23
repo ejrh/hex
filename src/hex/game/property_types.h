@@ -23,3 +23,7 @@ PROPERTY_TYPE(Capturable)
 // Unit statistics
 PROPERTY_TYPE(Moves)
 PROPERTY_TYPE(Sight)
+PROPERTY_TYPE(Attack)
+PROPERTY_TYPE(Defence)
+PROPERTY_TYPE(Damage)
+PROPERTY_TYPE(Health)
