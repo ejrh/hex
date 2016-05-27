@@ -31,7 +31,8 @@ void UiLoop::update() {
         } else if (evt.type == SDL_MOUSEBUTTONUP) {
             if (dragging_window == NULL) {
                 current_window = find_window(evt.button.x, evt.button.y);
-                current_window->receive_event(&evt);
+                if (current_window != NULL)
+                    current_window->receive_event(&evt);
             } else {
                 dragging_window = NULL;
             }
@@ -43,9 +44,11 @@ void UiLoop::update() {
         } else if (evt.type == SDL_MOUSEMOTION) {
             if (evt.motion.state == SDL_BUTTON_LMASK &&  abs(evt.motion.x - down_pos_x) > 4 && abs(evt.motion.y - down_pos_y) > 4) {
                 current_window = find_window(evt.button.x, evt.button.y);
-                dragging_window = current_window;
-                evt.type = drag_event_type;
-                dragging_window->receive_event(&evt);
+                if (current_window != NULL) {
+                    dragging_window = current_window;
+                    evt.type = drag_event_type;
+                    dragging_window->receive_event(&evt);
+                }
                 continue;
             }
         }

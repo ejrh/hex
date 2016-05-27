@@ -4,6 +4,7 @@
 #include "hex/game/game.h"
 #include "hex/game/game_arbiter.h"
 #include "hex/game/game_messages.h"
+#include "hex/game/combat/combat.h"
 #include "hex/game/movement/movement.h"
 #include "hex/messaging/updater.h"
 
@@ -83,6 +84,11 @@ void GameArbiter::process_command(boost::shared_ptr<Message> command) {
             bool attack = attack_target && (attack_target->owner != stack->owner);
             if (attack) {
                 BOOST_LOG_TRIVIAL(debug) << "Attack!";
+                Point target_point = attack_target->position;
+                Point attacking_point = end_pos;
+                Battle battle(game, target_point, attacking_point);
+                battle.run();
+                emit(create_message(DoBattle, end_stack_id, target_point, battle.moves));
             }
         } break;
 

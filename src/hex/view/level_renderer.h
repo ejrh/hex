@@ -47,6 +47,7 @@ protected:
 
     friend class LevelWindow;
     friend class StackWindow;
+    friend class BattleWindow;
 };
 
 #endif

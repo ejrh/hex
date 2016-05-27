@@ -30,6 +30,7 @@
 #include "hex/view/pre_updater.h"
 #include "hex/view/view.h"
 #include "hex/view/view_updater.h"
+#include "hex/view/combat/battle_viewer.h"
 
 
 struct Options {
@@ -211,6 +212,9 @@ void run(Options& options) {
 
     Audio audio(&resources);
     audio.start();
+
+    BattleViewer battle_viewer(&resources, &graphics, &audio, &game_view, &level_renderer);
+    pre_updater.battle_viewer = &battle_viewer;
 
     UiLoop loop(25);
     BackgroundWindow bw(&loop, &options, &game, &game_view, ais, &event_pusher, &arbiter, &updater, &level_renderer);

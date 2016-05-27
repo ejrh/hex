@@ -10,6 +10,12 @@ Battle::Battle(Game *game, const Point& target_point, const Point& attacking_poi
     set_up_participants();
 }
 
+Battle::Battle(Game *game, const Point& target_point, const Point& attacking_point, const std::vector<Move>& moves):
+        moves(moves), game(game), target_point(target_point), attacking_point(attacking_point), phase(Charge), turn(0)
+{
+    set_up_participants();
+}
+
 void Battle::set_up_participants() {
     BOOST_LOG_TRIVIAL(trace) << "Setting up battle participants";
 
@@ -41,7 +47,7 @@ void Battle::set_up_participants() {
             BOOST_LOG_TRIVIAL(trace) << "Stack " << dir << ": " << stacks[dir]->id;
             for (unsigned int i = 0; i < stacks[dir]->units.size(); i++) {
                 int participant_id = participants.size();
-                participants.push_back(Participant(participant_id, stack_sides[dir], stacks[dir], i));
+                participants.push_back(Participant(participant_id, stack_sides[dir], dir, stacks[dir], i));
                 BOOST_LOG_TRIVIAL(trace) << "Participant: " << participants[participant_id];
             }
         }

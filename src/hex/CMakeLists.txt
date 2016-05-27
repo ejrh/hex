@@ -33,6 +33,7 @@ set(srcs
         game/message_types.h
         game/combat/battle.cpp
         game/combat/combat.h
+        game/combat/move.h
         game/combat/participant.cpp
         game/movement/movement.cpp
         game/movement/movement.h
@@ -80,6 +81,12 @@ set(srcs
         ui/loop.cpp
         ui/ui.h
         ui/ui_window.cpp
+        view/combat/battle_viewer.cpp
+        view/combat/battle_viewer.h
+        view/combat/battle_window.cpp
+        view/combat/battle_window.h
+        view/combat/combat_view.cpp
+        view/combat/combat_view.h
         view/game_view.cpp
         view/ghost.cpp
         view/level_renderer.cpp
@@ -120,6 +127,7 @@ source_group(Sources\\networking REGULAR_EXPRESSION /networking/)
 source_group(Sources\\resources REGULAR_EXPRESSION /resources/)
 source_group(Sources\\ui REGULAR_EXPRESSION /ui/)
 source_group(Sources\\view REGULAR_EXPRESSION /view/)
+source_group(Sources\\view\\combat REGULAR_EXPRESSION /view/combat/)
 add_library(hex ${srcs})
 target_compile_options(hex PUBLIC ${gen_opts})
 

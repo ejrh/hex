@@ -3,8 +3,8 @@
 #include "hex/game/game.h"
 #include "hex/game/combat/combat.h"
 
-Participant::Participant(int id, Side side, UnitStack::pointer stack, int unit_number):
-        id(id), side(side), stack(stack), unit_number(unit_number)
+Participant::Participant(int id, Side side, int stack_num, UnitStack::pointer stack, int unit_number):
+        id(id), side(side), stack_num(stack_num), stack(stack), unit_number(unit_number)
 {
     this->unit = stack->units[unit_number];
 

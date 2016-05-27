@@ -7,6 +7,7 @@
 
 class Game;
 class GameView;
+class BattleViewer;
 
 class PreUpdater: public MessageReceiver {
 public:
@@ -21,6 +22,9 @@ private:
 private:
     Game *game;
     GameView *game_view;
+
+public:
+    BattleViewer *battle_viewer;
 };
 
 #endif

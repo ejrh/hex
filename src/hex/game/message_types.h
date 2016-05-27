@@ -60,6 +60,7 @@ MSG_TYPE(TurnBegin, WM(int))
 MSG_TYPE(TurnEnd, Message)
 
 MSG_TYPE(UnitMove, WM4(int, IntSet, Path, int))
+MSG_TYPE(DoBattle, WM3(int, Point, std::vector<Move>))
 
 MSG_TYPE(StreamOpen, WM(std::string))
 MSG_TYPE(StreamClose, Message)
