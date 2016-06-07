@@ -3,7 +3,7 @@
 #include "hex/noise.h"
 
 static float interpolate(float x1, float x2, float w) {
-    return (1.0f - w) * x1+ w * x2;
+    return (1.0f - w) * x1 + w * x2;
 }
 
 PerlinNoise::PerlinNoise(int width, int height): grid_width(width), grid_height(height) {
@@ -20,17 +20,15 @@ PerlinNoise::PerlinNoise(int width, int height): grid_width(width), grid_height(
             do {
                 dx = ((rand() % 2000) - 1000) / 1000.0f;
                 dy = ((rand() % 2000) - 1000) / 1000.0f;
-                a = sqrtf(dx*dx + dy*dy);
+                a = dx*dx + dy*dy;
             } while (a > 1.0f || a < 0.9f);
 
             float a2 = sqrtf(a);
 
             gradients[i][j][0] = dx / a2;
             gradients[i][j][1] = dy / a2;
-            //std::cerr << "G" << gradients[i][j][0] << "," << gradients[i][j][1] << "   ";
         }
     }
-    //std::cerr << std::endl;
 }
 
 PerlinNoise::~PerlinNoise() {
@@ -48,18 +46,18 @@ float PerlinNoise::dot_product(int ix, int iy, float x, float y) {
  }
 
 float PerlinNoise::value(float x, float y) {
-     int x0 = (int) (x * grid_width);
-     int x1 = x0  + 1;
-     int y0 = (int) (y * grid_height);
+     x *= grid_width;
+     y *= grid_height;
+     int x0 = (int) x;
+     int x1 = x0 + 1;
+     int y0 = (int) y;
      int y1 = y0 + 1;
 
-     if (x0 < 0 || x1 > grid_width || y0 < 0 || y1 > grid_width)
+     if (x0 < 0 || x1 > grid_width || y0 < 0 || y1 > grid_height)
          return 0.0f;
 
-     float sx = x * grid_width - (float) x0;
-     float sy = y * grid_height - (float) y0;
-
-     //std::cerr << x << "," << y << std::endl;
+     float sx = x - (float) x0;
+     float sy = y - (float) y0;
 
      // Interpolate between grid point gradients
      float n0, n1, ix0, ix1, value;
@@ -71,5 +69,5 @@ float PerlinNoise::value(float x, float y) {
      ix1 = interpolate(n0, n1, sx);
      value = interpolate(ix0, ix1, sy);
 
-     return value; // / ( grid_width * grid_height);
+     return value;
  }
