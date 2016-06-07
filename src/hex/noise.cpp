@@ -6,6 +6,11 @@ static float interpolate(float x1, float x2, float w) {
     return (1.0f - w) * x1 + w * x2;
 }
 
+static float fade(float t) {
+    // Approximate sigmoid function:  6t^5 - 15t^4 + 10t^3
+    return t * t * t * (t * (t * 6 - 15) + 10);
+}
+
 PerlinNoise::PerlinNoise(int width, int height): grid_width(width), grid_height(height) {
     gradients = new float_vector *[height + 1];
     for (int i = 0; i <= height; i++) {
@@ -58,6 +63,9 @@ float PerlinNoise::value(float x, float y) {
 
      float sx = x - (float) x0;
      float sy = y - (float) y0;
+
+     sx = fade(sx);
+     sy = fade(sy);
 
      // Interpolate between grid point gradients
      float n0, n1, ix0, ix1, value;
