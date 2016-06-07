@@ -9,9 +9,35 @@
 #include "hex/messaging/loader.h"
 #include "hex/messaging/updater.h"
 
+static std::string type(Tile& tile) {
+    std::vector<std::string> parts;
+    boost::split(parts, tile.type->name, boost::is_any_of("_"));
+    return parts[0];
+}
+
+static std::string subtype(Tile& tile) {
+    std::vector<std::string> parts;
+    boost::split(parts, tile.type->name, boost::is_any_of("_"));
+    if (parts.size() > 1)
+        return parts[1];
+    else
+        return "";
+}
+
+const float height_scale = 8.0f;
+const float height_power = 1.5f;
+const float sea_level = -2.0f;
+const float hill_level = 0.0f;
+const float mountain_level = 4.8f;
+const int hill_culling = 4;
+const int mountain_culling = 2;
+
 void generate_level(Level &level, std::map<std::string, TileType::pointer>& types) {
-    PerlinNoise noise(5, 5);
-    PerlinNoise noise2(10, 10);
+    PerlinNoise noise(3, 3);
+    PerlinNoise noise2(6, 6);
+
+    PerlinNoise type_noise1(3, 3);
+    PerlinNoise type_noise2(3, 3);
 
     for (int i = 0; i < level.height; i++) {
         for (int j = 0; j < level.width; j++) {
@@ -26,22 +52,38 @@ void generate_level(Level &level, std::map<std::string, TileType::pointer>& type
             if (j % 2 == 1)
                 py += 0.5f / level.height;
 
-            float value = (noise.value(px, py) + noise2.value(py, px))/6.0f;
-            if (value < 0.0f)
-                tile.type = types["water"];
-            else if (value < 0.5f)
-                tile.type = types["desert"];
-            else {
-                tile.type = types["grass"];
-                if (value > 1.4f) {
-                    tile.type = types["grass_mountain1"];
-                } else if (value > 1.2f && rand() % 2) {
-                    tile.type = types["grass_hill1"];
-                }
-            }
+            float height = (noise.value(px, py) + noise2.value(py, px)) * height_scale;
+            if (height > 0.0)
+                height = powf(height, height_power);
 
-            if (tile.type->has_property(Roadable) && rand() % 2)
-                tile.road = true;
+            if (height < sea_level)
+                tile.type = types["water"];
+            else {
+                float angle = atan2(type_noise1.value(px, py), type_noise2.value(px, py));
+                int sector = (int) ((angle + M_PI) * 5 / (2 * M_PI));
+                std::string type_name;
+                switch (sector) {
+                    case 0: type_name = "grass"; break;
+                    case 1: type_name = "desert"; break;
+                    case 2: type_name = "steppe"; break;
+                    case 3: type_name = "wasteland"; break;
+                    default: type_name = "snow"; break;
+                }
+
+                if (height > mountain_level) {
+                    type_name += "_mountain1";
+                } else if (height > hill_level && rand() % 2) {
+                    type_name += "_hill1";
+                }
+
+                tile.type = types[type_name];
+                if (!tile.type) {
+                    throw Error() << boost::format("Unknown tile type: %s") % type_name;
+                }
+
+                if (tile.type->has_property(Roadable) && rand() % 2)
+                    tile.road = true;
+            }
         }
     }
 
@@ -50,7 +92,9 @@ void generate_level(Level &level, std::map<std::string, TileType::pointer>& type
         for (int j = 0; j < level.width; j++) {
             Point tile_pos(j, i);
             Tile& tile = level.tiles[tile_pos];
-            if (tile.type == types["grass_hill1"]) {
+            std::string tile_type = type(tile);
+            std::string tile_subtype = subtype(tile);
+            if (tile_subtype == "hill1") {
                 bool left = rand() % 2 == 0;
                 int dir = left ? 5 : 1;
                 Point neighbour_pos;
@@ -58,11 +102,12 @@ void generate_level(Level &level, std::map<std::string, TileType::pointer>& type
                 if (!level.contains(neighbour_pos))
                     continue;
                 Tile& neighbour = level.tiles[neighbour_pos];
-                if (neighbour.type == types["grass_hill1"]) {
-                    tile.type = left ? types["grass_hill3"] : types["grass_hill2"];
-                    neighbour.type = types["grass_hill0"];
+                if (subtype(neighbour) == "hill1") {
+                    tile.type = types[tile_type + (left ? "_hill3" : "_hill2")];
+                    neighbour.type = types[tile_type + "_hill0"];
+                    tile_subtype = subtype(tile);
                 }
-            } else if (tile.type == types["grass_mountain1"]) {
+            } else if (tile_subtype == "mountain1") {
                 Point neighbour_pos[6];
                 get_neighbours(tile_pos, neighbour_pos);
                 if (!level.contains(neighbour_pos[5]) || !level.contains(neighbour_pos[0]) || !level.contains(neighbour_pos[1]))
@@ -70,16 +115,17 @@ void generate_level(Level &level, std::map<std::string, TileType::pointer>& type
                 Tile& neighbour5 = level.tiles[neighbour_pos[5]];
                 Tile& neighbour0 = level.tiles[neighbour_pos[0]];
                 Tile& neighbour1 = level.tiles[neighbour_pos[1]];
-                if (neighbour5.type != types["grass_mountain1"] || neighbour0.type != types["grass_mountain1"] || neighbour1.type != types["grass_mountain1"])
+                if (subtype(neighbour5) != "mountain1" || subtype(neighbour0) != "mountain1" || subtype(neighbour1) != "mountain1")
                     continue;
 
-                tile.type = types["grass_mountain2"];
-                neighbour5.type = types["grass_mountain0"];
-                neighbour0.type = types["grass_mountain0"];
-                neighbour1.type = types["grass_mountain0"];
+                tile.type = types[tile_type + "_mountain2"];
+                neighbour5.type = types[tile_type + "_mountain0"];
+                neighbour0.type = types[tile_type + "_mountain0"];
+                neighbour1.type = types[tile_type + "_mountain0"];
+                tile_subtype = subtype(tile);
             }
 
-            if (tile.type == types["grass_mountain2"]) {
+            if (tile_subtype == "mountain2") {
                 Point neighbour_pos[6];
                 get_neighbours(tile_pos, neighbour_pos);
                 Point neighbour_pos_l[6];
@@ -93,16 +139,24 @@ void generate_level(Level &level, std::map<std::string, TileType::pointer>& type
                 Tile& neighbour3 = level.tiles[neighbour_pos[3]];
                 Tile& neighbour2 = level.tiles[neighbour_pos[2]];
                 Tile& neighbourr1 = level.tiles[neighbour_pos_r[1]];
-                if (neighbourl5.type != types["grass_mountain1"] || neighbour4.type != types["grass_mountain1"] || neighbour3.type != types["grass_mountain1"]
-                        || neighbour2.type != types["grass_mountain1"] || neighbourr1.type != types["grass_mountain1"])
+                if (subtype(neighbourl5) != "mountain1" || subtype(neighbour4) != "mountain1" || subtype(neighbour3) != "mountain1"
+                        || subtype(neighbour2) != "mountain1" || subtype(neighbourr1) != "mountain1")
                     continue;
 
-                tile.type = types["grass_mountain3"];
-                neighbourl5.type = types["grass_mountain0"];
-                neighbour4.type = types["grass_mountain0"];
-                neighbour3.type = types["grass_mountain0"];
-                neighbour2.type = types["grass_mountain0"];
-                neighbourr1.type = types["grass_mountain0"];
+                tile.type = types[tile_type + "_mountain3"];
+                neighbourl5.type = types[tile_type + "_mountain0"];
+                neighbour4.type = types[tile_type + "_mountain0"];
+                neighbour3.type = types[tile_type + "_mountain0"];
+                neighbour2.type = types[tile_type + "_mountain0"];
+                neighbourr1.type = types[tile_type + "_mountain0"];
+            }
+
+            if (tile_subtype == "mountain1" && rand() % mountain_culling) {
+                tile.type = types[tile_type];
+            }
+
+            if (tile_subtype == "hill1" && rand() % hill_culling) {
+                tile.type = types[tile_type];
             }
         }
     }
