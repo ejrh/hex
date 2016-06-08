@@ -94,37 +94,53 @@ void generate_level(Level &level, std::map<std::string, TileType::pointer>& type
             Tile& tile = level.tiles[tile_pos];
             std::string tile_type = type(tile);
             std::string tile_subtype = subtype(tile);
+
+            // Hills can be coalesced in two patterns:
+            //       H   and   H
+            //     h             h
             if (tile_subtype == "hill1") {
                 bool left = rand() % 2 == 0;
-                int dir = left ? 5 : 1;
+                int dir = left ? 4 : 2;
                 Point neighbour_pos;
                 get_neighbour(tile_pos, dir, &neighbour_pos);
                 if (!level.contains(neighbour_pos))
                     continue;
                 Tile& neighbour = level.tiles[neighbour_pos];
                 if (subtype(neighbour) == "hill1") {
-                    tile.type = types[tile_type + (left ? "_hill3" : "_hill2")];
+                    tile.type = types[tile_type + (left ? "_hill2" : "_hill3")];
                     neighbour.type = types[tile_type + "_hill0"];
                     tile_subtype = subtype(tile);
                 }
-            } else if (tile_subtype == "mountain1") {
+            }
+
+            // Mountains can be coalesced as follows:
+            //       M
+            //     m   m
+            //       m
+            if (tile_subtype == "mountain1") {
                 Point neighbour_pos[6];
                 get_neighbours(tile_pos, neighbour_pos);
-                if (!level.contains(neighbour_pos[5]) || !level.contains(neighbour_pos[0]) || !level.contains(neighbour_pos[1]))
+                if (!level.contains(neighbour_pos[2]) || !level.contains(neighbour_pos[3]) || !level.contains(neighbour_pos[4]))
                     continue;
-                Tile& neighbour5 = level.tiles[neighbour_pos[5]];
-                Tile& neighbour0 = level.tiles[neighbour_pos[0]];
-                Tile& neighbour1 = level.tiles[neighbour_pos[1]];
-                if (subtype(neighbour5) != "mountain1" || subtype(neighbour0) != "mountain1" || subtype(neighbour1) != "mountain1")
+                Tile& neighbour2 = level.tiles[neighbour_pos[2]];
+                Tile& neighbour3 = level.tiles[neighbour_pos[3]];
+                Tile& neighbour4 = level.tiles[neighbour_pos[4]];
+                if (subtype(neighbour2) != "mountain1" || subtype(neighbour3) != "mountain1" || subtype(neighbour4) != "mountain1")
                     continue;
 
                 tile.type = types[tile_type + "_mountain2"];
-                neighbour5.type = types[tile_type + "_mountain0"];
-                neighbour0.type = types[tile_type + "_mountain0"];
-                neighbour1.type = types[tile_type + "_mountain0"];
+                neighbour2.type = types[tile_type + "_mountain0"];
+                neighbour3.type = types[tile_type + "_mountain0"];
+                neighbour4.type = types[tile_type + "_mountain0"];
                 tile_subtype = subtype(tile);
             }
 
+            // Mountains can further be coalesced:
+            //          M
+            //        m   m
+            //      m   m   m
+            //        m   m
+            //          m
             if (tile_subtype == "mountain2") {
                 Point neighbour_pos[6];
                 get_neighbours(tile_pos, neighbour_pos);
@@ -132,23 +148,25 @@ void generate_level(Level &level, std::map<std::string, TileType::pointer>& type
                 get_neighbours(neighbour_pos[4], neighbour_pos_l);
                 Point neighbour_pos_r[6];
                 get_neighbours(neighbour_pos[2], neighbour_pos_r);
-                if (!level.contains(neighbour_pos[3]) || !level.contains(neighbour_pos_l[5]) || !level.contains(neighbour_pos_r[1]))
+                Point neighbour_pos_b[6];
+                get_neighbours(neighbour_pos[3], neighbour_pos_b);
+                if (!level.contains(neighbour_pos_b[3]) || !level.contains(neighbour_pos_l[4]) || !level.contains(neighbour_pos_r[2]))
                     continue;
-                Tile& neighbourl5 = level.tiles[neighbour_pos_l[5]];
-                Tile& neighbour4 = level.tiles[neighbour_pos[4]];
-                Tile& neighbour3 = level.tiles[neighbour_pos[3]];
-                Tile& neighbour2 = level.tiles[neighbour_pos[2]];
-                Tile& neighbourr1 = level.tiles[neighbour_pos_r[1]];
-                if (subtype(neighbourl5) != "mountain1" || subtype(neighbour4) != "mountain1" || subtype(neighbour3) != "mountain1"
-                        || subtype(neighbour2) != "mountain1" || subtype(neighbourr1) != "mountain1")
+                Tile& neighbourl4 = level.tiles[neighbour_pos_l[4]];
+                Tile& neighbourb4 = level.tiles[neighbour_pos_b[4]];
+                Tile& neighbourb3 = level.tiles[neighbour_pos_b[3]];
+                Tile& neighbourb2 = level.tiles[neighbour_pos_b[2]];
+                Tile& neighbourr2 = level.tiles[neighbour_pos_r[2]];
+                if (subtype(neighbourl4) != "mountain1" || subtype(neighbourb4) != "mountain1" || subtype(neighbourb3) != "mountain1"
+                        || subtype(neighbourb2) != "mountain1" || subtype(neighbourr2) != "mountain1")
                     continue;
 
                 tile.type = types[tile_type + "_mountain3"];
-                neighbourl5.type = types[tile_type + "_mountain0"];
-                neighbour4.type = types[tile_type + "_mountain0"];
-                neighbour3.type = types[tile_type + "_mountain0"];
-                neighbour2.type = types[tile_type + "_mountain0"];
-                neighbourr1.type = types[tile_type + "_mountain0"];
+                neighbourl4.type = types[tile_type + "_mountain0"];
+                neighbourb4.type = types[tile_type + "_mountain0"];
+                neighbourb3.type = types[tile_type + "_mountain0"];
+                neighbourb2.type = types[tile_type + "_mountain0"];
+                neighbourr2.type = types[tile_type + "_mountain0"];
             }
 
             if (tile_subtype == "mountain1" && rand() % mountain_culling) {
