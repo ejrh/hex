@@ -25,6 +25,13 @@ void ViewUpdater::receive(boost::shared_ptr<Message> update) {
 
 void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
     switch (update->type) {
+        case ClearGame: {
+            game_view->level_view.tile_views.resize(0, 0);
+            game_view->faction_views.clear();
+            game_view->unit_stack_views.clear();
+            game_view->ghosts.clear();
+        } break;
+
         case SetLevel: {
             boost::shared_ptr<WrapperMessage2<int, int> > upd = boost::dynamic_pointer_cast<WrapperMessage2<int, int> >(update);
             game_view->level_view.level = &game->level;

@@ -1,8 +1,4 @@
 set(srcs
-        generate.cpp
-        generate.h
-        noise.cpp
-        noise.h
         ai/ai.cpp
         ai/ai.h
         ai/ai_updater.cpp
@@ -13,6 +9,8 @@ set(srcs
         basics/hexgrid.cpp
         basics/hexgrid.h
         basics/intset.h
+        basics/noise.cpp
+        basics/noise.h
         basics/point.h
         basics/vector2.h
         chat/chat.h
@@ -29,6 +27,8 @@ set(srcs
         game/game_updater.h
         game/game_writer.cpp
         game/game_writer.h
+        game/generation/generator.cpp
+        game/generation/generator.h
         game/level.cpp
         game/message_types.h
         game/combat/battle.cpp
@@ -120,6 +120,7 @@ source_group(Sources\\basics REGULAR_EXPRESSION /basics/)
 source_group(Sources\\chat REGULAR_EXPRESSION /chat/)
 source_group(Sources\\game REGULAR_EXPRESSION /game/)
 source_group(Sources\\game\\combat REGULAR_EXPRESSION /game/combat/)
+source_group(Sources\\game\\generation REGULAR_EXPRESSION /game/generation/)
 source_group(Sources\\game\\movement REGULAR_EXPRESSION /game/movement/)
 source_group(Sources\\graphics REGULAR_EXPRESSION /graphics/)
 source_group(Sources\\messaging REGULAR_EXPRESSION /messaging/)

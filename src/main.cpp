@@ -5,7 +5,6 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
 
-#include "hex/generate.h"
 #include "hex/ai/ai.h"
 #include "hex/ai/ai_updater.h"
 #include "hex/audio/audio.h"
@@ -16,6 +15,7 @@
 #include "hex/game/game_messages.h"
 #include "hex/game/game_updater.h"
 #include "hex/game/game_writer.h"
+#include "hex/game/generation/generator.h"
 #include "hex/graphics/graphics.h"
 #include "hex/messaging/event_pusher.h"
 #include "hex/messaging/writer.h"
@@ -63,8 +63,8 @@ void save_game(const std::string& filename, Game *game) {
 
 class BackgroundWindow: public UiWindow {
 public:
-    BackgroundWindow(UiLoop *loop, Options *options, Game *game, GameView *game_view, std::vector<Ai *> ais, EventPusher *event_pusher, GameArbiter *arbiter, Updater *updater, LevelRenderer *level_renderer):
-        UiWindow(0, 0, 0, 0), loop(loop), options(options), game(game), game_view(game_view), ais(ais), event_pusher(event_pusher), arbiter(arbiter), updater(updater), level_renderer(level_renderer) { }
+    BackgroundWindow(UiLoop *loop, Options *options, Generator *generator, Game *game, GameView *game_view, std::vector<Ai *> ais, EventPusher *event_pusher, GameArbiter *arbiter, Updater *updater, LevelRenderer *level_renderer):
+        UiWindow(0, 0, 0, 0), loop(loop), options(options), generator(generator), game(game), game_view(game_view), ais(ais), event_pusher(event_pusher), arbiter(arbiter), updater(updater), level_renderer(level_renderer) { }
 
     bool receive_event(SDL_Event *evt) {
         if (evt->type == SDL_QUIT
@@ -87,6 +87,14 @@ public:
         } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_F5) {
             game_view->debug_mode = !game_view->debug_mode;
             level_renderer->show_hexagons = game_view->debug_mode;
+            return true;
+        } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_F6) {
+            generator->mountain_level += (evt->key.keysym.mod & KMOD_SHIFT) ? 0.2 : -0.2;
+            std::cerr << "mountain_level = " << generator->mountain_level << std::endl;
+            generator->create_game(*updater);
+            updater->receive(create_message(GrantFactionView, 0, 2, true));
+            updater->receive(create_message(GrantFactionControl, 0, 2, true));
+            updater->receive(create_message(GrantFactionControl, 0, 3, true));
             return true;
         }
 
@@ -111,6 +119,7 @@ public:
 private:
     UiLoop *loop;
     Options *options;
+    Generator *generator;
     Game *game;
     GameView *game_view;
     std::vector<Ai *> ais;
@@ -166,6 +175,8 @@ void run(Options& options) {
 
     std::vector<Ai *> ais;
 
+    Generator generator;
+
     if (options.server_mode) {
         server.start();
         updater.subscribe(&server);
@@ -182,7 +193,7 @@ void run(Options& options) {
         dispatcher.subscribe(&arbiter);
         updater.subscribe(independent_ai_updater);
         if (options.load_filename.empty()) {
-            create_game(updater);
+            generator.create_game(updater);
         } else {
             load_game(options.load_filename, updater);
         }
@@ -217,7 +228,7 @@ void run(Options& options) {
     pre_updater.battle_viewer = &battle_viewer;
 
     UiLoop loop(25);
-    BackgroundWindow bw(&loop, &options, &game, &game_view, ais, &event_pusher, &arbiter, &updater, &level_renderer);
+    BackgroundWindow bw(&loop, &options, &generator, &game, &game_view, ais, &event_pusher, &arbiter, &updater, &level_renderer);
     loop.add_window(&bw);
     loop.add_window(&level_window);
     loop.add_window(&map_window);

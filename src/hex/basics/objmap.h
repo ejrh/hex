@@ -6,13 +6,18 @@
 template<typename K, typename T>
 class ObjMap {
 public:
-    typedef typename std::map<K, typename T::pointer>::iterator iterator;
-    typedef typename std::map<K, typename T::pointer>::const_iterator const_iterator;
+    typedef typename std::map<K, typename T::pointer> map;
+    typedef typename map::iterator iterator;
+    typedef typename map::const_iterator const_iterator;
 
     ObjMap(const char *name): name(name) { }
 
     size_t size() const {
         return data.size();
+    }
+
+    void clear() {
+        data.clear();
     }
 
     iterator begin() {
@@ -80,13 +85,13 @@ public:
         return data.rbegin()->first;
     }
 
-    operator std::map<K, typename T::pointer>&() {
+    operator map&() {
         return data;
     }
 
 private:
     std::string name;
-    std::map<K, typename T::pointer> data;
+    map data;
 };
 
 template<typename T>

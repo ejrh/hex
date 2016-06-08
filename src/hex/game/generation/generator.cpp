@@ -1,10 +1,11 @@
 #include "common.h"
 
-#include "hex/noise.h"
 #include "hex/basics/hexgrid.h"
+#include "hex/basics/noise.h"
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/game_updater.h"
+#include "hex/game/generation/generator.h"
 #include "hex/game/movement/movement.h"
 #include "hex/messaging/loader.h"
 #include "hex/messaging/updater.h"
@@ -24,20 +25,15 @@ static std::string subtype(Tile& tile) {
         return "";
 }
 
-const float height_scale = 8.0f;
-const float height_power = 1.5f;
-const float sea_level = -2.0f;
-const float hill_level = 0.0f;
-const float mountain_level = 4.8f;
-const int hill_culling = 4;
-const int mountain_culling = 2;
-
-void generate_level(Level &level, std::map<std::string, TileType::pointer>& types) {
+void Generator::generate_level() {
     PerlinNoise noise(3, 3);
     PerlinNoise noise2(6, 6);
 
     PerlinNoise type_noise1(3, 3);
     PerlinNoise type_noise2(3, 3);
+
+    Level& level = game->level;
+    std::map<std::string, TileType::pointer>& types = game->tile_types;
 
     for (int i = 0; i < level.height; i++) {
         for (int j = 0; j < level.width; j++) {
@@ -56,6 +52,9 @@ void generate_level(Level &level, std::map<std::string, TileType::pointer>& type
             if (height > 0.0)
                 height = powf(height, height_power);
 
+            int hill_rand = rand();
+            int road_rand = rand();
+
             if (height < sea_level)
                 tile.type = types["water"];
             else {
@@ -72,7 +71,7 @@ void generate_level(Level &level, std::map<std::string, TileType::pointer>& type
 
                 if (height > mountain_level) {
                     type_name += "_mountain1";
-                } else if (height > hill_level && rand() % 2) {
+                } else if (height > hill_level && hill_rand % 2) {
                     type_name += "_hill1";
                 }
 
@@ -81,7 +80,7 @@ void generate_level(Level &level, std::map<std::string, TileType::pointer>& type
                     throw Error() << boost::format("Unknown tile type: %s") % type_name;
                 }
 
-                if (tile.type->has_property(Roadable) && rand() % 2)
+                if (tile.type->has_property(Roadable) && road_rand % 2)
                     tile.road = true;
             }
         }
@@ -95,11 +94,15 @@ void generate_level(Level &level, std::map<std::string, TileType::pointer>& type
             std::string tile_type = type(tile);
             std::string tile_subtype = subtype(tile);
 
+            int mountain_rand = rand();
+            int hill_rand = rand();
+
             // Hills can be coalesced in two patterns:
             //       H   and   H
             //     h             h
+            int left_rand = rand();
             if (tile_subtype == "hill1") {
-                bool left = rand() % 2 == 0;
+                bool left = left_rand % 2 == 0;
                 int dir = left ? 4 : 2;
                 Point neighbour_pos;
                 get_neighbour(tile_pos, dir, &neighbour_pos);
@@ -169,20 +172,25 @@ void generate_level(Level &level, std::map<std::string, TileType::pointer>& type
                 neighbourr2.type = types[tile_type + "_mountain0"];
             }
 
-            if (tile_subtype == "mountain1" && rand() % mountain_culling) {
+            if (tile_subtype == "mountain1" && mountain_rand % mountain_culling) {
                 tile.type = types[tile_type];
             }
 
-            if (tile_subtype == "hill1" && rand() % hill_culling) {
+            if (tile_subtype == "hill1" && hill_rand % hill_culling) {
                 tile.type = types[tile_type];
             }
         }
     }
 }
 
-void create_game(Updater& updater) {
-    Game game;
-    GameUpdater game_updater(&game);
+void Generator::create_game(Updater& updater) {
+    updater.receive(create_message(ClearGame));
+
+    srand(seed);
+
+    game = new Game();
+
+    GameUpdater game_updater(game);
     updater.subscribe(&game_updater);
 
     int width = 57;
@@ -191,18 +199,17 @@ void create_game(Updater& updater) {
     ReceiverMessageLoader loader(updater);
     loader.load("data/game.txt");
 
-    game.level.width = width;
-    game.level.height = height;
-    game.level.tiles.resize(width, height);
-    std::map<std::string, TileType::pointer> tile_type_map = game.tile_types;
-    generate_level(game.level, tile_type_map);
+    game->level.width = width;
+    game->level.height = height;
+    game->level.tiles.resize(width, height);
+    generate_level();
 
-    updater.receive(boost::make_shared<WrapperMessage2<int, int> >(SetLevel, game.level.width, game.level.height));
-    for (int i = 0; i < game.level.height; i++) {
+    updater.receive(boost::make_shared<WrapperMessage2<int, int> >(SetLevel, game->level.width, game->level.height));
+    for (int i = 0; i < game->level.height; i++) {
         Point origin(0, i);
         std::vector<std::string> data;
-        for (int j = 0; j < game.level.width; j++) {
-            Tile& tile = game.level.tiles[i][j];
+        for (int j = 0; j < game->level.width; j++) {
+            Tile& tile = game->level.tiles[i][j];
             std::ostringstream data_ss;
             TileType::pointer tile_type = tile.type;
             data_ss << tile_type->name;
@@ -218,19 +225,19 @@ void create_game(Updater& updater) {
     updater.receive(create_message(CreateFaction, 3, "drow", "Great Drow Empire"));
 
     for (int i = 1; i <= 40; i++) {
-        StrMap<UnitType>::iterator item = game.unit_types.begin();
-        std::advance(item, rand() % game.unit_types.size());
+        StrMap<UnitType>::iterator item = game->unit_types.begin();
+        std::advance(item, rand() % game->unit_types.size());
 
-        IntMap<Faction>::iterator faction_iter = game.factions.begin();
-        std::advance(faction_iter, rand() % game.factions.size());
+        IntMap<Faction>::iterator faction_iter = game->factions.begin();
+        std::advance(faction_iter, rand() % game->factions.size());
         int faction = faction_iter->second->id;
 
-        MovementModel movement_model(&game.level);
+        MovementModel movement_model(&game->level);
         Point p(-1, -1);
         for (int j = 0; j < 10; j++) {
-            int tx = rand() % game.level.width;
-            int ty = rand() % game.level.height;
-            if (movement_model.admits(*item->second, *game.level.tiles[ty][tx].type)) {
+            int tx = rand() % game->level.width;
+            int ty = rand() % game->level.height;
+            if (movement_model.admits(*item->second, *game->level.tiles[ty][tx].type)) {
                 p = Point(tx, ty);
                 break;
             }
@@ -246,25 +253,25 @@ void create_game(Updater& updater) {
     };
 
     // Add towers
-    for (int i = 0; i < game.level.height; i++) {
-        for (int j = 0; j < game.level.width; j++) {
+    for (int i = 0; i < game->level.height; i++) {
+        for (int j = 0; j < game->level.width; j++) {
             Point tile_pos(j, i);
-            Tile& tile = game.level.tiles[tile_pos];
+            Tile& tile = game->level.tiles[tile_pos];
             if (!tile.type->has_property(Roadable))
                 continue;
             Point neighbour_pos[6];
             get_neighbours(tile_pos, neighbour_pos);
             int water_count = 0;
             for (int i = 0; i < 6; i++) {
-                if (!game.level.contains(neighbour_pos[i]))
+                if (!game->level.contains(neighbour_pos[i]))
                     continue;
-                Tile& neighbour = game.level.tiles[neighbour_pos[i]];
-                if (neighbour.type == tile_type_map["water"])
+                Tile& neighbour = game->level.tiles[neighbour_pos[i]];
+                if (neighbour.type == game->tile_types.get("water"))
                     water_count++;
             }
             if (water_count >= 3 && rand() % 4 == 0) {
-                IntMap<Faction>::iterator faction_iter = game.factions.begin();
-                std::advance(faction_iter, rand() % game.factions.size());
+                IntMap<Faction>::iterator faction_iter = game->factions.begin();
+                std::advance(faction_iter, rand() % game->factions.size());
                 int faction = faction_iter->second->id;
 
                 updater.receive(create_message(CreateStructure, tile_pos, "tower", faction));
@@ -274,8 +281,9 @@ void create_game(Updater& updater) {
         }
     }
 
-    game.turn_number = 1;
-    updater.receive(create_message(TurnBegin, game.turn_number));
+    game->turn_number = 1;
+    updater.receive(create_message(TurnBegin, game->turn_number));
 
     updater.unsubscribe(&game_updater);
+    delete game;
 }

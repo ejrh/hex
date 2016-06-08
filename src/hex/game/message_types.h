@@ -35,6 +35,7 @@ MSG_TYPE(CreateFactionView, WM(FactionViewDef))
 
 MSG_TYPE(LoadSong, WM(std::string))
 
+MSG_TYPE(ClearGame, Message)
 MSG_TYPE(CreateUnitType, WM(UnitType))
 MSG_TYPE(CreateTileType, WM(TileType))
 MSG_TYPE(CreateStructureType, WM(StructureType))

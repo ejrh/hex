@@ -24,6 +24,12 @@ void GameUpdater::receive(boost::shared_ptr<Message> update) {
 
 void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
     switch (update->type) {
+        case ClearGame: {
+            game->level.resize(0, 0);
+            game->factions.clear();
+            game->stacks.clear();
+        } break;
+
         case SetLevel: {
             boost::shared_ptr<WrapperMessage2<int, int> > upd = boost::dynamic_pointer_cast<WrapperMessage2<int, int> >(update);
             game->level.resize(upd->data1, upd->data2);
