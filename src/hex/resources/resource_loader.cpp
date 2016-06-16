@@ -80,6 +80,27 @@ void ResourceLoader::handle_message(boost::shared_ptr<Message> msg) {
             last_unit_view_def->move_animations[facing].images = upd->data3;
         } break;
 
+        case UnitAttackAnimation: {
+            boost::shared_ptr<UnitAttackAnimationMessage> upd = boost::dynamic_pointer_cast<UnitAttackAnimationMessage>(msg);
+            int facing = upd->data1;
+            last_unit_view_def->attack_animations[facing].bpm = upd->data2;
+            last_unit_view_def->attack_animations[facing].images = upd->data3;
+        } break;
+
+        case UnitRecoilAnimation: {
+            boost::shared_ptr<UnitRecoilAnimationMessage> upd = boost::dynamic_pointer_cast<UnitRecoilAnimationMessage>(msg);
+            int facing = upd->data1;
+            last_unit_view_def->recoil_animations[facing].bpm = upd->data2;
+            last_unit_view_def->recoil_animations[facing].images = upd->data3;
+        } break;
+
+        case UnitDieAnimation: {
+            boost::shared_ptr<UnitDieAnimationMessage> upd = boost::dynamic_pointer_cast<UnitDieAnimationMessage>(msg);
+            int facing = upd->data1;
+            last_unit_view_def->die_animations[facing].bpm = upd->data2;
+            last_unit_view_def->die_animations[facing].images = upd->data3;
+        } break;
+
         case CreateStructureView: {
             boost::shared_ptr<CreateStructureViewMessage> upd = boost::dynamic_pointer_cast<CreateStructureViewMessage>(msg);
             last_structure_view_def = resources->create_structure_view(upd->data);

@@ -6,6 +6,10 @@
 #include "hex/resources/view_def.h"
 
 
+// Assumes 1000 increments between frames
+#define frame_incr(bpm, update_ms) ((bpm) * (update_ms) / 60)
+
+
 class FactionView: public boost::enable_shared_from_this<FactionView> {
 public:
     typedef boost::shared_ptr<FactionView> pointer;
@@ -48,25 +52,58 @@ public:
     StructureView::pointer structure_view;
 };
 
-class UnitStackView: public boost::enable_shared_from_this<UnitStackView> {
+enum UnitPosture {
+    Holding,
+    Moving,
+    Attacking,
+    Recoiling,
+    Dying
+};
+
+class UnitView {
+public:
+    UnitView():
+        facing(rand() % 6), posture(Holding), variation(rand()), phase(rand()), selected(false) { }
+    ~UnitView() { }
+
+    void update(unsigned int update_ms) {
+        AnimationDef& animation = get_animation_def();
+        phase += frame_incr(animation.bpm, update_ms);
+    }
+
+    AnimationDef& get_animation_def() const {
+        switch (posture) {
+            case Holding: return view_def->hold_animations[facing];
+            case Moving: return view_def->move_animations[facing];
+            case Attacking: return view_def->attack_animations[facing];
+            case Recoiling: return view_def->recoil_animations[facing];
+            case Dying: return view_def->die_animations[facing];
+            default: return view_def->hold_animations[facing];
+        }
+    }
+
+public:
+    UnitViewDef::pointer view_def;
+    int facing;
+    UnitPosture posture;
+    unsigned int variation;
+    unsigned int phase;
+    bool selected;
+};
+
+class UnitStackView: public UnitView, public boost::enable_shared_from_this<UnitStackView> {
 public:
     typedef boost::shared_ptr<UnitStackView> pointer;
 
     UnitStackView(UnitStack::pointer stack):
         stack(stack),
-        facing(rand() % 6), variation(rand()), phase(rand()), selected(false), moving(false), locked(false), move_steps(0) { }
+        moving(false), locked(false) { }
     ~UnitStackView() { }
 
 public:
     UnitStack::pointer stack;
-    UnitViewDef::pointer view_def;
-    int facing;
-    unsigned int variation;
-    unsigned int phase;
-    bool selected;
     bool moving, locked;
     Path path;
-    int move_steps;
 };
 
 class GameView;
@@ -157,8 +194,5 @@ public:
 
     bool debug_mode;
 };
-
-// Assumes 1000 increments between frames
-#define frame_incr(bpm, update_ms) ((bpm) * (update_ms) / 60)
 
 #endif

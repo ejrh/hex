@@ -7,11 +7,11 @@ class Resources;
 class Graphics;
 class Audio;
 class GameView;
-class LevelRenderer;
+class UnitRenderer;
 
 class BattleViewer {
 public:
-    BattleViewer(Resources *resources, Graphics *graphics, Audio *audio, GameView *view, LevelRenderer *renderer);
+    BattleViewer(Resources *resources, Graphics *graphics, Audio *audio, GameView *view, UnitRenderer *renderer);
     void show_battle(Battle *battle);
 
 private:
@@ -19,7 +19,7 @@ private:
     Graphics *graphics;
     Audio *audio;
     GameView *game_view;
-    LevelRenderer *renderer;
+    UnitRenderer *renderer;
 };
 
 

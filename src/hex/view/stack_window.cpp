@@ -3,12 +3,12 @@
 #include "hex/game/game.h"
 #include "hex/graphics/font.h"
 #include "hex/graphics/graphics.h"
-#include "hex/view/level_renderer.h"
 #include "hex/view/stack_window.h"
+#include "hex/view/unit_renderer.h"
 #include "hex/view/view.h"
 
 
-StackWindow::StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view, LevelRenderer *renderer):
+StackWindow::StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view, UnitRenderer *renderer):
         UiWindow(x, y, width, height), resources(resources), graphics(graphics), view(view), renderer(renderer) {
     int px = x + StackWindow::border;
     int py = y + StackWindow::border;
@@ -53,19 +53,21 @@ void StackWindow::draw() {
         TextFormat tf(graphics, SmallFont10, true, 255,255,255);
 
         for (unsigned int i = 0; i < stack->units.size(); i++) {
-            int highlight;
+            Unit& unit = *stack->units[i];
+            UnitView unit_view;
+            unit_view.facing = 2;
+            unit_view.phase = 0;
+            unit_view.view_def = resources->get_unit_view_def(unit.type->name);
+            unit_view.selected = false;
             if (view->selected_units.contains(i)) {
                 graphics->fill_rectangle(25,25,25, unit_rectangles[i]);
-                highlight = 64;
+                unit_view.selected = true;
             } else {
                 graphics->fill_rectangle(75,75,75, unit_rectangles[i]);
-                highlight = 0;
             }
-            Unit& unit = *stack->units[i];
-            UnitViewDef& view_def = *resources->get_unit_view_def(unit.type->name);
             int px = unit_rectangles[i].x + StackWindow::unit_width / 2;
             int py = unit_rectangles[i].y + StackWindow::unit_height / 2;
-            renderer->draw_unit(px, py, unit, view_def, highlight);
+            renderer->draw_unit_centered(px, py, unit_view);
 
             std::ostringstream ss;
             ss << unit.properties[Moves] / MOVE_SCALE;

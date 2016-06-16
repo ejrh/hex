@@ -108,6 +108,8 @@ set(srcs
         view/status_window.h
         view/tile_painter.cpp
         view/tile_painter.h
+        view/unit_renderer.cpp
+        view/unit_renderer.h
         view/view.h
         view/view_updater.cpp
         view/view_updater.h

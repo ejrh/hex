@@ -5,12 +5,13 @@
 #include "hex/graphics/font.h"
 #include "hex/graphics/graphics.h"
 #include "hex/game/game.h"
-#include "hex/view/view.h"
 #include "hex/view/level_renderer.h"
+#include "hex/view/unit_renderer.h"
+#include "hex/view/view.h"
 
 
-LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *level, GameView *view):
-        show_hexagons(false), graphics(graphics), resources(resources), level(level), view(view) {
+LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *level, GameView *view, UnitRenderer *unit_renderer):
+        show_hexagons(false), graphics(graphics), resources(resources), level(level), view(view), unit_renderer(unit_renderer) {
     cursor_images = resources->image_series["CURSORS"];
     arrow_images = resources->image_series["ARROWS"];
 }
@@ -89,7 +90,7 @@ void LevelRenderer::render_objects(int x, int y, Point tile_pos) {
     if (tile_view.structure_view) {
         StructureViewDef::pointer view_def = tile_view.structure_view->view_def;
         AnimationDef& animation = view_def->animation;
-        Image *structure = get_image_or_placeholder(animation.images, tile_view.phase / 1000, view_def->name);
+        Image *structure = unit_renderer->get_image_or_placeholder(animation.images, tile_view.phase / 1000, view_def->name);
 
         int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
         graphics->blit(structure, x - view_def->centre_x, y - view_def->centre_y, SDL_BLENDMODE_BLEND, alpha);
@@ -160,49 +161,14 @@ void LevelRenderer::render_objects(int x, int y, Point tile_pos) {
 }
 
 void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
-    UnitViewDef::pointer view_def = stack_view.view_def;
-    if (!view_def) {
-        return;
-    }
+    unit_renderer->draw_unit(x, y, stack_view);
 
-    int facing = stack_view.facing;
-    if (facing < 0 || facing >= 6)
-        facing = 0;
-
-    AnimationDef& animation = stack_view.moving ? view_def->move_animations[facing] : view_def->hold_animations[facing];
-    Image *unit = get_image_or_placeholder(animation.images, stack_view.phase / 1000, view_def->name);
-    graphics->blit(unit, x - unit->width / 2, y - unit->height + 6, SDL_BLENDMODE_BLEND);
-
-    if (stack_view.selected && !stack_view.moving) {
-        int add_phase = (view->phase / 1000) % 32;
-        if (add_phase < 16)
-            add_phase = add_phase*16;
-        else {
-            add_phase = (32 - add_phase)*16;
-            if (add_phase > 255)
-                add_phase = 255;
-        }
-        graphics->blit(unit, x - unit->width / 2, y - unit->height + 6, SDL_BLENDMODE_ADD, add_phase);
-    }
-
+    // Draw flag
     Faction::pointer owner = stack_view.stack->owner;
     FactionView::pointer faction_view = view->faction_views.get(owner->id);
     FactionViewDef::pointer faction_view_def = faction_view->view_def;
 
     graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, x+16, y-20, 8, 12);
-}
-
-void LevelRenderer::draw_unit(int x, int y, Unit &unit, UnitViewDef& view_def, int highlight) {
-    int facing = 2;
-    std::vector<ImageRef>& image_series = view_def.hold_animations[facing].images;
-    Image *image = get_image_or_placeholder(image_series, 0, view_def.name);
-
-    x -= image->clip_x_offset + image->clip_width / 2;
-    y -= image->clip_y_offset + image->clip_height / 2;
-
-    graphics->blit(image, x, y, SDL_BLENDMODE_BLEND);
-    if (highlight != 0)
-        graphics->blit(image, x, y, SDL_BLENDMODE_ADD, highlight);
 }
 
 void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {
@@ -223,15 +189,4 @@ void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {
         if (path_arrow != NULL)
             graphics->blit(path_arrow, x - path_arrow->width / 2, y - path_arrow->height / 2 - 6, SDL_BLENDMODE_BLEND);
     }
-}
-
-Image *LevelRenderer::get_image_or_placeholder(ImageSeries& image_series, int pos, const std::string name) {
-    if (image_series.size() != 0) {
-        return image_series[pos % image_series.size()].image;
-    }
-    const std::string& label = name.substr(0, 3);
-    TextFormat tf(graphics, SmallFont14, true, 255,255,255, 128,128,128);
-    Image *image = tf.write_to_image(label);
-    image_series.push_back(ImageRef("PLACEHOLDER", image));
-    return image;
 }

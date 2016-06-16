@@ -1,11 +1,13 @@
 #ifndef COMBAT_VIEW_H
 #define COMBAT_VIEW_H
 
+#include "hex/view/view.h"
+
 class Participant;
 class UnitStack;
 class Battle;
 
-class ParticipantView {
+class ParticipantView: public UnitView {
 public:
     ParticipantView(Participant *participant);
 
@@ -28,7 +30,9 @@ public:
 
 class BattleView {
 public:
-    BattleView(Battle *battle, int width, int height);
+    BattleView(Battle *battle, int width, int height, Resources *resources);
+
+    void update();
 
     static const int participant_width = 60;
     static const int participant_height = 50;
@@ -39,8 +43,10 @@ public:
 public:
     Battle *battle;
     int width, height;
+    Resources *resources;
     BattleStackView battle_stack_views[7];
     std::vector<ParticipantView> participant_views;
+    unsigned int last_update;
 };
 
 #endif

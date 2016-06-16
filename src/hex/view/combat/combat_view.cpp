@@ -26,11 +26,11 @@ void BattleStackView::add_participant(ParticipantView& pv) {
 
     participants[num] = pv.participant->id;
     pv.x = x + (num % 4) * BattleView::participant_width + BattleView::participant_width / 2;
-    pv.y = y + (num / 4) * BattleView::participant_height + BattleView::participant_height / 2;
+    pv.y = y + (num / 4) * BattleView::participant_height + BattleView::participant_height;
 }
 
-BattleView::BattleView(Battle *battle, int width, int height):
-        battle(battle), width(width), height(height) {
+BattleView::BattleView(Battle *battle, int width, int height, Resources *resources):
+        battle(battle), width(width), height(height), resources(resources), last_update(0) {
     Point centre(0, 0);
     int centre_x = width/2;
     int centre_y = height/2;
@@ -48,10 +48,25 @@ BattleView::BattleView(Battle *battle, int width, int height):
     for (std::vector<Participant>::iterator iter = battle->participants.begin(); iter != battle->participants.end(); iter++) {
         Participant& p = *iter;
         ParticipantView pv(&p);
+        pv.view_def = resources->get_unit_view_def(p.unit->type->name);
+        pv.facing = 2;
+        pv.posture = Holding;
 
         BattleStackView& bsv = battle_stack_views[p.stack_num];
         bsv.add_participant(pv);
 
         participant_views.push_back(pv);
+    }
+}
+
+void BattleView::update() {
+    unsigned int ticks = SDL_GetTicks();
+    if (ticks < last_update + 25)
+        return;
+    unsigned int update_ms = ticks - last_update;
+    last_update = ticks;
+
+    for (std::vector<ParticipantView>::iterator iter = participant_views.begin(); iter != participant_views.end(); iter++) {
+        iter->update(update_ms);
     }
 }

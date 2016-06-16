@@ -11,14 +11,13 @@ class Level;
 class GameView;
 class LevelView;
 class UnitStackView;
-class Unit;
-class UnitViewDef;
+class UnitRenderer;
 
 class LevelRenderer {
 public:
     typedef void (LevelRenderer::*RenderMethod)(int x, int y, Point tile_pos);
 
-    LevelRenderer(Graphics *graphics, Resources *resources, Level *level, GameView *view);
+    LevelRenderer(Graphics *graphics, Resources *resources, Level *level, GameView *view, UnitRenderer *unit_renderer);
     ~LevelRenderer();
 
 protected:
@@ -28,10 +27,7 @@ protected:
     virtual void render_features(int x, int y, Point tile_pos);
     virtual void render_objects(int x, int y, Point tile_pos);
     virtual void draw_unit_stack(int x, int y, UnitStackView& stack_view);
-    virtual void draw_unit(int x, int y, Unit &unit, UnitViewDef& view_def, int highlight = 0);
     virtual void render_path_arrow(int x, int y, Point tile_pos);
-
-    Image *get_image_or_placeholder(ImageSeries& image_series, int pos, const std::string name);
 
 public:
     bool show_hexagons;
@@ -41,13 +37,12 @@ protected:
     Resources *resources;
     Level *level;
     GameView *view;
+    UnitRenderer *unit_renderer;
 
     ImageSeries cursor_images;
     ImageSeries arrow_images;
 
     friend class LevelWindow;
-    friend class StackWindow;
-    friend class BattleWindow;
 };
 
 #endif

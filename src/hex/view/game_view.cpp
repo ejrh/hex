@@ -23,13 +23,12 @@ void GameView::update() {
     unsigned int ticks = SDL_GetTicks();
     if (ticks < last_update + 25)
         return;
-
     unsigned int update_ms = ticks - last_update;
+    last_update = ticks;
 
     int level_bpm = 60 * 40;
     phase += frame_incr(level_bpm, update_ms);
 
-    last_update = ticks;
     for (int i = 0; i < level_view.level->height; i++)
         for (int j = 0; j < level_view.level->width; j++) {
             TileViewDef::pointer view_def = level_view.tile_views[i][j].view_def;
@@ -45,7 +44,7 @@ void GameView::update() {
         UnitViewDef::pointer view_def = stack_view.view_def;
         if (!view_def)
             continue;
-        stack_view.phase += frame_incr(view_def->hold_animations[stack_view.facing].bpm, update_ms);
+        stack_view.update(update_ms);
     }
 
     level_view.ghost_visibility.clear();

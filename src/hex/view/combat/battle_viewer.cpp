@@ -51,11 +51,11 @@ private:
 
 }
 
-BattleViewer::BattleViewer(Resources *resources, Graphics *graphics, Audio *audio, GameView *game_view, LevelRenderer *renderer):
+BattleViewer::BattleViewer(Resources *resources, Graphics *graphics, Audio *audio, GameView *game_view, UnitRenderer *renderer):
         resources(resources), graphics(graphics), audio(audio), game_view(game_view), renderer(renderer) { }
 
 void BattleViewer::show_battle(Battle *battle) {
-    BattleView battle_view(battle, graphics->width, graphics->height);
+    BattleView battle_view(battle, graphics->width, graphics->height, resources);
 
     UiLoop loop(25);
     battle_viewer::BackgroundWindow bg_window(&loop);

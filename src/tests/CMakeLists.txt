@@ -41,3 +41,8 @@ add_executable(pathfinding_test pathfinding_test.cpp)
 target_link_libraries(pathfinding_test hex)
 target_link_libraries(pathfinding_test ${gen_libs})
 target_compile_options(pathfinding_test PUBLIC ${gen_opts})
+
+add_executable(unit_rendering_test unit_rendering_test.cpp)
+target_link_libraries(unit_rendering_test hex)
+target_link_libraries(unit_rendering_test ${gen_libs})
+target_compile_options(unit_rendering_test PUBLIC ${gen_opts})
