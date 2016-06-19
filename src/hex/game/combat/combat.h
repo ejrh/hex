@@ -5,11 +5,7 @@
 
 class UnitStack;
 class Unit;
-
-enum BattlePhase {
-    Charge,
-    Melee
-};
+class CombatModel;
 
 enum Side {
     None,
@@ -26,6 +22,7 @@ public:
     bool can_move() const;
     bool can_attack(const Participant& other) const;
     bool can_heal(const Participant& other) const;
+    bool is_alive() const;
 
 public:
     int id;
@@ -37,6 +34,7 @@ public:
     Unit::pointer unit;
 
     int health;
+    int max_health;
 };
 
 std::ostream& operator<<(std::ostream& os, const Participant& p);
@@ -49,7 +47,7 @@ public:
 
     void set_up_participants();
     void run();
-    bool finished() const;
+    bool check_finished();
     void step();
     void step_participant(Participant& participant);
     void make_move(Participant& participant, Participant& target);
@@ -59,13 +57,16 @@ public:
     std::vector<Participant> participants;
     std::vector<Move> moves;
 
+    CombatModel *combat_model;
     Game *game;
     Point target_point;
     Point attacking_point;
     UnitStack::pointer stacks[7];
     Side stack_sides[7];
-    BattlePhase phase;
     int turn;
+    int last_attacking_health;
+    int last_defending_health;
+    int rounds_without_injury;
 };
 
 #endif

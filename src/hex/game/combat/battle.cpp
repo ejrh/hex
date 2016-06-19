@@ -3,17 +3,21 @@
 #include "hex/basics/hexgrid.h"
 #include "hex/game/game.h"
 #include "hex/game/combat/combat.h"
+#include "hex/game/combat/combat_model.h"
+#include "hex/game/combat/move_types.h"
 
 Battle::Battle(Game *game, const Point& target_point, const Point& attacking_point):
-        game(game), target_point(target_point), attacking_point(attacking_point), phase(Charge), turn(0)
+        game(game), target_point(target_point), attacking_point(attacking_point), turn(0)
 {
     set_up_participants();
+    combat_model = CombatModel::get_default();
 }
 
 Battle::Battle(Game *game, const Point& target_point, const Point& attacking_point, const std::vector<Move>& moves):
-        moves(moves), game(game), target_point(target_point), attacking_point(attacking_point), phase(Charge), turn(0)
+        moves(moves), game(game), target_point(target_point), attacking_point(attacking_point), turn(0)
 {
     set_up_participants();
+    combat_model = CombatModel::get_default();
 }
 
 void Battle::set_up_participants() {
@@ -55,12 +59,15 @@ void Battle::set_up_participants() {
 }
 
 void Battle::run() {
-    while (!finished()) {
+    last_attacking_health = 0;
+    last_defending_health = 0;
+    rounds_without_injury = 0;
+    do {
         step();
-    }
+    } while (!check_finished());
 }
 
-bool Battle::finished() const {
+bool Battle::check_finished() {
     int attacking_health = 0;
     int defending_health = 0;
     for (std::vector<Participant>::const_iterator iter = participants.begin(); iter != participants.end(); iter++) {
@@ -71,11 +78,20 @@ bool Battle::finished() const {
             defending_health += participant.health;
     }
 
-    return attacking_health <= 0 || defending_health <= 0;
+    bool no_injury = last_attacking_health == attacking_health && last_defending_health == defending_health;
+    if (no_injury)
+        rounds_without_injury++;
+    else
+        rounds_without_injury = 0;
+    bool finished = attacking_health <= 0 || defending_health <= 0 || rounds_without_injury >= 3;
+    BOOST_LOG_TRIVIAL(trace) << boost::format("Finished: %s; with attacking %d (was %d), defending %d (was %d)") % finished % attacking_health % last_attacking_health % defending_health % last_defending_health;
+    last_attacking_health = attacking_health;
+    last_defending_health = defending_health;
+    return finished;
 }
 
 void Battle::step() {
-    BOOST_LOG_TRIVIAL(trace) << "Phase " << phase << ", turn " << turn;
+    BOOST_LOG_TRIVIAL(trace) << "Turn " << turn;
     for (std::vector<Participant>::iterator iter = participants.begin(); iter != participants.end(); iter++) {
         step_participant(*iter);
     }
@@ -108,27 +124,26 @@ void Battle::step_participant(Participant& participant) {
 }
 
 void Battle::make_move(Participant& participant, Participant& target) {
-    int attack_value = rand() % (participant.get_attack() + 1);
-    int defence_value = rand() % (target.get_defence() + 1);
-    int damage;
-    if (attack_value >= defence_value) {
-        damage = rand() % (participant.get_damage() + 1);
-    } else {
-        damage = 0;
+    std::vector<const MoveType *> move_types = combat_model->get_available_move_types(*this, participant);
+
+    const MoveType *best = NULL;
+    int best_value = 0;
+    for (std::vector<const MoveType *>::const_iterator iter = move_types.begin(); iter != move_types.end(); iter++) {
+        if (best == NULL || (*iter)->expected_value(*this, participant, target) > best_value) {
+            best = *iter;
+            best_value = best->expected_value(*this, participant, target);
+        }
     }
 
-    Move move(participant.id, target.id, damage);
-    moves.push_back(move);
-    apply_move(move);
+    if (best != NULL) {
+        Move move = best->generate(*this, participant, target);
+        moves.push_back(move);
+        apply_move(move);
+    }
 }
 
-
 void Battle::apply_move(const Move& move) {
-    Participant& participant = participants[move.participant_id];
-    Participant& target = participants[move.target_id];
-    target.health -= move.damage;
-    if (target.health <= 0) {
-        BOOST_LOG_TRIVIAL(trace) << "Target death";
-        target.health = 0;
-    }
+    const MoveType& move_type = combat_model->get_move_type(move);
+    move_type.apply(*this, move);
+    BOOST_LOG_TRIVIAL(trace) << move;
 }

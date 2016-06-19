@@ -33,7 +33,11 @@ set(srcs
         game/message_types.h
         game/combat/battle.cpp
         game/combat/combat.h
+        game/combat/combat_model.cpp
+        game/combat/combat_model.h
         game/combat/move.h
+        game/combat/move_types.h
+        game/combat/move_types.cpp
         game/combat/participant.cpp
         game/movement/movement.cpp
         game/movement/movement.h

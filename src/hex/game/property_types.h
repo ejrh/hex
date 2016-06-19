@@ -20,6 +20,12 @@ PROPERTY_TYPE(Climbing)
 
 PROPERTY_TYPE(Capturable)
 
+// Combat move types
+PROPERTY_TYPE(Archery)
+PROPERTY_TYPE(Charge)
+PROPERTY_TYPE(Healing)
+PROPERTY_TYPE(Strike)
+
 // Unit statistics
 PROPERTY_TYPE(Moves)
 PROPERTY_TYPE(Sight)

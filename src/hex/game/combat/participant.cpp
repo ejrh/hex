@@ -9,6 +9,7 @@ Participant::Participant(int id, Side side, int stack_num, UnitStack::pointer st
     this->unit = stack->units[unit_number];
 
     health = unit->get_property(Health);
+    max_health = unit->type->get_property(Health);
 }
 
 int Participant::get_attack() const {
@@ -39,6 +40,10 @@ bool Participant::can_heal(const Participant& other) const {
     if (other.health <= 0)
         return false;
     return side == other.side;
+}
+
+bool Participant::is_alive() const {
+    return health > 0;
 }
 
 std::ostream& operator<<(std::ostream& os, const Participant& p) {
