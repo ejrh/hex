@@ -11,7 +11,21 @@ enum PropertyType {
 };
 #undef PROPERTY_TYPE
 
-typedef std::map<PropertyType, int> Properties;
+class Properties {
+public:
+    int count(const PropertyType& type) const {
+        return data.count(type);
+    }
+
+    std::map<PropertyType, int>::const_iterator find(const PropertyType& type) const {
+        return data.find(type);
+    }
+
+    int& operator[](const PropertyType& type) { return data[type]; }
+
+public:
+    std::map<PropertyType, int> data;
+};
 
 PropertyType get_property_type(const std::string& name);
 const std::string get_property_type_name(const PropertyType property_type);

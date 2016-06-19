@@ -43,9 +43,10 @@ public:
 
     template <typename K, typename V>
     Serialiser& operator<<(const std::pair<K, V> p) {
-        if (need_seperator)
-            out << ", ";
-        out << p.first << ": " << p.second;
+        *this << p.first;
+        out << ": ";
+        need_seperator = false;
+        *this << p.second;
         need_seperator = true;
         return *this;
     }

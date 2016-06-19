@@ -66,9 +66,18 @@ int main(int argc, char *argv[]) {
         path.push_back(Point(4,7));
         path.push_back(Point(4,8));
 
+        UnitType orc_type;
+        orc_type.name = "orc";
+        orc_type.properties[Attack] = 3;
+        orc_type.properties[Defence] = 2;
+
+        updater.receive(create_message(CreateUnitType, orc_type));
+
         updater.receive(create_message(SetLevel, 20, 20));
 
         updater.receive(create_message(CreateFaction, 1, "orcs", "Alice"));
+
+        updater.receive(create_message(CreateStack, 1, Point(3,6), 1));
 
         updater.receive(create_message(UnitMove, 0, IntSet(), path, 0));
 

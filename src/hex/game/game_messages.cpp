@@ -2,6 +2,7 @@
 
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
+#include "hex/game/game_serialisation.h"
 #include "hex/messaging/message.h"
 
 
