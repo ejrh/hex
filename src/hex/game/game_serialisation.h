@@ -101,7 +101,7 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, StructureType& d) {
 template<typename Serialiser>
 inline Serialiser& operator<<(Serialiser& serialiser, const Move& m) {
     serialiser.begin_tuple();
-    serialiser << m.participant_id << m.target_id << m.type << m.damage;
+    serialiser << m.participant_id << m.target_id << m.type << m.effect;
     serialiser.end_tuple();
     return serialiser;
 }
@@ -109,7 +109,7 @@ inline Serialiser& operator<<(Serialiser& serialiser, const Move& m) {
 template<typename Deserialiser>
 inline Deserialiser& operator>>(Deserialiser& deserialiser, Move& m) {
     deserialiser.begin_tuple();
-    deserialiser >> m.participant_id >> m.target_id >> m.type >> m.damage;
+    deserialiser >> m.participant_id >> m.target_id >> m.type >> m.effect;
     deserialiser.end_tuple();
     return deserialiser;
 }

@@ -20,9 +20,8 @@ public:
     int get_defence() const;
     int get_damage() const;
     bool can_move() const;
-    bool can_attack(const Participant& other) const;
-    bool can_heal(const Participant& other) const;
     bool is_alive() const;
+    int adjust_health(int change);
 
 public:
     int id;
@@ -32,9 +31,6 @@ public:
     UnitStack::pointer stack;
     int unit_number;
     Unit::pointer unit;
-
-    int health;
-    int max_health;
 };
 
 std::ostream& operator<<(std::ostream& os, const Participant& p);
@@ -50,8 +46,11 @@ public:
     bool check_finished();
     void step();
     void step_participant(Participant& participant);
-    void make_move(Participant& participant, Participant& target);
+    void make_move(Participant& participant);
     void apply_move(const Move& move);
+    void replay();
+    void replay_move(const Move& move);
+    void commit();
 
 public:
     std::vector<Participant> participants;

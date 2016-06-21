@@ -6,67 +6,96 @@
 #include "hex/game/combat/move.h"
 #include "hex/game/combat/move_types.h"
 
-int damage_roll(const Participant& participant, const Participant& target) {
-    int attack_value = rand() % (participant.get_attack() + 1);
-    int defence_value = rand() % (target.get_defence() + 1);
-    int damage;
+int damage_roll(int attack, int defence, int damage) {
+    int attack_value = rand() % (attack + 1);
+    int defence_value = rand() % (defence + 1);
+    int damage_value;
     if (attack_value > defence_value) {
-        damage = rand() % (participant.get_damage() + 1);
+        damage_value = rand() % (damage + 1);
     } else {
-        damage = 0;
+        damage_value = 0;
     }
-
-    return damage;
+    return damage_value;
 }
 
-int average_damage_roll(const Participant& participant, const Participant& target, int num_trials) {
-    int total_damage = 0;
+int damage_roll(const Participant& participant, const Participant& target) {
+    return damage_roll(participant.get_attack(), target.get_defence(), participant.get_damage());
+}
+
+float average_damage_roll(const Participant& participant, const Participant& target, int num_trials) {
+    float total_damage = 0;
     for (int i = 0; i < num_trials; i++) {
         total_damage += damage_roll(participant, target);
     }
     return total_damage / num_trials;
 }
 
-int MoveType::expected_value(const Battle& battle, const Participant& participant, const Participant& target) const {
+bool MoveType::is_viable(const Battle& battle, const Participant& participant, const Participant& target) const {
+    if (direction == Beneficial)
+        return participant.side == target.side && target.is_alive();
+    else if (direction == Detrimental)
+        return participant.side != target.side && target.is_alive();
+    else
+        return true;
+}
+
+float MoveType::expected_value(const Battle& battle, const Participant& participant, const Participant& target) const {
     return average_damage_roll(participant, target);
-};
+}
 
 Move MoveType::generate(const Battle& battle, const Participant& participant, const Participant& target) const {
     Move move;
     move.participant_id = participant.id;
     move.target_id = target.id;
     move.type = type;
-    move.damage = damage_roll(participant, target);
+    move.effect = damage_roll(participant, target);
     return move;
-};
+}
 
 void MoveType::apply(Battle& battle, const Move& move) const {
-    Participant& participant = battle.participants[move.participant_id];
     Participant& target = battle.participants[move.target_id];
-    target.health -= move.damage;
-    if (target.health <= 0) {
-        BOOST_LOG_TRIVIAL(trace) << "Target death";
-        target.health = 0;
-    }
-};
+    target.adjust_health(-move.effect);
+}
 
-int HealingMoveType::expected_value(const Battle& battle, const Participant& participant, const Participant& target) const {
-    return 5;
-};
+bool ChargeMoveType::is_viable(const Battle& battle, const Participant& participant, const Participant& target) const {
+    return battle.turn == 0 && MoveType::is_viable(battle, participant, target);
+}
+
+float ChargeMoveType::expected_value(const Battle& battle, const Participant& participant, const Participant& target) const {
+    return MoveType::expected_value(battle, participant, target) + 2;
+}
+
+Move ChargeMoveType::generate(const Battle& battle, const Participant& participant, const Participant& target) const {
+    assert(battle.turn == 0);
+    Move move;
+    move.participant_id = participant.id;
+    move.target_id = target.id;
+    move.type = type;
+    move.effect = damage_roll(participant.get_attack() + 2, target.get_defence(), participant.get_attack());
+    return move;
+}
+
+bool HealingMoveType::is_viable(const Battle& battle, const Participant& participant, const Participant& target) const {
+    return participant.id != target.id && MoveType::is_viable(battle, participant, target);
+}
+
+float HealingMoveType::expected_value(const Battle& battle, const Participant& participant, const Participant& target) const {
+    return std::min(target.unit->type->get_property(Health) - target.unit->get_property(Health), 5);
+}
 
 Move HealingMoveType::generate(const Battle& battle, const Participant& participant, const Participant& target) const {
     Move move;
     move.participant_id = participant.id;
     move.target_id = target.id;
     move.type = Healing;
-    move.damage = 0;
+    move.effect = 5;
     return move;
-};
+}
 
 void HealingMoveType::apply(Battle& battle, const Move& move) const {
+    Participant& participant = battle.participants[move.participant_id];
+    participant.unit->properties[Healing] = 0;
+
     Participant& target = battle.participants[move.target_id];
-    target.health += 5;
-    if (target.health >= target.max_health) {
-        target.health = target.max_health;
-    }
-};
+    target.adjust_health(move.effect);
+}

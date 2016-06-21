@@ -35,3 +35,18 @@ const std::string get_property_type_name(const PropertyType property_type) {
     }
 #undef PROPERTY_TYPE
 }
+
+std::ostream& operator<<(std::ostream& os, const Properties& p) {
+    os << "{";
+    bool first = true;
+    for (std::map<PropertyType, int>::const_iterator iter = p.data.begin(); iter != p.data.end(); iter++) {
+        if (!first)
+            os << ", ";
+        else
+            first = false;
+
+        os << get_property_type_name(iter->first) << ": " << iter->second;
+    }
+    os << "}";
+    return os;
+}

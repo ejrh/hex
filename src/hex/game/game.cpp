@@ -74,6 +74,7 @@ Unit::pointer Game::create_unit(int stack_id, const std::string& type_name) {
     UnitStack::pointer stack = stacks.get(stack_id);
     Unit::pointer new_unit = boost::make_shared<Unit>();
     new_unit->type = type;
+    new_unit->properties[Health] = type->properties[Health];
 
     stack->units.push_back(new_unit);
     return new_unit;
@@ -150,6 +151,8 @@ void Game::begin_turn(int turn_number) {
             Unit& unit = **unit_iter;
             UnitType& type = *unit.type;
             unit.properties[Moves] = type.properties[Moves];
+            if (unit.properties[Health] > 0 && unit.properties[Health] < type.properties[Health])
+                unit.properties[Health]++;
         }
     }
 

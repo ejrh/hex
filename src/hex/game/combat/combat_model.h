@@ -19,13 +19,13 @@ public:
 
     std::vector<const MoveType *> get_available_move_types(const Battle& battle, const Participant& participant) const;
 
-    const MoveType& get_move_type(const Move& move) const;
+    const MoveType *get_move_type(const Move& move) const;
 
 private:
     void populate_move_types();
 
 private:
-    std::map<PropertyType, MoveType> move_types;
+    std::map<PropertyType, MoveType *> move_types;
     static CombatModel default_combat_model;
 };
 

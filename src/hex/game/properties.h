@@ -30,4 +30,6 @@ public:
 PropertyType get_property_type(const std::string& name);
 const std::string get_property_type_name(const PropertyType property_type);
 
+std::ostream& operator<<(std::ostream& os, const Properties& p);
+
 #endif

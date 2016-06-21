@@ -52,6 +52,14 @@ public:
 
     Unit() { }
     ~Unit() { }
+
+    Unit::pointer copy() const {
+        Unit::pointer unit = boost::make_shared<Unit>();
+        unit->type = type;
+        unit->properties = properties;
+        return unit;
+    }
+
     bool has_property(PropertyType property) const {
         if (properties.count(property) > 0)
             return true;

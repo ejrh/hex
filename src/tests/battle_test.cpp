@@ -48,27 +48,22 @@ void create_game(MessageReceiver& updater) {
 
     UnitType cat_type;
     cat_type.name = "cat";
-    cat_type.properties[Walking] = 1;
-    cat_type.properties[Moves] = 24;
-    cat_type.properties[Sight] = 5;
     cat_type.properties[Attack] = 5;
     cat_type.properties[Defence] = 3;
     cat_type.properties[Damage] = 2;
-    cat_type.properties[Health] = 5;
+    cat_type.properties[Health] = 6;
     cat_type.properties[Strike] = 1;
     cat_type.properties[Charge] = 1;
     updater.receive(create_message(CreateUnitType, cat_type));
 
     UnitType mouse_type;
     mouse_type.name = "mouse";
-    mouse_type.properties[Walking] = 1;
-    mouse_type.properties[Moves] = 20;
-    mouse_type.properties[Sight] = 4;
     mouse_type.properties[Attack] = 2;
     mouse_type.properties[Defence] = 5;
     mouse_type.properties[Damage] = 1;
-    mouse_type.properties[Health] = 3;
+    mouse_type.properties[Health] = 4;
     mouse_type.properties[Strike] = 1;
+    mouse_type.properties[Healing] = 1;
     updater.receive(create_message(CreateUnitType, mouse_type));
 
     updater.receive(create_message(CreateFaction, 1, "cats", "Cats"));
@@ -79,8 +74,7 @@ void create_game(MessageReceiver& updater) {
 
     updater.receive(create_message(CreateStack, 2, STACK2_POS, 2));
     updater.receive(create_message(CreateUnit, 2, "mouse"));
-
-    updater.receive(create_message(TurnBegin, 1));
+    updater.receive(create_message(CreateUnit, 2, "mouse"));
 }
 
 unsigned long game_checksum(Game& game) {
@@ -111,10 +105,7 @@ BOOST_AUTO_TEST_CASE(simple_battle) {
     srand(time(NULL));
     Battle battle(&game, STACK2_POS, STACK1_POS);
     battle.run();
-    for (std::vector<Move>::const_iterator iter = battle.moves.begin(); iter != battle.moves.end(); iter++) {
-        const Move& move = *iter;
-        std::cout << move << std::endl;
-    }
+    battle.commit();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

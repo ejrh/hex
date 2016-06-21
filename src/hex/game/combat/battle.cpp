@@ -72,10 +72,11 @@ bool Battle::check_finished() {
     int defending_health = 0;
     for (std::vector<Participant>::const_iterator iter = participants.begin(); iter != participants.end(); iter++) {
         const Participant& participant = *iter;
+        int health = participant.unit->get_property(Health);
         if (participant.side == Attacker)
-            attacking_health += participant.health;
+            attacking_health += health;
         else if (participant.side == Defender)
-            defending_health += participant.health;
+            defending_health += health;
     }
 
     bool no_injury = last_attacking_health == attacking_health && last_defending_health == defending_health;
@@ -103,47 +104,95 @@ void Battle::step_participant(Participant& participant) {
         return;
 
     BOOST_LOG_TRIVIAL(trace) << "Participant " << participant;
-
-    int target_id = -1;
-    for (std::vector<Participant>::const_iterator iter = participants.begin(); iter != participants.end(); iter++) {
-        const Participant& other = *iter;
-        if (participant.can_attack(other)) {
-            target_id = other.id;
-            break;
-        }
-    }
-
-    if (target_id == -1) {
-        BOOST_LOG_TRIVIAL(trace) << "No target";
-        return;
-    }
-
-    Participant& target = participants[target_id];
-    BOOST_LOG_TRIVIAL(trace) << "Target " << target;
-    make_move(participant, target);
+    make_move(participant);
 }
 
-void Battle::make_move(Participant& participant, Participant& target) {
+void Battle::make_move(Participant& participant) {
     std::vector<const MoveType *> move_types = combat_model->get_available_move_types(*this, participant);
 
     const MoveType *best = NULL;
-    int best_value = 0;
-    for (std::vector<const MoveType *>::const_iterator iter = move_types.begin(); iter != move_types.end(); iter++) {
-        if (best == NULL || (*iter)->expected_value(*this, participant, target) > best_value) {
-            best = *iter;
-            best_value = best->expected_value(*this, participant, target);
+    int best_target = -1;
+    float best_value = 0;
+    int num_considered = 0;
+    for (std::vector<Participant>::const_iterator iter = participants.begin(); iter != participants.end(); iter++) {
+        const Participant& target = *iter;
+        for (std::vector<const MoveType *>::const_iterator iter2 = move_types.begin(); iter2 != move_types.end(); iter2++) {
+            const MoveType *type = *iter2;
+            if (!type->is_viable(*this, participant, target))
+                continue;
+
+            num_considered++;
+
+            float expected_value = type->expected_value(*this, participant, target);
+
+            if (best == NULL || expected_value > best_value) {
+                best = type;
+                best_target = target.id;
+                best_value = best->expected_value(*this, participant, target);
+            }
         }
     }
 
-    if (best != NULL) {
-        Move move = best->generate(*this, participant, target);
+    if (best != NULL && best_target != -1) {
+        Move move = best->generate(*this, participant, participants[best_target]);
         moves.push_back(move);
         apply_move(move);
+        BOOST_LOG_TRIVIAL(trace) << boost::format("Considered %d moves and chose: ") % num_considered << move << boost::format(" (with value %0.1f)") % best_value;
+    } else {
+        BOOST_LOG_TRIVIAL(trace) << "Considered no moves";
     }
 }
 
 void Battle::apply_move(const Move& move) {
-    const MoveType& move_type = combat_model->get_move_type(move);
-    move_type.apply(*this, move);
-    BOOST_LOG_TRIVIAL(trace) << move;
+    const MoveType *move_type = combat_model->get_move_type(move);
+    move_type->apply(*this, move);
+    Participant& target = participants[move.target_id];
+    if (target.unit->get_property(Health) <= 0) {
+        BOOST_LOG_TRIVIAL(trace) << "Target death";
+        target.unit->properties[Health] = 0;
+    }
+}
+
+void Battle::replay() {
+    for (std::vector<Move>::iterator iter = moves.begin(); iter != moves.end(); iter++) {
+        Move& move = *iter;
+        replay_move(move);
+    }
+}
+
+void Battle::replay_move(const Move& move) {
+    apply_move(move);
+}
+
+void Battle::commit() {
+    BOOST_LOG_TRIVIAL(trace) << "Committing battle results";
+
+    for (std::vector<Participant>::const_iterator iter = participants.begin(); iter != participants.end(); iter++) {
+        const Participant& participant = *iter;
+
+        participant.stack->units[participant.unit_number]->type = participant.unit->type;
+        participant.stack->units[participant.unit_number]->properties = participant.unit->properties;
+    }
+
+    for (int dir = 0; dir < 7; dir++) {
+        if (stacks[dir]) {
+            UnitStack& stack = *stacks[dir];
+            BOOST_LOG_TRIVIAL(trace) << "Stack " << dir << ": " << stack.id;
+            std::vector<Unit::pointer>::iterator iter = stack.units.begin();
+            while (iter != stack.units.end()) {
+                Unit& unit = **iter;
+                if (unit.get_property(Health) <= 0) {
+                    BOOST_LOG_TRIVIAL(trace) << "Unit: " << unit.type->name << " (dead)";
+                    iter = stack.units.erase(iter);
+                } else {
+                    BOOST_LOG_TRIVIAL(trace) << "Unit: " << unit.type->name << " " << unit.properties;
+                    iter++;
+                }
+            }
+            if (stack.units.size() == 0) {
+                BOOST_LOG_TRIVIAL(trace) << "Stack was destroyed";
+                game->destroy_unit_stack(stack.id);
+            }
+        }
+    }
 }

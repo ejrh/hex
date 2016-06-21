@@ -4,6 +4,7 @@
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/game_updater.h"
+#include "hex/game/combat/combat.h"
 #include "hex/messaging/message.h"
 
 
@@ -102,6 +103,17 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
 
         case TurnEnd: {
             game->end_turn();
+        } break;
+
+        case DoBattle: {
+            boost::shared_ptr<DoBattleMessage> upd = boost::dynamic_pointer_cast<DoBattleMessage>(update);
+            int attacker_id = upd->data1;
+            Point attacking_point = game->stacks.get(attacker_id)->position;
+            Point attacked_point = upd->data2;
+            std::vector<Move>& moves = upd->data3;
+            Battle battle(game, attacked_point, attacking_point, moves);
+            battle.replay();
+            battle.commit();
         } break;
 
         default:

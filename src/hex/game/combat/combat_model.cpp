@@ -10,18 +10,18 @@ CombatModel CombatModel::default_combat_model;
 std::vector<const MoveType *> CombatModel::get_available_move_types(const Battle& battle, const Participant& participant) const {
     std::vector<const MoveType *> types;
 
-    for (std::map<PropertyType, MoveType>::const_iterator iter = move_types.begin(); iter != move_types.end(); iter++) {
+    for (std::map<PropertyType, MoveType *>::const_iterator iter = move_types.begin(); iter != move_types.end(); iter++) {
         PropertyType type = iter->first;
-        const MoveType& move_type = iter->second;
-        if (participant.unit->has_property(type)) {
-            types.push_back(&move_type);
+        const MoveType *move_type = iter->second;
+        if (participant.unit->get_property(type) > 0) {
+            types.push_back(move_type);
         }
     }
     return types;
 }
 
-const MoveType& CombatModel::get_move_type(const Move& move) const {
-    std::map<PropertyType, MoveType>::const_iterator iter = move_types.find(move.type);
+const MoveType *CombatModel::get_move_type(const Move& move) const {
+    std::map<PropertyType, MoveType *>::const_iterator iter = move_types.find(move.type);
     if (iter == move_types.end()) {
         throw Error() << "Cannot find move type for " << get_property_type_name(move.type);
     }
@@ -30,8 +30,8 @@ const MoveType& CombatModel::get_move_type(const Move& move) const {
 }
 
 void CombatModel::populate_move_types() {
-    move_types[Archery] = ArcheryMoveType();
-    move_types[Charge] = ChargeMoveType();
-    move_types[Healing] = HealingMoveType();
-    move_types[Strike] = StrikeMoveType();
+    move_types[Archery] = new ArcheryMoveType();
+    move_types[Charge] = new ChargeMoveType();
+    move_types[Healing] = new HealingMoveType();
+    move_types[Strike] = new StrikeMoveType();
 }
