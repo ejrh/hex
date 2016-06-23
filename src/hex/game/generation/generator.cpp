@@ -53,7 +53,6 @@ void Generator::generate_level() {
                 height = powf(height, height_power);
 
             int hill_rand = rand();
-            int road_rand = rand();
 
             if (height < sea_level)
                 tile.type = types["water"];
@@ -79,9 +78,6 @@ void Generator::generate_level() {
                 if (!tile.type) {
                     throw Error() << boost::format("Unknown tile type: %s") % type_name;
                 }
-
-                if (tile.type->has_property(Roadable) && road_rand % 2)
-                    tile.road = true;
             }
         }
     }
@@ -179,6 +175,30 @@ void Generator::generate_level() {
             if (tile_subtype == "hill1" && hill_rand % hill_culling) {
                 tile.type = types[tile_type];
             }
+        }
+    }
+
+    // Add forests
+    for (int i = 0; i < level.height; i++) {
+        for (int j = 0; j < level.width; j++) {
+            Point tile_pos(j, i);
+            Tile& tile = level.tiles[tile_pos];
+
+            int forest_rand = rand();
+            if (tile.type->name == "grass" && forest_rand % 4 == 0)
+                tile.type = types["grass_forest"];
+        }
+    }
+
+    // Add roads
+    for (int i = 0; i < level.height; i++) {
+        for (int j = 0; j < level.width; j++) {
+            Point tile_pos(j, i);
+            Tile& tile = level.tiles[tile_pos];
+
+            int road_rand = rand();
+                if (tile.type->has_property(Roadable) && road_rand % 2)
+                    tile.road = true;
         }
     }
 }

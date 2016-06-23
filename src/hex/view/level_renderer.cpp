@@ -44,10 +44,14 @@ void LevelRenderer::render_tile_transitions(int x, int y, Point tile_pos) {
         if (trans != NULL) {
             int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
             int trans_x = x - trans->width / 2;
-            int trans_y = y - trans->height / 2 - 6;
+            int trans_y = y - trans->height / 2;
             graphics->blit(trans, trans_x, trans_y, SDL_BLENDMODE_BLEND, alpha);
         }
     }
+}
+
+void LevelRenderer::render_features(int x, int y, Point tile_pos) {
+    TileView& tile_view = view->level_view.tile_views[tile_pos];
 
     if (tile_view.feature != NULL) {
         int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
@@ -55,18 +59,6 @@ void LevelRenderer::render_tile_transitions(int x, int y, Point tile_pos) {
         int feature_y = y - tile_view.feature_y;
         graphics->blit(tile_view.feature, feature_x, feature_y, SDL_BLENDMODE_BLEND, alpha);
     }
-
-    for (std::vector<Image *>::iterator iter = tile_view.roads.begin(); iter != tile_view.roads.end(); iter++) {
-        Image *road = *iter;
-        if (road != NULL) {
-            int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
-            graphics->blit(road, x - road->width / 2, y - road->height / 2, SDL_BLENDMODE_BLEND, alpha);
-        }
-    }
-}
-
-void LevelRenderer::render_features(int x, int y, Point tile_pos) {
-    TileView& tile_view = view->level_view.tile_views[tile_pos];
 
     for (std::vector<Image *>::iterator iter = tile_view.roads.begin(); iter != tile_view.roads.end(); iter++) {
         Image *road = *iter;

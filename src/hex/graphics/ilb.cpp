@@ -310,6 +310,23 @@ char *ILBReader::read_pixel_data(ImageData &image) {
     return pixel_data;
 }
 
+static void fix_transparency(char *pixel_data, ImageData &image, SDL_Surface *surface) {
+    for (int i = 0; i < image.clip_height * image.clip_width; i++) {
+        if (((Uint16 *) pixel_data)[i] == image.transparency_colour) {
+            Uint32 old_key;
+            SDL_GetColorKey(surface, &old_key);
+            Uint32 key = ((Uint32 *) surface->pixels)[i];
+            key &= ~0xFF000000;
+            if (old_key != key) {
+                SDL_SetColorKey(surface, SDL_TRUE, key);
+                BOOST_LOG_TRIVIAL(debug) << boost::format("Changed colour key from %08x to %08x") % old_key % key;
+            }
+            return;
+        }
+    }
+    BOOST_LOG_TRIVIAL(debug) << "Couldn't find any transparent pixels";
+}
+
 Image *ILBReader::create_image(char *pixel_data, ImageData &image) {
     SDL_Surface *surface;
 
@@ -340,6 +357,12 @@ Image *ILBReader::create_image(char *pixel_data, ImageData &image) {
     Uint32 pf = SDL_GetWindowPixelFormat(graphics->window);
     SDL_Surface *new_surface = SDL_ConvertSurfaceFormat(surface, pf, 0);
     SDL_FreeSurface(surface);
+
+    // This is a silly step that we need to do because SDL uses different rounding when converting
+    // the colour key from 565 format to RGBA, vs. converting the surface's pixels.
+    if (image.pixel_format == ILB_FORMAT_565) {
+        fix_transparency(pixel_data, image, new_surface);
+    }
 
     SDL_Texture *texture = SDL_CreateTextureFromSurface(graphics->renderer, new_surface);
     SDL_FreeSurface(new_surface);

@@ -4,6 +4,7 @@ CreateTileType("outside", {})
 CreateTileType("water", {"Swimmable", "Flyable"})
 
 CreateTileType("grass", {"Walkable", "Flyable", "Roadable"})
+CreateTileType("grass_forest", {"Walkable", "Flyable", "Forest"})
 
 CreateTileType("grass_hill0", {"Walkable", "SlowWalking", "Flyable"})
 CreateTileType("grass_hill1", {"Walkable", "SlowWalking", "Flyable"})

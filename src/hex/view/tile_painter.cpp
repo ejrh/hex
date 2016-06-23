@@ -75,7 +75,12 @@ void TilePainter::paint_transitions(const Point& tile_pos) {
                 match = false;
                 continue;
             }
-            if (def.type_names.count(neighbour_def->name) == 0) {
+
+            std::vector<std::string> parts;
+            boost::split(parts, neighbour_def->name, boost::is_any_of("_"));
+            std::string neighbour_base_name = parts[0];
+
+            if (def.type_names.count(neighbour_base_name) == 0) {
                 match = false;
                 continue;
             }
