@@ -36,6 +36,7 @@ MSG_TYPE(CreateStructureView, WM(StructureViewDef))
 MSG_TYPE(StructureAnimation, WM4(int, int, int, ImageSeries))
 
 MSG_TYPE(CreateFactionView, WM(FactionViewDef))
+MSG_TYPE(FactionImageSet, WM2(std::string, ImageSeries))
 
 MSG_TYPE(LoadSong, WM(std::string))
 

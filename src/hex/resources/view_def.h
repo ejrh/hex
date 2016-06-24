@@ -22,6 +22,9 @@ public:
     FactionViewDef(std::string name, int r, int g, int b): name(name), r(r), g(g), b(b) { }
     std::string name;
     int r, g, b;
+    ImageSeries big_flag_images;
+    ImageSeries small_flag_images;
+    ImageSeries shield_images;
 };
 
 class TransitionDef {

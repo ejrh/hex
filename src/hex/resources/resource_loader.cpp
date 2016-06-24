@@ -31,6 +31,17 @@ void ResourceLoader::handle_message(boost::shared_ptr<Message> msg) {
             boost::shared_ptr<WrapperMessage<FactionViewDef> > upd = boost::dynamic_pointer_cast<WrapperMessage<FactionViewDef> >(msg);
             FactionViewDef::pointer def = boost::make_shared<FactionViewDef>(upd->data);
             resources->faction_view_defs.put_and_warn(def->name, def);
+            last_faction_view_def = def;
+        } break;
+
+        case FactionImageSet: {
+            boost::shared_ptr<FactionImageSetMessage> upd = boost::dynamic_pointer_cast<FactionImageSetMessage>(msg);
+            if (upd->data1 == "BIG_FLAGS")
+                last_faction_view_def->big_flag_images = upd->data2;
+            else if (upd->data1 == "SMALL_FLAGS")
+                last_faction_view_def->small_flag_images = upd->data2;
+            else if (upd->data1 == "SHIELDS")
+                last_faction_view_def->shield_images = upd->data2;
         } break;
 
         case CreateTileView: {

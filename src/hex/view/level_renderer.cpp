@@ -78,6 +78,25 @@ void LevelRenderer::render_objects(int x, int y, Point tile_pos) {
     TileView& tile_view = view->level_view.tile_views[tile_pos];
 
     if (tile_view.structure_view) {
+        // Draw flag
+        Faction::pointer& owner = tile_view.structure_view->structure->owner;
+        if (owner) {
+            FactionView::pointer faction_view = view->faction_views.get(owner->id);
+            FactionViewDef::pointer faction_view_def = faction_view->view_def;
+
+            Image *flag = NULL;
+            if (faction_view_def->small_flag_images.size() > 0) {
+                flag = faction_view_def->small_flag_images[(view->phase / 1000) % faction_view_def->small_flag_images.size()].image;
+            }
+            if (flag != NULL) {
+                graphics->blit(flag, x+20 - flag->width/2, y-24 - flag->height/2, SDL_BLENDMODE_BLEND);
+            } else {
+                graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, x+16, y-30, 8, 12);
+                graphics->fill_rectangle(100, 100, 100, x+14, y-30, 2, 30);
+            }
+        }
+
+        // Draw structure
         StructureViewDef::pointer view_def = tile_view.structure_view->view_def;
         AnimationDef& animation = view_def->animation;
         Image *structure = unit_renderer->get_image_or_placeholder(animation.images, tile_view.phase / 1000, view_def->name);
@@ -94,13 +113,6 @@ void LevelRenderer::render_objects(int x, int y, Point tile_pos) {
                     add_phase = 255;
             }
             graphics->blit(structure, x - view_def->centre_x, y - view_def->centre_y, SDL_BLENDMODE_ADD, add_phase);
-        }
-
-        Faction::pointer& owner = tile_view.structure_view->structure->owner;
-        if (owner) {
-            FactionView::pointer faction_view = view->faction_views.get(owner->id);
-            FactionViewDef::pointer faction_view_def = faction_view->view_def;
-            graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, x+16, y-20, 8, 12);
         }
     }
 
@@ -152,12 +164,21 @@ void LevelRenderer::render_objects(int x, int y, Point tile_pos) {
 void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
     unit_renderer->draw_unit(x, y, stack_view);
 
-    // Draw flag
+    // Draw shield
     Faction::pointer owner = stack_view.stack->owner;
     FactionView::pointer faction_view = view->faction_views.get(owner->id);
     FactionViewDef::pointer faction_view_def = faction_view->view_def;
 
-    graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, x+16, y-20, 8, 12);
+    int num = stack_view.stack->units.size();
+    Image *shield = NULL;
+    if (num >= 0 && num < faction_view_def->shield_images.size()) {
+        shield = faction_view_def->shield_images[num].image;
+    }
+    if (shield != NULL) {
+        graphics->blit(shield, x-24, y-44, SDL_BLENDMODE_BLEND);
+    } else {
+        graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, x-24, y-44, 8, 12);
+    }
 }
 
 void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {

@@ -9,6 +9,13 @@ void Resources::resolve_references() {
         resolve_image_series(iter->second);
     }
 
+    for (StrMap<FactionViewDef>::iterator def_iter = faction_view_defs.begin(); def_iter != faction_view_defs.end(); def_iter++) {
+        FactionViewDef& def = *def_iter->second;
+        resolve_image_series(def.big_flag_images);
+        resolve_image_series(def.small_flag_images);
+        resolve_image_series(def.shield_images);
+    }
+
     for (StrMap<UnitViewDef>::iterator def_iter = unit_view_defs.begin(); def_iter != unit_view_defs.end(); def_iter++) {
         UnitViewDef& def = *def_iter->second;
         for (std::vector<AnimationDef>::iterator anim_iter = def.hold_animations.begin(); anim_iter != def.hold_animations.end(); anim_iter++) {

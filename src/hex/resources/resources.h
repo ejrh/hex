@@ -57,7 +57,7 @@ private:
 class ResourceLoader: public MessageLoader {
 public:
     ResourceLoader(Resources *resources, ImageLoader *image_loader): resources(resources), image_loader(image_loader),
-            last_tile_view_def(), last_unit_view_def(), last_structure_view_def(), warned_image_loader(false) { }
+            last_faction_view_def(), last_tile_view_def(), last_unit_view_def(), last_structure_view_def(), warned_image_loader(false) { }
 
     void handle_message(boost::shared_ptr<Message> msg);
 
@@ -67,6 +67,7 @@ public:
 private:
     Resources *resources;
     ImageLoader *image_loader;
+    FactionViewDef::pointer last_faction_view_def;
     TileViewDef::pointer last_tile_view_def;
     UnitViewDef::pointer last_unit_view_def;
     StructureViewDef::pointer last_structure_view_def;
