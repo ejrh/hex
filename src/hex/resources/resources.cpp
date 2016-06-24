@@ -26,6 +26,9 @@ void Resources::resolve_references() {
         for (std::vector<AnimationDef>::iterator anim_iter = def.die_animations.begin(); anim_iter != def.die_animations.end(); anim_iter++) {
             resolve_image_series(anim_iter->images);
         }
+        for (std::vector<AnimationDef>::iterator anim_iter = def.shadow_animations.begin(); anim_iter != def.shadow_animations.end(); anim_iter++) {
+            resolve_image_series(anim_iter->images);
+        }
     }
 
     for (StrMap<TileViewDef>::iterator def_iter = tile_view_defs.begin(); def_iter != tile_view_defs.end(); def_iter++) {

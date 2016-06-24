@@ -101,6 +101,13 @@ void ResourceLoader::handle_message(boost::shared_ptr<Message> msg) {
             last_unit_view_def->die_animations[facing].images = upd->data3;
         } break;
 
+        case UnitShadowAnimation: {
+            boost::shared_ptr<UnitShadowAnimationMessage> upd = boost::dynamic_pointer_cast<UnitShadowAnimationMessage>(msg);
+            int facing = upd->data1;
+            last_unit_view_def->shadow_animations[facing].bpm = upd->data2;
+            last_unit_view_def->shadow_animations[facing].images = upd->data3;
+        } break;
+
         case CreateStructureView: {
             boost::shared_ptr<CreateStructureViewMessage> upd = boost::dynamic_pointer_cast<CreateStructureViewMessage>(msg);
             last_structure_view_def = resources->create_structure_view(upd->data);

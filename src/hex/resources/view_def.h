@@ -61,7 +61,7 @@ class UnitViewDef: public boost::enable_shared_from_this<UnitViewDef> {
 public:
     typedef boost::shared_ptr<UnitViewDef> pointer;
 
-    UnitViewDef(): hold_animations(6), move_animations(6), attack_animations(6), recoil_animations(6), die_animations(6), move_speed(60) { }
+    UnitViewDef(): hold_animations(6), move_animations(6), attack_animations(6), recoil_animations(6), die_animations(6), shadow_animations(6), move_speed(60) { }
     UnitViewDef(std::string name): name(name), hold_animations(6), move_animations(6), move_speed(60) { }
     ~UnitViewDef() { }
 
@@ -71,6 +71,7 @@ public:
     std::vector<AnimationDef> attack_animations;
     std::vector<AnimationDef> recoil_animations;
     std::vector<AnimationDef> die_animations;
+    std::vector<AnimationDef> shadow_animations;
     int move_speed; // tiles per minute
 };
 

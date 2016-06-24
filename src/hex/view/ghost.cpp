@@ -17,6 +17,7 @@ Ghost::Ghost(GameView *view, UnitStack::pointer stack, const IntSet selected_uni
     view->set_view_def(*stack_view);
     stack_view->path = path;
     stack_view->moving = true;
+    stack_view->posture = Moving;
 
     // Lock target
     target_view = view->get_stack_view(target_stack->id);

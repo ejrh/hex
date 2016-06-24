@@ -30,6 +30,7 @@ MSG_TYPE(UnitMoveAnimation, WM3(int, int, ImageSeries))
 MSG_TYPE(UnitAttackAnimation, WM3(int, int, ImageSeries))
 MSG_TYPE(UnitRecoilAnimation, WM3(int, int, ImageSeries))
 MSG_TYPE(UnitDieAnimation, WM3(int, int, ImageSeries))
+MSG_TYPE(UnitShadowAnimation, WM3(int, int, ImageSeries))
 
 MSG_TYPE(CreateStructureView, WM(StructureViewDef))
 MSG_TYPE(StructureAnimation, WM4(int, int, int, ImageSeries))

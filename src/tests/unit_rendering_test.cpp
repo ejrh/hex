@@ -94,7 +94,6 @@ public:
         graphics->blit(ground, cx - ground->width / 2, cy - ground->height / 2, SDL_BLENDMODE_BLEND, 255);
 
         unit_renderer->draw_unit(cx, cy, *unit_view);
-        //std::cerr << boost::format("w %d h %d cxo %d cyo %d cw %d ch %d\n") % image->width % image->height % image->clip_x_offset % image->clip_y_offset % image->clip_width % image->clip_height;
 
         TextFormat tf(graphics, SmallFont14, true, 250, 250, 250);
         tf.write_text(unit_view->view_def->name, cx, cy + 32);

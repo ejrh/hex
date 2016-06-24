@@ -16,6 +16,16 @@ UnitRenderer::~UnitRenderer() {
 }
 
 void UnitRenderer::draw_unit(int x, int y, UnitView& unit_view) {
+    // Shadow
+    AnimationDef& shadow_animation = unit_view.view_def->shadow_animations[unit_view.facing];
+    if (shadow_animation.images.size() != 0) {
+        int pos = unit_view.phase / 1000;
+        Image *shadow = shadow_animation.images[pos % shadow_animation.images.size()].image;
+        int alpha = 64;
+        graphics->blit(shadow, x - shadow->width / 2, y - shadow->height + 8, SDL_BLENDMODE_BLEND, alpha);
+    }
+
+    // Unit
     ImageSeries& image_series = (ImageSeries&) get_image_series(unit_view);
     Image *image = get_image_or_placeholder(image_series, unit_view.phase / 1000, unit_view.view_def->name);
 
@@ -24,8 +34,9 @@ void UnitRenderer::draw_unit(int x, int y, UnitView& unit_view) {
     y += 8;
 
     graphics->blit(image, x, y, SDL_BLENDMODE_BLEND);
-    int highlight = 0;
 
+    // Highlight
+    int highlight = 0;
     if (unit_view.selected) {
         int add_phase = (unit_view.phase / 1000) % 32;
         if (add_phase < 16)
