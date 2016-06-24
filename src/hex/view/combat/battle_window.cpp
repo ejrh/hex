@@ -35,5 +35,22 @@ void BattleWindow::draw_stack(int stack_num) {
         ParticipantView& pv = *iter;
         Unit& unit = *pv.participant->unit;
         renderer->draw_unit(pv.x, pv.y, pv);
+
+        if (pv.selected) {
+            Move& move = view->battle->moves[view->current_move];
+            TextFormat tf(graphics, SmallFont14, true, 250, 250, 250);
+            tf.write_text(get_property_type_name(move.type), pv.x, pv.y + 20);
+        }
+
+        if (pv.participant->is_alive()) {
+            graphics->fill_rectangle(0, 0, 0, pv.x - 21, pv.y - 43, 42, 5);
+            float health = unit.get_property(Health) / (float) unit.type->get_property(Health);
+            float health2 = (unit.get_property(Health) - 1) / (float) (unit.type->get_property(Health) - 1);
+            int r = (1.0 - health2) * 255;
+            int g = health2 * 255;
+            int b = 0;
+            int w = health * 40;
+            graphics->fill_rectangle(r, g, b, pv.x - 20, pv.y - 42, w, 3);
+        }
     }
 }

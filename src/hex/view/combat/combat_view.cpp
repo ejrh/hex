@@ -30,7 +30,8 @@ void BattleStackView::add_participant(ParticipantView& pv) {
 }
 
 BattleView::BattleView(Battle *battle, int width, int height, Resources *resources):
-        battle(battle), width(width), height(height), resources(resources), last_update(0) {
+        battle(battle), width(width), height(height), resources(resources), last_update(0),
+        phase(0), current_move(0), current_step(0), phase_end(1000) {
     Point centre(0, 0);
     int centre_x = width/2;
     int centre_y = height/2;
@@ -66,7 +67,56 @@ void BattleView::update() {
     unsigned int update_ms = ticks - last_update;
     last_update = ticks;
 
+    phase += update_ms;
+    if (phase >= phase_end && current_move < battle->moves.size()) {
+        step();
+        phase = 0;
+    }
+
     for (std::vector<ParticipantView>::iterator iter = participant_views.begin(); iter != participant_views.end(); iter++) {
         iter->update(update_ms);
+    }
+}
+
+void BattleView::step() {
+    current_step++;
+    if (current_step > 4) {
+        current_step = 0;
+        current_move++;
+    }
+
+    if (current_move >= battle->moves.size())
+        return;
+
+    Move& move = battle->moves[current_move];
+    std::cerr << "Move " << current_move << ": " << move << std::endl;
+
+    ParticipantView& pv = participant_views[move.participant_id];
+    ParticipantView& tv = participant_views[move.target_id];
+
+    switch (current_step) {
+        case 0: {
+            phase_end = 250;
+        } break;
+
+        case 1: {
+            pv.selected = true;
+            pv.phase = 15000;
+            pv.posture = Attacking;
+            phase_end = 500;
+        } break;
+
+        case 2: {
+            tv.posture = (move.effect != 0) ? Recoiling : Holding;
+            phase_end = 500;
+        } break;
+
+        case 3: {
+            battle->replay_move(move);
+            pv.selected = false;
+            pv.posture = Holding;
+            tv.posture = tv.participant->is_alive() ? Holding : Dying;
+            phase_end = 250;
+        }
     }
 }

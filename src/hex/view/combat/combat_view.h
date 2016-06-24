@@ -33,6 +33,7 @@ public:
     BattleView(Battle *battle, int width, int height, Resources *resources);
 
     void update();
+    void step();
 
     static const int participant_width = 60;
     static const int participant_height = 50;
@@ -47,6 +48,10 @@ public:
     BattleStackView battle_stack_views[7];
     std::vector<ParticipantView> participant_views;
     unsigned int last_update;
+    unsigned int phase;
+    unsigned int current_move;
+    unsigned int current_step;
+    unsigned int phase_end;
 };
 
 #endif
