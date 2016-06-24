@@ -195,6 +195,7 @@ void LevelWindow::draw() {
     for (std::vector<Ghost>::iterator iter = view->ghosts.begin(); iter != view->ghosts.end(); iter++) {
         draw_ghost(&*iter);
     }
+    draw_level(&LevelRenderer::render_fog);
 }
 
 void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
@@ -222,8 +223,6 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
             int xpos = j*x_spacing - shift_x + TILE_WIDTH / 2;
             int ypos = i*y_spacing - shift_y + Y_SPACING / 2;
             Point tile_pos(j, i);
-            if (!view->debug_mode && !view->level_view.discovered.check(tile_pos))
-                continue;
             (*level_renderer.*render)(xpos, ypos, tile_pos);
         }
 
@@ -232,8 +231,6 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
             int xpos = j*x_spacing - shift_x + TILE_WIDTH / 2;
             int ypos = i*y_spacing + y_offset - shift_y + Y_SPACING / 2;
             Point tile_pos(j, i);
-            if (!view->debug_mode && !view->level_view.discovered.check(tile_pos))
-                continue;
             (*level_renderer.*render)(xpos, ypos, tile_pos);
         }
     }

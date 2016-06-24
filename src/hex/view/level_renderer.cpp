@@ -14,6 +14,8 @@ LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *le
         show_hexagons(false), graphics(graphics), resources(resources), level(level), view(view), unit_renderer(unit_renderer) {
     cursor_images = resources->image_series["CURSORS"];
     arrow_images = resources->image_series["ARROWS"];
+    fog_images = resources->image_series["FOG"];
+    shadow_images = resources->image_series["SHADOW"];
 }
 
 LevelRenderer::~LevelRenderer() {
@@ -31,8 +33,7 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
 
     Image *ground = choose_image(def->animation.images, tile_view.phase / 1000);
     if (ground != NULL) {
-        int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
-        graphics->blit(ground, x - ground->width / 2, y - ground->height / 2, SDL_BLENDMODE_BLEND, alpha);
+        graphics->blit(ground, x - ground->width / 2, y - ground->height / 2, SDL_BLENDMODE_BLEND);
     }
 }
 
@@ -42,10 +43,9 @@ void LevelRenderer::render_tile_transitions(int x, int y, Point tile_pos) {
     for (std::vector<Image *>::iterator iter = tile_view.transitions.begin(); iter != tile_view.transitions.end(); iter++) {
         Image *trans = *iter;
         if (trans != NULL) {
-            int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
             int trans_x = x - trans->width / 2;
             int trans_y = y - trans->height / 2;
-            graphics->blit(trans, trans_x, trans_y, SDL_BLENDMODE_BLEND, alpha);
+            graphics->blit(trans, trans_x, trans_y, SDL_BLENDMODE_BLEND);
         }
     }
 }
@@ -54,17 +54,15 @@ void LevelRenderer::render_features(int x, int y, Point tile_pos) {
     TileView& tile_view = view->level_view.tile_views[tile_pos];
 
     if (tile_view.feature != NULL) {
-        int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
         int feature_x = x - tile_view.feature_x;
         int feature_y = y - tile_view.feature_y;
-        graphics->blit(tile_view.feature, feature_x, feature_y, SDL_BLENDMODE_BLEND, alpha);
+        graphics->blit(tile_view.feature, feature_x, feature_y, SDL_BLENDMODE_BLEND);
     }
 
     for (std::vector<Image *>::iterator iter = tile_view.roads.begin(); iter != tile_view.roads.end(); iter++) {
         Image *road = *iter;
         if (road != NULL) {
-            int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
-            graphics->blit(road, x - road->width / 2, y - road->height / 2, SDL_BLENDMODE_BLEND, alpha);
+            graphics->blit(road, x - road->width / 2, y - road->height / 2, SDL_BLENDMODE_BLEND);
         }
     }
 }
@@ -84,8 +82,7 @@ void LevelRenderer::render_objects(int x, int y, Point tile_pos) {
         AnimationDef& animation = view_def->animation;
         Image *structure = unit_renderer->get_image_or_placeholder(animation.images, tile_view.phase / 1000, view_def->name);
 
-        int alpha = (view->level_view.check_visibility(tile_pos)) ? 255 : 128;
-        graphics->blit(structure, x - view_def->centre_x, y - view_def->centre_y, SDL_BLENDMODE_BLEND, alpha);
+        graphics->blit(structure, x - view_def->centre_x, y - view_def->centre_y, SDL_BLENDMODE_BLEND);
 
         if (tile_view.structure_view->selected) {
             int add_phase = (view->phase / 1000) % 32;
@@ -180,5 +177,15 @@ void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {
 
         if (path_arrow != NULL)
             graphics->blit(path_arrow, x - path_arrow->width / 2, y - path_arrow->height / 2 - 6, SDL_BLENDMODE_BLEND);
+    }
+}
+
+void LevelRenderer::render_fog(int x, int y, Point tile_pos) {
+    if (!view->level_view.discovered.check(tile_pos)) {
+        Image *fog = fog_images[0].image;
+        graphics->blit(fog, x - fog->width / 2, y - fog->height / 2, SDL_BLENDMODE_BLEND);
+    } else if (!view->level_view.check_visibility(tile_pos)) {
+        Image *shadow = shadow_images[0].image;
+        graphics->blit(shadow, x - shadow->width / 2, y - shadow->height / 2, SDL_BLENDMODE_BLEND);
     }
 }

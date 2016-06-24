@@ -28,6 +28,7 @@ protected:
     virtual void render_objects(int x, int y, Point tile_pos);
     virtual void draw_unit_stack(int x, int y, UnitStackView& stack_view);
     virtual void render_path_arrow(int x, int y, Point tile_pos);
+    virtual void render_fog(int x, int y, Point tile_pos);
 
 public:
     bool show_hexagons;
@@ -41,6 +42,8 @@ protected:
 
     ImageSeries cursor_images;
     ImageSeries arrow_images;
+    ImageSeries fog_images;
+    ImageSeries shadow_images;
 
     friend class LevelWindow;
 };
