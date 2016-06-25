@@ -16,10 +16,23 @@ void Audio::start() {
         return;
 
     MikMod_RegisterAllDrivers();
+
+#ifdef _WIN32
+    // Tell DirectSound to use globalfocus so it plays in the background
+    int ds_id = MikMod_DriverFromAlias("ds");
+    if (ds_id != 0) {
+        MDRIVER *ds = MikMod_DriverByOrdinal(ds_id);
+        ds->CommandLine("globalfocus=1");
+    }
+#endif
+
     MikMod_RegisterAllLoaders();
     if (MikMod_Init((char *) "")) {
         throw Error() << "Couldn't initialise sound: " << MikMod_strerror(MikMod_errno);
     }
+
+    BOOST_LOG_TRIVIAL(debug) << "MikMod drivers: " << MikMod_InfoDriver();
+
     started = true;
 }
 
@@ -31,6 +44,7 @@ void Audio::stop() {
     if (module != NULL)
         Player_Free(module);
     MikMod_Exit();
+
     started = false;
 }
 
