@@ -1,11 +1,3 @@
 # CreateUnitView(name, move_speed)
 # UnitHoldAnimation(facing, bpm, images)
 # UnitMoveAnimation(facing, bpm, images)
-
-CreateUnitView("dragon", 180)
-UnitMoveAnimation(0, 0, ["dragon000.png"])
-UnitMoveAnimation(1, 0, ["dragon100.png"])
-UnitMoveAnimation(2, 0, ["dragon200.png"])
-UnitMoveAnimation(3, 0, ["dragon300.png"])
-UnitMoveAnimation(4, 0, ["dragon400.png"])
-UnitMoveAnimation(5, 0, ["dragon500.png"])

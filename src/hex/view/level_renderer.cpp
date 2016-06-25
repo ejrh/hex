@@ -171,7 +171,7 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
 
     int num = stack_view.stack->units.size();
     Image *shield = NULL;
-    if (num >= 0 && num < faction_view_def->shield_images.size()) {
+    if (num >= 0 && num < (int) faction_view_def->shield_images.size()) {
         shield = faction_view_def->shield_images[num].image;
     }
     if (shield != NULL) {

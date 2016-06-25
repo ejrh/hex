@@ -12,3 +12,12 @@ TileAnimation(0, ["grass1.png"])
 
 CreateTileView("desert", 128,128,64)
 TileAnimation(0, ["desert1.png"])
+
+CreateTileView("snow", 128,128,64)
+TileAnimation(0, ["snow1.png"])
+
+CreateTileView("steppe", 128,128,64)
+TileAnimation(0, ["steppe1.png"])
+
+CreateTileView("wasteland", 128,128,64)
+TileAnimation(0, ["wasteland1.png"])
