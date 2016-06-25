@@ -15,9 +15,13 @@ public:
     void update();
 
 private:
+    void run_thread();
+
+private:
     Resources *resources;
-    bool started;
+    volatile bool started;
     MODULE *module;
+    boost::thread audio_thread;
 };
 
 #endif

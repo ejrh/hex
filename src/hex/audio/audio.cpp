@@ -34,18 +34,20 @@ void Audio::start() {
     BOOST_LOG_TRIVIAL(debug) << "MikMod drivers: " << MikMod_InfoDriver();
 
     started = true;
+    audio_thread = boost::thread(&Audio::run_thread, this);
 }
 
 void Audio::stop() {
     if (!started)
         return;
 
+    started = false;
+    audio_thread.join();
+
     Player_Stop();
     if (module != NULL)
         Player_Free(module);
     MikMod_Exit();
-
-    started = false;
 }
 
 void Audio::play(const std::string& filename) {
@@ -77,5 +79,11 @@ void Audio::update() {
         play(*song_iter);
     }
 
-    MikMod_Update();
+}
+
+void Audio::run_thread() {
+    while (started) {
+        MikMod_Update();
+        SDL_Delay(20);
+    }
 }
