@@ -4,21 +4,34 @@
 #include "hex/game/game.h"
 
 
+class AiUpdater;
 class MessageReceiver;
+class MessageQueue;
 
 class Ai {
 public:
-    Ai(Game *game, const std::string& faction_type, MessageReceiver *dispatcher);
+    Ai(const std::string& faction_type, MessageReceiver *dispatcher);
+    ~Ai();
 
+    void start();
+    void stop();
+    MessageReceiver *get_receiver() const;
+
+private:
+    void run_thread();
     void update();
     void update_unit_stack(UnitStack& stack);
 
 private:
-    Game *game;
+    Game game;
     std::string faction_type;
+    AiUpdater *updater;
+    MessageQueue *receiver;
     MessageReceiver *dispatcher;
     unsigned int last_update;
     Faction::pointer faction;
+    bool started;
+    boost::thread ai_thread;
 
     friend class AiUpdater;
 };

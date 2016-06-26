@@ -4,6 +4,7 @@
 #include "hex/messaging/receiver.h"
 
 class Ai;
+class GameUpdater;
 
 class AiUpdater: public MessageReceiver {
 public:
@@ -17,6 +18,7 @@ private:
 
 private:
     Ai *ai;
+    GameUpdater *game_updater;
 };
 
 #endif

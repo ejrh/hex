@@ -65,6 +65,8 @@ set(srcs
         messaging/loader.h
         messaging/message.cpp
         messaging/message.h
+        messaging/queue.cpp
+        messaging/queue.h
         messaging/receiver.cpp
         messaging/receiver.h
         messaging/serialiser.h

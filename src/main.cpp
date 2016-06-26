@@ -6,7 +6,6 @@
 #include <boost/program_options/variables_map.hpp>
 
 #include "hex/ai/ai.h"
-#include "hex/ai/ai_updater.h"
 #include "hex/audio/audio.h"
 #include "hex/basics/error.h"
 #include "hex/chat/chat.h"
@@ -19,6 +18,8 @@
 #include "hex/graphics/graphics.h"
 #include "hex/messaging/event_pusher.h"
 #include "hex/messaging/writer.h"
+#include "hex/messaging/receiver.h"
+#include "hex/messaging/queue.h"
 #include "hex/networking/networking.h"
 #include "hex/view/level_renderer.h"
 #include "hex/view/level_window.h"
@@ -64,8 +65,10 @@ void save_game(const std::string& filename, Game *game) {
 
 class BackgroundWindow: public UiWindow {
 public:
-    BackgroundWindow(UiLoop *loop, Options *options, Generator *generator, Game *game, GameView *game_view, std::vector<Ai *> ais, EventPusher *event_pusher, GameArbiter *arbiter, Updater *updater, LevelRenderer *level_renderer):
-        UiWindow(0, 0, 0, 0), loop(loop), options(options), generator(generator), game(game), game_view(game_view), ais(ais), event_pusher(event_pusher), arbiter(arbiter), updater(updater), level_renderer(level_renderer) { }
+    BackgroundWindow(UiLoop *loop, Options *options, Generator *generator, Game *game, GameView *game_view,
+            MessageReceiver *dispatcher, MessageQueue *dispatch_queue, EventPusher *event_pusher, GameArbiter *arbiter, Updater *updater, LevelRenderer *level_renderer):
+        UiWindow(0, 0, 0, 0), loop(loop), options(options), generator(generator), game(game), game_view(game_view),
+            dispatcher(dispatcher), dispatch_queue(dispatch_queue), event_pusher(event_pusher), arbiter(arbiter), updater(updater), level_renderer(level_renderer) { }
 
     bool receive_event(SDL_Event *evt) {
         if (evt->type == SDL_QUIT
@@ -112,9 +115,7 @@ public:
 
     void draw() {
         game_view->update();
-        for (std::vector<Ai *>::iterator iter = ais.begin(); iter != ais.end(); iter++) {
-            (*iter)->update();
-        }
+        dispatch_queue->flush(dispatcher);
     }
 
 private:
@@ -123,7 +124,8 @@ private:
     Generator *generator;
     Game *game;
     GameView *game_view;
-    std::vector<Ai *> ais;
+    MessageReceiver *dispatcher;
+    MessageQueue *dispatch_queue;
     EventPusher *event_pusher;
     GameArbiter *arbiter;
     Updater *updater;
@@ -163,6 +165,7 @@ void run(Options& options) {
     Updater updater(1000);
     GameArbiter arbiter(&game, &updater);
     Updater dispatcher(1000);
+    MessageQueue dispatch_queue(1000);
 
     GameView game_view(&game, &player, &resources, &dispatcher);
     PreUpdater pre_updater(&game, &game_view);
@@ -187,12 +190,11 @@ void run(Options& options) {
         client.connect(options.host_addr);
         dispatcher.subscribe(&client);
     } else {
-        Ai *independent_ai = new Ai(&game, std::string("independent"), &dispatcher);
-        AiUpdater *independent_ai_updater = new AiUpdater(independent_ai);
+        Ai *independent_ai = new Ai(std::string("independent"), &dispatch_queue);
         ais.push_back(independent_ai);
 
         dispatcher.subscribe(&arbiter);
-        updater.subscribe(independent_ai_updater);
+        updater.subscribe(independent_ai->get_receiver());
         if (options.load_filename.empty()) {
             generator.create_game(updater);
         } else {
@@ -229,8 +231,13 @@ void run(Options& options) {
     BattleViewer battle_viewer(&resources, &graphics, &audio, &game_view, &unit_renderer);
     pre_updater.battle_viewer = &battle_viewer;
 
+    for (std::vector<Ai *>::iterator iter = ais.begin(); iter != ais.end(); iter++) {
+        Ai *ai = *iter;
+        ai->start();
+    }
+
     UiLoop loop(25);
-    BackgroundWindow bw(&loop, &options, &generator, &game, &game_view, ais, &event_pusher, &arbiter, &updater, &level_renderer);
+    BackgroundWindow bw(&loop, &options, &generator, &game, &game_view, &dispatcher, &dispatch_queue, &event_pusher, &arbiter, &updater, &level_renderer);
     loop.add_window(&bw);
     loop.add_window(&level_window);
     loop.add_window(&map_window);
@@ -247,6 +254,12 @@ void run(Options& options) {
 
     audio.stop();
     graphics.stop();
+
+    for (std::vector<Ai *>::iterator iter = ais.begin(); iter != ais.end(); iter++) {
+        Ai *ai = *iter;
+        ai->stop();
+        delete ai;
+    }
 }
 
 bool parse_options(int argc, char *argv[], Options& options) {
