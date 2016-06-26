@@ -10,6 +10,12 @@ ParticipantView::ParticipantView(Participant *participant):
         participant(participant) {
 }
 
+BattleStackView::BattleStackView() {
+    for (int i = 0; i < 12; i++) {
+        participants[i] = -1;
+    }
+}
+
 void BattleStackView::add_participant(ParticipantView& pv) {
     int num = -1;
     for (int i = 0; i < 12; i++) {

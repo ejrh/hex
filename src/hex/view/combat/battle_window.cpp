@@ -21,7 +21,7 @@ bool BattleWindow::receive_event(SDL_Event *evt) {
 void BattleWindow::draw() {
     view->update();
 
-    for (int i = 0; i <= 7; i++) {
+    for (int i = 0; i <= 6; i++) {
         draw_stack(i);
     }
 }
@@ -31,8 +31,11 @@ void BattleWindow::draw_stack(int stack_num) {
 
     graphics->fill_rectangle(200,100,100, stack_view.x, stack_view.y, BattleView::battle_stack_width, BattleView::battle_stack_height);
 
-    for (std::vector<ParticipantView>::iterator iter = view->participant_views.begin(); iter != view->participant_views.end(); iter++) {
-        ParticipantView& pv = *iter;
+    for (int i = 0; i < 12; i++) {
+        if (stack_view.participants[i] == -1)
+            continue;
+
+        ParticipantView& pv = view->participant_views[stack_view.participants[i]];
         Unit& unit = *pv.participant->unit;
         renderer->draw_unit(pv.x, pv.y, pv);
 

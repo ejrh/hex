@@ -18,7 +18,7 @@ public:
 
 class BattleStackView {
 public:
-    BattleStackView() { }
+    BattleStackView();
 
     void add_participant(ParticipantView& pv);
 
