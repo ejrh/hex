@@ -26,17 +26,13 @@ void HSSReader::read(ImageMap& image_set) {
     unsigned char magic_2 = (ILB_MAGIC >> 16) & 0xFF;
     unsigned char magic_3 = ILB_MAGIC >> 24;
 
-    int num = 0;
     long pos = 0;
     while (pos < file_size - 3) {
         if (buffer[pos] == magic_0 && buffer[pos+1] == magic_1 && buffer[pos+2] == magic_2 && buffer[pos+3] == magic_3) {
             std::string buf_str((char *) (buffer + pos), file_size - pos);
             std::istringstream s(buf_str);
             ILBReader ilb_reader(s, graphics);
-            std::ostringstream ss;
-            ss << num << "/";;
-            ilb_reader.read(image_set, ss.str());
-            num++;
+            ilb_reader.read(image_set);
         }
         pos++;
     }
