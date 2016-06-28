@@ -53,6 +53,7 @@ public:
     ~TileViewDef() { }
 
     std::string name;
+    std::string base_name;
     int r, g, b;
     AnimationDef animation;
     std::vector<TransitionDef> transitions;

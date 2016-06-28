@@ -11,6 +11,7 @@ set(srcs
         basics/intset.h
         basics/noise.cpp
         basics/noise.h
+        basics/objmap.h
         basics/point.h
         basics/vector2.h
         chat/chat.h

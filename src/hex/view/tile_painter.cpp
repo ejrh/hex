@@ -68,21 +68,16 @@ void TilePainter::paint_transitions(const Point& tile_pos) {
             get_neighbour(tile_pos, *dir_iter, &neighbour_pos);
             if (!game->level.contains(neighbour_pos)) {
                 match = false;
-                continue;
+                break;
             }
             TileViewDef::pointer neighbour_def = view->level_view.tile_views[neighbour_pos].view_def;
             if (!neighbour_def) {
                 match = false;
-                continue;
+                break;
             }
-
-            std::vector<std::string> parts;
-            boost::split(parts, neighbour_def->name, boost::is_any_of("_"));
-            std::string neighbour_base_name = parts[0];
-
-            if (def.type_names.count(neighbour_base_name) == 0) {
+            if (def.type_names.count(neighbour_def->base_name) == 0) {
                 match = false;
-                continue;
+                break;
             }
         }
 

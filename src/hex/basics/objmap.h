@@ -53,10 +53,11 @@ public:
         data.erase(id);
     }
 
-    typename T::pointer& get(const K& id) {
+    typename T::pointer& get(const K& id) const {
         if (data.find(id) == data.end())
             throw DataError() << "Item '" << id << "' not found in " << name;
-        return data[id];
+        map& const_data = const_cast<map&>(data);
+        return const_data[id];
     }
 
     typename T::pointer& get_and_warn(const K& id) {

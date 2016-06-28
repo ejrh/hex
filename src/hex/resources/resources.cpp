@@ -107,14 +107,9 @@ FactionViewDef::pointer Resources::get_faction_view_def(const std::string& name)
 }
 
 TileViewDef::pointer Resources::find_base(const TileViewDef& def) const {
-    for (StrMap<TileViewDef>::const_iterator iter = tile_view_defs.begin(); iter != tile_view_defs.end(); iter++) {
-        if (iter->second->name == def.name)
-            continue;
-
-        std::pair<std::string::const_iterator,std::string::const_iterator> res = std::mismatch(iter->second->name.begin(), iter->second->name.end(), def.name.begin());
-        if (res.first == iter->second->name.end()) {
-            return iter->second;
-        }
+    TileViewDef::pointer base;
+    if (def.base_name != def.name) {
+        base = tile_view_defs.get(def.base_name);
     }
-    return TileViewDef::pointer();
+    return base;
 }

@@ -83,6 +83,7 @@ void Generator::generate_level() {
     }
 
     // Coalesce hills and mountains
+    BOOST_LOG_TRIVIAL(info) << "Coalescing hills and mountains";
     for (int i = 0; i < level.height; i++) {
         for (int j = 0; j < level.width; j++) {
             Point tile_pos(j, i);
@@ -179,6 +180,7 @@ void Generator::generate_level() {
     }
 
     // Add forests
+    BOOST_LOG_TRIVIAL(info) << "Adding forests";
     for (int i = 0; i < level.height; i++) {
         for (int j = 0; j < level.width; j++) {
             Point tile_pos(j, i);
@@ -191,14 +193,15 @@ void Generator::generate_level() {
     }
 
     // Add roads
+    BOOST_LOG_TRIVIAL(info) << "Adding roads";
     for (int i = 0; i < level.height; i++) {
         for (int j = 0; j < level.width; j++) {
             Point tile_pos(j, i);
             Tile& tile = level.tiles[tile_pos];
 
             int road_rand = rand();
-                if (tile.type->has_property(Roadable) && road_rand % 2)
-                    tile.road = true;
+            if (tile.type->has_property(Roadable) && road_rand % 2)
+                tile.road = true;
         }
     }
 }
@@ -219,6 +222,7 @@ void Generator::create_game(Updater& updater) {
     ReceiverMessageLoader loader(updater);
     loader.load("data/game.txt");
 
+    BOOST_LOG_TRIVIAL(info) << "Generating terrain";
     game->level.width = width;
     game->level.height = height;
     game->level.tiles.resize(width, height);
@@ -240,10 +244,12 @@ void Generator::create_game(Updater& updater) {
         updater.receive(boost::make_shared<WrapperMessage2<Point, std::vector<std::string> > >(SetLevelData, origin, data));
     }
 
+    BOOST_LOG_TRIVIAL(info) << "Creating factions";
     updater.receive(create_message(CreateFaction, 1, "independent", "Independent"));
     updater.receive(create_message(CreateFaction, 2, "orcs", "Orc Hegemony"));
     updater.receive(create_message(CreateFaction, 3, "drow", "Great Drow Empire"));
 
+    BOOST_LOG_TRIVIAL(info) << "Creating unit stacks";
     for (int i = 1; i <= 40; i++) {
         StrMap<UnitType>::iterator item = game->unit_types.begin();
         std::advance(item, rand() % game->unit_types.size());
@@ -257,7 +263,8 @@ void Generator::create_game(Updater& updater) {
         for (int j = 0; j < 10; j++) {
             int tx = rand() % game->level.width;
             int ty = rand() % game->level.height;
-            if (movement_model.admits(*item->second, *game->level.tiles[ty][tx].type)) {
+            Tile& tile = game->level.tiles[ty][tx];
+            if (movement_model.admits(*item->second, *tile.type) && !tile.stack) {
                 p = Point(tx, ty);
                 break;
             }
@@ -273,6 +280,7 @@ void Generator::create_game(Updater& updater) {
     };
 
     // Add towers
+    BOOST_LOG_TRIVIAL(info) << "Placing towers";
     for (int i = 0; i < game->level.height; i++) {
         for (int j = 0; j < game->level.width; j++) {
             Point tile_pos(j, i);

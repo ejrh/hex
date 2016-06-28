@@ -1,23 +1,23 @@
 # CreateTileView(name)
 # TileAnimation(bpm, images)
 
-CreateTileView("outside", 128,128,128)
+CreateTileView("outside", "outside", 128,128,128)
 TileAnimation(0, ["outside.png"])
 
-CreateTileView("water", 64,64,192)
+CreateTileView("water", "water", 64,64,192)
 TileAnimation(0, ["water1.png"])
 
-CreateTileView("grass", 64,192,64)
+CreateTileView("grass", "grass", 64,192,64)
 TileAnimation(0, ["grass1.png"])
 
-CreateTileView("desert", 128,128,64)
+CreateTileView("desert", "desert", 128,128,64)
 TileAnimation(0, ["desert1.png"])
 
-CreateTileView("snow", 128,128,64)
+CreateTileView("snow", "snow", 128,128,64)
 TileAnimation(0, ["snow1.png"])
 
-CreateTileView("steppe", 128,128,64)
+CreateTileView("steppe", "steppe", 128,128,64)
 TileAnimation(0, ["steppe1.png"])
 
-CreateTileView("wasteland", 128,128,64)
+CreateTileView("wasteland", "wasteland", 128,128,64)
 TileAnimation(0, ["wasteland1.png"])
