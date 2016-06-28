@@ -7,6 +7,7 @@
 #include "hex/game/game_updater.h"
 #include "hex/game/generation/generator.h"
 #include "hex/game/movement/movement.h"
+#include "hex/game/movement/pathfinding.h"
 #include "hex/messaging/loader.h"
 #include "hex/messaging/updater.h"
 
@@ -207,14 +208,36 @@ void Generator::generate_level() {
 
     // Add roads
     BOOST_LOG_TRIVIAL(info) << "Adding roads";
-    for (int i = 0; i < level.height; i++) {
-        for (int j = 0; j < level.width; j++) {
-            Point tile_pos(j, i);
-            Tile& tile = level.tiles[tile_pos];
-
-            int road_rand = rand();
-            if (tile.type->has_property(Roadable) && road_rand % 2)
-                tile.road = true;
+    for (int i = 0; i < 100; i++) {
+        Point start_pos(rand() % level.width, rand() % level.height);
+        Point end_pos(start_pos.x + rand() % 10 - rand() % 10, start_pos.y + rand() % 10 - rand() % 10);
+        if (!level.contains(end_pos))
+            continue;
+        MovementModel movement(&level);
+        Pathfinder pathfinder(&level, &movement);
+        UnitStack::pointer party = boost::make_shared<UnitStack>(start_pos, Faction::pointer());
+        Unit::pointer unit = boost::make_shared<Unit>();
+        unit->type = boost::make_shared<UnitType>();
+        unit->properties[Walking] = 1;
+        party->units.push_back(unit);
+        pathfinder.start(*party, start_pos, end_pos);
+        pathfinder.complete();
+        Path path;
+        pathfinder.build_path(path);
+        path.resize(30);
+        for (Path::iterator iter = path.begin(); iter != path.end(); iter++) {
+            Tile& tile = level.tiles[*iter];
+            if (tile.type->has_property(Roadable) && rand() % 6 != 0) {
+                Point neighbours[6];
+                get_neighbours(*iter, neighbours);
+                bool too_many_roads = false;
+                for (int i = 0; i < 6; i++) {
+                    if (level.tiles[neighbours[i]].road && level.tiles[neighbours[(i+1) % 6]].road)
+                        too_many_roads = true;
+                }
+                if (!too_many_roads)
+                    tile.road = true;
+            }
         }
     }
 }
