@@ -61,6 +61,14 @@ int MovementModel::cost_to(const Unit& unit, const Point& tile_pos) const {
         return 4;
     }
 
+    if (tile.has_property(Sailable) && unit.has_property(Sailing)) {
+        return 4;
+    }
+
+    if (tile.has_property(Forest) && unit.has_property(Forestry)) {
+        return 3;
+    }
+
     if (tile.has_property(Flyable) && unit.has_property(Flying)) {
         if (tile.has_property(SlowFlying))
             return 5;
@@ -75,6 +83,8 @@ int MovementModel::admits(const UnitType& unit_type, const TileType& tile_type) 
     if (unit_type.has_property(Walking) && tile_type.has_property(Walkable))
         return true;
     else if (unit_type.has_property(Swimming) && tile_type.has_property(Swimmable))
+        return true;
+    else if (unit_type.has_property(Sailing) && tile_type.has_property(Sailable))
         return true;
     if (unit_type.has_property(Flying) && tile_type.has_property(Flyable))
         return true;

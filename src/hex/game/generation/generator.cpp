@@ -286,32 +286,49 @@ void Generator::create_game(Updater& updater) {
     updater.receive(create_message(CreateFaction, 3, "drow", "Great Drow Empire"));
 
     BOOST_LOG_TRIVIAL(info) << "Creating unit stacks";
-    for (int i = 1; i <= 40; i++) {
-        StrMap<UnitType>::iterator item = game->unit_types.begin();
-        std::advance(item, rand() % game->unit_types.size());
-
+    for (int i = 1; i <= 50; i++) {
         IntMap<Faction>::iterator faction_iter = game->factions.begin();
         std::advance(faction_iter, rand() % game->factions.size());
         int faction = faction_iter->second->id;
 
         MovementModel movement_model(&game->level);
-        Point p(-1, -1);
-        for (int j = 0; j < 10; j++) {
-            int tx = rand() % game->level.width;
-            int ty = rand() % game->level.height;
-            Tile& tile = game->level.tiles[ty][tx];
-            if (movement_model.admits(*item->second, *tile.type) && !tile.stack) {
-                p = Point(tx, ty);
-                break;
+        Point p(rand() % game->level.width, rand() % game->level.height);
+        Tile& tile = game->level.tiles[p];
+        if (tile.stack) {
+            continue;
+        }
+
+        int num = (rand() % 8) + 1;
+        int has_transport = false;
+        for (int j = 0; j < num; j++) {
+            StrMap<UnitType>::iterator item;
+            int attempts = 0;
+            do {
+                item = game->unit_types.begin();
+                std::advance(item, rand() % game->unit_types.size());
+                if (attempts++ > 100) {
+                    goto max_attempts;
+                }
+            } while (!movement_model.admits(*item->second, *tile.type));
+
+            if (item->second->has_property(Transport)) {
+                if (has_transport) {
+                    continue;
+                } else {
+                    has_transport = true;
+                }
             }
+
+            if (j == 0) {
+                updater.receive(create_message(CreateStack, i, p, faction));
+            }
+
+            updater.receive(create_message(CreateUnit, i, item->second->name));
+
+            max_attempts: ;
         }
 
         if (p.x != -1) {
-            updater.receive(create_message(CreateStack, i, p, faction));
-            int num = (rand() % 5) + 1;
-            for (int j = 0; j < num; j++) {
-                updater.receive(create_message(CreateUnit, i, item->second->name));
-            }
         }
     };
 

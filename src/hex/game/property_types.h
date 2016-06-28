@@ -7,16 +7,22 @@
 PROPERTY_TYPE(Walkable)
 PROPERTY_TYPE(SlowWalking)
 PROPERTY_TYPE(Swimmable)
+PROPERTY_TYPE(Sailable)
 PROPERTY_TYPE(Flyable)
 PROPERTY_TYPE(SlowFlying)
 PROPERTY_TYPE(Climbable)
 PROPERTY_TYPE(Roadable)
+PROPERTY_TYPE(Forest)
 
 // Unit abilities
 PROPERTY_TYPE(Walking)
 PROPERTY_TYPE(Swimming)
+PROPERTY_TYPE(Sailing)
 PROPERTY_TYPE(Flying)
 PROPERTY_TYPE(Climbing)
+PROPERTY_TYPE(Forestry)
+
+PROPERTY_TYPE(Transport)
 
 PROPERTY_TYPE(Capturable)
 
