@@ -4,7 +4,8 @@ CreateTileType("outside", {})
 CreateTileType("water", {"Swimmable", "Flyable"})
 
 CreateTileType("grass", {"Walkable", "Flyable", "Roadable"})
-CreateTileType("grass_forest", {"Walkable", "Flyable", "Forest"})
+CreateTileType("grass_forest", {"Walkable", "SlowWalking", "Flyable", "Forest"})
+CreateTileType("grass_dead_forest", {"Walkable", "SlowWalking", "Flyable", "Forest"})
 
 CreateTileType("grass_hill0", {"Walkable", "SlowWalking", "Flyable"})
 CreateTileType("grass_hill1", {"Walkable", "SlowWalking", "Flyable"})
@@ -17,6 +18,8 @@ CreateTileType("grass_mountain2", {"Climbable", "Flyable", "SlowFlying"})
 CreateTileType("grass_mountain3", {})
 
 CreateTileType("desert", {"Walkable", "Flyable", "Roadable"})
+CreateTileType("desert_forest", {"Walkable", "SlowWalking", "Flyable", "Forest"})
+CreateTileType("desert_dead_forest", {"Walkable", "SlowWalking", "Flyable", "Forest"})
 
 CreateTileType("desert_hill0", {"Walkable", "SlowWalking", "Flyable"})
 CreateTileType("desert_hill1", {"Walkable", "SlowWalking", "Flyable"})
@@ -29,6 +32,8 @@ CreateTileType("desert_mountain2", {"Climbable", "Flyable", "SlowFlying"})
 CreateTileType("desert_mountain3", {})
 
 CreateTileType("snow", {"Walkable", "Flyable", "Roadable"})
+CreateTileType("snow_forest", {"Walkable", "SlowWalking", "Flyable", "Forest"})
+CreateTileType("snow_dead_forest", {"Walkable", "SlowWalking", "Flyable", "Forest"})
 
 CreateTileType("snow_hill0", {"Walkable", "SlowWalking", "Flyable"})
 CreateTileType("snow_hill1", {"Walkable", "SlowWalking", "Flyable"})
@@ -41,6 +46,8 @@ CreateTileType("snow_mountain2", {"Climbable", "Flyable", "SlowFlying"})
 CreateTileType("snow_mountain3", {})
 
 CreateTileType("steppe", {"Walkable", "Flyable", "Roadable"})
+CreateTileType("steppe_forest", {"Walkable", "SlowWalking", "Flyable", "Forest"})
+CreateTileType("steppe_dead_forest", {"Walkable", "SlowWalking", "Flyable", "Forest"})
 
 CreateTileType("steppe_hill0", {"Walkable", "SlowWalking", "Flyable"})
 CreateTileType("steppe_hill1", {"Walkable", "SlowWalking", "Flyable"})
@@ -53,6 +60,8 @@ CreateTileType("steppe_mountain2", {"Climbable", "Flyable", "SlowFlying"})
 CreateTileType("steppe_mountain3", {})
 
 CreateTileType("wasteland", {"Walkable", "Flyable", "Roadable"})
+CreateTileType("wasteland_forest", {"Walkable", "SlowWalking", "Flyable", "Forest"})
+CreateTileType("wasteland_dead_forest", {"Walkable", "SlowWalking", "Flyable", "Forest"})
 
 CreateTileType("wasteland_hill0", {"Walkable", "SlowWalking", "Flyable"})
 CreateTileType("wasteland_hill1", {"Walkable", "SlowWalking", "Flyable"})

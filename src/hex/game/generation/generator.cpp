@@ -32,6 +32,8 @@ void Generator::generate_level() {
     PerlinNoise type_noise1(3, 3);
     PerlinNoise type_noise2(3, 3);
 
+    PerlinNoise forest_noise(6, 6);
+
     Level& level = game->level;
     std::map<std::string, TileType::pointer>& types = game->tile_types;
 
@@ -183,12 +185,23 @@ void Generator::generate_level() {
     BOOST_LOG_TRIVIAL(info) << "Adding forests";
     for (int i = 0; i < level.height; i++) {
         for (int j = 0; j < level.width; j++) {
+            float px = (float) j / level.width;
+            float py = (float) i / level.height;
+            if (j % 2 == 1)
+                py += 0.5f / level.height;
+
+            float forest_value = forest_noise.value(px, py);
+
             Point tile_pos(j, i);
             Tile& tile = level.tiles[tile_pos];
+            std::string tile_type = type(tile);
 
             int forest_rand = rand();
-            if (tile.type->name == "grass" && forest_rand % 4 == 0)
-                tile.type = types["grass_forest"];
+            if (forest_value > 0.0 && tile.type->name == tile_type && forest_rand % 4 != 0) {
+                std::string forest_type = tile_type + ((forest_rand % 3 == 0) ? "_dead_forest" : "_forest");
+                if (types.find(forest_type) != types.end())
+                    tile.type = types[forest_type];
+            }
         }
     }
 
