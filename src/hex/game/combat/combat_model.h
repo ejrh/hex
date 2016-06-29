@@ -16,6 +16,7 @@ public:
     CombatModel() {
         populate_move_types();
     }
+    ~CombatModel();
 
     std::vector<const MoveType *> get_available_move_types(const Battle& battle, const Participant& participant) const;
 
@@ -24,8 +25,10 @@ public:
 private:
     void populate_move_types();
 
-private:
+public:
     std::map<PropertyType, MoveType *> move_types;
+
+private:
     static CombatModel default_combat_model;
 };
 

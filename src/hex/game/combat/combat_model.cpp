@@ -7,6 +7,12 @@
 
 CombatModel CombatModel::default_combat_model;
 
+CombatModel::~CombatModel() {
+    for (std::map<PropertyType, MoveType *>::iterator iter = move_types.begin(); iter != move_types.end(); iter++) {
+        delete iter->second;
+    }
+}
+
 std::vector<const MoveType *> CombatModel::get_available_move_types(const Battle& battle, const Participant& participant) const {
     std::vector<const MoveType *> types;
 
@@ -34,4 +40,5 @@ void CombatModel::populate_move_types() {
     move_types[Charge] = new ChargeMoveType();
     move_types[Healing] = new HealingMoveType();
     move_types[Strike] = new StrikeMoveType();
+    move_types[Riposte] = new RiposteMoveType();
 }

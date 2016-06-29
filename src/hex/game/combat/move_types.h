@@ -8,28 +8,33 @@ class Move;
 enum MoveDirection {
     UnknownMoveDirection,
     Beneficial,
-    Detrimental
+    Detrimental,
+    Returned
 };
 
 class MoveType {
 public:
-    MoveType(): type(UnknownPropertyType), direction(UnknownMoveDirection) { }
-    MoveType(PropertyType type, MoveDirection direction): type(type), direction(direction) { }
+    MoveType(): type(UnknownPropertyType), direction(UnknownMoveDirection), num_repeats(1) { }
+    MoveType(PropertyType type, MoveDirection direction, int num_repeats = 1): type(type), direction(direction), num_repeats(num_repeats) { }
     virtual ~MoveType() { }
 
     virtual bool is_viable(const Battle& battle, const Participant& participant, const Participant& target) const;
     virtual float expected_value(const Battle& battle, const Participant& participant, const Participant& target) const;
+    virtual int repeats() const;
     virtual Move generate(const Battle& battle, const Participant& participant, const Participant& target) const;
     virtual void apply(Battle& battle, const Move& move) const;
 
 protected:
     PropertyType type;
     MoveDirection direction;
+    int num_repeats;
+
+    friend std::ostream& operator<<(std::ostream& os, const MoveType& t);
 };
 
 class ArcheryMoveType: public MoveType {
 public:
-    ArcheryMoveType(): MoveType(Archery, Detrimental) { };
+    ArcheryMoveType(): MoveType(Archery, Detrimental, 2) { };
 };
 
 class ChargeMoveType: public MoveType {
@@ -51,11 +56,23 @@ public:
 
 class StrikeMoveType: public MoveType {
 public:
-    StrikeMoveType(): MoveType(Strike, Detrimental) { };
+    StrikeMoveType(): MoveType(Strike, Detrimental, 2) { };
+};
+
+class RiposteMoveType: public MoveType {
+public:
+    RiposteMoveType(): MoveType(Riposte, Returned) { };
+    virtual bool is_viable(const Battle& battle, const Participant& participant, const Participant& target) const;
+    virtual Move generate(const Battle& battle, const Participant& participant, const Participant& target) const;
 };
 
 int damage_roll(const Participant& participant, const Participant& target);
 
 float average_damage_roll(const Participant& participant, const Participant& target, int num_trials = 5);
+
+inline std::ostream& operator<<(std::ostream& os, const MoveType& t) {
+    os << get_property_type_name(t.type);
+    return os;
+}
 
 #endif

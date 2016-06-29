@@ -31,6 +31,7 @@ PROPERTY_TYPE(Archery)
 PROPERTY_TYPE(Charge)
 PROPERTY_TYPE(Healing)
 PROPERTY_TYPE(Strike)
+PROPERTY_TYPE(Riposte)
 
 // Unit statistics
 PROPERTY_TYPE(Moves)

@@ -7,6 +7,12 @@
 #include "hex/game/combat/move_types.h"
 
 int damage_roll(int attack, int defence, int damage) {
+    if (attack < 1)
+        attack = 1;
+    if (defence < 1)
+        defence = 1;
+    if (damage < 1)
+        damage = 1;
     int attack_value = rand() % (attack + 1);
     int defence_value = rand() % (defence + 1);
     int damage_value;
@@ -41,6 +47,10 @@ bool MoveType::is_viable(const Battle& battle, const Participant& participant, c
 
 float MoveType::expected_value(const Battle& battle, const Participant& participant, const Participant& target) const {
     return average_damage_roll(participant, target);
+}
+
+int MoveType::repeats() const {
+    return num_repeats;
 }
 
 Move MoveType::generate(const Battle& battle, const Participant& participant, const Participant& target) const {
@@ -80,7 +90,7 @@ bool HealingMoveType::is_viable(const Battle& battle, const Participant& partici
 }
 
 float HealingMoveType::expected_value(const Battle& battle, const Participant& participant, const Participant& target) const {
-    return std::min(target.unit->type->get_property(Health) - target.unit->get_property(Health), 5);
+    return std::min((float) target.unit->type->get_property(Health) - target.unit->get_property(Health), 5.0f);
 }
 
 Move HealingMoveType::generate(const Battle& battle, const Participant& participant, const Participant& target) const {
@@ -98,4 +108,22 @@ void HealingMoveType::apply(Battle& battle, const Move& move) const {
 
     Participant& target = battle.participants[move.target_id];
     target.adjust_health(move.effect);
+}
+
+bool RiposteMoveType::is_viable(const Battle& battle, const Participant& participant, const Participant& target) const {
+    if (!MoveType::is_viable(battle, participant, target))
+        return false;
+    if (battle.moves.empty())
+        return false;
+    const Move& last_move = battle.moves[battle.moves.size() - 1];
+    return last_move.type == Strike && participant.unit->has_property(Strike);
+}
+
+Move RiposteMoveType::generate(const Battle& battle, const Participant& participant, const Participant& target) const {
+    Move move;
+    move.participant_id = participant.id;
+    move.target_id = target.id;
+    move.type = type;
+    move.effect = damage_roll(participant.get_attack() - 1, target.get_defence(), participant.get_attack() - 1);
+    return move;
 }

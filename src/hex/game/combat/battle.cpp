@@ -123,27 +123,44 @@ void Battle::make_move(Participant& participant) {
 
             num_considered++;
 
-            float expected_value = type->expected_value(*this, participant, target);
+            float expected_value = type->expected_value(*this, participant, target) * type->repeats();
 
-            if (best == NULL || expected_value > best_value) {
+            if (expected_value > best_value) {
                 best = type;
                 best_target = target.id;
-                best_value = best->expected_value(*this, participant, target);
+                best_value = expected_value;
             }
         }
     }
 
     if (best != NULL && best_target != -1) {
-        Move move = best->generate(*this, participant, participants[best_target]);
-        moves.push_back(move);
-        apply_move(move);
-        BOOST_LOG_TRIVIAL(trace) << boost::format("Considered %d moves and chose: ") % num_considered << move << boost::format(" (with value %0.1f)") % best_value;
+        BOOST_LOG_TRIVIAL(trace) << boost::format("Considered %d moves and chose: ") % num_considered << *best << boost::format(" (with value %0.1f)") % best_value;
+        Participant& target = participants[best_target];
+        for (int i = 0; i < best->repeats(); i++) {
+            // It's possible the move is no longer viable
+            if (!best->is_viable(*this, participant, target))
+                break;
+
+            // Make the move
+            Move move = best->generate(*this, participant, target);
+            moves.push_back(move);
+            apply_move(move);
+
+            // Riposte
+            MoveType *riposte_type = combat_model->move_types[Riposte];
+            if (riposte_type != NULL && riposte_type->is_viable(*this, target, participant)) {
+                Move riposte = riposte_type->generate(*this, target, participant);
+                moves.push_back(riposte);
+                apply_move(riposte);
+            }
+        }
     } else {
         BOOST_LOG_TRIVIAL(trace) << "Considered no moves";
     }
 }
 
 void Battle::apply_move(const Move& move) {
+    BOOST_LOG_TRIVIAL(trace) << "Move: " << move;
     const MoveType *move_type = combat_model->get_move_type(move);
     move_type->apply(*this, move);
     Participant& target = participants[move.target_id];

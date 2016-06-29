@@ -33,6 +33,7 @@ methods:
   - `is_viable` - Is it possible to make this move?
   - `expected_value` - What is the expected value of making this move?  (in approximately units of
      damage to the target)
+  - `repeats` - How many times does the move get made?
   - `generate` - Generate a move using this move type
   - `apply` - Apply a move generating using this move type
 
@@ -59,6 +60,17 @@ target's defence stat.
         damage_value = random(0 to damage)
     else
         damage_value = 0
+
+Riposte
+-------
+
+After moves a Riposte move may be generated.  This move is made by the target in reponse to a
+move.  A riposte is viable if the last move was of melee type (such as Strike), and the target
+has the Strike ability.  The target and participant of the last move are switched for the
+following Riposte.
+
+Riposte is similar to Strike in terms of effect, except that the attack and damage scores are
+reduced by 1.
 
 Moves
 -----
