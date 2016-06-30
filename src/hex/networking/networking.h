@@ -69,8 +69,7 @@ private:
     boost::asio::io_service io_service;
     boost::thread server_thread;
     tcp::acceptor acceptor;
-    bool shutdown_requested;
-
+    boost::atomic<bool> shutdown_requested;
     int next_connection_id;
     std::map<int, Connection::pointer> connections;
 
@@ -99,7 +98,7 @@ private:
     boost::asio::io_service io_service;
     boost::thread client_thread;
     tcp::resolver resolver;
-    bool shutdown_requested;
+    boost::atomic<bool> shutdown_requested;
     Connection::pointer connection;
     int game_id;
     int last_received_id;

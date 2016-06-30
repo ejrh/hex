@@ -18,6 +18,7 @@
 #include <boost/make_shared.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
+#include <boost/atomic.hpp>
 #include <boost/heap/priority_queue.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>

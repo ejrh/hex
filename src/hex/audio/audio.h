@@ -19,7 +19,7 @@ private:
 
 private:
     Resources *resources;
-    volatile bool started;
+    boost::atomic<bool> started;
     MODULE *module;
     boost::thread audio_thread;
 };

@@ -30,7 +30,7 @@ private:
     MessageReceiver *dispatcher;
     unsigned int last_update;
     Faction::pointer faction;
-    bool started;
+    boost::atomic<bool> started;
     boost::thread ai_thread;
 
     friend class AiUpdater;
