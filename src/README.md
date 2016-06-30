@@ -5,16 +5,6 @@ Components:
   * hexlib - Library containing actual Hex implementation
   * hexmain - Executable game
 
-Dependencies:
-  * cmake
-  * boost-dev
-  * boost-program-options-dev
-  * boost-system-dev
-  * boost-thread-dev
-  * boost-filesystem-dev
-  * SDL2-dev
-  * SDL2-ttf-dev
-
 
 Modules
 -------

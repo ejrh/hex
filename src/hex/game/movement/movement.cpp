@@ -27,7 +27,7 @@ bool MovementModel::can_enter(const UnitStack& party, const Point& tile_pos) con
 
 int MovementModel::cost_to(const UnitStack& party, const Point& tile_pos) const {
     if (!can_enter(party, tile_pos))
-    return INT_MAX;
+        return INT_MAX;
 
     //TODO if one unit is a transport, then the others move for free
 
@@ -114,7 +114,7 @@ bool MovementModel::check_step(const UnitStack& stack, StackMovePoints *points, 
     Point next_step = path[step_num];
 
     if (!can_enter(stack, next_step))
-    return false;
+        return false;
 
     for (unsigned int i = 0; i < stack.units.size(); i++) {
         Unit& unit = *stack.units[i];
