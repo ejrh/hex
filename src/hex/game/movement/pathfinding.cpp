@@ -65,7 +65,7 @@ int Pathfinder::cost_between(const PathfinderQueueEntry& entry1, const Pathfinde
 }
 
 int Pathfinder::heuristic(const PathfinderQueueEntry& entry1, const PathfinderQueueEntry& entry2) {
-    return distance_between(entry1.point, entry2.point);
+    return distance_between(entry1.point, entry2.point) * movement->cost_to(*party, entry1.point);
 }
 
 void Pathfinder::step() {
