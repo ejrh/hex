@@ -203,10 +203,16 @@ void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {
 
 void LevelRenderer::render_fog(int x, int y, Point tile_pos) {
     if (!view->level_view.discovered.check(tile_pos)) {
-        Image *fog = fog_images[0].image;
+        Image *fog = NULL;
+        if (fog_images.size() > 0)
+        fog = fog_images[0].image;
+    if (fog != NULL)
         graphics->blit(fog, x - fog->width / 2, y - fog->height / 2, SDL_BLENDMODE_BLEND);
     } else if (!view->level_view.check_visibility(tile_pos)) {
-        Image *shadow = shadow_images[0].image;
+        Image *shadow = NULL;
+        if (shadow_images.size() > 0)
+        shadow = shadow_images[0].image;
+    if (shadow != NULL)
         graphics->blit(shadow, x - shadow->width / 2, y - shadow->height / 2, SDL_BLENDMODE_BLEND);
     }
 }
