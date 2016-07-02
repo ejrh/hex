@@ -106,9 +106,9 @@ void Game::transfer_units(int stack_id, const IntSet selected_units, Path path, 
     UnitStack::pointer target_stack = stacks.get(target_id);
 
     MovementModel movement(&level);
-    for (Path::const_iterator iter = path.begin() + 1; iter != path.end(); iter++) {
+    for (Path::const_iterator iter = path.begin(); iter != path.end(); iter++) {
         Point pos = *iter;
-        movement.move(*stack, pos);
+        movement.move(*stack, selected_units, pos);
     }
 
     Point& new_pos = path.back();

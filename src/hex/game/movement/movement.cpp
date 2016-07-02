@@ -91,11 +91,13 @@ int MovementModel::admits(const UnitType& unit_type, const TileType& tile_type) 
     return false;
 }
 
-void MovementModel::move(UnitStack& party, const Point& tile_pos) const {
-    for (std::vector<Unit::pointer>::iterator iter = party.units.begin(); iter != party.units.end(); iter++) {
-        Unit& unit = **iter;
-        int cost = cost_to(unit, tile_pos);
-        unit.properties[Moves] -= cost;
+void MovementModel::move(UnitStack& party, const IntSet& selected_units, const Point& tile_pos) const {
+    for (unsigned int i = 0; i < party.units.size(); i++) {
+        if (selected_units.contains(i)) {
+            Unit& unit = *party.units[i];
+            int cost = cost_to(unit, tile_pos);
+            unit.properties[Moves] -= cost;
+        }
     }
 }
 

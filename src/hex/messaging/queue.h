@@ -13,6 +13,7 @@ public:
     boost::shared_ptr<Message> fetch_message();
     int fetch_messages(std::vector<boost::shared_ptr<Message> >& results);
     int flush(MessageReceiver *receiver);
+    const std::vector<boost::shared_ptr<Message> >& get_queue() const { return queue; }
 
 private:
     boost::mutex mtx;

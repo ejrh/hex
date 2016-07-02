@@ -112,9 +112,10 @@ void GameView::right_click_tile(const Point& tile_pos) {
         return;
 
     if (level_view.level->contains(tile_pos) && player->has_control(stack->owner)) {
+        UnitStack::pointer selected_stack = stack->copy_subset(selected_units);
         MovementModel movement_model(level_view.level, tile_pos);
         Pathfinder pathfinder(level_view.level, &movement_model);
-        pathfinder.start(*stack, stack->position, tile_pos);
+        pathfinder.start(*selected_stack, stack->position, tile_pos);
         pathfinder.complete();
         Path new_path;
         pathfinder.build_path(new_path);

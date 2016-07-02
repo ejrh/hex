@@ -9,6 +9,7 @@
 #include "hex/game/game_writer.h"
 #include "hex/messaging/message.h"
 #include "hex/messaging/checksum.h"
+#include "hex/messaging/queue.h"
 #include "hex/messaging/updater.h"
 #include "hex/messaging/writer.h"
 
@@ -82,10 +83,11 @@ unsigned long game_checksum(Game& game) {
 
 struct Fixture {
     Fixture():
-             game_updater(&game), writer(std::cout), updater(1000), arbiter(&game, &updater) {
+             game_updater(&game), writer(std::cout), updater(1000), arbiter(&game, &updater), collector(1000) {
         updater.subscribe(&game_updater);
         create_game(updater);
         updater.subscribe(&writer);
+        updater.subscribe(&collector);
 
         path_to_empty.push_back(STEP_POS);
         path_to_empty.push_back(EMPTY_POS);
@@ -94,11 +96,25 @@ struct Fixture {
         path_to_stack2.push_back(STACK2_POS);
     }
 
+    void check_received(boost::shared_ptr<Message> msg) {
+        const std::vector<boost::shared_ptr<Message> >& msgs = collector.get_queue();
+        for (std::vector<boost::shared_ptr<Message> >::const_iterator iter = msgs.begin(); iter != msgs.end(); iter++) {
+            msg->id = (*iter)->id;
+            msg->origin = (*iter)->origin;
+            if (equal(msg, *iter))
+                return;
+        }
+        std::ostringstream err_msg;
+        err_msg << "Message not received: " << msg.get();
+        BOOST_ERROR(err_msg.str());
+    }
+
     Game game;
     GameUpdater game_updater;
     MessageWriter writer;
     Updater updater;
     GameArbiter arbiter;
+    MessageQueue collector;
 
     Path path_to_empty;
     Path path_to_stack2;
@@ -120,6 +136,52 @@ BOOST_AUTO_TEST_CASE(simple_movement) {
 
     BOOST_CHECK_NE(pre_checksum, post_checksum);
     BOOST_CHECK_EQUAL(game.stacks.get(1)->position, Point(1,3));
+    check_received(create_message(TransferUnits, stack_id, selected_units, path, stack_id));
+}
+
+BOOST_AUTO_TEST_CASE(insufficient_points_1) {
+    int stack_id = 1;
+    IntSet selected_units;
+    selected_units.insert(0);
+    selected_units.insert(1);
+    Path path = path_to_empty;
+    int target_id = 0;
+    UnitStack::pointer stack = game.stacks.get(stack_id);
+    stack->units[0]->properties[Moves] = 1;
+    stack->units[1]->properties[Moves] = 1;
+
+    unsigned long pre_checksum = game_checksum(game);
+    arbiter.receive(create_message(UnitMove, stack_id, selected_units, path, target_id));
+    unsigned long post_checksum = game_checksum(game);
+
+    BOOST_CHECK_EQUAL(pre_checksum, post_checksum);
+}
+
+BOOST_AUTO_TEST_CASE(insufficient_points_2) {
+    int stack_id = 1;
+    IntSet selected_units;
+    selected_units.insert(0);
+    selected_units.insert(1);
+    Path path = path_to_empty;
+    int target_id = 0;
+    UnitStack::pointer stack = game.stacks.get(stack_id);
+    Unit::pointer unit0 = stack->units[0];
+    Unit::pointer unit1 = stack->units[0];
+    unit0->properties[Moves] = 5;
+    unit1->properties[Moves] = 5;
+
+    unsigned long pre_checksum = game_checksum(game);
+    arbiter.receive(create_message(UnitMove, stack_id, selected_units, path, target_id));
+    unsigned long post_checksum = game_checksum(game);
+
+    Path short_path = path;
+    short_path.resize(1);
+
+    BOOST_CHECK_NE(pre_checksum, post_checksum);
+    BOOST_CHECK_EQUAL(stack->position, short_path[0]);
+    check_received(create_message(TransferUnits, stack_id, selected_units, short_path, stack_id));
+    BOOST_CHECK_EQUAL(unit0->properties[Moves], 1);
+    BOOST_CHECK_EQUAL(unit1->properties[Moves], 1);
 }
 
 BOOST_AUTO_TEST_CASE(split_movement) {
@@ -134,8 +196,31 @@ BOOST_AUTO_TEST_CASE(split_movement) {
     unsigned long post_checksum = game_checksum(game);
 
     BOOST_CHECK_NE(pre_checksum, post_checksum);
+    check_received(create_message(TransferUnits, stack_id, selected_units, path, 3));
     BOOST_CHECK_EQUAL(game.stacks.get(1)->position, Point(2,2));
     BOOST_CHECK_EQUAL(game.stacks.get(1)->units.size(), 1);
+    BOOST_CHECK_EQUAL(game.stacks.get(3)->position, Point(1,3));
+    BOOST_CHECK_EQUAL(game.stacks.get(3)->units.size(), 1);
+}
+
+BOOST_AUTO_TEST_CASE(split_movement_2) {
+    int stack_id = 1;
+    IntSet selected_units;
+    selected_units.insert(0);
+    Path path = path_to_empty;
+    int target_id = 0;
+    UnitStack::pointer stack = game.stacks.get(stack_id);
+    Unit::pointer unit1 = stack->units[1];
+    unit1->properties[Moves] = 1;
+
+    unsigned long pre_checksum = game_checksum(game);
+    arbiter.receive(create_message(UnitMove, stack_id, selected_units, path, target_id));
+    unsigned long post_checksum = game_checksum(game);
+
+    BOOST_CHECK_NE(pre_checksum, post_checksum);
+    check_received(create_message(TransferUnits, stack_id, selected_units, path, 3));
+    BOOST_CHECK_EQUAL(stack->position, Point(2,2));
+    BOOST_CHECK_EQUAL(stack->units.size(), 1);
     BOOST_CHECK_EQUAL(game.stacks.get(3)->position, Point(1,3));
     BOOST_CHECK_EQUAL(game.stacks.get(3)->units.size(), 1);
 }

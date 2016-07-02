@@ -47,7 +47,8 @@ void GameArbiter::process_command(boost::shared_ptr<Message> command) {
             }
 
             MovementModel movement(&game->level);
-            unsigned int allowed_steps = movement.check_path(*stack, path);
+            UnitStack::pointer selected_stack = stack->copy_subset(units);
+            unsigned int allowed_steps = movement.check_path(*selected_stack, path);
             bool truncated = allowed_steps < path.size();
             int attack_target_id = target_id;
             if (truncated)
@@ -55,6 +56,7 @@ void GameArbiter::process_command(boost::shared_ptr<Message> command) {
             path.resize(allowed_steps);
 
             if (!path.empty()) {
+                end_pos = path.back();
                 /* Generate updates. */
                 Faction::pointer faction = stack->owner;
                 bool move = units.size() == stack->units.size() && target_id == 0;

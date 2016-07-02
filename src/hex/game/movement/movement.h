@@ -18,7 +18,7 @@ public:
     }
     bool exhausted() const {
         for (std::vector<int>::const_iterator iter = points.begin(); iter != points.end(); iter++) {
-            if (*iter <= 0)
+            if (*iter < 0)
                 return true;
         }
         return false;
@@ -39,7 +39,7 @@ public:
     int cost_to(const UnitStack& party, const Point& tile_pos) const;
     int cost_to(const Unit& unit, const Point& tile_pos) const;
     int admits(const UnitType& unit_type, const TileType& tile_type) const;
-    void move(UnitStack& party, const Point& tile_pos) const;
+    void move(UnitStack& party, const IntSet& selected_units, const Point& tile_pos) const;
     int check_path(const UnitStack& stack, const Path& path) const;
     bool check_step(const UnitStack& stack, StackMovePoints *points, const Path& path, int step_num) const;
 

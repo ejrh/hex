@@ -30,6 +30,19 @@ protected:
     friend Deserialiser& operator>>(Deserialiser& deserialiser, Message *& msg);
 };
 
+inline std::ostream& operator<<(std::ostream& os, const Message *msg) {
+    Serialiser s(os);
+    s << msg;
+    return os;
+}
+
+static inline bool equal(boost::shared_ptr<Message> m1, boost::shared_ptr<Message> m2) {
+    std::ostringstream s1;
+    s1 << m1.get();
+    std::ostringstream s2;
+    s2 << m2.get();
+    return s1.str() == s2.str();
+}
 
 template<typename T>
 class WrapperMessage: public Message {
