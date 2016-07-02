@@ -295,7 +295,7 @@ char *ILBReader::read_pixel_data(ImageData &image) {
 
     if (image.type == ILB_TYPE_PICTURE16) {
         read_data(pixel_data, pixel_data_size);
-    } else if (image.type == ILB_TYPE_RLESPRITE16) {
+    } else if (image.type == ILB_TYPE_RLESPRITE16 || image.type == ILB_TYPE_TRANSPARENT_RLESPRITE16) {
         read_RLE16(image.data_size, (unsigned short) image.transparency_colour, (unsigned short *) pixel_data, pixel_data_size);
     } else if (image.type == ILB_TYPE_RLESPRITE08) {
         read_RLE8(image.data_size, (unsigned char) image.transparency_index, (unsigned char *) pixel_data, pixel_data_size);
@@ -332,7 +332,7 @@ Image *ILBReader::create_image(char *pixel_data, ImageData &image) {
 
     if (image.type == ILB_TYPE_PICTURE16 && image.pixel_format == ILB_FORMAT_565) {
         surface = SDL_CreateRGBSurfaceFrom(pixel_data, image.width, image.height, 16, image.width*2, 0x0000f800,0x000007e0,0x0000001f,0);
-    } else if (image.type == ILB_TYPE_RLESPRITE16 && image.pixel_format == ILB_FORMAT_565) {
+    } else if ((image.type == ILB_TYPE_RLESPRITE16 || image.type == ILB_TYPE_TRANSPARENT_RLESPRITE16) && image.pixel_format == ILB_FORMAT_565) {
         surface = SDL_CreateRGBSurfaceFrom(pixel_data, image.clip_width, image.clip_height, 16, image.clip_width*2, 0x0000f800,0x000007e0,0x0000001f,0);
         SDL_SetColorKey(surface, SDL_TRUE, image.transparency_colour);
     } else if (image.type == ILB_TYPE_RLESPRITE08) {

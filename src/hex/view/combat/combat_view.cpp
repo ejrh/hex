@@ -105,11 +105,12 @@ void BattleView::step() {
 
     switch (current_step) {
         case 0: {
+            pv.selected = true;
             phase_end = 250;
         } break;
 
         case 1: {
-            pv.selected = true;
+            tv.targetted = true;
             pv.phase = 0;
             pv.posture = Attacking;
             phase_end = pv.get_animation_def().duration();
@@ -126,6 +127,7 @@ void BattleView::step() {
         case 3: {
             battle->replay_move(move);
             pv.selected = false;
+            tv.targetted = false;
             tv.posture = tv.participant->is_alive() ? Holding : Dying;
             if (tv.posture == Dying) {
                 tv.facing = rand() % 6;

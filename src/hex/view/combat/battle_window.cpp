@@ -12,6 +12,7 @@
 
 BattleWindow::BattleWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, BattleView *view, UnitRenderer *renderer):
         UiWindow(x, y, width, height), resources(resources), graphics(graphics), view(view), renderer(renderer) {
+    target_images = resources->image_series["TARGETS"];
 }
 
 bool BattleWindow::receive_event(SDL_Event *evt) {
@@ -36,13 +37,29 @@ void BattleWindow::draw_stack(int stack_num) {
             continue;
 
         ParticipantView& pv = view->participant_views[stack_view.participants[i]];
+
+        if (pv.selected) {
+            Image *target = target_images[0].image;
+            if (target != NULL) {
+                graphics->blit(target, pv.x - target->width / 2, pv.y - target->height, SDL_BLENDMODE_BLEND, 128);
+            }
+        }
+
         Unit& unit = *pv.participant->unit;
         renderer->draw_unit(pv.x, pv.y, pv);
+
 
         if (pv.selected) {
             Move& move = view->battle->moves[view->current_move];
             TextFormat tf(graphics, SmallFont14, true, 250, 250, 250);
             tf.write_text(get_property_type_name(move.type), pv.x, pv.y + 20);
+        }
+
+        if (pv.targetted) {
+            Image *target = target_images[1].image;
+            if (target != NULL) {
+                graphics->blit(target, pv.x - target->width / 2, pv.y - target->height, SDL_BLENDMODE_BLEND);
+            }
         }
 
         if (pv.participant->is_alive()) {

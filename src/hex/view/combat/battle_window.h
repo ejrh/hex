@@ -21,6 +21,8 @@ private:
     Graphics *graphics;
     BattleView *view;
     UnitRenderer *renderer;
+
+    ImageSeries target_images;
 };
 
 
