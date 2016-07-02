@@ -24,9 +24,11 @@ public:
     virtual Move generate(const Battle& battle, const Participant& participant, const Participant& target) const;
     virtual void apply(Battle& battle, const Move& move) const;
 
-protected:
+public:
     PropertyType type;
     MoveDirection direction;
+
+protected:
     int num_repeats;
 
     friend std::ostream& operator<<(std::ostream& os, const MoveType& t);

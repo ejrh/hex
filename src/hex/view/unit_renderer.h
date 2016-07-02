@@ -16,6 +16,9 @@ public:
     virtual void draw_unit(int x, int y, UnitView& unit_view);
     virtual void draw_unit_centered(int x, int y, UnitView& unit_view);
 
+public:
+    bool generate_placeholders;
+
 protected:
     const ImageSeries& get_image_series(const UnitView& unit_view) const;
     Image *get_image_or_placeholder(ImageSeries& image_series, int pos, const std::string name);

@@ -27,10 +27,10 @@ static std::string posture_names[] = {
 
 class TestWindow: public UiWindow {
 public:
-    TestWindow(UiLoop *loop, Graphics *graphics, Resources *resources, Game *game, UnitRenderer *unit_renderer, UnitView *unit_view):
+    TestWindow(UiLoop *loop, Graphics *graphics, Resources *resources, Game *game, UnitRenderer *unit_renderer, UnitViewDef::pointer view_def):
             UiWindow(0, 0, 0, 0),
             loop(loop), graphics(graphics), resources(resources),
-            game(game), unit_renderer(unit_renderer), unit_view(unit_view),
+            game(game), unit_renderer(unit_renderer), view_def(view_def),
             last_update(0) {
     }
 
@@ -43,32 +43,25 @@ public:
 
         if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_PAGEDOWN) {
             std::map<std::string,UnitViewDef::pointer>& map = resources->unit_view_defs;
-            std::map<std::string,UnitViewDef::pointer>::iterator iter = map.find(unit_view->view_def->name);
+            std::map<std::string,UnitViewDef::pointer>::iterator iter = map.find(view_def->name);
             iter++;
             if (iter == map.end()) {
                 iter = map.begin();
             }
-            unit_view->view_def = iter->second;
+            view_def = iter->second;
         } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_PAGEUP) {
             std::map<std::string,UnitViewDef::pointer>& map = resources->unit_view_defs;
-            std::map<std::string,UnitViewDef::pointer>::iterator iter = map.find(unit_view->view_def->name);
+            std::map<std::string,UnitViewDef::pointer>::iterator iter = map.find(view_def->name);
             if (iter == map.begin()) {
                 iter = map.end();
             }
             iter--;
-            unit_view->view_def = iter->second;
-        } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_LEFT) {
-            unit_view->facing--;
-            if (unit_view->facing < 0)
-                unit_view->facing = 5;
-        } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_RIGHT) {
-            unit_view->facing++;
-            if (unit_view->facing > 5)
-                unit_view->facing = 0;
-        } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_SPACE) {
-            ((int&) unit_view->posture)++;
-            if (unit_view->posture > Dying)
-                unit_view->posture = Holding;
+            view_def = iter->second;
+        } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_r) {
+            resources->unit_view_defs.clear();
+            resources->tile_view_defs.clear();
+            load_resources(resources, graphics);
+            view_def = resources->unit_view_defs.get(view_def->name);
         }
 
         return false;
@@ -80,33 +73,52 @@ public:
         unsigned int update_ms = ticks - last_update;
         last_update = ticks;
 
-        unit_view->update(update_ms);
+        for (int i = 0; i < 5; i++) {
+            unit_views[i].view_def = view_def;
+            unit_views[i].posture = (UnitPosture) i;
+            unit_views[i].update(update_ms);
+            if ((UnitPosture) i == Attacking || (UnitPosture) i == Recoiling) {
+                AnimationDef& animation = unit_views[i].get_animation_def();
+                if (unit_views[i].phase / 1000 >= animation.images.size() && animation.images.size() > 0) {
+                    unit_views[i].posture = Holding;
+                    if (unit_views[i].phase > 10000)
+                        unit_views[i].phase = 0;
+                }
+            }
+        }
 
         /* Draw view */
-        int cx = graphics->width / 2;
-        int cy = graphics->height / 2;
-
         SDL_SetRenderDrawColor(graphics->renderer, 0,0,0, 255);
         SDL_RenderClear(graphics->renderer);
 
-        TileViewDef::pointer tile_view_def = resources->tile_view_defs.get("grass");
-        Image *ground = tile_view_def->animation.images[0].image;
-        graphics->blit(ground, cx - ground->width / 2, cy - ground->height / 2, SDL_BLENDMODE_BLEND, 255);
+        for (int i = 0; i < 5; i++) {
+            int cy = (int) (((graphics->height - 64) / 5) * (i + 0.5) + 16);
 
-        unit_renderer->draw_unit(cx, cy, *unit_view);
+            for (int j = 0; j < 6; j++) {
+                int cx = (int) ((graphics->width / 6) * (j + 0.5));
+                unit_views[i].facing = j;
+
+                TileViewDef::pointer tile_view_def = resources->tile_view_defs.get("grass");
+                Image *ground = tile_view_def->animation.images[0].image;
+                graphics->blit(ground, cx - ground->width / 2, cy - ground->height / 2, SDL_BLENDMODE_BLEND, 255);
+
+                unit_renderer->draw_unit(cx, cy, unit_views[i]);
+            }
+
+            unit_views[i].posture = (UnitPosture) i;
+
+            TextFormat tf2(graphics, SmallFont14, true, 150, 150, 150);
+            std::ostringstream ss;
+            AnimationDef& animation = unit_views[i].get_animation_def();
+            ss << posture_names[unit_views[i].posture] << " (" << animation.bpm << " bpm, duration " << animation.duration() << "ms)";
+            tf2.write_text(ss.str(), graphics->width / 2, cy + 32);
+        }
+
+        int cx = graphics->width / 2;
+        int cy = graphics->height - 64;
 
         TextFormat tf(graphics, SmallFont14, true, 250, 250, 250);
-        tf.write_text(unit_view->view_def->name, cx, cy + 32);
-
-        TextFormat tf2(graphics, SmallFont14, true, 150, 150, 150);
-        std::ostringstream ss;
-        ss << "Facing: " << unit_view->facing;
-        tf2.write_text(ss.str(), cx, cy + 48);
-
-        ss.str("");
-        int bpm = unit_view->get_animation_def().bpm;
-        ss << "Posture: " << posture_names[unit_view->posture] << " (" << bpm << " bpm)";
-        tf2.write_text(ss.str(), cx, cy + 64);
+        tf.write_text(view_def->name, cx, cy + 32);
 
         graphics->update();
     }
@@ -117,7 +129,8 @@ private:
     Resources *resources;
     Game *game;
     UnitRenderer *unit_renderer;
-    UnitView *unit_view;
+    UnitViewDef::pointer view_def;
+    UnitView unit_views[5];
     unsigned int last_update;
 };
 
@@ -131,12 +144,12 @@ void run() {
     load_resources(&resources, &graphics);
 
     UnitRenderer unit_renderer(&graphics, &resources);
+    unit_renderer.generate_placeholders = false;
 
-    UnitView unit_view;
-    unit_view.view_def = resources.get_unit_view_def("drow_archer");
+    UnitViewDef::pointer view_def = resources.unit_view_defs.begin()->second;
 
     UiLoop loop(25);
-    TestWindow test_window(&loop, &graphics, &resources, &game, &unit_renderer, &unit_view);
+    TestWindow test_window(&loop, &graphics, &resources, &game, &unit_renderer, view_def);
     loop.add_window(&test_window);
     loop.run();
 

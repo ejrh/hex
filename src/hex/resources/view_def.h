@@ -8,8 +8,19 @@ class AnimationDef {
 public:
     AnimationDef(): bpm(60) { }
 
+    // Duration of the complete animation loop, in ms
+    int duration() const {
+        if (images.size() == 0) {
+            return 0;
+        }
+        if (bpm == 0) {
+            return 100;
+        }
+        return 60000 * images.size() / bpm;
+    }
+
 public:
-    int bpm;
+    int bpm;   // How many frames of the animation are played in one minute
     ImageSeries images;
 };
 

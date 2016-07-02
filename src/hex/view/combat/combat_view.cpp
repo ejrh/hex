@@ -3,6 +3,8 @@
 #include "hex/basics/hexgrid.h"
 #include "hex/game/game.h"
 #include "hex/game/combat/combat.h"
+#include "hex/game/combat/combat_model.h"
+#include "hex/game/combat/move_types.h"
 #include "hex/view/combat/combat_view.h"
 
 
@@ -73,14 +75,14 @@ void BattleView::update() {
     unsigned int update_ms = ticks - last_update;
     last_update = ticks;
 
+    for (std::vector<ParticipantView>::iterator iter = participant_views.begin(); iter != participant_views.end(); iter++) {
+        iter->update(update_ms);
+    }
+
     phase += update_ms;
     if (phase >= phase_end && current_move < battle->moves.size()) {
         step();
         phase = 0;
-    }
-
-    for (std::vector<ParticipantView>::iterator iter = participant_views.begin(); iter != participant_views.end(); iter++) {
-        iter->update(update_ms);
     }
 }
 
@@ -95,6 +97,7 @@ void BattleView::step() {
         return;
 
     Move& move = battle->moves[current_move];
+    const MoveType *move_type = battle->combat_model->get_move_type(move);
     std::cerr << "Move " << current_move << ": " << move << std::endl;
 
     ParticipantView& pv = participant_views[move.participant_id];
@@ -107,22 +110,27 @@ void BattleView::step() {
 
         case 1: {
             pv.selected = true;
-            pv.phase = 15000;
+            pv.phase = 0;
             pv.posture = Attacking;
-            phase_end = 500;
+            phase_end = pv.get_animation_def().duration();
         } break;
 
         case 2: {
-            tv.posture = (move.effect != 0) ? Recoiling : Holding;
-            phase_end = 500;
+            pv.posture = Holding;
+            bool hurt = move_type->direction == Detrimental && move.effect != 0;
+            tv.phase = 0;
+            tv.posture = hurt ? Recoiling : Holding;
+            phase_end = tv.get_animation_def().duration();
         } break;
 
         case 3: {
             battle->replay_move(move);
             pv.selected = false;
-            pv.posture = Holding;
             tv.posture = tv.participant->is_alive() ? Holding : Dying;
-            phase_end = 250;
+            if (tv.posture == Dying) {
+                tv.facing = rand() % 6;
+            }
+            phase_end = tv.get_animation_def().duration();
         }
     }
 }

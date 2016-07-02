@@ -9,7 +9,7 @@
 
 
 UnitRenderer::UnitRenderer(Graphics *graphics, Resources *resources):
-        graphics(graphics), resources(resources) {
+        graphics(graphics), resources(resources), generate_placeholders(true) {
 }
 
 UnitRenderer::~UnitRenderer() {
@@ -17,17 +17,21 @@ UnitRenderer::~UnitRenderer() {
 
 void UnitRenderer::draw_unit(int x, int y, UnitView& unit_view) {
     // Shadow
-    AnimationDef& shadow_animation = unit_view.view_def->shadow_animations[unit_view.facing];
-    if (shadow_animation.images.size() != 0) {
-        int pos = unit_view.phase / 1000;
-        Image *shadow = shadow_animation.images[pos % shadow_animation.images.size()].image;
-        int alpha = 64;
-        graphics->blit(shadow, x - shadow->width / 2, y - shadow->height + 8, SDL_BLENDMODE_BLEND, alpha);
+    if (unit_view.posture != Dying) {
+        AnimationDef& shadow_animation = unit_view.view_def->shadow_animations[unit_view.facing];
+        if (shadow_animation.images.size() != 0) {
+            int pos = unit_view.phase / 1000;
+            Image *shadow = shadow_animation.images[pos % shadow_animation.images.size()].image;
+            int alpha = 96;
+            graphics->blit(shadow, x - shadow->width / 2, y - shadow->height + 8, SDL_BLENDMODE_BLEND, alpha);
+        }
     }
 
     // Unit
     ImageSeries& image_series = (ImageSeries&) get_image_series(unit_view);
     Image *image = get_image_or_placeholder(image_series, unit_view.phase / 1000, unit_view.view_def->name);
+    if (!image)
+        return;
 
     x -= image->width / 2;
     y -= image->height;
@@ -75,6 +79,9 @@ Image *UnitRenderer::get_image_or_placeholder(ImageSeries& image_series, int pos
     if (image_series.size() != 0) {
         return image_series[pos % image_series.size()].image;
     }
+    if (!generate_placeholders)
+        return NULL;
+
     const std::string& label = name.substr(0, 4);
     TextFormat tf(graphics, SmallFont14, false, 255,255,255, 128,128,128);
     Image *image = tf.write_to_image(label);
