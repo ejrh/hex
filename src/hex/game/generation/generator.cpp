@@ -232,11 +232,14 @@ void Generator::generate_level() {
                 get_neighbours(*iter, neighbours);
                 bool too_many_roads = false;
                 for (int i = 0; i < 6; i++) {
-                    if (level.tiles[neighbours[i]].road && level.tiles[neighbours[(i+1) % 6]].road)
+                    if (level.tiles[neighbours[i]].has_property(Road) && level.tiles[neighbours[(i+1) % 6]].has_property(Road))
                         too_many_roads = true;
                 }
-                if (!too_many_roads)
-                    tile.road = true;
+                if (!too_many_roads) {
+                    std::string tile_type = type(tile);
+                    std::string road_type = tile_type + "_road";
+                    tile.type = types[road_type];
+                }
             }
         }
     }
@@ -270,12 +273,8 @@ void Generator::create_game(Updater& updater) {
         std::vector<std::string> data;
         for (int j = 0; j < game->level.width; j++) {
             Tile& tile = game->level.tiles[i][j];
-            std::ostringstream data_ss;
             TileType::pointer tile_type = tile.type;
-            data_ss << tile_type->name;
-            if (tile.road)
-                data_ss << "/r";
-            data.push_back(data_ss.str());
+            data.push_back(tile.type->name);
         }
         updater.receive(boost::make_shared<WrapperMessage2<Point, std::vector<std::string> > >(SetLevelData, origin, data));
     }

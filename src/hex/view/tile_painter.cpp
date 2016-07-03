@@ -97,7 +97,7 @@ void TilePainter::paint_roads(const Point& tile_pos) {
     if (!view_def)
         return;
     Tile& tile = game->level.tiles[tile_pos];
-    if (!tile.road)
+    if (!tile.has_property(Road))
         return;
 
     for (unsigned int dir = 0; dir < 6; dir++) {
@@ -107,7 +107,7 @@ void TilePainter::paint_roads(const Point& tile_pos) {
             continue;
 
         Tile& neighbour_tile = game->level.tiles[neighbour];
-        if (!neighbour_tile.road)
+        if (!neighbour_tile.has_property(Road))
             continue;
 
         if (view_def->roads.size() > dir)

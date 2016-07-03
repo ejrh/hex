@@ -159,18 +159,17 @@ public:
 
 class Tile {
 public:
-    Tile(): type(), stack(), structure(), road(false) { }
-    Tile(TileType::pointer type): type(type), stack(), structure(), road(false) { }
+    Tile(): type(), stack(), structure() { }
+    Tile(TileType::pointer type): type(type), stack(), structure() { }
 
     bool has_property(PropertyType property) const {
-        return type->has_property(property);
+        return type && type->has_property(property);
     }
 
 public:
     TileType::pointer type;
     UnitStack::pointer stack;
     Structure::pointer structure;
-    bool road;
 };
 
 class Level {

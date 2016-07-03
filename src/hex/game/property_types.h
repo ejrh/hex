@@ -13,6 +13,7 @@ PROPERTY_TYPE(SlowFlying)
 PROPERTY_TYPE(Climbable)
 PROPERTY_TYPE(Roadable)
 PROPERTY_TYPE(Forest)
+PROPERTY_TYPE(Road)
 
 // Unit abilities
 PROPERTY_TYPE(Walking)

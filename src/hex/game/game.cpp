@@ -13,20 +13,14 @@ void Game::set_level_data(const Point& offset, const std::vector<std::string>& t
             continue;
         }
 
-        std::vector<std::string> parts;
-        boost::split(parts, tile_data[i], boost::is_any_of("/"));
-        std::string& tile_type_name = parts[0];
-
+        const std::string& tile_type_name = tile_data[i];
         TileType::pointer tile_type = tile_types.get(tile_type_name);
+        if (!tile_type) {
+            BOOST_LOG_TRIVIAL(error) << "Unknown tile type: " << tile_type_name;
+            continue;
+        }
         Tile& tile = level.tiles[tile_pos];
         tile.type = tile_type;
-        tile.road = false;
-
-        for (unsigned int j = 1; j < parts.size(); j++) {
-            if (parts[j] == "r") {
-                tile.road = true;
-            }
-        }
     }
 }
 

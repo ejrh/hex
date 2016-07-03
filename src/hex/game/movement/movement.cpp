@@ -49,7 +49,7 @@ int MovementModel::cost_to(const Unit& unit, const Point& tile_pos) const {
     Tile &tile = level->tiles[tile_pos];
 
     if (tile.has_property(Walkable) && unit.has_property(Walking)) {
-        if (tile.road)
+        if (tile.has_property(Road))
             return 3;
         else if (tile.has_property(SlowWalking))
             return 5;
