@@ -13,7 +13,10 @@ public:
     void create_game(Updater& updater);
 
 private:
-    void generate_level();
+    void create_level(Updater& updater);
+    void create_factions(Updater& updater);
+    void create_unit_stacks(Updater& updater);
+    void create_towers(Updater& updater);
 
 public:
     float height_scale;

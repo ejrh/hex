@@ -17,6 +17,8 @@ set(srcs
         chat/chat.h
         chat/chat_updater.cpp
         chat/chat_window.cpp
+        game/end_of_turn.cpp
+        game/end_of_turn.h
         game/game.cpp
         game/game.h
         game/game_arbiter.cpp
@@ -30,6 +32,8 @@ set(srcs
         game/game_writer.h
         game/generation/generator.cpp
         game/generation/generator.h
+        game/generation/level_generator.cpp
+        game/generation/level_generator.h
         game/level.cpp
         game/message_types.h
         game/combat/battle.cpp

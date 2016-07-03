@@ -2,6 +2,7 @@
 
 #include "hex/basics/error.h"
 #include "hex/basics/hexgrid.h"
+#include "hex/game/end_of_turn.h"
 #include "hex/game/game.h"
 #include "hex/game/movement/movement.h"
 
@@ -70,6 +71,7 @@ Unit::pointer Game::create_unit(int stack_id, const std::string& type_name) {
     Unit::pointer new_unit = boost::make_shared<Unit>();
     new_unit->type = type;
     new_unit->properties[Health] = type->properties[Health];
+    new_unit->properties[Moves] = type->properties[Moves];
 
     stack->units.push_back(new_unit);
     return new_unit;
@@ -139,31 +141,22 @@ bool Game::all_factions_ready() {
     return true;
 }
 
+void Game::end_turn() {
+    EndOfTurn end_of_turn(this);
+    end_of_turn.apply();
+
+    in_turn = false;
+}
+
 void Game::begin_turn(int turn_number) {
-    for (IntMap<UnitStack>::iterator iter = stacks.begin(); iter != stacks.end(); iter++) {
-        UnitStack::pointer stack = iter->second;
-        for (std::vector<Unit::pointer>::iterator unit_iter = stack->units.begin(); unit_iter != stack->units.end(); unit_iter++) {
-            Unit& unit = **unit_iter;
-            UnitType& type = *unit.type;
-            unit.properties[Moves] = type.properties[Moves];
-            if (unit.properties[Health] > 0 && unit.properties[Health] < type.properties[Health])
-                unit.properties[Health]++;
-        }
-    }
 
     for (IntMap<Faction>::const_iterator iter = factions.begin(); iter != factions.end(); iter++) {
         Faction& faction = *iter->second;
         faction.ready = false;
     }
 
-    BOOST_LOG_TRIVIAL(debug) << "Start of turn " << turn_number;
     this->turn_number = turn_number;
     in_turn = true;
-}
-
-void Game::end_turn() {
-    BOOST_LOG_TRIVIAL(debug) << "End of turn " << turn_number;
-    in_turn = false;
 }
 
 int Game::get_free_stack_id() {
