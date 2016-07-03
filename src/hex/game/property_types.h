@@ -41,3 +41,7 @@ PROPERTY_TYPE(Attack)
 PROPERTY_TYPE(Defence)
 PROPERTY_TYPE(Damage)
 PROPERTY_TYPE(Health)
+
+// Unit spawning
+PROPERTY_TYPE(SpawnGroup)
+PROPERTY_TYPE(SpawnChance)

@@ -1,6 +1,7 @@
 #include "common.h"
 
 #include "hex/basics/error.h"
+#include "hex/basics/hexgrid.h"
 #include "hex/game/game.h"
 #include "hex/game/movement/movement.h"
 
@@ -168,3 +169,18 @@ void Game::end_turn() {
 int Game::get_free_stack_id() {
     return stacks.get_free_id();
 }
+
+int Game::get_nearby_stacks(Point position, int radius, std::vector<UnitStack::pointer> stacks) const {
+    std::vector<Point> points;
+    get_circle_points(position, radius, points, level.width, level.height);
+    int num_found = 0;
+    for (std::vector<Point>::const_iterator iter = points.begin(); iter != points.end(); iter++) {
+        const Tile& tile = level.tiles[*iter];
+        if (tile.stack) {
+            stacks.push_back(tile.stack);
+            num_found++;
+        }
+    }
+    return num_found;
+}
+

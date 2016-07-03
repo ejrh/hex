@@ -289,6 +289,8 @@ void Generator::create_game(Updater& updater) {
         IntMap<Faction>::iterator faction_iter = game->factions.begin();
         std::advance(faction_iter, rand() % game->factions.size());
         int faction = faction_iter->second->id;
+        if (faction == 1)
+            continue;
 
         MovementModel movement_model(&game->level);
         Point p(rand() % game->level.width, rand() % game->level.height);

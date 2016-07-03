@@ -95,3 +95,23 @@ void get_circle(const Point point, int radius, std::vector<int>& scanlines) {
         scanlines[i] = radius;
     }
 }
+
+void get_circle_points(const Point point, int radius, std::vector<Point>& points, int width, int height) {
+    int num_scanlines = 2 * radius + 1;
+    std::vector<int> scanlines(num_scanlines);
+    get_circle(point, radius, scanlines);
+    for (int i = 0; i < num_scanlines; i++) {
+        int row = point.y - radius + i;
+        if (row < 0 || row >= height)
+            continue;
+        int x1 = point.x - scanlines[i];
+        int x2 = point.x + scanlines[i];
+        if (x1 < 0)
+            x1 = 0;
+        if (x2 >= width)
+            x2 = width - 1;
+        for (int j = x1; j <= x2; j++) {
+            points.push_back(Point(j, row));
+        }
+    }
+}

@@ -151,6 +151,11 @@ public:
     bool has_property(PropertyType property) const {
         return properties.count(property) > 0;
     }
+    int get_property(PropertyType property) const {
+        if (properties.count(property) > 0)
+            return properties.find(property)->second;
+        return 0;
+    }
 
 public:
     std::string name;
@@ -164,6 +169,11 @@ public:
 
     bool has_property(PropertyType property) const {
         return type && type->has_property(property);
+    }
+    int get_property(PropertyType property) const {
+        if (!type)
+            return 0;
+        return type->get_property(property);
     }
 
 public:
@@ -212,6 +222,7 @@ public:
     void end_turn();
 
     int get_free_stack_id();
+    int get_nearby_stacks(Point position, int radius, std::vector<UnitStack::pointer> stacks) const;
 
 public:
     StrMap<TileType> tile_types;

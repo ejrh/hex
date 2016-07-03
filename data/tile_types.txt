@@ -3,9 +3,9 @@ CreateTileType("outside", {})
 
 CreateTileType("water", {"Swimmable", "Sailable", "Flyable"})
 
-CreateTileType("grass", {"Walkable", "Flyable", "Roadable"})
+CreateTileType("grass", {"Walkable", "Flyable", "Roadable", "SpawnGroup": 4, "SpawnChance": 10})
 CreateTileType("grass_road", {"Walkable", "Flyable", "Road"})
-CreateTileType("grass_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest"})
+CreateTileType("grass_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest", "SpawnGroup": 1, "SpawnChance": 10})
 CreateTileType("grass_dead_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest"})
 
 CreateTileType("grass_hill0", {"Walkable", "SlowWalking", "Flyable"})
@@ -18,9 +18,9 @@ CreateTileType("grass_mountain1", {"Climbable", "Flyable"})
 CreateTileType("grass_mountain2", {"Climbable", "Flyable", "SlowFlying"})
 CreateTileType("grass_mountain3", {})
 
-CreateTileType("desert", {"Walkable", "Flyable", "Roadable"})
+CreateTileType("desert", {"Walkable", "Flyable", "Roadable", "SpawnGroup": 3, "SpawnChance": 10})
 CreateTileType("desert_road", {"Walkable", "Flyable", "Road"})
-CreateTileType("desert_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest"})
+CreateTileType("desert_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest", "SpawnGroup": 5, "SpawnChance": 10})
 CreateTileType("desert_dead_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest"})
 
 CreateTileType("desert_hill0", {"Walkable", "SlowWalking", "Flyable"})
@@ -65,7 +65,7 @@ CreateTileType("steppe_mountain3", {})
 
 CreateTileType("wasteland", {"Walkable", "Flyable", "Roadable"})
 CreateTileType("wasteland_road", {"Walkable", "Flyable", "Road"})
-CreateTileType("wasteland_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest"})
+CreateTileType("wasteland_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest", "SpawnGroup": 2, "SpawnChance": 10})
 CreateTileType("wasteland_dead_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest"})
 
 CreateTileType("wasteland_hill0", {"Walkable", "SlowWalking", "Flyable"})

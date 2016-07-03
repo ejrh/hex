@@ -105,6 +105,8 @@ void GameArbiter::process_command(boost::shared_ptr<Message> command) {
             if (game->all_factions_ready()) {
                 emit(create_message(TurnEnd));
                 // process turn end
+
+                spawn_units();
                 game->turn_number++;
                 emit(create_message(TurnBegin, game->turn_number));
             }
@@ -118,6 +120,54 @@ void GameArbiter::process_command(boost::shared_ptr<Message> command) {
         default:
             break;
     }
+}
+
+void GameArbiter::spawn_units() {
+    for (int i = 0; i < game->level.height; i++)
+        for (int j = 0; j < game->level.width; j++) {
+            Point position(j, i);
+            Tile& tile = game->level.tiles[position];
+
+            int spawn_group = tile.get_property(SpawnGroup);
+            if (!spawn_group)
+                continue;
+
+            std::vector<UnitStack::pointer> nearby_stacks;
+            int num_nearby = game->get_nearby_stacks(position, 3, nearby_stacks);
+            if (num_nearby > 0)
+                continue;
+
+            int random100 = rand() % 100;
+            int spawn_chance = tile.get_property(SpawnGroup);
+            if (random100 > spawn_chance)
+                continue;
+
+            int stack_id = game->get_free_stack_id();
+            int faction_id = 1;   // Independent
+
+            int spawn_max = (rand() % 8) + 1;
+            int spawn_count = 0;
+            for (int k = 0; k < spawn_max; k++) {
+                for (StrMap<UnitType>::const_iterator iter = game->unit_types.begin(); iter != game->unit_types.end(); iter++) {
+                    const UnitType::pointer type = iter->second;
+                    if (type->get_property(SpawnGroup) != spawn_group)
+                        continue;
+
+                    random100 = rand() % 100;
+                    spawn_chance = type->get_property(SpawnChance);
+                    if (random100 > spawn_chance)
+                        continue;
+
+                    if (spawn_count == 0) {
+                        emit(create_message(CreateStack, stack_id, position, faction_id));
+                    }
+                    emit(create_message(CreateUnit, stack_id, type->name));
+                    spawn_count++;
+                }
+            }
+            if (spawn_count > 0)
+                BOOST_LOG_TRIVIAL(debug) << boost::format("Spawned %d units from group %d at %s") % spawn_count % spawn_group % position;
+        }
 }
 
 void GameArbiter::emit(boost::shared_ptr<Message> update) {

@@ -16,6 +16,7 @@ public:
 
 private:
     void process_command(boost::shared_ptr<Message> update);
+    void spawn_units();
     void emit(boost::shared_ptr<Message> update);
 
 private:
