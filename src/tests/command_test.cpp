@@ -5,9 +5,9 @@
 #include "hex/game/game_serialisation.h"
 #include "hex/game/game_updater.h"
 #include "hex/messaging/message.h"
+#include "hex/messaging/publisher.h"
 #include "hex/messaging/receiver.h"
 #include "hex/messaging/serialiser.h"
-#include "hex/messaging/updater.h"
 
 
 #define ORIGIN 1
@@ -48,7 +48,7 @@ public:
 int main(int argc, char *argv[]) {
 
     Game game;
-    Updater updater(ORIGIN);
+    Publisher updater(ORIGIN);
     GameUpdater game_updater(&game);
     updater.subscribe(&game_updater);
 

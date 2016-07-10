@@ -6,7 +6,6 @@
 #include "hex/game/game_messages.h"
 #include "hex/game/combat/combat.h"
 #include "hex/game/movement/movement.h"
-#include "hex/messaging/updater.h"
 
 
 GameArbiter::GameArbiter(Game *game, MessageReceiver *publisher): game(game), publisher(publisher) {

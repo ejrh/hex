@@ -5,7 +5,6 @@
 #include "hex/graphics/graphics.h"
 #include "hex/messaging/message.h"
 #include "hex/messaging/receiver.h"
-#include "hex/messaging/updater.h"
 
 class MessageLoader: public MessageReceiver {
 public:

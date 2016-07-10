@@ -1,13 +1,14 @@
-#ifndef UPDATER_H
-#define UPDATER_H
+#ifndef PUBLISHER_H
+#define PUBLISHER_H
 
 #include "hex/messaging/receiver.h"
 
 
-class Updater: public MessageReceiver {
+class Publisher: public MessageReceiver {
 public:
-    Updater(int id);
-    virtual ~Updater();
+    Publisher();
+    Publisher(int id);
+    virtual ~Publisher();
 
     void subscribe(MessageReceiver *receiver);
     void unsubscribe(MessageReceiver *receiver);

@@ -1,7 +1,7 @@
 #include "common.h"
 
 #include "hex/basics/error.h"
-#include "hex/messaging/event_pusher.h"
+#include "hex/messaging/queue.h"
 #include "hex/messaging/receiver.h"
 #include "hex/networking/networking.h"
 
@@ -20,8 +20,8 @@ public:
 };
 
 void run() {
-    EventPusher event_pusher;
-    Server server(SERVER_PORT, &event_pusher);
+    MessageQueue dispatch_queue(1000);
+    Server server(SERVER_PORT, &dispatch_queue);
     PrintingMessageReceiver printer;
 
     server.start();
@@ -29,7 +29,7 @@ void run() {
     SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS);
     SDL_Delay(1000);
 
-    Client client(&event_pusher);
+    Client client(&dispatch_queue);
     client.connect(std::string("localhost:9999"));
 
     bool running = true;
@@ -40,10 +40,7 @@ void run() {
             if (evt.type == SDL_QUIT)
                 running = false;
 
-            if (evt.type == event_pusher.event_type) {
-                boost::shared_ptr<Message> msg = event_pusher.get_message(evt);
-                printer.receive(msg);
-            }
+            dispatch_queue.flush(&printer);
         }
     }
 

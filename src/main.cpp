@@ -16,9 +16,9 @@
 #include "hex/game/game_writer.h"
 #include "hex/game/generation/generator.h"
 #include "hex/graphics/graphics.h"
-#include "hex/messaging/event_pusher.h"
 #include "hex/messaging/writer.h"
 #include "hex/messaging/receiver.h"
+#include "hex/messaging/publisher.h"
 #include "hex/messaging/queue.h"
 #include "hex/networking/networking.h"
 #include "hex/view/level_renderer.h"
@@ -52,7 +52,7 @@ void load_resources(Resources *resources, Graphics *graphics) {
     resources->resolve_references();
 }
 
-void load_game(const std::string& filename, Updater& updater) {
+void load_game(const std::string& filename, MessageReceiver& updater) {
     replay_messages(filename, updater);
 }
 
@@ -63,25 +63,146 @@ void save_game(const std::string& filename, Game *game) {
     game_writer.write(game);
 }
 
+class NodeInterface: public MessageReceiver {
+public:
+    virtual ~NodeInterface() { }
+    virtual void update() = 0;
+    virtual void start() = 0;
+    virtual void stop() = 0;
+    virtual void subscribe(MessageReceiver *receiver) = 0;
+};
+
+class LocalNode: public NodeInterface {
+public:
+    LocalNode():
+            game(), game_updater(&game), publisher(1000), arbiter(&game, &publisher), dispatch_queue(1000) {
+        publisher.subscribe(&game_updater);
+    }
+
+    virtual void receive(boost::shared_ptr<Message> command) {
+        dispatch_queue.receive(command);
+    }
+
+    virtual void update() {
+        dispatch_queue.flush(&arbiter);
+    }
+
+    virtual void start() {
+        for (std::vector<Ai *>::iterator iter = ais.begin(); iter != ais.end(); iter++) {
+            Ai *ai = *iter;
+            ai->start();
+        }
+    }
+
+    virtual void stop() {
+        for (std::vector<Ai *>::iterator iter = ais.begin(); iter != ais.end(); iter++) {
+            Ai *ai = *iter;
+            ai->stop();
+            delete ai;
+        }
+    }
+
+    virtual void subscribe(MessageReceiver *receiver) {
+        publisher.subscribe(receiver);
+    }
+
+    void add_ai(const std::string& faction_type) {
+        Ai *ai = new Ai(faction_type, &dispatch_queue);
+        subscribe(ai->get_receiver());
+        ais.push_back(ai);
+    }
+
+    MessageReceiver& get_publisher() {
+        return publisher;
+    }
+
+protected:
+    Game game;
+    GameUpdater game_updater;
+    Publisher publisher;
+    GameArbiter arbiter;
+    MessageQueue dispatch_queue;
+    std::vector<Ai *> ais;
+};
+
+class ServerNode: public LocalNode {
+public:
+    ServerNode():
+            server(9999, &arbiter) {
+        publisher.subscribe(&server);
+    }
+
+    virtual void start() {
+        server.start();
+    }
+
+    virtual void stop() {
+        server.stop();
+    }
+
+private:
+    Server server;
+};
+
+class ClientNode: public NodeInterface {
+public:
+    ClientNode(const std::string& host_addr):
+            host_addr(host_addr), update_queue(1000), client(&update_queue) {
+    }
+
+    virtual void receive(boost::shared_ptr<Message> command) {
+        client.receive(command);
+    }
+
+    virtual void update() {
+        update_queue.flush(&publisher);
+    }
+
+    virtual void start() {
+        client.connect(host_addr);
+    }
+
+    virtual void stop() {
+        client.disconnect();
+    }
+
+    virtual void subscribe(MessageReceiver *receiver) {
+        publisher.subscribe(receiver);
+    }
+
+private:
+    std::string host_addr;
+    MessageQueue update_queue;
+    Client client;
+    Publisher publisher;
+};
+
+NodeInterface *make_node_interface(Options& options) {
+    NodeInterface *node;
+
+    if (options.client_mode) {
+        node = new ClientNode(options.host_addr);
+    } else if (options.server_mode) {
+        node = new ServerNode();
+    } else {
+        node = new LocalNode();
+    }
+
+    return node;
+}
+
 class BackgroundWindow: public UiWindow {
 public:
     BackgroundWindow(UiLoop *loop, Options *options, Generator *generator, Game *game, GameView *game_view,
-            MessageReceiver *dispatcher, MessageQueue *dispatch_queue, EventPusher *event_pusher, GameArbiter *arbiter, Updater *updater, LevelRenderer *level_renderer):
+            NodeInterface *node_interface,
+            LevelRenderer *level_renderer):
         UiWindow(0, 0, 0, 0), loop(loop), options(options), generator(generator), game(game), game_view(game_view),
-            dispatcher(dispatcher), dispatch_queue(dispatch_queue), event_pusher(event_pusher), arbiter(arbiter), updater(updater), level_renderer(level_renderer) { }
+            node_interface(node_interface), level_renderer(level_renderer) { }
 
     bool receive_event(SDL_Event *evt) {
         if (evt->type == SDL_QUIT
             || (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_ESCAPE)) {
             loop->running = false;
-            return true;
-        } else if (evt->type == event_pusher->event_type) {
-            boost::shared_ptr<Message> msg = event_pusher->get_message(*evt);
-            if (options->server_mode) {
-                arbiter->receive(msg);
-            } else if (options->client_mode) {
-                updater->receive(msg);
-            }
             return true;
         }
 
@@ -93,12 +214,17 @@ public:
             level_renderer->show_hexagons = game_view->debug_mode;
             return true;
         } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_F6) {
-            generator->mountain_level += (evt->key.keysym.mod & KMOD_SHIFT) ? 0.2 : -0.2;
-            std::cerr << "mountain_level = " << generator->mountain_level << std::endl;
-            generator->create_game(*updater);
-            updater->receive(create_message(GrantFactionView, 0, 2, true));
-            updater->receive(create_message(GrantFactionControl, 0, 2, true));
-            updater->receive(create_message(GrantFactionControl, 0, 3, true));
+            LocalNode *local = dynamic_cast<LocalNode *>(node_interface);
+            if (local != NULL) {
+                MessageReceiver& updater = local->get_publisher();
+
+                generator->mountain_level += (evt->key.keysym.mod & KMOD_SHIFT) ? 0.2 : -0.2;
+                std::cerr << "mountain_level = " << generator->mountain_level << std::endl;
+                generator->create_game(updater);
+                updater.receive(create_message(GrantFactionView, 0, 2, true));
+                updater.receive(create_message(GrantFactionControl, 0, 2, true));
+                updater.receive(create_message(GrantFactionControl, 0, 3, true));
+            }
             return true;
         }
 
@@ -115,7 +241,7 @@ public:
 
     void draw() {
         game_view->update();
-        dispatch_queue->flush(dispatcher);
+        node_interface->update();
     }
 
 private:
@@ -124,11 +250,7 @@ private:
     Generator *generator;
     Game *game;
     GameView *game_view;
-    MessageReceiver *dispatcher;
-    MessageQueue *dispatch_queue;
-    EventPusher *event_pusher;
-    GameArbiter *arbiter;
-    Updater *updater;
+    NodeInterface *node_interface;
     LevelRenderer *level_renderer;
 };
 
@@ -154,47 +276,28 @@ void run(Options& options) {
     Resources resources;
     load_resources(&resources, &graphics);
 
-    EventPusher event_pusher;
-    Server server(9999, &event_pusher);
-
-    Client client(&event_pusher);
+    NodeInterface *node_interface = make_node_interface(options);
 
     Player player(0, std::string("player"));
 
     Game game;
-    Updater updater(1000);
-    GameArbiter arbiter(&game, &updater);
-    Updater dispatcher(1000);
-    MessageQueue dispatch_queue(1000);
-
-    GameView game_view(&game, &player, &resources, &dispatcher);
+    GameView game_view(&game, &player, &resources, node_interface);
     PreUpdater pre_updater(&game, &game_view);
-    updater.subscribe(&pre_updater);
+    node_interface->subscribe(&pre_updater);
 
     GameUpdater game_updater(&game);
-    updater.subscribe(&game_updater);
+    node_interface->subscribe(&game_updater);
 
     ViewUpdater view_updater(&game, &game_view, &resources);
-    updater.subscribe(&view_updater);
-
-    std::vector<Ai *> ais;
+    node_interface->subscribe(&view_updater);
 
     Generator generator;
 
-    if (options.server_mode) {
-        server.start();
-        updater.subscribe(&server);
-    }
+    if (!options.client_mode) {
+        LocalNode *local = static_cast<LocalNode *>(node_interface);
+        local->add_ai(std::string("independent"));
 
-    if (options.client_mode) {
-        client.connect(options.host_addr);
-        dispatcher.subscribe(&client);
-    } else {
-        Ai *independent_ai = new Ai(std::string("independent"), &dispatch_queue);
-        ais.push_back(independent_ai);
-
-        dispatcher.subscribe(&arbiter);
-        updater.subscribe(independent_ai->get_receiver());
+        MessageReceiver& updater = local->get_publisher();
         if (options.load_filename.empty()) {
             generator.create_game(updater);
         } else {
@@ -206,6 +309,8 @@ void run(Options& options) {
         updater.receive(create_message(GrantFactionControl, 0, 3, true));
     }
 
+    node_interface->start();
+
     int sidebar_width = StackWindow::window_width;
     int sidebar_position = graphics.width - sidebar_width;
     int map_window_height = 200;
@@ -216,9 +321,9 @@ void run(Options& options) {
     UnitRenderer unit_renderer(&graphics, &resources);
     LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view, &unit_renderer);
     LevelWindow level_window(graphics.width - sidebar_width, graphics.height - StatusWindow::window_height, &game_view, &level_renderer, &resources);
-    ChatWindow chat_window(200, graphics.height, &resources, &graphics, &dispatcher);
+    ChatWindow chat_window(200, graphics.height, &resources, &graphics, node_interface);
     ChatUpdater chat_updater(&chat_window);
-    updater.subscribe(&chat_updater);
+    node_interface->subscribe(&chat_updater);
 
     MapWindow map_window(sidebar_position, 0, sidebar_width, map_window_height, &game_view, &level_window, &graphics, &resources);
     StackWindow stack_window(sidebar_position, 200, sidebar_width, StackWindow::window_height, &resources, &graphics, &game_view, &unit_renderer);
@@ -231,13 +336,8 @@ void run(Options& options) {
     BattleViewer battle_viewer(&resources, &graphics, &audio, &game_view, &unit_renderer);
     pre_updater.battle_viewer = &battle_viewer;
 
-    for (std::vector<Ai *>::iterator iter = ais.begin(); iter != ais.end(); iter++) {
-        Ai *ai = *iter;
-        ai->start();
-    }
-
     UiLoop loop(25);
-    BackgroundWindow bw(&loop, &options, &generator, &game, &game_view, &dispatcher, &dispatch_queue, &event_pusher, &arbiter, &updater, &level_renderer);
+    BackgroundWindow bw(&loop, &options, &generator, &game, &game_view, node_interface, &level_renderer);
     loop.add_window(&bw);
     loop.add_window(&level_window);
     loop.add_window(&map_window);
@@ -249,17 +349,11 @@ void run(Options& options) {
     loop.add_window(&tw);
     loop.run();
 
-    server.stop();
-    client.disconnect();
+    node_interface->stop();
+    delete node_interface;
 
     audio.stop();
     graphics.stop();
-
-    for (std::vector<Ai *>::iterator iter = ais.begin(); iter != ais.end(); iter++) {
-        Ai *ai = *iter;
-        ai->stop();
-        delete ai;
-    }
 }
 
 bool parse_options(int argc, char *argv[], Options& options) {

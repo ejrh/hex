@@ -64,19 +64,17 @@ set(srcs
         graphics/load_image.cpp
         messaging/checksum.cpp
         messaging/checksum.h
-        messaging/event_pusher.cpp
-        messaging/event_pusher.h
         messaging/loader.cpp
         messaging/loader.h
         messaging/message.cpp
         messaging/message.h
+        messaging/publisher.cpp
+        messaging/publisher.h
         messaging/queue.cpp
         messaging/queue.h
         messaging/receiver.cpp
         messaging/receiver.h
         messaging/serialiser.h
-        messaging/updater.cpp
-        messaging/updater.h
         messaging/writer.h
         networking/client.cpp
         networking/connection.cpp

@@ -10,35 +10,38 @@
 #include "hex/game/movement/movement.h"
 #include "hex/game/movement/pathfinding.h"
 #include "hex/messaging/loader.h"
-#include "hex/messaging/updater.h"
+#include "hex/messaging/publisher.h"
 
 
-void Generator::create_game(Updater& updater) {
+void Generator::create_game(MessageReceiver& updater) {
     updater.receive(create_message(ClearGame));
 
     srand(seed);
 
     game = new Game();
-
     GameUpdater game_updater(game);
-    updater.subscribe(&game_updater);
 
-    ReceiverMessageLoader loader(updater);
+    // Wrap the updater in a publisher that will also keep the private game instance up to date
+    // with every update emitted by the generator.
+    Publisher publisher;
+    publisher.subscribe(&game_updater);
+    publisher.subscribe(&updater);
+
+    ReceiverMessageLoader loader(publisher);
     loader.load("data/game.txt");
 
-    create_level(updater);
-    create_factions(updater);
-    create_unit_stacks(updater);
-    create_towers(updater);
+    create_level(publisher);
+    create_factions(publisher);
+    create_unit_stacks(publisher);
+    create_towers(publisher);
 
     game->turn_number = 1;
-    updater.receive(create_message(TurnBegin, game->turn_number));
+    publisher.receive(create_message(TurnBegin, game->turn_number));
 
-    updater.unsubscribe(&game_updater);
     delete game;
 }
 
-void Generator::create_level(Updater& updater) {
+void Generator::create_level(MessageReceiver& updater) {
     int width = 57;
     int height = 48;
     LevelGenerator level_generator(this, game);
@@ -57,14 +60,14 @@ void Generator::create_level(Updater& updater) {
     }
 }
 
-void Generator::create_factions(Updater& updater) {
+void Generator::create_factions(MessageReceiver& updater) {
     BOOST_LOG_TRIVIAL(info) << "Creating factions";
     updater.receive(create_message(CreateFaction, 1, "independent", "Independent"));
     updater.receive(create_message(CreateFaction, 2, "orcs", "Orc Hegemony"));
     updater.receive(create_message(CreateFaction, 3, "drow", "Great Drow Empire"));
 }
 
-void Generator::create_unit_stacks(Updater& updater) {
+void Generator::create_unit_stacks(MessageReceiver& updater) {
     BOOST_LOG_TRIVIAL(info) << "Creating unit stacks";
     for (int i = 1; i <= 50; i++) {
         IntMap<Faction>::iterator faction_iter = game->factions.begin();
@@ -115,7 +118,7 @@ void Generator::create_unit_stacks(Updater& updater) {
     };
 }
 
-void Generator::create_towers(Updater& updater) {
+void Generator::create_towers(MessageReceiver& updater) {
     BOOST_LOG_TRIVIAL(info) << "Placing towers";
     for (int i = 0; i < game->level.height; i++) {
         for (int j = 0; j < game->level.width; j++) {

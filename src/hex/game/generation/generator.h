@@ -1,7 +1,7 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
-class Updater;
+class MessageReceiver;
 class Game;
 
 class Generator {
@@ -10,13 +10,13 @@ public:
         height_scale(8.0f), height_power(1.5f), sea_level(-2.0f), hill_level(0.0f), mountain_level(4.8f), hill_culling(4), mountain_culling(2),
         seed(rand())
     { }
-    void create_game(Updater& updater);
+    void create_game(MessageReceiver& updater);
 
 private:
-    void create_level(Updater& updater);
-    void create_factions(Updater& updater);
-    void create_unit_stacks(Updater& updater);
-    void create_towers(Updater& updater);
+    void create_level(MessageReceiver& updater);
+    void create_factions(MessageReceiver& updater);
+    void create_unit_stacks(MessageReceiver& updater);
+    void create_towers(MessageReceiver& updater);
 
 public:
     float height_scale;

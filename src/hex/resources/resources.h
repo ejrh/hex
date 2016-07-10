@@ -6,7 +6,6 @@
 #include "hex/messaging/loader.h"
 #include "hex/messaging/message.h"
 #include "hex/messaging/receiver.h"
-#include "hex/messaging/updater.h"
 #include "hex/resources/view_def.h"
 
 

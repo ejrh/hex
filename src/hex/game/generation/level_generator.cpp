@@ -9,7 +9,6 @@
 #include "hex/game/generation/level_generator.h"
 #include "hex/game/movement/movement.h"
 #include "hex/game/movement/pathfinding.h"
-#include "hex/messaging/updater.h"
 
 static std::string type(Tile& tile) {
     std::vector<std::string> parts;

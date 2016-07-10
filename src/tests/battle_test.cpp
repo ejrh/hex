@@ -10,7 +10,7 @@
 #include "hex/game/combat/combat.h"
 #include "hex/messaging/message.h"
 #include "hex/messaging/checksum.h"
-#include "hex/messaging/updater.h"
+#include "hex/messaging/publisher.h"
 #include "hex/messaging/writer.h"
 
 #define BOOST_TEST_MODULE BattleTest
@@ -95,7 +95,7 @@ struct Fixture {
     Game game;
     GameUpdater game_updater;
     MessageWriter writer;
-    Updater updater;
+    Publisher updater;
     GameArbiter arbiter;
 };
 
