@@ -223,9 +223,34 @@ void GameView::mark_ready() {
 void GameView::set_view_def(UnitStackView& stack_view) const {
     UnitStack::pointer& stack = stack_view.stack;
     if (!stack->units.empty()) {
-        UnitType& unit_type = *stack->units[0]->type;
+        int representative = 0;
+        for (int i = 1; i < stack->units.size(); i++) {
+            if (stack->units[i]->has_property(Transport)) {
+                representative = i;
+                break;
+            }
+            //TODO pick most valuable
+        }
+        UnitType& unit_type = *stack->units[representative]->type;
         stack_view.view_def = resources->get_unit_view_def(unit_type.name);
     } else {
         stack_view.view_def.reset();
+    }
+}
+
+void GameView::fix_stack_views() {
+    std::vector<int> to_delete;
+
+    for (IntMap<UnitStackView>::iterator iter = unit_stack_views.begin(); iter != unit_stack_views.end(); iter++) {
+        UnitStackView& view = *iter->second;
+        if (game->stacks.find(view.stack->id) != view.stack) {
+            to_delete.push_back(view.stack->id);
+        } else {
+            set_view_def(view);
+        }
+    }
+
+    for (std::vector<int>::iterator iter = to_delete.begin(); iter != to_delete.end(); iter++) {
+        unit_stack_views.remove(*iter);
     }
 }

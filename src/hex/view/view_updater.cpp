@@ -131,6 +131,10 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         case TurnEnd: {
         } break;
 
+        case DoBattle: {
+            game_view->fix_stack_views();
+        } break;
+
         default:
             break;
     }

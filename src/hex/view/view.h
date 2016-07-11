@@ -175,6 +175,7 @@ public:
     void transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id);
     void mark_ready();
     void set_view_def(UnitStackView& stack_view) const;
+    void fix_stack_views();
 
 public:
     Game *game;
