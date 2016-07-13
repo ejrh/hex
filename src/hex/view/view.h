@@ -168,6 +168,7 @@ public:
     void left_click_tile(const Point& tile_pos);
     void right_click_tile(const Point& tile_pos);
     void set_drawn_path(const Point& start, const Path& path);
+    Path find_path(UnitStack& party, const Point& from_pos, const Point& to_pos);
     void clear_drawn_path();
     void update_visibility();
     UnitStackView::pointer get_stack_view(int stack_id);

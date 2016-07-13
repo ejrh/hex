@@ -76,6 +76,15 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
             }
         } break;
 
+        case TransferUnits: {
+            boost::shared_ptr<UnitMoveMessage> upd = boost::dynamic_pointer_cast<UnitMoveMessage>(update);
+            int old_stack_id = upd->data1;
+            UnitStackView::pointer old_stack = game_view->unit_stack_views.find(old_stack_id);
+            if (old_stack) {
+                game_view->set_view_def(*old_stack);
+            }
+        } break;
+
         case DestroyStack: {
             boost::shared_ptr<DestroyStackMessage> upd = boost::dynamic_pointer_cast<DestroyStackMessage>(update);
             if (game_view->selected_stack_id == upd->data) {

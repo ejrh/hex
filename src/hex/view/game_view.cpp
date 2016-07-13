@@ -113,12 +113,7 @@ void GameView::right_click_tile(const Point& tile_pos) {
 
     if (level_view.level->contains(tile_pos) && player->has_control(stack->owner)) {
         UnitStack::pointer selected_stack = stack->copy_subset(selected_units);
-        MovementModel movement_model(level_view.level, tile_pos);
-        Pathfinder pathfinder(level_view.level, &movement_model);
-        pathfinder.start(*selected_stack, stack->position, tile_pos);
-        pathfinder.complete();
-        Path new_path;
-        pathfinder.build_path(new_path);
+        Path new_path = find_path(*selected_stack, selected_stack->position, tile_pos);
 
         if (stack_view->path == new_path && !new_path.empty()) {
             int target_id = 0;
@@ -136,6 +131,16 @@ void GameView::right_click_tile(const Point& tile_pos) {
             set_drawn_path(stack->position, stack_view->path);
         }
     }
+}
+
+Path GameView::find_path(UnitStack& party, const Point& from_pos, const Point& to_pos) {
+    MovementModel movement_model(level_view.level, to_pos);
+    Pathfinder pathfinder(level_view.level, &movement_model);
+    pathfinder.start(party, from_pos, to_pos);
+    pathfinder.complete();
+    Path new_path;
+    pathfinder.build_path(new_path);
+    return new_path;
 }
 
 void GameView::clear_drawn_path() {
@@ -205,6 +210,22 @@ void GameView::transfer_units(int stack_id, const IntSet selected_units, Path pa
 
     if (path.empty())
         return;
+
+    UnitStackView::pointer stack_view = unit_stack_views.get(stack_id);
+    if (selected_units.size() == stack->units.size()) {
+        Point from_pos = *path.rbegin();
+        Point tile_pos = stack_view->path.empty() ? stack->position : *stack_view->path.rbegin();
+        stack_view->path = find_path(*stack, from_pos, tile_pos);
+    } else {
+        UnitStackView::pointer target_stack_view = unit_stack_views.get(target_id);
+        Point from_pos = *path.rbegin();
+        Point tile_pos = stack_view->path.empty() ? stack->position : *stack_view->path.rbegin();
+        target_stack_view->path = find_path(*stack, from_pos, tile_pos);
+    }
+
+    if (selected_stack_id == stack_id) {
+        clear_drawn_path();
+    }
 
     Ghost ghost(this, stack, selected_units, path, target_stack);
     ghosts.push_back(ghost);

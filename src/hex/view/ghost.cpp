@@ -18,6 +18,7 @@ Ghost::Ghost(GameView *view, UnitStack::pointer stack, const IntSet selected_uni
     stack_view->path = path;
     stack_view->moving = true;
     stack_view->posture = Moving;
+    stack_view->selected = view->selected_stack_id == stack->id;
 
     // Lock target
     target_view = view->get_stack_view(target_stack->id);
@@ -46,6 +47,9 @@ void Ghost::update(unsigned int update_ms) {
         if (view->player->has_view(target->owner)) {
             view->level_view.visibility.unmask(*target);
             view->update_visibility();
+        }
+        if (stack_view->selected) {
+            view->set_drawn_path(target->position, target_view->path);
         }
         finished = true;
         return;
