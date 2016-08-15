@@ -37,10 +37,10 @@ void GameUpdater::apply_update(boost::shared_ptr<Message> update) {
         } break;
 
         case SetLevelData: {
-            boost::shared_ptr<WrapperMessage2<Point, std::vector<std::string> > > upd = boost::dynamic_pointer_cast<WrapperMessage2<Point, std::vector<std::string> > >(update);
+            boost::shared_ptr<SetLevelDataMessage> upd = boost::dynamic_pointer_cast<SetLevelDataMessage>(update);
             Point offset = upd->data1;
-            std::vector<std::string>& tile_data = upd->data2;
-            game->set_level_data(offset, tile_data);
+            CompressableStringVector& tile_data = upd->data2;
+            game->set_level_data(offset, tile_data.data);
         } break;
 
         case CreateTileType: {

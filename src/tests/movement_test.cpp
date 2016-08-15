@@ -38,7 +38,7 @@ void create_game(MessageReceiver& updater) {
     updater.receive(create_message(SetLevel, LEVEL_WIDTH, LEVEL_HEIGHT));
     for (int i = 0; i < LEVEL_HEIGHT; i++) {
         Point offset(0, i);
-        std::vector<std::string> data;
+        CompressableStringVector data;
         for (int j = 0; j < LEVEL_WIDTH; j++) {
             if (j == 3 && i >= 3)
                 data.push_back("wall");

@@ -39,7 +39,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         } break;
 
         case SetLevelData: {
-            boost::shared_ptr<WrapperMessage2<Point, std::vector<std::string> > > upd = boost::dynamic_pointer_cast<WrapperMessage2<Point, std::vector<std::string> > >(update);
+            boost::shared_ptr<SetLevelDataMessage> upd = boost::dynamic_pointer_cast<SetLevelDataMessage>(update);
             Point offset = upd->data1;
             int len = upd->data2.size();
             TilePainter painter(game, game_view, resources);

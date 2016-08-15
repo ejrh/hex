@@ -47,7 +47,7 @@ void GameWriter::write_levels(Game *game) {
     emit(create_message(SetLevel, game->level.width, game->level.height));
     for (int i = 0; i < game->level.height; i++) {
         Point origin(0, i);
-        std::vector<std::string> data;
+        CompressableStringVector data;
         for (int j = 0; j < game->level.width; j++) {
             data.push_back(game->level.tiles[i][j].type->name);
         }

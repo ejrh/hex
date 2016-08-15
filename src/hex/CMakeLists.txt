@@ -13,6 +13,8 @@ set(srcs
         basics/noise.h
         basics/objmap.h
         basics/point.h
+        basics/string_vector.cpp
+        basics/string_vector.h
         basics/vector2.h
         chat/chat.h
         chat/chat_updater.cpp

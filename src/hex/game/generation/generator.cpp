@@ -50,13 +50,13 @@ void Generator::create_level(MessageReceiver& updater) {
     updater.receive(boost::make_shared<WrapperMessage2<int, int> >(SetLevel, game->level.width, game->level.height));
     for (int i = 0; i < game->level.height; i++) {
         Point origin(0, i);
-        std::vector<std::string> data;
+        CompressableStringVector data;
         for (int j = 0; j < game->level.width; j++) {
             Tile& tile = game->level.tiles[i][j];
             TileType::pointer tile_type = tile.type;
             data.push_back(tile.type->name);
         }
-        updater.receive(boost::make_shared<WrapperMessage2<Point, std::vector<std::string> > >(SetLevelData, origin, data));
+        updater.receive(boost::make_shared<SetLevelDataMessage>(SetLevelData, origin, data));
     }
 }
 

@@ -6,6 +6,22 @@
 
 
 template<typename Serialiser>
+inline Serialiser& operator<<(Serialiser& serialiser, const CompressableStringVector& v) {
+    std::vector<std::string> strs;
+    compress_string_vector(v, strs);
+    serialiser << strs;
+    return serialiser;
+}
+
+template<typename Deserialiser>
+inline Deserialiser& operator>>(Deserialiser& deserialiser, CompressableStringVector& v) {
+    std::vector<std::string> strs;
+    deserialiser >> strs;
+    decompress_string_vector(strs, v);
+    return deserialiser;
+}
+
+template<typename Serialiser>
 inline Serialiser& operator<<(Serialiser& serialiser, const PropertyName& t) {
     serialiser << get_property_name_str(t);
     return serialiser;
