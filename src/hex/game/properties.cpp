@@ -6,46 +6,46 @@
 class PropertyMap {
 public:
 
-#define PROPERTY_TYPE(n) data[#n] = n;
+#define PROPERTY_NAME(n) data[#n] = n;
     PropertyMap() {
-        #include "hex/game/property_types.h"
+        #include "hex/game/property_names.h"
     }
-#undef PROPERTY_TYPE
+#undef PROPERTY_NAME
 
-    std::map<std::string, PropertyType> data;
+    std::map<std::string, PropertyName> data;
 };
 
 PropertyMap property_map;
 
-PropertyType get_property_type(const std::string& name) {
-    std::map<std::string, PropertyType>::iterator iter = property_map.data.find(name);
+PropertyName get_property_name(const std::string& name) {
+    std::map<std::string, PropertyName>::iterator iter = property_map.data.find(name);
     if (iter != property_map.data.end())
         return iter->second;
-    BOOST_LOG_TRIVIAL(warning) << boost::format("Unknown property type: %s") % name;
-    return UnknownPropertyType;
+    BOOST_LOG_TRIVIAL(warning) << boost::format("Unknown property name: %s") % name;
+    return UnknownPropertyName;
 }
 
-const std::string get_property_type_name(const PropertyType property_type) {
+const std::string get_property_name_str(const PropertyName property_name) {
 
-#define PROPERTY_TYPE(n) case n: return std::string(#n); break;
-    switch (property_type) {
-        #include "hex/game/property_types.h"
+#define PROPERTY_NAME(n) case n: return std::string(#n); break;
+    switch (property_name) {
+        #include "hex/game/property_names.h"
         default:
             return std::string("unknown");
     }
-#undef PROPERTY_TYPE
+#undef PROPERTY_NAME
 }
 
 std::ostream& operator<<(std::ostream& os, const Properties& p) {
     os << "{";
     bool first = true;
-    for (std::map<PropertyType, int>::const_iterator iter = p.data.begin(); iter != p.data.end(); iter++) {
+    for (std::map<PropertyName, PropertyValue>::const_iterator iter = p.data.begin(); iter != p.data.end(); iter++) {
         if (!first)
             os << ", ";
         else
             first = false;
 
-        os << get_property_type_name(iter->first) << ": " << iter->second;
+        os << get_property_name_str(iter->first) << ": " << iter->second.value;
     }
     os << "}";
     return os;

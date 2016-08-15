@@ -48,7 +48,7 @@ set(srcs
         game/movement/movement.h
         game/movement/pathfinding.cpp
         game/movement/pathfinding.h
-        game/property_types.h
+        game/property_names.h
         game/properties.cpp
         game/properties.h
         game/unit_stack.cpp

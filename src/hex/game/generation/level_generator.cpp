@@ -229,7 +229,7 @@ void LevelGenerator::add_roads() {
         UnitStack::pointer party = boost::make_shared<UnitStack>(start_pos, Faction::pointer());
         Unit::pointer unit = boost::make_shared<Unit>();
         unit->type = boost::make_shared<UnitType>();
-        unit->properties[Walking] = 1;
+        unit->properties.set<int>(Walking, 1);
         party->units.push_back(unit);
         pathfinder.start(*party, start_pos, end_pos);
         pathfinder.complete();

@@ -90,7 +90,7 @@ bool HealingMoveType::is_viable(const Battle& battle, const Participant& partici
 }
 
 float HealingMoveType::expected_value(const Battle& battle, const Participant& participant, const Participant& target) const {
-    return std::min((float) target.unit->type->get_property(Health) - target.unit->get_property(Health), 5.0f);
+    return std::min((float) target.unit->type->get_property<int>(Health) - target.unit->get_property<int>(Health), 5.0f);
 }
 
 Move HealingMoveType::generate(const Battle& battle, const Participant& participant, const Participant& target) const {
@@ -104,7 +104,7 @@ Move HealingMoveType::generate(const Battle& battle, const Participant& particip
 
 void HealingMoveType::apply(Battle& battle, const Move& move) const {
     Participant& participant = battle.participants[move.participant_id];
-    participant.unit->properties[Healing] = 0;
+    participant.unit->properties.set<int>(Healing, 0);
 
     Participant& target = battle.participants[move.target_id];
     target.adjust_health(move.effect);

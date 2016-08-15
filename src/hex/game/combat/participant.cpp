@@ -10,15 +10,15 @@ Participant::Participant(int id, Side side, int stack_num, UnitStack::pointer st
 }
 
 int Participant::get_attack() const {
-    return unit->get_property(Attack);
+    return unit->get_property<int>(Attack);
 }
 
 int Participant::get_defence() const {
-    return unit->get_property(Defence);
+    return unit->get_property<int>(Defence);
 }
 
 int Participant::get_damage() const {
-    return unit->get_property(Damage);
+    return unit->get_property<int>(Damage);
 }
 
 bool Participant::can_move() const {
@@ -27,17 +27,25 @@ bool Participant::can_move() const {
     return true;
 }
 
+int Participant::get_health() const {
+    return unit->get_property<int>(Health);
+}
+
+int Participant::get_max_health() const {
+    return unit->type->get_property<int>(Health);
+}
+
 bool Participant::is_alive() const {
-    return unit->get_property(Health) > 0;
+    return unit->get_property<int>(Health) > 0;
 }
 
 int Participant::adjust_health(int change) {
-    unit->properties[Health] += change;
-    if (unit->properties[Health] < 0)
-        unit->properties[Health] = 0;
-    else if (unit->properties[Health] > unit->type->properties[Health])
-        unit->properties[Health] = unit->type->properties[Health];
-    return unit->get_property(Health);
+    unit->properties.increment(Health, change);
+    if (unit->get_property<int>(Health) < 0)
+        unit->set_property<int>(Health, 0);
+    else if (unit->get_property<int>(Health) > unit->type->get_property<int>(Health))
+        unit->set_property(Health, unit->type->get_property<int>(Health));
+    return unit->get_property<int>(Health);
 }
 
 std::ostream& operator<<(std::ostream& os, const Participant& p) {

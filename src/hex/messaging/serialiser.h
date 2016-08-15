@@ -4,6 +4,18 @@
 #include "hex/basics/error.h"
 
 
+inline bool is_atom_char(int x) {
+    return std::isalnum(x) || x == '_';
+}
+
+inline bool needs_quoting(const std::string& str) {
+    for (std::string::const_iterator iter = str.begin(); iter != str.end(); iter++) {
+        if (!is_atom_char(*iter))
+            return true;
+    }
+    return false;
+}
+
 class Serialiser {
 public:
     Serialiser(std::ostream &out): out(out), need_seperator(false) { }
@@ -28,7 +40,11 @@ public:
     Serialiser& operator<<(const std::string& x) {
         if (need_seperator)
             out << ", ";
-        out << "\"" << x << "\"";
+        if (needs_quoting(x)) {
+            out << "\"" << x << "\"";
+        } else {
+            out << x;
+        }
         need_seperator = true;
         return *this;
     }
@@ -174,15 +190,7 @@ public:
     Deserialiser& operator>>(std::string& x) {
         if (expect_seperator)
             skip_separator();
-        if (in.peek() == '"') {
-            skip_expected('"');
-            std::stringbuf sbuf;
-            in.get(sbuf, '"');
-            skip_expected('"');
-            x.assign(sbuf.str());
-        } else {
-            in >> x;
-        }
+        read_atom(x);
         expect_seperator = true;
         return *this;
     }
@@ -327,6 +335,32 @@ public:
         expect_seperator = false;
     }
 
+    void read_atom(std::string& atom) {
+        if (in.peek() == '"') {
+            in.get();
+            for (;;) {
+                int x = in.get();
+                if (x == '"')
+                    break;
+                if (x == '\\') {
+                    x = in.get();
+                    if (x == 'n')
+                        x = '\n';
+                }
+                atom.push_back(x);
+            }
+            was_quoted = true;
+        } else {
+            for (;;) {
+                int x = in.peek();
+                if (!is_atom_char(x))
+                    break;
+                atom.push_back(in.get());
+            }
+            was_quoted = false;
+        }
+    }
+
     int peek() {
         return in.peek();
     }
@@ -340,8 +374,11 @@ public:
 
         va_end(args);
 
-        //warn(buffer);
+        BOOST_LOG_TRIVIAL(warning) << buffer;
     }
+
+public:
+    bool was_quoted;
 
 private:
     std::istream &in;

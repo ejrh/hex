@@ -96,7 +96,7 @@ void MovementModel::move(UnitStack& party, const IntSet& selected_units, const P
         if (selected_units.contains(i)) {
             Unit& unit = *party.units[i];
             int cost = cost_to(unit, tile_pos);
-            unit.properties[Moves] -= cost;
+            unit.properties.increment<int>(Moves, -cost);
         }
     }
 }

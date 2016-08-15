@@ -30,15 +30,12 @@ public:
 
     UnitType() { }
     ~UnitType() { }
-    bool has_property(PropertyType property) const {
-        if (properties.count(property) > 0)
-            return true;
-        return false;
+    bool has_property(PropertyName property) const {
+        return properties.contains(property);
     }
-    int get_property(PropertyType property) const {
-        if (properties.count(property) > 0)
-            return properties.find(property)->second;
-        return 0;
+    template<typename T>
+    T get_property(PropertyName property) const {
+        return properties.get<T>(property);
     }
 
 public:
@@ -60,15 +57,16 @@ public:
         return unit;
     }
 
-    bool has_property(PropertyType property) const {
-        if (properties.count(property) > 0)
-            return true;
-        return type->has_property(property);
+    bool has_property(PropertyName property) const {
+        return properties.contains(property, type->properties);
     }
-    int get_property(PropertyType property) const {
-        if (properties.count(property) > 0)
-            return properties.find(property)->second;
-        return type->get_property(property);
+    template<typename T>
+    int get_property(PropertyName property) const {
+        return properties.get<T>(property, type->properties);
+    }
+    template<typename T>
+    void set_property(PropertyName property, const T& value) {
+        properties.set<T>(property, value);
     }
 
 public:
@@ -91,7 +89,7 @@ public:
     void transfer_units(const IntSet unit_selection, UnitStack& target_stack);
 
     static int sight_func(int max1, Unit::pointer unit) {
-        int max2 = unit->get_property(Sight);
+        int max2 = unit->get_property<int>(Sight);
         return std::max(max1, max2);
     }
     int sight() { return std::accumulate(units.begin(), units.end(), 0, sight_func); }
@@ -110,15 +108,12 @@ public:
     typedef boost::shared_ptr<StructureType> pointer;
 
     StructureType() { }
-    bool has_property(PropertyType property) const {
-        if (properties.count(property) > 0)
-            return true;
-        return false;
+    bool has_property(PropertyName property) const {
+        return properties.contains(property);
     }
-    int get_property(PropertyType property) const {
-        if (properties.count(property) > 0)
-            return properties.find(property)->second;
-        return 0;
+    template<typename T>
+    T get_property(PropertyName property) const {
+        return properties.get<T>(property);
     }
 
 public:
@@ -133,7 +128,7 @@ public:
     Structure();
     Structure(const Point& position, StructureType::pointer type, Faction::pointer owner): position(position), type(type), owner(owner) { };
 
-    int sight() { return type->get_property(Sight); }
+    int sight() { return type->get_property<int>(Sight); }
 
 public:
     Point position;
@@ -148,13 +143,12 @@ public:
     TileType() { }
     ~TileType() { }
 
-    bool has_property(PropertyType property) const {
-        return properties.count(property) > 0;
+    bool has_property(PropertyName property) const {
+        return properties.contains(property);
     }
-    int get_property(PropertyType property) const {
-        if (properties.count(property) > 0)
-            return properties.find(property)->second;
-        return 0;
+    template<typename T>
+    T get_property(PropertyName property) const {
+        return properties.get<T>(property);
     }
 
 public:
@@ -167,13 +161,16 @@ public:
     Tile(): type(), stack(), structure() { }
     Tile(TileType::pointer type): type(type), stack(), structure() { }
 
-    bool has_property(PropertyType property) const {
+    bool has_property(PropertyName property) const {
         return type && type->has_property(property);
     }
-    int get_property(PropertyType property) const {
-        if (!type)
-            return 0;
-        return type->get_property(property);
+    template<typename T>
+    T get_property(PropertyName property) const {
+        if (!type) {
+            static T default_value;
+            return default_value;
+        }
+        return type->get_property<T>(property);
     }
 
 public:

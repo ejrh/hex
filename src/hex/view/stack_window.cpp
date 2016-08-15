@@ -70,7 +70,7 @@ void StackWindow::draw() {
             renderer->draw_unit_centered(px, py, unit_view);
 
             std::ostringstream ss;
-            ss << unit.properties[Moves] / MOVE_SCALE;
+            ss << unit.get_property<int>(Moves) / MOVE_SCALE;
             px = unit_rectangles[i].x + StackWindow::unit_width;
             py = unit_rectangles[i].y + StackWindow::unit_height;
             tf.write_text(ss.str(), px, py);

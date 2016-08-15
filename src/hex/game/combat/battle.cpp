@@ -72,7 +72,7 @@ bool Battle::check_finished() {
     int defending_health = 0;
     for (std::vector<Participant>::const_iterator iter = participants.begin(); iter != participants.end(); iter++) {
         const Participant& participant = *iter;
-        int health = participant.unit->get_property(Health);
+        int health = participant.get_health();
         if (participant.side == Attacker)
             attacking_health += health;
         else if (participant.side == Defender)
@@ -164,7 +164,7 @@ void Battle::apply_move(const Move& move) {
     const MoveType *move_type = combat_model->get_move_type(move);
     move_type->apply(*this, move);
     Participant& target = participants[move.target_id];
-    if (target.unit->get_property(Health) <= 0) {
+    if (target.get_health() <= 0) {
         BOOST_LOG_TRIVIAL(trace) << "Target death";
         target.unit->properties[Health] = 0;
     }
@@ -198,7 +198,7 @@ void Battle::commit() {
             std::vector<Unit::pointer>::iterator iter = stack.units.begin();
             while (iter != stack.units.end()) {
                 Unit& unit = **iter;
-                if (unit.get_property(Health) <= 0) {
+                if (unit.get_property<int>(Health) <= 0) {
                     BOOST_LOG_TRIVIAL(trace) << "Unit: " << unit.type->name << " (dead)";
                     iter = stack.units.erase(iter);
                 } else {

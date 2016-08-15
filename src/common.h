@@ -13,6 +13,7 @@
 #include <queue>
 #include <algorithm>
 #include <numeric>
+#include <cctype>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -26,6 +27,7 @@
 #include <boost/log/trivial.hpp>
 #include <boost/format.hpp>
 #include <boost/crc.hpp>
+#include <boost/variant.hpp>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>

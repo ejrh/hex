@@ -13,7 +13,7 @@ public:
     StackMovePoints(const UnitStack& stack) {
         points.resize(stack.units.size());
         for (unsigned int i = 0; i < stack.units.size(); i++) {
-            points[i] = stack.units[i]->get_property(Moves);
+            points[i] = stack.units[i]->get_property<int>(Moves);
         }
     }
     bool exhausted() const {

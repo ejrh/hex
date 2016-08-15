@@ -127,7 +127,7 @@ void GameArbiter::spawn_units() {
             Point position(j, i);
             Tile& tile = game->level.tiles[position];
 
-            int spawn_group = tile.get_property(SpawnGroup);
+            int spawn_group = tile.get_property<int>(SpawnGroup);
             if (!spawn_group)
                 continue;
 
@@ -137,7 +137,7 @@ void GameArbiter::spawn_units() {
                 continue;
 
             int random100 = rand() % 100;
-            int spawn_chance = tile.get_property(SpawnGroup);
+            int spawn_chance = tile.get_property<int>(SpawnGroup);
             if (random100 > spawn_chance)
                 continue;
 
@@ -149,11 +149,11 @@ void GameArbiter::spawn_units() {
             for (int k = 0; k < spawn_max; k++) {
                 for (StrMap<UnitType>::const_iterator iter = game->unit_types.begin(); iter != game->unit_types.end(); iter++) {
                     const UnitType::pointer type = iter->second;
-                    if (type->get_property(SpawnGroup) != spawn_group)
+                    if (type->get_property<int>(SpawnGroup) != spawn_group)
                         continue;
 
                     random100 = rand() % 100;
-                    spawn_chance = type->get_property(SpawnChance);
+                    spawn_chance = type->get_property<int>(SpawnChance);
                     if (random100 > spawn_chance)
                         continue;
 

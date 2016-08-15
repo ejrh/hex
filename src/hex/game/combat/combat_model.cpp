@@ -8,7 +8,7 @@
 CombatModel CombatModel::default_combat_model;
 
 CombatModel::~CombatModel() {
-    for (std::map<PropertyType, MoveType *>::iterator iter = move_types.begin(); iter != move_types.end(); iter++) {
+    for (std::map<PropertyName, MoveType *>::iterator iter = move_types.begin(); iter != move_types.end(); iter++) {
         delete iter->second;
     }
 }
@@ -16,10 +16,10 @@ CombatModel::~CombatModel() {
 std::vector<const MoveType *> CombatModel::get_available_move_types(const Battle& battle, const Participant& participant) const {
     std::vector<const MoveType *> types;
 
-    for (std::map<PropertyType, MoveType *>::const_iterator iter = move_types.begin(); iter != move_types.end(); iter++) {
-        PropertyType type = iter->first;
+    for (std::map<PropertyName, MoveType *>::const_iterator iter = move_types.begin(); iter != move_types.end(); iter++) {
+        PropertyName type = iter->first;
         const MoveType *move_type = iter->second;
-        if (participant.unit->get_property(type) > 0) {
+        if (participant.unit->get_property<int>(type) > 0) {
             types.push_back(move_type);
         }
     }
@@ -27,9 +27,9 @@ std::vector<const MoveType *> CombatModel::get_available_move_types(const Battle
 }
 
 const MoveType *CombatModel::get_move_type(const Move& move) const {
-    std::map<PropertyType, MoveType *>::const_iterator iter = move_types.find(move.type);
+    std::map<PropertyName, MoveType *>::const_iterator iter = move_types.find(move.type);
     if (iter == move_types.end()) {
-        throw Error() << "Cannot find move type for " << get_property_type_name(move.type);
+        throw Error() << "Cannot find move type for " << get_property_name_str(move.type);
     }
 
     return iter->second;

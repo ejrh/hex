@@ -52,7 +52,7 @@ void BattleWindow::draw_stack(int stack_num) {
         if (pv.selected) {
             Move& move = view->battle->moves[view->current_move];
             TextFormat tf(graphics, SmallFont14, true, 250, 250, 250);
-            tf.write_text(get_property_type_name(move.type), pv.x, pv.y + 20);
+            tf.write_text(get_property_name_str(move.type), pv.x, pv.y + 20);
         }
 
         if (pv.targetted) {
@@ -64,8 +64,8 @@ void BattleWindow::draw_stack(int stack_num) {
 
         if (pv.participant->is_alive()) {
             graphics->fill_rectangle(0, 0, 0, pv.x - 21, pv.y - 43, 42, 5);
-            float health = unit.get_property(Health) / (float) unit.type->get_property(Health);
-            float health2 = (unit.get_property(Health) - 1) / (float) (unit.type->get_property(Health) - 1);
+            float health = pv.participant->get_health() / (float) pv.participant->get_max_health();
+            float health2 = (pv.participant->get_health() - 1) / (float) (pv.participant->get_max_health() - 1);
             int r = (1.0 - health2) * 255;
             int g = health2 * 255;
             int b = 0;

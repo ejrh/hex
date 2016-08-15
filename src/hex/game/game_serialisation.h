@@ -6,16 +6,57 @@
 
 
 template<typename Serialiser>
-inline Serialiser& operator<<(Serialiser& serialiser, const PropertyType& t) {
-    serialiser << get_property_type_name(t);
+inline Serialiser& operator<<(Serialiser& serialiser, const PropertyName& t) {
+    serialiser << get_property_name_str(t);
     return serialiser;
 }
 
 template<typename Deserialiser>
-inline Deserialiser& operator>>(Deserialiser& deserialiser, PropertyType& t) {
+inline Deserialiser& operator>>(Deserialiser& deserialiser, PropertyName& t) {
     std::string name;
     deserialiser >> name;
-    t = get_property_type(name);
+    t = get_property_name(name);
+    return deserialiser;
+}
+
+template<typename Serialiser>
+class serialise_visitor: public boost::static_visitor<> {
+public:
+    serialise_visitor(Serialiser& serialiser): serialiser(serialiser) { }
+
+    void operator()(const int& i) const {
+        serialiser << i;
+    }
+
+    void operator()(const std::string& str) const {
+        serialiser << str;
+    }
+
+private:
+    Serialiser& serialiser;
+};
+
+template<typename Serialiser>
+inline Serialiser& operator<<(Serialiser& serialiser, const PropertyValue& t) {
+    boost::apply_visitor(serialise_visitor<Serialiser>(serialiser), t.value);
+    return serialiser;
+}
+
+template<typename Deserialiser>
+inline Deserialiser& operator>>(Deserialiser&deserialiser, PropertyValue& t) {
+    std::string atom;
+    deserialiser >> atom;
+    if (deserialiser.was_quoted) {
+        t.value = atom;
+    } else {
+        char *end;
+        int intval = std::strtol(atom.c_str(), &end, 0);
+        if (*end == '\0') {
+            t.value = intval;
+        } else {
+            t.value = atom;
+        }
+    }
     return deserialiser;
 }
 

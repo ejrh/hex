@@ -20,6 +20,8 @@ public:
     int get_defence() const;
     int get_damage() const;
     bool can_move() const;
+    int get_health() const;
+    int get_max_health() const;
     bool is_alive() const;
     int adjust_health(int change);
 
