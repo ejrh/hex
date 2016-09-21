@@ -54,7 +54,7 @@ void MapWindow::draw() {
 
     for (int i = 0; i < view->level_view.tile_views.height; i++)
         for (int j = 0; j < view->level_view.tile_views.width; j++) {
-            if (!view->level_view.discovered.check(Point(j, i)))
+            if (!view->debug_mode && !view->level_view.discovered.check(Point(j, i)))
                 continue;
 
             TileView& tile_view = view->level_view.tile_views[i][j];
@@ -76,7 +76,7 @@ void MapWindow::draw() {
                 }
             }
 
-            if (!view->level_view.check_visibility(Point(j, i))) {
+            if (!view->debug_mode && !view->level_view.check_visibility(Point(j, i))) {
                 r = (r + 75) / 2;
                 g = (g + 75) / 2;
                 b = (b + 50) / 2;
@@ -90,7 +90,7 @@ void MapWindow::draw() {
 
     for (IntMap<UnitStackView>::iterator iter = view->unit_stack_views.begin(); iter != view->unit_stack_views.end(); iter++) {
         UnitStack::pointer stack = iter->second->stack;
-        if (iter->second->moving || !view->level_view.check_visibility(stack->position))
+        if (iter->second->moving || (!view->debug_mode && !view->level_view.check_visibility(stack->position)))
             continue;
 
         int px, py;

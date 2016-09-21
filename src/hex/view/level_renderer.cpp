@@ -131,7 +131,7 @@ void LevelRenderer::render_objects(int x, int y, Point tile_pos) {
     }
 
     bool draw_it = true;
-    if (!view->level_view.check_visibility(tile_pos))
+    if (!view->debug_mode && !view->level_view.check_visibility(tile_pos))
         return;
 
     Tile &tile = level->tiles[tile_pos];

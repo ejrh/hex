@@ -195,7 +195,8 @@ void LevelWindow::draw() {
     for (std::vector<Ghost>::iterator iter = view->ghosts.begin(); iter != view->ghosts.end(); iter++) {
         draw_ghost(&*iter);
     }
-    draw_level(&LevelRenderer::render_fog);
+    if (!view->debug_mode)
+        draw_level(&LevelRenderer::render_fog);
 }
 
 void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
