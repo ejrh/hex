@@ -163,7 +163,7 @@ int Game::get_free_stack_id() {
     return stacks.get_free_id();
 }
 
-int Game::get_nearby_stacks(Point position, int radius, std::vector<UnitStack::pointer> stacks) const {
+int Game::get_nearby_stacks(Point position, int radius, std::vector<UnitStack::pointer>& stacks) const {
     std::vector<Point> points;
     get_circle_points(position, radius, points, level.width, level.height);
     int num_found = 0;

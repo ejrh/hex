@@ -219,7 +219,7 @@ public:
     void end_turn();
 
     int get_free_stack_id();
-    int get_nearby_stacks(Point position, int radius, std::vector<UnitStack::pointer> stacks) const;
+    int get_nearby_stacks(Point position, int radius, std::vector<UnitStack::pointer>& stacks) const;
 
 public:
     StrMap<TileType> tile_types;

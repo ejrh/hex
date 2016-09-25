@@ -21,6 +21,7 @@ private:
     void run_thread();
     void update();
     void update_unit_stack(UnitStack& stack);
+    UnitStack::pointer get_nearest_enemy(UnitStack& stack);
 
 private:
     Game game;

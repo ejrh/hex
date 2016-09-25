@@ -70,9 +70,18 @@ void Ai::update() {
 }
 
 void Ai::update_unit_stack(UnitStack& stack) {
+    UnitStack::pointer enemy = get_nearest_enemy(stack);
+    Point tile_pos(stack.position);
+    if (enemy) {
+        BOOST_LOG_TRIVIAL(info) << "Saw enemy: " << enemy->id;
+        tile_pos = enemy->position;
+    } else {
+        tile_pos.x += (rand() % 5) - (rand() % 5);
+        tile_pos.y += (rand() % 5) - (rand() % 5);
+    }
+
     MovementModel movement_model(&game.level);
     Pathfinder pathfinder(&game.level, &movement_model);
-    Point tile_pos(rand() % game.level.width, rand() % game.level.height);
     pathfinder.start(stack, stack.position, tile_pos);
     pathfinder.complete();
     Path new_path;
@@ -95,4 +104,14 @@ void Ai::update_unit_stack(UnitStack& stack) {
     }
 
     dispatcher->receive(create_message(UnitMove, stack.id, selected_units, new_path, 0));
+}
+
+UnitStack::pointer Ai::get_nearest_enemy(UnitStack& stack) {
+    std::vector<UnitStack::pointer> stacks;
+    game.get_nearby_stacks(stack.position, stack.sight(), stacks);
+    for (std::vector<UnitStack::pointer>::iterator iter = stacks.begin(); iter != stacks.end(); iter++) {
+        if ((*iter)->owner != stack.owner)
+            return *iter;
+    }
+    return UnitStack::pointer();
 }
