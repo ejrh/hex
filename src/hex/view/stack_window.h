@@ -9,10 +9,11 @@ class Graphics;
 class GameView;
 class LevelView;
 class UnitRenderer;
+class UnitInfoWindow;
 
 class StackWindow: public UiWindow {
 public:
-    StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view, UnitRenderer *renderer);
+    StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view, UnitRenderer *renderer, UnitInfoWindow *unit_info_window);
     bool receive_event(SDL_Event *evt);
     void draw();
 
@@ -30,6 +31,7 @@ private:
     Graphics *graphics;
     GameView *view;
     UnitRenderer *renderer;
+    UnitInfoWindow *unit_info_window;
 
     std::vector<SDL_Rect> unit_rectangles;
 };

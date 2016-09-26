@@ -29,6 +29,7 @@
 #include "hex/view/status_window.h"
 #include "hex/view/player.h"
 #include "hex/view/pre_updater.h"
+#include "hex/view/unit_info_window.h"
 #include "hex/view/unit_renderer.h"
 #include "hex/view/view.h"
 #include "hex/view/view_updater.h"
@@ -317,6 +318,8 @@ void run(Options& options) {
     int stack_window_height = StackWindow::window_height;
     int status_window_height = StatusWindow::window_height;
     int message_window_height = graphics.height - map_window_height - stack_window_height - status_window_height;
+    int unit_info_window_x = (graphics.width - UnitInfoWindow::unit_info_window_width) / 2;
+    int unit_info_window_y = (graphics.height - UnitInfoWindow::unit_info_window_height) / 2;
 
     UnitRenderer unit_renderer(&graphics, &resources);
     LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view, &unit_renderer);
@@ -325,8 +328,9 @@ void run(Options& options) {
     ChatUpdater chat_updater(&chat_window);
     node_interface->subscribe(&chat_updater);
 
+    UnitInfoWindow unit_info_window(unit_info_window_x, unit_info_window_y, UnitInfoWindow::unit_info_window_width, UnitInfoWindow::unit_info_window_height, &resources, &graphics, &game_view);
     MapWindow map_window(sidebar_position, 0, sidebar_width, map_window_height, &game_view, &level_window, &graphics, &resources);
-    StackWindow stack_window(sidebar_position, 200, sidebar_width, StackWindow::window_height, &resources, &graphics, &game_view, &unit_renderer);
+    StackWindow stack_window(sidebar_position, 200, sidebar_width, StackWindow::window_height, &resources, &graphics, &game_view, &unit_renderer, &unit_info_window);
     MessageWindow message_window(sidebar_position, map_window_height + stack_window_height, sidebar_width, message_window_height, &resources, &graphics, &game_view);
     StatusWindow status_window(0, level_window.height, graphics.width, status_window_height, &resources, &graphics, &game_view);
 
@@ -345,6 +349,7 @@ void run(Options& options) {
     loop.add_window(&message_window);
     loop.add_window(&status_window);
     loop.add_window(&chat_window);
+    loop.add_window(&unit_info_window);
     TopWindow tw(&graphics, &audio);
     loop.add_window(&tw);
     loop.run();

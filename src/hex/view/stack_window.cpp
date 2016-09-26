@@ -6,10 +6,11 @@
 #include "hex/view/stack_window.h"
 #include "hex/view/unit_renderer.h"
 #include "hex/view/view.h"
+#include "hex/view/unit_info_window.h"
 
 
-StackWindow::StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view, UnitRenderer *renderer):
-        UiWindow(x, y, width, height), resources(resources), graphics(graphics), view(view), renderer(renderer) {
+StackWindow::StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view, UnitRenderer *renderer, UnitInfoWindow *unit_info_window):
+        UiWindow(x, y, width, height), resources(resources), graphics(graphics), view(view), renderer(renderer), unit_info_window(unit_info_window) {
     int px = x + StackWindow::border;
     int py = y + StackWindow::border;
 
@@ -35,12 +36,24 @@ bool StackWindow::receive_event(SDL_Event *evt) {
         for (unsigned int i = 0; i < stack->units.size(); i++) {
             if (rect_contains(unit_rectangles[i], evt->button.x, evt->button.y)) {
                 view->selected_units.toggle(i);
+                return true;
             }
         }
-    } else if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_RIGHT) {
+    }
+    if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_RIGHT) {
+        for (unsigned int i = 0; i < stack->units.size(); i++) {
+            if (rect_contains(unit_rectangles[i], evt->button.x, evt->button.y)) {
+                Unit& unit = *stack->units[i];
+                unit_info_window->open(unit.shared_from_this());
+                return true;
+            }
+        }
+    }
+    if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_RIGHT) {
         for (unsigned int i = 0; i < stack->units.size(); i++) {
             view->selected_units.toggle(i);
         }
+        return true;
     }
     return false;
 }
