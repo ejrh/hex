@@ -28,7 +28,7 @@ void StatusWindow::draw() {
     draw_faction_readiness();
 
     if (view->debug_mode) {
-        TextFormat tf(graphics, SmallFont10, false, 255,255,255);
-        tf.write_text("Debug", x + width - 42, y + 4);
+        TextFormat tf(SmallFont10, false, 255,255,255);
+        tf.write_text(graphics, "Debug", x + width - 42, y + 4);
     }
 }

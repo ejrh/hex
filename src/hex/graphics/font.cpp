@@ -34,6 +34,10 @@ TTF_Font *FontCache::lookup_font(FontId font_id) {
         size = 10;
     else if (font_id == SmallFont14)
         size = 14;
+    else {
+        BOOST_LOG_TRIVIAL(error) << "Unknown font: " << font_id;
+        return NULL;
+    }
 
     TTF_Font *font = TTF_OpenFont(FONT_PATH, size);
     if (!font)
@@ -47,7 +51,7 @@ TTF_Font *FontCache::lookup_font(FontId font_id) {
 }
 
 
-void TextFormat::write_text(const std::string& text, int x, int y) {
+void TextFormat::write_text(Graphics *graphics, const std::string& text, int x, int y) {
     SDL_Color colour = {R, G, B};
     SDL_Surface *text_surface = TTF_RenderText_Solid(font, text.c_str(), colour);
     if (text_surface == NULL) {
@@ -63,7 +67,7 @@ void TextFormat::write_text(const std::string& text, int x, int y) {
     SDL_FreeSurface(text_surface);
 }
 
-Image *TextFormat::write_to_image(const std::string& text) {
+Image *TextFormat::write_to_image(Graphics *graphics, const std::string& text) {
     SDL_Color colour = {R, G, B};
     SDL_Surface *text_surface = TTF_RenderText_Solid(font, text.c_str(), colour);
     if (text_surface == NULL) {
@@ -124,9 +128,9 @@ void TextCache::write_text(const std::string& text, int x, int y) {
     } else {
         //TODO discard least-recently-used entry and free its image
 
-        image = format.write_to_image(text);
+        image = format.write_to_image(graphics, text);
         cache[text] = image;
     }
 
-    format.graphics->blit(image, x, y, SDL_BLENDMODE_BLEND);
+    graphics->blit(image, x, y, SDL_BLENDMODE_BLEND);
 }

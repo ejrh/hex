@@ -63,7 +63,7 @@ void StackWindow::draw() {
 
     UnitStack::pointer stack = view->game->stacks.find(view->selected_stack_id);
     if (stack) {
-        TextFormat tf(graphics, SmallFont10, true, 255,255,255);
+        TextFormat tf(SmallFont10, true, 255,255,255);
 
         for (unsigned int i = 0; i < stack->units.size(); i++) {
             Unit& unit = *stack->units[i];
@@ -86,7 +86,7 @@ void StackWindow::draw() {
             ss << unit.get_property<int>(Moves) / MOVE_SCALE;
             px = unit_rectangles[i].x + StackWindow::unit_width;
             py = unit_rectangles[i].y + StackWindow::unit_height;
-            tf.write_text(ss.str(), px, py);
+            tf.write_text(graphics, ss.str(), px, py);
         }
     }
 }

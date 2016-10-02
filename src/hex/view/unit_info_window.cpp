@@ -50,11 +50,11 @@ void UnitInfoWindow::draw() {
     graphics->fill_rectangle(200,150,150, x, y, width, height);
     graphics->fill_rectangle(0,0,0, x+4, y+4, width-8, height-8);
 
-    TextFormat tf(graphics, SmallFont14, true, 255,255,255);
+    TextFormat tf(SmallFont14, true, 255,255,255);
     const std::string& title = current_unit->type->name;
-    tf.write_text(title, x + width/2, y + 12);
+    tf.write_text(graphics, title, x + width/2, y + 12);
 
-    TextFormat tf2(graphics, SmallFont10, false, 192,192,192);
+    TextFormat tf2(SmallFont10, false, 192,192,192);
     int x_offset = x + 12;
     int y_offset = y + 20;
     std::map<PropertyName, PropertyValue> properties = get_all_properties(*current_unit);
@@ -63,7 +63,7 @@ void UnitInfoWindow::draw() {
         ss << get_property_name_str(iter->first);
         ss << ": ";
         ss << iter->second.value;
-        tf2.write_text(ss.str(), x_offset, y_offset);
+        tf2.write_text(graphics, ss.str(), x_offset, y_offset);
         y_offset += 12;
     }
 }

@@ -108,8 +108,8 @@ class PathfindingRenderer: public LevelRenderer {
 public:
     PathfindingRenderer(Graphics *graphics, Level *level, PathfindingView *view):
             LevelRenderer(graphics, &::resources, level, view, NULL),
-            cache1(TextFormat(graphics, SmallFont10, true, 250,50,50), 1000),
-            cache2(TextFormat(graphics, SmallFont10, true, 100,200,50), 1000) { }
+            cache1(graphics, TextFormat(SmallFont10, true, 250,50,50), 1000),
+            cache2(graphics, TextFormat(SmallFont10, true, 100,200,50), 1000) { }
     void render_tile(int x, int y, Point tile_pos);
 
 private:
@@ -156,14 +156,10 @@ void PathfindingRenderer::render_tile(int x, int y, Point tile_pos) {
         char buffer[50];
         snprintf(buffer, sizeof(buffer), "%d", node.cost);
         if (node.cost == INT_MAX) snprintf(buffer, sizeof(buffer), "-");
-        //TextFormat tf1(graphics, SmallFont10, true, 250,50,50);
-        //tf1.write_text(std::string(buffer), x + TILE_WIDTH/2, y + 12);
         cache1.write_text(std::string(buffer), x + TILE_WIDTH/2, y + 12);
 
         snprintf(buffer, sizeof(buffer), "%d", node.heuristic);
         if (node.heuristic == INT_MIN) snprintf(buffer, sizeof(buffer), "-");
-        //TextFormat tf2(graphics, SmallFont10, true, 100,200,50);
-        //tf2.write_text(std::string(buffer), x + TILE_WIDTH/2, y + TILE_HEIGHT - 12);
         cache2.write_text(std::string(buffer), x + TILE_WIDTH/2, y + TILE_HEIGHT - 12);
     }
 }

@@ -29,17 +29,17 @@ void ChatWindow::draw() {
     if (first_line < 0)
         first_line = 0;
     int y_offset = 8;
-    TextFormat tf(graphics, SmallFont14, false, 255,255,255, 0,0,0);
+    TextFormat tf(SmallFont14, false, 255,255,255, 0,0,0);
     for (unsigned int i = first_line; i < chat_history.size(); i++) {
-        tf.write_text(chat_history[i], x + 8, y_offset);
+        tf.write_text(graphics, chat_history[i], x + 8, y_offset);
         y_offset += 16;
     }
 
     if (open) {
         graphics->fill_rectangle(0, 0, 0, 200, 300, graphics->width - 400, 16);
         if (chat_line.size() > 0) {
-            TextFormat tf(graphics, SmallFont14, false, 128,255,255, 0,255,255);
-            tf.write_text(chat_line, 200, 300);
+            TextFormat tf(SmallFont14, false, 128,255,255, 0,255,255);
+            tf.write_text(graphics, chat_line, 200, 300);
         }
     }
 }

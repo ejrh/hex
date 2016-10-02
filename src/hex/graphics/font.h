@@ -1,8 +1,6 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include "hex/graphics/graphics.h"
-
 enum FontId {
     SmallFont10,
     SmallFont14
@@ -22,21 +20,25 @@ private:
 
 extern FontCache font_cache;
 
+class Graphics;
+class Image;
 
 class TextFormat {
 public:
-    TextFormat(Graphics *graphics, FontId font_id, bool centered, Uint8 R, Uint8 G, Uint8 B):
-        graphics(graphics), font_id(font_id), font(font_cache.lookup_font(font_id)), centered(centered), R(R), G(G), B(B), outlined(false) { }
+    TextFormat():
+        font_id(SmallFont10), font(font_cache.lookup_font(SmallFont10)), centered(false), R(255), G(255), B(255), outlined(false) { }
 
-    TextFormat(Graphics *graphics, FontId font_id, bool centered, Uint8 R, Uint8 G, Uint8 B, Uint8 outline_R, Uint8 outline_G, Uint8 outline_B):
-        graphics(graphics), font_id(font_id), font(font_cache.lookup_font(font_id)), centered(centered), R(R), G(G), B(B),
+    TextFormat(FontId font_id, bool centered, Uint8 R, Uint8 G, Uint8 B):
+        font_id(font_id), font(font_cache.lookup_font(font_id)), centered(centered), R(R), G(G), B(B), outlined(false) { }
+
+    TextFormat(FontId font_id, bool centered, Uint8 R, Uint8 G, Uint8 B, Uint8 outline_R, Uint8 outline_G, Uint8 outline_B):
+        font_id(font_id), font(font_cache.lookup_font(font_id)), centered(centered), R(R), G(G), B(B),
         outlined(true), outline_R(outline_R), outline_G(outline_G), outline_B(outline_B) { }
 
-    void write_text(const std::string& text, int x, int y);
-    Image *write_to_image(const std::string& text);
+    void write_text(Graphics *graphics, const std::string& text, int x, int y);
+    Image *write_to_image(Graphics *graphics, const std::string& text);
 
 public:
-    Graphics *graphics;
     FontId font_id;
     TTF_Font *font;
     bool centered;
@@ -47,11 +49,13 @@ public:
 
 class TextCache {
 public:
-    TextCache(const TextFormat& format, int size): format(format), size(size) { }
+    TextCache(Graphics *graphics, const TextFormat& format, int size):
+            graphics(graphics), format(format), size(size) { }
 
     void write_text(const std::string& text, int x, int y);
 
 private:
+    Graphics *graphics;
     TextFormat format;
     int size;
     std::map<std::string, Image *> cache;

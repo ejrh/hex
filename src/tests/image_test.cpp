@@ -69,13 +69,13 @@ public:
 
         graphics->draw_rectangle(100, 100, 100, x + image->clip_x_offset, y + image->clip_y_offset, image->clip_width, image->clip_height);
 
-        TextFormat tf(graphics, SmallFont14, true, 250, 250, 250);
-        tf.write_text(current, cx, y + h + 16);
+        TextFormat tf(SmallFont14, true, 250, 250, 250);
+        tf.write_text(graphics, current, cx, y + h + 16);
 
-        TextFormat tf2(graphics, SmallFont14, true, 150, 150, 150);
+        TextFormat tf2(SmallFont14, true, 150, 150, 150);
         std::ostringstream ss;
         ss << boost::format("W %d, H %d") % image->width % image->height;
-        tf2.write_text(ss.str(), cx, y + h + 32);
+        tf2.write_text(graphics, ss.str(), cx, y + h + 32);
 
         graphics->update();
     }

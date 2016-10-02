@@ -10,7 +10,7 @@ static bool show_gradients;
 void draw_noise(Graphics &graphics, PerlinNoise &noise) {
     graphics.fill_rectangle(0, 0, 0, 0, 0, graphics.width, graphics.height);
 
-    TextFormat tf(&graphics, SmallFont10, true, 0, 200, 200);
+    TextFormat tf(SmallFont10, true, 0, 200, 200);
 
     float min_value = 0.0, max_value = 0.0;
 
@@ -26,7 +26,7 @@ void draw_noise(Graphics &graphics, PerlinNoise &noise) {
         }
     std::ostringstream ss;
     ss << boost::format("min = %0.2f, max = %0.2f") % min_value % max_value;
-    tf.write_text(ss.str(), graphics.width / 2, graphics.height - 10);
+    tf.write_text(&graphics, ss.str(), graphics.width / 2, graphics.height - 10);
 
     int offset_x = (graphics.width - 512) / 2;
     int offset_y = (graphics.height - 512) / 2;
@@ -52,7 +52,7 @@ void draw_noise(Graphics &graphics, PerlinNoise &noise) {
                 noise.get_gradient(j, i, &gx, &gy);
                 std::ostringstream ss;
                 ss << boost::format("%0.2f, %0.2f") % gx % gy;
-                tf.write_text(ss.str(), j * 64 + offset_x, i * 64 + offset_y);
+                tf.write_text(&graphics, ss.str(), j * 64 + offset_x, i * 64 + offset_y);
             }
     }
 

@@ -107,18 +107,18 @@ public:
 
             unit_views[i].posture = (UnitPosture) i;
 
-            TextFormat tf2(graphics, SmallFont14, true, 150, 150, 150);
+            TextFormat tf2(SmallFont14, true, 150, 150, 150);
             std::ostringstream ss;
             AnimationDef& animation = unit_views[i].get_animation_def();
             ss << posture_names[unit_views[i].posture] << " (" << animation.bpm << " bpm, duration " << animation.duration() << "ms)";
-            tf2.write_text(ss.str(), graphics->width / 2, cy + 32);
+            tf2.write_text(graphics, ss.str(), graphics->width / 2, cy + 32);
         }
 
         int cx = graphics->width / 2;
         int cy = graphics->height - 64;
 
-        TextFormat tf(graphics, SmallFont14, true, 250, 250, 250);
-        tf.write_text(view_def->name, cx, cy + 32);
+        TextFormat tf(SmallFont14, true, 250, 250, 250);
+        tf.write_text(graphics, view_def->name, cx, cy + 32);
 
         graphics->update();
     }

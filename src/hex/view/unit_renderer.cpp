@@ -83,8 +83,8 @@ Image *UnitRenderer::get_image_or_placeholder(ImageSeries& image_series, int pos
         return NULL;
 
     const std::string& label = name.substr(0, 4);
-    TextFormat tf(graphics, SmallFont14, false, 255,255,255, 128,128,128);
-    Image *image = tf.write_to_image(label);
+    TextFormat tf(SmallFont14, false, 255,255,255, 128,128,128);
+    Image *image = tf.write_to_image(graphics, label);
     image_series.push_back(ImageRef("PLACEHOLDER", image));
     return image;
 }

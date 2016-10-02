@@ -19,10 +19,10 @@ void MessageWindow::draw() {
     if (first_line < 0)
         first_line = 0;
     int y_offset = y + 8;
-    TextFormat tf(graphics, SmallFont10, false, 192,192,192, 0,0,0);
+    TextFormat tf(SmallFont10, false, 192,192,192, 0,0,0);
     for (unsigned int i = first_line; i < view->messages.size(); i++) {
         InfoMessage& message = view->messages[i];
-        tf.write_text(message.text, x + 8, y_offset);
+        tf.write_text(graphics, message.text, x + 8, y_offset);
         y_offset += 12;
     }
 }
