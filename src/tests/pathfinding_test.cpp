@@ -261,7 +261,8 @@ void run() {
         SDL_SetRenderDrawColor(graphics.renderer, 0,0,0, 255);
         SDL_RenderClear(graphics.renderer);
 
-        level_window.draw();
+        UiContext context(&graphics, 0, 0);
+        level_window.draw(context);
         graphics.update();
     }
 

@@ -10,7 +10,8 @@
 
 
 StackWindow::StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view, UnitRenderer *renderer, UnitInfoWindow *unit_info_window):
-        UiWindow(x, y, width, height), resources(resources), graphics(graphics), view(view), renderer(renderer), unit_info_window(unit_info_window) {
+        UiWindow(x, y, width, height, WindowIsVisible|WindowIsActive|WindowWantsMouseEvents),
+        resources(resources), graphics(graphics), view(view), renderer(renderer), unit_info_window(unit_info_window) {
     int px = x + StackWindow::border;
     int py = y + StackWindow::border;
 
@@ -27,7 +28,7 @@ StackWindow::StackWindow(int x, int y, int width, int height, Resources *resourc
     }
 }
 
-bool StackWindow::receive_event(SDL_Event *evt) {
+bool StackWindow::receive_mouse_event(SDL_Event *evt, int x, int y) {
     UnitStack::pointer stack = view->game->stacks.find(view->selected_stack_id);
     if (!stack)
         return false;
@@ -58,7 +59,7 @@ bool StackWindow::receive_event(SDL_Event *evt) {
     return false;
 }
 
-void StackWindow::draw() {
+void StackWindow::draw(const UiContext& context) {
     graphics->fill_rectangle(100,150,100, x, y, width, height);
 
     UnitStack::pointer stack = view->game->stacks.find(view->selected_stack_id);

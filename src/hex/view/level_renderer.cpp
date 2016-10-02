@@ -100,19 +100,20 @@ void LevelRenderer::render_objects(int x, int y, Point tile_pos) {
         StructureViewDef::pointer view_def = tile_view.structure_view->view_def;
         AnimationDef& animation = view_def->animation;
         Image *structure = unit_renderer->get_image_or_placeholder(animation.images, tile_view.phase / 1000, view_def->name);
+        if (structure) {
+            graphics->blit(structure, x - view_def->centre_x, y - view_def->centre_y, SDL_BLENDMODE_BLEND);
 
-        graphics->blit(structure, x - view_def->centre_x, y - view_def->centre_y, SDL_BLENDMODE_BLEND);
-
-        if (tile_view.structure_view->selected) {
-            int add_phase = (view->phase / 1000) % 32;
-            if (add_phase < 16)
-                add_phase = add_phase*16;
-            else {
-                add_phase = (32 - add_phase)*16;
-                if (add_phase > 255)
-                    add_phase = 255;
+            if (tile_view.structure_view->selected) {
+                int add_phase = (view->phase / 1000) % 32;
+                if (add_phase < 16)
+                    add_phase = add_phase*16;
+                else {
+                    add_phase = (32 - add_phase)*16;
+                    if (add_phase > 255)
+                        add_phase = 255;
+                }
+                graphics->blit(structure, x - view_def->centre_x, y - view_def->centre_y, SDL_BLENDMODE_ADD, add_phase);
             }
-            graphics->blit(structure, x - view_def->centre_x, y - view_def->centre_y, SDL_BLENDMODE_ADD, add_phase);
         }
     }
 

@@ -28,13 +28,13 @@ static std::string posture_names[] = {
 class TestWindow: public UiWindow {
 public:
     TestWindow(UiLoop *loop, Graphics *graphics, Resources *resources, Game *game, UnitRenderer *unit_renderer, UnitViewDef::pointer view_def):
-            UiWindow(0, 0, 0, 0),
+            UiWindow(0, 0, 0, 0, WindowIsVisible|WindowIsActive|WindowWantsKeyboardEvents),
             loop(loop), graphics(graphics), resources(resources),
             game(game), unit_renderer(unit_renderer), view_def(view_def),
             last_update(0) {
     }
 
-    bool receive_event(SDL_Event *evt) {
+    bool receive_keyboard_event(SDL_Event *evt) {
         if (evt->type == SDL_QUIT
             || (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_ESCAPE)) {
             loop->running = false;
@@ -67,7 +67,7 @@ public:
         return false;
     }
 
-    void draw() {
+    void draw(const UiContext& context) {
         /* Update view */
         unsigned int ticks = SDL_GetTicks();
         unsigned int update_ms = ticks - last_update;
@@ -148,9 +148,9 @@ void run() {
 
     UnitViewDef::pointer view_def = resources.unit_view_defs.begin()->second;
 
-    UiLoop loop(25);
+    UiLoop loop(&graphics, 25);
     TestWindow test_window(&loop, &graphics, &resources, &game, &unit_renderer, view_def);
-    loop.add_window(&test_window);
+    loop.root = &test_window;
     loop.run();
 
     graphics.stop();

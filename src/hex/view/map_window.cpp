@@ -6,10 +6,13 @@
 #include "hex/view/level_renderer.h"
 #include "hex/view/level_window.h"
 #include "hex/view/map_window.h"
+#include "hex/view/unit_renderer.h"
 
 
 MapWindow::MapWindow(int x, int y, int width, int height, GameView *view, LevelWindow *level_window, Graphics *graphics, Resources *resources):
-        UiWindow(x, y, width, height), view(view), level_window(level_window), graphics(graphics), resources(resources) {
+        UiWindow(x, y, width, height, WindowIsVisible|WindowIsActive|WindowWantsMouseEvents),
+        view(view), level_window(level_window), graphics(graphics), resources(resources),
+        dragging(false) {
 }
 
 MapWindow::~MapWindow() {
@@ -37,8 +40,8 @@ void MapWindow::left_click(int x, int y) {
 void MapWindow::right_click(int x, int y) {
 }
 
-bool MapWindow::receive_event(SDL_Event *evt) {
-    if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_LEFT) {
+bool MapWindow::receive_mouse_event(SDL_Event *evt, int x, int y) {
+    if (evt->type == SDL_MOUSEBUTTONDOWN && evt->button.button == SDL_BUTTON_LEFT) {
         left_click(evt->button.x, evt->button.y);
         return true;
     } else if (evt->type == drag_event_type) {
@@ -49,7 +52,7 @@ bool MapWindow::receive_event(SDL_Event *evt) {
     return false;
 }
 
-void MapWindow::draw() {
+void MapWindow::draw(const UiContext& context) {
     graphics->fill_rectangle(75,75,50, x, y, width, height);
 
     for (int i = 0; i < view->level_view.tile_views.height; i++)

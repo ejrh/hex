@@ -52,6 +52,11 @@ target_link_libraries(string_utils_test hex)
 target_link_libraries(string_utils_test ${gen_libs})
 target_compile_options(string_utils_test PUBLIC ${gen_opts})
 
+add_executable(ui_test ui_test.cpp)
+target_link_libraries(ui_test hex)
+target_link_libraries(ui_test ${gen_libs})
+target_compile_options(ui_test PUBLIC ${gen_opts})
+
 add_executable(unit_rendering_test unit_rendering_test.cpp)
 target_link_libraries(unit_rendering_test hex)
 target_link_libraries(unit_rendering_test ${gen_libs})

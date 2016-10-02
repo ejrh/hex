@@ -14,7 +14,7 @@
 #define SLOPE_HEIGHT (Y_SPACING/2)
 
 LevelWindow::LevelWindow(int width, int height, GameView *view, LevelRenderer *level_renderer, Resources *resources):
-        UiWindow(0, 0, width, height),
+        UiWindow(0, 0, width, height, WindowIsVisible|WindowIsActive|WindowWantsMouseEvents|WindowWantsKeyboardEvents),
         view(view), level_renderer(level_renderer), resources(resources),
         shift_x(SLOPE_WIDTH), shift_y(SLOPE_HEIGHT), x_spacing(X_SPACING), y_spacing(Y_SPACING),
         scroll_up(false), scroll_down(false), scroll_left(false), scroll_right(false) {
@@ -135,9 +135,11 @@ void LevelWindow::right_click(int x, int y) {
         view->right_click_tile(tile_pos);
 }
 
-bool LevelWindow::receive_event(SDL_Event *evt) {
+bool LevelWindow::receive_mouse_event(SDL_Event *evt, int x, int y) {
     if (evt->type == SDL_MOUSEMOTION) {
         set_mouse_position(evt->motion.x, evt->motion.y);
+        return true;
+    } else if (evt->type == SDL_MOUSEBUTTONDOWN && evt->button.button == SDL_BUTTON_LEFT) {
         return true;
     } else if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_LEFT) {
         left_click(evt->button.x, evt->button.y);
@@ -147,7 +149,13 @@ bool LevelWindow::receive_event(SDL_Event *evt) {
         return true;
     } else if (evt->type == drag_event_type) {
         shift(evt->motion.xrel, evt->motion.yrel);
-    } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_UP) {
+    }
+
+    return false;
+}
+
+bool LevelWindow::receive_keyboard_event(SDL_Event *evt) {
+    if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_UP) {
         scroll_up = true;
     } else if (evt->type == SDL_KEYUP && evt->key.keysym.sym == SDLK_UP) {
         scroll_up = false;
@@ -168,7 +176,7 @@ bool LevelWindow::receive_event(SDL_Event *evt) {
     return false;
 }
 
-void LevelWindow::draw() {
+void LevelWindow::draw(const UiContext& context) {
     int scroll_x = 0;
     int scroll_y = 0;
     if (scroll_up) {

@@ -319,12 +319,12 @@ static void fix_transparency(char *pixel_data, ImageData &image, SDL_Surface *su
             key &= ~0xFF000000;
             if (old_key != key) {
                 SDL_SetColorKey(surface, SDL_TRUE, key);
-                BOOST_LOG_TRIVIAL(debug) << boost::format("Changed colour key from %08x to %08x") % old_key % key;
+                //BOOST_LOG_TRIVIAL(debug) << boost::format("Changed colour key from %08x to %08x") % old_key % key;
             }
             return;
         }
     }
-    BOOST_LOG_TRIVIAL(debug) << "Couldn't find any transparent pixels";
+    //BOOST_LOG_TRIVIAL(debug) << "Couldn't find any transparent pixels";
 }
 
 Image *ILBReader::create_image(char *pixel_data, ImageData &image) {
@@ -423,7 +423,7 @@ void ILBReader::read(ImageMap& image_set, const std::string& prefix) {
                 if (image_set.find(name) != image_set.end()) {
                     BOOST_LOG_TRIVIAL(warning) << "Overwriting previously loaded image: " << name;
                 }
-                BOOST_LOG_TRIVIAL(trace) << "Loaded image: " << name;
+                //BOOST_LOG_TRIVIAL(trace) << "Loaded image: " << name;
                 image_set[name] = im;
             }
         }

@@ -6,7 +6,8 @@
 #include "hex/view/status_window.h"
 #include "hex/view/view.h"
 
-StatusWindow::StatusWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view): UiWindow(x, y, width, height), resources(resources), graphics(graphics), view(view) {
+StatusWindow::StatusWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view):
+        UiWindow(x, y, width, height, WindowIsVisible), resources(resources), graphics(graphics), view(view) {
 }
 
 void StatusWindow::draw_faction_readiness() {
@@ -22,7 +23,7 @@ void StatusWindow::draw_faction_readiness() {
     }
 }
 
-void StatusWindow::draw() {
+void StatusWindow::draw(const UiContext& context) {
     graphics->fill_rectangle(50,50,100, x, y, width, height);
 
     draw_faction_readiness();

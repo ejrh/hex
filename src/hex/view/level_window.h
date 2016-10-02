@@ -22,14 +22,17 @@ public:
     void left_click(int x, int y);
     void right_click(int x, int y);
 
-    bool receive_event(SDL_Event *evt);
-    void draw();
+    bool receive_mouse_event(SDL_Event *evt, int x, int y);
+    bool receive_keyboard_event(SDL_Event *evt);
+
+    void draw(const UiContext& context);
     void draw_level(LevelRenderer::RenderMethod render);
     void draw_ghost(Ghost *ghost);
 
 public:
     GameView *view;
     LevelRenderer *level_renderer;
+    bool dragging;
 
 protected:
     Resources *resources;

@@ -20,21 +20,11 @@ static std::map<PropertyName, PropertyValue> get_all_properties(const Unit& unit
 }
 
 UnitInfoWindow::UnitInfoWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view):
-        UiWindow(x, y, width, height), resources(resources), graphics(graphics), view(view), is_open(false) {
+        UiDialog(x, y, width, height, WindowWantsKeyboardEvents),
+        resources(resources), graphics(graphics), view(view) {
 }
 
-bool UnitInfoWindow::contains(int px, int py) {
-    if (!is_open)
-        return false;
-    else
-        return UiWindow::contains(px, py);
-}
-
-
-bool UnitInfoWindow::receive_event(SDL_Event *evt) {
-    if (!is_open)
-        return false;
-
+bool UnitInfoWindow::receive_keyboard_event(SDL_Event *evt) {
     if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_ESCAPE) {
         close();
         return true;
@@ -43,20 +33,15 @@ bool UnitInfoWindow::receive_event(SDL_Event *evt) {
     return false;
 }
 
-void UnitInfoWindow::draw() {
-    if (!is_open)
+void UnitInfoWindow::draw(const UiContext& context) {
+    UiDialog::draw(context);
+
+    if (!current_unit)
         return;
-
-    graphics->fill_rectangle(200,150,150, x, y, width, height);
-    graphics->fill_rectangle(0,0,0, x+4, y+4, width-8, height-8);
-
-    TextFormat tf(SmallFont14, true, 255,255,255);
-    const std::string& title = current_unit->type->name;
-    tf.write_text(graphics, title, x + width/2, y + 12);
 
     TextFormat tf2(SmallFont10, false, 192,192,192);
     int x_offset = x + 12;
-    int y_offset = y + 20;
+    int y_offset = y + title_height + 12;
     std::map<PropertyName, PropertyValue> properties = get_all_properties(*current_unit);
     for (std::map<PropertyName, PropertyValue>::const_iterator iter = properties.begin(); iter != properties.end(); iter++) {
         std::ostringstream ss;
@@ -70,9 +55,11 @@ void UnitInfoWindow::draw() {
 
 void UnitInfoWindow::open(Unit::pointer current_unit) {
     this->current_unit = current_unit;
-    is_open = true;
+    title->set_text(current_unit->type->name);
+    set_flag(WindowIsVisible|WindowIsActive);
 }
 
 void UnitInfoWindow::close() {
-    is_open = false;
+    current_unit.reset();
+    clear_flag(WindowIsVisible|WindowIsActive);
 }

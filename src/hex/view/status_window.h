@@ -12,7 +12,7 @@ class StatusWindow: public UiWindow {
 public:
     StatusWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view);
     void draw_faction_readiness();
-    void draw();
+    void draw(const UiContext& context);
 
     static const int window_height = 20;
 

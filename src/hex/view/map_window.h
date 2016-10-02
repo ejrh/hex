@@ -19,8 +19,8 @@ public:
     void left_click(int x, int y);
     void right_click(int x, int y);
 
-    bool receive_event(SDL_Event *evt);
-    void draw();
+    bool receive_mouse_event(SDL_Event *evt, int x, int y);
+    void draw(const UiContext& context);
 
 public:
     GameView *view;
@@ -29,6 +29,7 @@ protected:
     LevelWindow *level_window;
     Graphics *graphics;
     Resources *resources;
+    bool dragging;
 };
 
 #endif

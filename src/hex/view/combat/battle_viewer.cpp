@@ -15,19 +15,17 @@ namespace battle_viewer {
 
 class BackgroundWindow: public UiWindow {
 public:
-    BackgroundWindow(UiLoop *loop): UiWindow(0, 0, 0, 0), loop(loop) { }
+    BackgroundWindow(UiLoop *loop):
+            UiWindow(0, 0, 0, 0, WindowIsVisible|WindowIsActive|WindowWantsKeyboardEvents),
+            loop(loop) { }
 
-    bool receive_event(SDL_Event *evt) {
+    bool receive_keyboard_event(SDL_Event *evt) {
         if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_ESCAPE) {
             loop->running = false;
             return true;
         }
 
         return false;
-    }
-
-    bool contains(int px, int py) {
-        return true;
     }
 
 private:
@@ -37,9 +35,11 @@ private:
 
 class TopWindow: public UiWindow {
 public:
-    TopWindow(Graphics *graphics, Audio *audio): UiWindow(0, 0, 0, 0), graphics(graphics), audio(audio) { }
+    TopWindow(Graphics *graphics, Audio *audio):
+            UiWindow(0, 0, 0, 0, WindowIsVisible),
+            graphics(graphics), audio(audio) { }
 
-    void draw() {
+    void draw(const UiContext& context) {
         graphics->update();
         audio->update();
     }
@@ -57,12 +57,12 @@ BattleViewer::BattleViewer(Resources *resources, Graphics *graphics, Audio *audi
 void BattleViewer::show_battle(Battle *battle) {
     BattleView battle_view(battle, graphics->width, graphics->height, resources);
 
-    UiLoop loop(25);
+    UiLoop loop(graphics, 25);
     battle_viewer::BackgroundWindow bg_window(&loop);
-    loop.add_window(&bg_window);
+    loop.root = &bg_window;
     BattleWindow battle_window(100, 100, graphics->width - 200, graphics->height - 200, resources, graphics, &battle_view, renderer);
-    loop.add_window(&battle_window);
+    bg_window.add_child(&battle_window);
     battle_viewer::TopWindow top_window(graphics, audio);
-    loop.add_window(&top_window);
+    bg_window.add_child(&top_window);
     loop.run();
 }

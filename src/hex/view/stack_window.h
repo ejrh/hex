@@ -14,8 +14,8 @@ class UnitInfoWindow;
 class StackWindow: public UiWindow {
 public:
     StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view, UnitRenderer *renderer, UnitInfoWindow *unit_info_window);
-    bool receive_event(SDL_Event *evt);
-    void draw();
+    bool receive_mouse_event(SDL_Event *evt, int x, int y);
+    void draw(const UiContext& context);
 
     static const int units_across = 4;
     static const int units_down = 3;

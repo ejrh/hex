@@ -7,10 +7,11 @@
 
 
 ChatWindow::ChatWindow(int width, int height, Resources *resources, Graphics *graphics, MessageReceiver *dispatcher):
-        UiWindow(0, 0, width, height), graphics(graphics), dispatcher(dispatcher), open(false) {
+        UiWindow(0, 0, width, height, WindowIsActive|WindowIsVisible|WindowWantsKeyboardEvents),
+resources(resources), graphics(graphics), dispatcher(dispatcher), open(false) {
 }
 
-bool ChatWindow::receive_event(SDL_Event *evt) {
+bool ChatWindow::receive_keyboard_event(SDL_Event *evt) {
     if (evt->type == SDL_KEYDOWN)
         return keypress(evt->key.keysym.sym);
     else if (evt->type == SDL_TEXTINPUT) {
@@ -20,11 +21,7 @@ bool ChatWindow::receive_event(SDL_Event *evt) {
     return false;
 }
 
-bool ChatWindow::contains(int px, int py) {
-    return false;
-}
-
-void ChatWindow::draw() {
+void ChatWindow::draw(const UiContext& context) {
     int first_line = chat_history.size() - 10;
     if (first_line < 0)
         first_line = 0;

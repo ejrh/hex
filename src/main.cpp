@@ -197,10 +197,11 @@ public:
     BackgroundWindow(UiLoop *loop, Options *options, Generator *generator, Game *game, GameView *game_view,
             NodeInterface *node_interface,
             LevelRenderer *level_renderer):
-        UiWindow(0, 0, 0, 0), loop(loop), options(options), generator(generator), game(game), game_view(game_view),
-            node_interface(node_interface), level_renderer(level_renderer) { }
+        UiWindow(0, 0, 0, 0, WindowIsVisible|WindowIsActive|WindowWantsKeyboardEvents),
+        loop(loop), options(options), generator(generator), game(game), game_view(game_view),
+        node_interface(node_interface), level_renderer(level_renderer) { }
 
-    bool receive_event(SDL_Event *evt) {
+    bool receive_keyboard_event(SDL_Event *evt) {
         if (evt->type == SDL_QUIT
             || (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_ESCAPE)) {
             loop->running = false;
@@ -236,11 +237,7 @@ public:
         return false;
     }
 
-    bool contains(int px, int py) {
-        return true;
-    }
-
-    void draw() {
+    void draw(const UiContext& context) {
         game_view->update();
         node_interface->update();
     }
@@ -257,9 +254,11 @@ private:
 
 class TopWindow: public UiWindow {
 public:
-    TopWindow(Graphics *graphics, Audio *audio): UiWindow(0, 0, 0, 0), graphics(graphics), audio(audio) { }
+    TopWindow(Graphics *graphics, Audio *audio):
+            UiWindow(0, 0, 0, 0, WindowIsVisible),
+            graphics(graphics), audio(audio) { }
 
-    void draw() {
+    void draw(const UiContext& context) {
         graphics->update();
         audio->update();
     }
@@ -340,18 +339,18 @@ void run(Options& options) {
     BattleViewer battle_viewer(&resources, &graphics, &audio, &game_view, &unit_renderer);
     pre_updater.battle_viewer = &battle_viewer;
 
-    UiLoop loop(25);
+    UiLoop loop(&graphics, 25);
     BackgroundWindow bw(&loop, &options, &generator, &game, &game_view, node_interface, &level_renderer);
-    loop.add_window(&bw);
-    loop.add_window(&level_window);
-    loop.add_window(&map_window);
-    loop.add_window(&stack_window);
-    loop.add_window(&message_window);
-    loop.add_window(&status_window);
-    loop.add_window(&chat_window);
-    loop.add_window(&unit_info_window);
+    loop.root = &bw;
+    bw.add_child(&level_window);
+    bw.add_child(&map_window);
+    bw.add_child(&stack_window);
+    bw.add_child(&message_window);
+    bw.add_child(&status_window);
+    bw.add_child(&chat_window);
+    bw.add_child(&unit_info_window);
     TopWindow tw(&graphics, &audio);
-    loop.add_window(&tw);
+    bw.add_child(&tw);
     loop.run();
 
     node_interface->stop();

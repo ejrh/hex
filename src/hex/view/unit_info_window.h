@@ -2,18 +2,18 @@
 #define UNIT_INFO_WINDOW_H
 
 #include "hex/ui/ui.h"
+#include "hex/ui/controls.h"
 
 
 class Resources;
 class Graphics;
 class GameView;
 
-class UnitInfoWindow: public UiWindow {
+class UnitInfoWindow: public UiDialog {
 public:
     UnitInfoWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view);
-    bool contains(int px, int py);
-    bool receive_event(SDL_Event *evt);
-    void draw();
+    bool receive_keyboard_event(SDL_Event *evt);
+    void draw(const UiContext& context);
 
     void open(Unit::pointer current_unit);
     void close();
@@ -25,7 +25,6 @@ private:
     Resources *resources;
     Graphics *graphics;
     GameView *view;
-    bool is_open;
     Unit::pointer current_unit;
 };
 

@@ -13,9 +13,8 @@ class ChatWindow: public UiWindow {
 public:
     ChatWindow(int width, int height, Resources *resources, Graphics *graphics, MessageReceiver *dispatcher);
 
-    virtual bool receive_event(SDL_Event *evt);
-    virtual bool contains(int px, int py);
-    void draw();
+    virtual bool receive_keyboard_event(SDL_Event *evt);
+    virtual void draw(const UiContext& context);
 
     bool keypress(SDL_Keycode key);
     bool type(SDL_TextInputEvent *evt);

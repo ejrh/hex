@@ -8,10 +8,10 @@
 
 
 MessageWindow::MessageWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view):
-        UiWindow(x, y, width, height), resources(resources), graphics(graphics), view(view) {
+        UiWindow(x, y, width, height, WindowIsVisible), resources(resources), graphics(graphics), view(view) {
 }
 
-void MessageWindow::draw() {
+void MessageWindow::draw(const UiContext& context) {
     graphics->fill_rectangle(100,150,150, x, y, width, height);
     graphics->fill_rectangle(0,0,0, x+4, y+4, width-8, height-8);
 

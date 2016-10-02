@@ -11,15 +11,12 @@
 
 
 BattleWindow::BattleWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, BattleView *view, UnitRenderer *renderer):
-        UiWindow(x, y, width, height), resources(resources), graphics(graphics), view(view), renderer(renderer) {
+        UiWindow(x, y, width, height, WindowIsVisible),
+        resources(resources), graphics(graphics), view(view), renderer(renderer) {
     target_images = resources->image_series["TARGETS"];
 }
 
-bool BattleWindow::receive_event(SDL_Event *evt) {
-    return false;
-}
-
-void BattleWindow::draw() {
+void BattleWindow::draw(const UiContext& context) {
     view->update();
 
     for (int i = 0; i <= 6; i++) {

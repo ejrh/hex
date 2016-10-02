@@ -18,13 +18,13 @@ void load_resources(Resources *resources, Graphics *graphics) {
 class TestWindow: public UiWindow {
 public:
     TestWindow(UiLoop *loop, Graphics *graphics, Resources *resources):
-            UiWindow(0, 0, 0, 0),
+            UiWindow(0, 0, 0, 0, WindowIsVisible|WindowIsActive|WindowWantsKeyboardEvents),
             loop(loop), graphics(graphics), resources(resources)
     {
         current = resources->images.begin()->first;
     }
 
-    bool receive_event(SDL_Event *evt) {
+    bool receive_keyboard_event(SDL_Event *evt) {
         if (evt->type == SDL_QUIT
             || (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_ESCAPE)) {
             loop->running = false;
@@ -50,7 +50,7 @@ public:
         return false;
     }
 
-    void draw() {
+    void draw(const UiContext& context) {
         int cx = graphics->width / 2;
         int cy = graphics->height / 2;
         Image *image = resources->images[current];
@@ -94,9 +94,9 @@ void run() {
     Resources resources;
     load_resources(&resources, &graphics);
 
-    UiLoop loop(25);
+    UiLoop loop(&graphics, 25);
     TestWindow test_window(&loop, &graphics, &resources);
-    loop.add_window(&test_window);
+    loop.root = &test_window;
     loop.run();
 
     graphics.stop();
