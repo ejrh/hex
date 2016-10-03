@@ -118,6 +118,8 @@ private:
 };
 
 void PathfindingRenderer::render_tile(int x, int y, Point tile_pos) {
+    x -= TILE_WIDTH/2;
+    y -= Y_SPACING/2;
     int p1 = SLOPE_WIDTH;
     int p2 = TILE_WIDTH - SLOPE_WIDTH;
     int p3 = TILE_WIDTH;
@@ -128,7 +130,11 @@ void PathfindingRenderer::render_tile(int x, int y, Point tile_pos) {
         points[i].x += x;
         points[i].y += y;
     }
-    graphics->draw_lines(100,100,200, points, 7);
+    if (tile_pos == view->level_view.highlight_tile) {
+        graphics->draw_lines(255,255,255, points, 7);
+    } else {
+        graphics->draw_lines(100,100,200, points, 7);
+    }
 
     Tile &tile = level->tiles[tile_pos];
     TileView &tile_view = view->level_view.tile_views[tile_pos];

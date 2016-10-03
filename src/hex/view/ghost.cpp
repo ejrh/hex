@@ -56,7 +56,7 @@ void Ghost::update(unsigned int update_ms) {
     }
 
     Point next_pos = stack_view->path[step];
-    stack_view->facing = get_direction(next_pos, stack_view->stack->position);
+    stack_view->facing = get_direction(stack_view->stack->position, next_pos);
     stack_view->phase += frame_incr(view_def->move_animations[stack_view->facing].bpm, update_ms);
     if (view->player->has_view(target->owner)) {
         view->level_view.discovered.draw(next_pos, target->sight(), true);

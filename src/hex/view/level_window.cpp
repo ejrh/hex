@@ -1,6 +1,7 @@
 #include "common.h"
 
 #include "hex/basics/point.h"
+#include "hex/basics/hexgrid.h"
 #include "hex/game/game.h"
 #include "hex/view/level_window.h"
 #include "hex/view/view.h"
@@ -34,54 +35,7 @@ void LevelWindow::set_mouse_position(int x, int y) {
 void LevelWindow::mouse_to_tile(int x, int y, Point *tile) {
     x += shift_x;
     y += shift_y;
-
-    int x_mod = x % (2*X_SPACING);
-    int x_div = x / (2*X_SPACING);
-
-    int segment = -99;
-    if (x_mod < SLOPE_WIDTH)
-        segment = 0;
-    else if (x_mod < X_SPACING)
-        segment = 1;
-    else if (x_mod < TILE_WIDTH)
-        segment = 2;
-    else
-        segment = 3;
-
-    if (segment == 0) {
-        int y_mod = y % Y_SPACING;
-        int y_div = y / Y_SPACING;
-        if (y_mod*SLOPE_WIDTH < SLOPE_HEIGHT - x_mod*SLOPE_HEIGHT) {
-            tile->x = 2*x_div - 1;
-            tile->y = y_div - 1;
-        } else if (y_mod*SLOPE_WIDTH < SLOPE_HEIGHT*SLOPE_WIDTH + x_mod*SLOPE_HEIGHT) {
-            tile->x = 2*x_div;
-            tile->y = y_div;
-        } else {
-            tile->x = 2*x_div - 1;
-            tile->y = y_div;
-        }
-    } else if (segment == 1) {
-        tile->x = 2 * x_div;
-        tile->y = y / Y_SPACING;
-    } else if (segment == 2) {
-        x_mod -= X_SPACING;
-        int y_mod = y % Y_SPACING;
-        int y_div = y / Y_SPACING;
-        if (y_mod*SLOPE_WIDTH < x_mod*SLOPE_HEIGHT) {
-            tile->x = 2*x_div + 1;
-            tile->y = y_div - 1;
-        } else if (y_mod*SLOPE_WIDTH < 2*SLOPE_HEIGHT*SLOPE_WIDTH - x_mod*SLOPE_HEIGHT) {
-            tile->x = 2*x_div;
-            tile->y = y_div;
-        } else {
-            tile->x = 2*x_div + 1;
-            tile->y = y_div;
-        }
-    } else if (segment == 3) {
-        tile->x = 2 * x_div + 1;
-        tile->y = (y - SLOPE_HEIGHT) / Y_SPACING;
-    }
+    pixel_to_point(x, y, X_SPACING, Y_SPACING, SLOPE_WIDTH, SLOPE_HEIGHT, tile);
 }
 
 void LevelWindow::tile_to_pixel(const Point tile, int *px, int *py) {

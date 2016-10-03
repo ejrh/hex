@@ -186,12 +186,12 @@ void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {
     TileView &tile_view = view->level_view.tile_views[tile_pos];
 
     switch (tile_view.path_dir) {
-        case 0: y -= 16; break;
-        case 1: x += 16; y -= 8; break;
-        case 2: x += 16; y += 8; break;
-        case 3: y += 16; break;
-        case 4: x -= 16; y += 8; break;
-        case 5: x -= 16; y -= 8; break;
+        case 0: y += 16; break;
+        case 1: x -= 16; y += 8; break;
+        case 2: x -= 16; y -= 8; break;
+        case 3: y -= 16; break;
+        case 4: x += 16; y -= 8; break;
+        case 5: x += 16; y += 8; break;
     }
 
     if (tile_view.path_dir >= 0 && tile_view.path_dir < 6) {
