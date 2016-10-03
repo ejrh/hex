@@ -32,7 +32,7 @@ public:
 public:
     GameView *view;
     LevelRenderer *level_renderer;
-    bool dragging;
+    bool terrain_only;
 
 protected:
     Resources *resources;

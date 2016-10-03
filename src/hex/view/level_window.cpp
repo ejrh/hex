@@ -16,7 +16,7 @@
 
 LevelWindow::LevelWindow(int width, int height, GameView *view, LevelRenderer *level_renderer, Resources *resources):
         UiWindow(0, 0, width, height, WindowIsVisible|WindowIsActive|WindowWantsMouseEvents|WindowWantsKeyboardEvents),
-        view(view), level_renderer(level_renderer), resources(resources),
+        view(view), level_renderer(level_renderer), terrain_only(false), resources(resources),
         shift_x(SLOPE_WIDTH), shift_y(SLOPE_HEIGHT), x_spacing(X_SPACING), y_spacing(Y_SPACING),
         scroll_up(false), scroll_down(false), scroll_left(false), scroll_right(false) {
     shift(0, 0);
@@ -152,13 +152,15 @@ void LevelWindow::draw(const UiContext& context) {
     draw_level(&LevelRenderer::render_tile);
     draw_level(&LevelRenderer::render_tile_transitions);
     draw_level(&LevelRenderer::render_features);
-    draw_level(&LevelRenderer::render_objects);
-    draw_level(&LevelRenderer::render_path_arrow);
-    for (std::vector<Ghost>::iterator iter = view->ghosts.begin(); iter != view->ghosts.end(); iter++) {
-        draw_ghost(&*iter);
+    if (!terrain_only) {
+        draw_level(&LevelRenderer::render_objects);
+        draw_level(&LevelRenderer::render_path_arrow);
+        for (std::vector<Ghost>::iterator iter = view->ghosts.begin(); iter != view->ghosts.end(); iter++) {
+            draw_ghost(&*iter);
+        }
+        if (!view->debug_mode)
+            draw_level(&LevelRenderer::render_fog);
     }
-    if (!view->debug_mode)
-        draw_level(&LevelRenderer::render_fog);
 }
 
 void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {

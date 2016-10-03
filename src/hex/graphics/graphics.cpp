@@ -86,3 +86,29 @@ void Graphics::fill_rectangle(Uint8 R, Uint8 G, Uint8 B, SDL_Rect& rect) {
 void Graphics::update() {
     SDL_RenderPresent(renderer);
 }
+
+void Graphics::set_target_image(Image *target) {
+    target_texture = target->texture;
+    SDL_SetRenderTarget(renderer, target_texture);
+    width = target->width;
+    height = target->height;
+}
+
+void Graphics::unset_target_image() {
+    target_texture = NULL;
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_GetWindowSize(window, &width, &height);
+}
+
+void Graphics::save_image(Image *image, const std::string& filename) {
+    set_target_image(image);
+    save_screenshot(filename);
+    unset_target_image();
+}
+
+void Graphics::save_screenshot(const std::string& filename) {
+    SDL_Surface *sshot = SDL_CreateRGBSurface(0, width, height, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+    SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_ARGB8888, sshot->pixels, sshot->pitch);
+    SDL_SaveBMP(sshot, filename.c_str());
+    SDL_FreeSurface(sshot);
+}

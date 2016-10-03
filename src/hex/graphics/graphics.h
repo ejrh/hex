@@ -11,11 +11,7 @@ public:
     int clip_x_offset, clip_y_offset;
     int clip_width, clip_height;
     int width, height;
-
-private:
     SDL_Texture *texture;
-
-    friend class Graphics;
 };
 
 
@@ -35,12 +31,17 @@ public:
     void update();
     int get_width() { return width; }
     int get_height() { return height; }
+    void set_target_image(Image *target);
+    void unset_target_image();
+    void save_image(Image *image, const std::string& filename);
+    void save_screenshot(const std::string& filename);
 
 public:
     SDL_Window *window;
     SDL_Renderer *renderer;
     int width;
     int height;
+    SDL_Texture *target_texture;
 };
 
 inline bool rect_contains(const SDL_Rect& rect, int px, int py) {

@@ -20,7 +20,11 @@ public:
     void right_click(int x, int y);
 
     bool receive_mouse_event(SDL_Event *evt, int x, int y);
+    bool receive_keyboard_event(SDL_Event *evt);
     void draw(const UiContext& context);
+
+private:
+    void create_map_image();
 
 public:
     GameView *view;
@@ -30,6 +34,7 @@ protected:
     Graphics *graphics;
     Resources *resources;
     bool dragging;
+    Image *map_image;
 };
 
 #endif
