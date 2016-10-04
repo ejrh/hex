@@ -192,6 +192,89 @@ void generate_level(Level &level) {
 }
 
 
+class BackgroundWindow: public UiWindow {
+public:
+    BackgroundWindow(UiLoop *loop, Graphics *graphics, PathfindingView *view):
+        UiWindow(0, 0, graphics->width, graphics->height, WindowIsVisible|WindowIsActive|WindowWantsMouseEvents|WindowWantsKeyboardEvents),
+        loop(loop), graphics(graphics), view(view) {
+    }
+
+    bool receive_mouse_event(SDL_Event *evt, int x, int y) {
+        if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_LEFT) {
+            if (!dragging) {
+                view->left_click();
+                return true;
+            } else {
+                dragging = false;
+            }
+        } else if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_MIDDLE) {
+            view->middle_click();
+            return true;
+        } else if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_RIGHT) {
+            view->right_click();
+            return true;
+        } else {
+            if (evt->type == drag_event_type)
+                dragging = true;
+
+            return children[0]->receive_mouse_event(evt, x, y);
+        }
+        return false;
+    }
+
+    bool receive_keyboard_event(SDL_Event *evt) {
+        if (evt->type == SDL_QUIT
+            || (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_ESCAPE)) {
+            loop->running = false;
+            return true;
+        } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym >= SDLK_1 && evt->key.keysym.sym <= SDLK_9) {
+            switch (evt->key.keysym.sym) {
+                case SDLK_1: view->brush_radius = 1; break;
+                case SDLK_2: view->brush_radius = 2; break;
+                case SDLK_3: view->brush_radius = 3; break;
+                case SDLK_4: view->brush_radius = 4; break;
+                case SDLK_5: view->brush_radius = 5; break;
+                case SDLK_6: view->brush_radius = 6; break;
+                case SDLK_7: view->brush_radius = 7; break;
+                case SDLK_8: view->brush_radius = 8; break;
+                case SDLK_9: view->brush_radius = 9; break;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    void draw(const UiContext& context) {
+        view->update();
+
+        SDL_SetRenderDrawColor(graphics->renderer, 0,0,0, 255);
+        SDL_RenderClear(graphics->renderer);
+    }
+
+private:
+    UiLoop *loop;
+    Graphics *graphics;
+    PathfindingView *view;
+    bool dragging;
+};
+
+
+class TopWindow: public UiWindow {
+public:
+    TopWindow(Graphics *graphics):
+        UiWindow(0, 0, 0, 0, WindowIsVisible),
+        graphics(graphics) {
+    }
+
+    void draw(const UiContext& context) {
+        graphics->update();
+    }
+
+private:
+    Graphics *graphics;
+};
+
+
 void run() {
     open_tile->properties[Walkable] = 1;
 
@@ -213,64 +296,14 @@ void run() {
     PathfindingRenderer level_renderer(&graphics, &game.level, &view);
     LevelWindow level_window(graphics.width, graphics.height, &view, &level_renderer, &resources);
 
-    int down_pos_x, down_pos_y;
-    bool dragging = false;
-
-    SDL_Event evt;
-    bool running = true;
-    while (running) {
-        while (SDL_PollEvent(&evt)) {
-            SDL_WaitEventTimeout(&evt, 500);
-            if (evt.type == SDL_QUIT
-                || (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_ESCAPE))
-                running = false;
-
-            if (evt.type == SDL_MOUSEMOTION) {
-                level_window.set_mouse_position(evt.motion.x, evt.motion.y);
-            }
-
-            if (evt.type == SDL_MOUSEBUTTONDOWN && evt.button.button == SDL_BUTTON_LMASK) {
-                down_pos_x = evt.motion.x;
-                down_pos_y = evt.motion.y;
-            } else if (evt.type == SDL_MOUSEBUTTONUP && dragging) {
-                dragging = false;
-            } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_LEFT) {
-                view.left_click();
-            } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_MIDDLE) {
-                view.middle_click();
-            } else if (evt.type == SDL_MOUSEBUTTONUP && evt.button.button == SDL_BUTTON_RIGHT) {
-                view.right_click();
-            } else if (evt.type == SDL_MOUSEMOTION && dragging) {
-                level_window.shift(evt.motion.xrel, evt.motion.yrel);
-            } else if (evt.type == SDL_MOUSEMOTION) {
-                if (evt.motion.state == SDL_BUTTON_LMASK &&  abs(evt.motion.x - down_pos_x) > 4 && abs(evt.motion.y - down_pos_y) > 4)
-                    dragging = true;
-            }
-
-            if (evt.type == SDL_KEYDOWN) {
-                switch (evt.key.keysym.sym) {
-                    case SDLK_1: view.brush_radius = 1; break;
-                    case SDLK_2: view.brush_radius = 2; break;
-                    case SDLK_3: view.brush_radius = 3; break;
-                    case SDLK_4: view.brush_radius = 4; break;
-                    case SDLK_5: view.brush_radius = 5; break;
-                    case SDLK_6: view.brush_radius = 6; break;
-                    case SDLK_7: view.brush_radius = 7; break;
-                    case SDLK_8: view.brush_radius = 8; break;
-                    case SDLK_9: view.brush_radius = 9; break;
-                }
-            }
-        }
-
-        view.update();
-
-        SDL_SetRenderDrawColor(graphics.renderer, 0,0,0, 255);
-        SDL_RenderClear(graphics.renderer);
-
-        UiContext context(&graphics, 0, 0);
-        level_window.draw(context);
-        graphics.update();
-    }
+    UiLoop loop(&graphics, 25);
+    BackgroundWindow bg_window(&loop, &graphics, &view);
+    loop.root = &bg_window;
+    bg_window.add_child(&level_window);
+    level_window.clear_flag(WindowIsActive);
+    TopWindow tw(&graphics);
+    bg_window.add_child(&tw);
+    loop.run();
 
     graphics.stop();
 }
