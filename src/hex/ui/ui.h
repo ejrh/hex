@@ -44,6 +44,8 @@ public:
 
 class UiWindow {
 public:
+    typedef std::unique_ptr<UiWindow> pointer;
+
     UiWindow(int x, int y, int width, int height, UiWindowFlags flags);
     virtual ~UiWindow();
 
@@ -63,7 +65,7 @@ public:
     UiWindow *parent;
     int x, y;
     int width, height;
-    std::vector<UiWindow *> children;
+    std::vector<UiWindow::pointer> children;
     unsigned int flags;
 };
 
@@ -71,20 +73,21 @@ class UiLoop {
 public:
     UiLoop(Graphics *graphics, unsigned int frame_time);
 
+    void set_root_window(UiWindow *window);
     void update();
     void run();
 
 private:
-    bool deliver_event(UiWindow *window, SDL_Event *event, int offset_x, int offset_y);
-    bool deliver_event_to_children(UiWindow *window, SDL_Event *event, int offset_x, int offset_y);
-    void draw_window(UiWindow *window, const UiContext& context);
-    void draw_children(UiWindow *window, const UiContext& context);
+    bool deliver_event(UiWindow& window, SDL_Event *event, int offset_x, int offset_y);
+    bool deliver_event_to_children(UiWindow& window, SDL_Event *event, int offset_x, int offset_y);
+    void draw_window(UiWindow& window, const UiContext& context);
+    void draw_children(UiWindow& window, const UiContext& context);
 
 public:
     Graphics *graphics;
     unsigned int frame_time;
 
-    UiWindow *root;
+    UiWindow::pointer root;
     bool running;
 
     int down_pos_x, down_pos_y;

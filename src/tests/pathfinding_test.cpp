@@ -294,15 +294,15 @@ void run() {
     PathfindingView view(&game);
 
     PathfindingRenderer level_renderer(&graphics, &game.level, &view);
-    LevelWindow level_window(graphics.width, graphics.height, &view, &level_renderer, &resources);
+    LevelWindow *level_window = new LevelWindow(graphics.width, graphics.height, &view, &level_renderer, &resources);
 
     UiLoop loop(&graphics, 25);
-    BackgroundWindow bg_window(&loop, &graphics, &view);
-    loop.root = &bg_window;
-    bg_window.add_child(&level_window);
-    level_window.clear_flag(WindowIsActive);
-    TopWindow tw(&graphics);
-    bg_window.add_child(&tw);
+    BackgroundWindow *bg_window = new BackgroundWindow(&loop, &graphics, &view);
+    loop.set_root_window(bg_window);
+    bg_window->add_child(level_window);
+    level_window->clear_flag(WindowIsActive);
+    TopWindow *tw = new TopWindow(&graphics);
+    bg_window->add_child(tw);
     loop.run();
 
     graphics.stop();

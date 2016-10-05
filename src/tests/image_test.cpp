@@ -95,8 +95,8 @@ void run() {
     load_resources(&resources, &graphics);
 
     UiLoop loop(&graphics, 25);
-    TestWindow test_window(&loop, &graphics, &resources);
-    loop.root = &test_window;
+    TestWindow *test_window = new TestWindow(&loop, &graphics, &resources);
+    loop.set_root_window(test_window);
     loop.run();
 
     graphics.stop();

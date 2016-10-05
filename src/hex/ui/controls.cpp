@@ -9,6 +9,10 @@ UiLabel::UiLabel(int x, int y, int width, int height):
         UiWindow(x, y, width, height, WindowIsVisible), text_image(NULL) {
 }
 
+UiLabel::~UiLabel() {
+    delete text_image;
+}
+
 void UiLabel::draw(const UiContext& context) {
     if (this->text_image == NULL && text.size() > 0) {
         this->text_image = format.write_to_image(context.graphics, text);
@@ -44,7 +48,6 @@ UiDialog::UiDialog(int x, int y, int width, int height, UiWindowFlags flags):
 }
 
 UiDialog::~UiDialog() {
-    delete title;
 }
 
 
@@ -64,7 +67,6 @@ UiButton::UiButton(int x, int y, int width, int height, const std::string& label
 }
 
 UiButton::~UiButton() {
-    delete label;
 }
 
 bool UiButton::receive_mouse_event(SDL_Event *evt, int x, int y) {

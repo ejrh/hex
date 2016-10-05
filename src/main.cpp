@@ -322,16 +322,16 @@ void run(Options& options) {
 
     UnitRenderer unit_renderer(&graphics, &resources);
     LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view, &unit_renderer);
-    LevelWindow level_window(graphics.width - sidebar_width, graphics.height - StatusWindow::window_height, &game_view, &level_renderer, &resources);
-    ChatWindow chat_window(200, graphics.height, &resources, &graphics, node_interface);
-    ChatUpdater chat_updater(&chat_window);
+    LevelWindow *level_window = new LevelWindow(graphics.width - sidebar_width, graphics.height - StatusWindow::window_height, &game_view, &level_renderer, &resources);
+    ChatWindow *chat_window = new ChatWindow(200, graphics.height, &resources, &graphics, node_interface);
+    ChatUpdater chat_updater(chat_window);
     node_interface->subscribe(&chat_updater);
 
-    UnitInfoWindow unit_info_window(unit_info_window_x, unit_info_window_y, UnitInfoWindow::unit_info_window_width, UnitInfoWindow::unit_info_window_height, &resources, &graphics, &game_view);
-    MapWindow map_window(sidebar_position, 0, sidebar_width, map_window_height, &game_view, &level_window, &graphics, &resources);
-    StackWindow stack_window(sidebar_position, 200, sidebar_width, StackWindow::window_height, &resources, &graphics, &game_view, &unit_renderer, &unit_info_window);
-    MessageWindow message_window(sidebar_position, map_window_height + stack_window_height, sidebar_width, message_window_height, &resources, &graphics, &game_view);
-    StatusWindow status_window(0, level_window.height, graphics.width, status_window_height, &resources, &graphics, &game_view);
+    UnitInfoWindow *unit_info_window = new UnitInfoWindow(unit_info_window_x, unit_info_window_y, UnitInfoWindow::unit_info_window_width, UnitInfoWindow::unit_info_window_height, &resources, &graphics, &game_view);
+    MapWindow *map_window = new MapWindow(sidebar_position, 0, sidebar_width, map_window_height, &game_view, level_window, &graphics, &resources);
+    StackWindow *stack_window = new StackWindow(sidebar_position, 200, sidebar_width, StackWindow::window_height, &resources, &graphics, &game_view, &unit_renderer, unit_info_window);
+    MessageWindow *message_window = new MessageWindow(sidebar_position, map_window_height + stack_window_height, sidebar_width, message_window_height, &resources, &graphics, &game_view);
+    StatusWindow *status_window = new StatusWindow(0, level_window->height, graphics.width, status_window_height, &resources, &graphics, &game_view);
 
     Audio audio(&resources);
     audio.start();
@@ -340,17 +340,17 @@ void run(Options& options) {
     pre_updater.battle_viewer = &battle_viewer;
 
     UiLoop loop(&graphics, 25);
-    BackgroundWindow bw(&loop, &options, &generator, &game, &game_view, node_interface, &level_renderer);
-    loop.root = &bw;
-    bw.add_child(&level_window);
-    bw.add_child(&map_window);
-    bw.add_child(&stack_window);
-    bw.add_child(&message_window);
-    bw.add_child(&status_window);
-    bw.add_child(&chat_window);
-    bw.add_child(&unit_info_window);
-    TopWindow tw(&graphics, &audio);
-    bw.add_child(&tw);
+    BackgroundWindow *bw = new BackgroundWindow(&loop, &options, &generator, &game, &game_view, node_interface, &level_renderer);
+    loop.set_root_window(bw);
+    bw->add_child(level_window);
+    bw->add_child(map_window);
+    bw->add_child(stack_window);
+    bw->add_child(message_window);
+    bw->add_child(status_window);
+    bw->add_child(chat_window);
+    bw->add_child(unit_info_window);
+    TopWindow *tw = new TopWindow(&graphics, &audio);
+    bw->add_child(tw);
     loop.run();
 
     node_interface->stop();

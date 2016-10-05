@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <numeric>
 #include <cctype>
+#include <memory>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>

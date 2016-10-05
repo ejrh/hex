@@ -149,8 +149,8 @@ void run() {
     UnitViewDef::pointer view_def = resources.unit_view_defs.begin()->second;
 
     UiLoop loop(&graphics, 25);
-    TestWindow test_window(&loop, &graphics, &resources, &game, &unit_renderer, view_def);
-    loop.root = &test_window;
+    TestWindow *test_window = new TestWindow(&loop, &graphics, &resources, &game, &unit_renderer, view_def);
+    loop.set_root_window(test_window);
     loop.run();
 
     graphics.stop();

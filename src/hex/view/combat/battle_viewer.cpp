@@ -58,11 +58,11 @@ void BattleViewer::show_battle(Battle *battle) {
     BattleView battle_view(battle, graphics->width, graphics->height, resources);
 
     UiLoop loop(graphics, 25);
-    battle_viewer::BackgroundWindow bg_window(&loop);
-    loop.root = &bg_window;
-    BattleWindow battle_window(100, 100, graphics->width - 200, graphics->height - 200, resources, graphics, &battle_view, renderer);
-    bg_window.add_child(&battle_window);
-    battle_viewer::TopWindow top_window(graphics, audio);
-    bg_window.add_child(&top_window);
+    battle_viewer::BackgroundWindow *bg_window = new battle_viewer::BackgroundWindow(&loop);
+    loop.set_root_window(bg_window);
+    BattleWindow *battle_window = new BattleWindow(100, 100, graphics->width - 200, graphics->height - 200, resources, graphics, &battle_view, renderer);
+    bg_window->add_child(battle_window);
+    battle_viewer::TopWindow *top_window = new battle_viewer::TopWindow(graphics, audio);
+    bg_window->add_child(top_window);
     loop.run();
 }

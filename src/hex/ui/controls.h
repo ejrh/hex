@@ -8,7 +8,7 @@
 class UiLabel: public UiWindow {
 public:
     UiLabel(int x, int y, int width, int height);
-    virtual ~UiLabel() { delete text_image; }
+    virtual ~UiLabel();
 
     virtual void draw(const UiContext& context);
 

@@ -102,12 +102,12 @@ void run() {
     graphics.start("UI test", 800, 600, false);
 
     UiLoop loop(&graphics, 25);
-    TestWindow test_window(&loop, &graphics);
-    TestDialog test_dialog(200, 200, 400, 200, &graphics);
-    TopWindow top_window(&graphics);
-    test_window.add_child(&test_dialog);
-    test_window.add_child(&top_window);
-    loop.root = &test_window;
+    TestWindow *test_window = new TestWindow(&loop, &graphics);
+    TestDialog *test_dialog = new TestDialog(200, 200, 400, 200, &graphics);
+    TopWindow *top_window = new TopWindow(&graphics);
+    test_window->add_child(test_dialog);
+    test_window->add_child(top_window);
+    loop.set_root_window(test_window);
     loop.run();
 
     graphics.stop();

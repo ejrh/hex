@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1)
 project(hex)
 
 # Cotire, used for precompiled header support
@@ -25,6 +25,8 @@ endif(MSVC)
 if(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
     set(gen_opts "-Wall" "-g")
 endif(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
+
+set(CMAKE_CXX_STANDARD 11)
 
 include_directories("src")
 
