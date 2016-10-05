@@ -79,6 +79,8 @@ void GameArbiter::process_command(boost::shared_ptr<Message> command) {
                 if (merge) {
                     emit(create_message(DestroyStack, stack_id));
                 }
+            } else {
+                end_pos = stack->position;
             }
 
             UnitStack::pointer attack_target = game->stacks.find(attack_target_id);
