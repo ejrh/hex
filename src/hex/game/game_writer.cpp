@@ -73,7 +73,8 @@ void GameWriter::write_structures(Game *game) {
             Structure::pointer structure = game->level.tiles[tile_pos].structure;
             if (!structure)
                 continue;
-            emit(create_message(CreateStructure, tile_pos, structure->type->name, structure->owner->id));
+            int owner_id = (structure->owner != NULL) ? structure->owner->id : 0;
+            emit(create_message(CreateStructure, tile_pos, structure->type->name, owner_id));
         }
     }
 }
