@@ -37,6 +37,9 @@ float average_damage_roll(const Participant& participant, const Participant& tar
 }
 
 bool MoveType::is_viable(const Battle& battle, const Participant& participant, const Participant& target) const {
+    if (!participant.can_move())
+        return false;
+
     if (direction == Beneficial)
         return participant.side == target.side && target.is_alive();
     else if (direction == Detrimental)
