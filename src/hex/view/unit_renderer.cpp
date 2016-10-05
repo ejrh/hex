@@ -9,7 +9,8 @@
 
 
 UnitRenderer::UnitRenderer(Graphics *graphics, Resources *resources):
-        graphics(graphics), resources(resources), generate_placeholders(true) {
+        generate_placeholders(true),
+        graphics(graphics), resources(resources) {
 }
 
 UnitRenderer::~UnitRenderer() {
@@ -23,7 +24,7 @@ void UnitRenderer::draw_unit(int x, int y, UnitView& unit_view) {
             int pos = unit_view.phase / 1000;
             Image *shadow = shadow_animation.images[pos % shadow_animation.images.size()].image;
             int alpha = 96;
-            graphics->blit(shadow, x - shadow->width / 2, y - shadow->height + 8, SDL_BLENDMODE_BLEND, alpha);
+            graphics->blit(shadow, x - shadow->width / 2, y - shadow->height + 24, SDL_BLENDMODE_BLEND, alpha);
         }
     }
 
@@ -35,7 +36,7 @@ void UnitRenderer::draw_unit(int x, int y, UnitView& unit_view) {
 
     x -= image->width / 2;
     y -= image->height;
-    y += 8;
+    y += 24;
 
     graphics->blit(image, x, y, SDL_BLENDMODE_BLEND);
 

@@ -44,7 +44,7 @@ void LevelRenderer::render_tile_transitions(int x, int y, Point tile_pos) {
         Image *trans = *iter;
         if (trans != NULL) {
             int trans_x = x - trans->width / 2;
-            int trans_y = y - trans->height / 2;
+            int trans_y = y - trans->height / 2 - 6;
             graphics->blit(trans, trans_x, trans_y, SDL_BLENDMODE_BLEND);
         }
     }
@@ -176,7 +176,7 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
         shield = faction_view_def->shield_images[num].image;
     }
     if (shield != NULL) {
-        graphics->blit(shield, x-24, y-44, SDL_BLENDMODE_BLEND);
+        graphics->blit(shield, x - shield->width/2 - 16, y - shield->height/2 - 18, SDL_BLENDMODE_BLEND);
     } else {
         graphics->fill_rectangle(faction_view_def->r, faction_view_def->g, faction_view_def->b, x-24, y-44, 8, 12);
     }
