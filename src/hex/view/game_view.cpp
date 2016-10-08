@@ -158,13 +158,17 @@ void GameView::set_drawn_path(const Point& start, const Path& path) {
     }
 
     drawn_path = path;
+    if (drawn_path.size() == 0)
+        return;
 
     // Draw new path
     Point last = start;
     for (std::vector<Point>::const_iterator iter = drawn_path.begin(); iter != drawn_path.end(); iter++) {
-        level_view.tile_views[*iter].path_dir = get_direction(last, *iter);
+        int arrow_num = get_direction(last, *iter);
+        level_view.tile_views[*iter].path_dir = arrow_num;
         last = *iter;
     }
+    level_view.tile_views[last].path_dir |= TileView::PATH_END;
 }
 
 void GameView::update_visibility() {

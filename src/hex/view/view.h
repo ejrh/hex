@@ -39,6 +39,8 @@ public:
     TileView(): view_def(), highlighted(false), path_dir(-1), variation(0), phase(0), feature(NULL), structure_view() { }
     ~TileView() { }
 
+    static const int PATH_END = 8;
+
 public:
     TileViewDef::pointer view_def;
     bool highlighted;

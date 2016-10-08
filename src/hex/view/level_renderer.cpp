@@ -185,7 +185,16 @@ void LevelRenderer::draw_unit_stack(int x, int y, UnitStackView &stack_view) {
 void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {
     TileView &tile_view = view->level_view.tile_views[tile_pos];
 
-    switch (tile_view.path_dir) {
+    if (tile_view.path_dir < 0)
+        return;
+
+    if (tile_view.path_dir & TileView::PATH_END) {
+        Image *path_end = arrow_images[6].image;
+        if (path_end != NULL)
+            graphics->blit(path_end, x - path_end->width / 2, y - path_end->height / 2 - 6, SDL_BLENDMODE_BLEND);
+    }
+
+    switch (tile_view.path_dir & 0x7) {
         case 0: y += 16; break;
         case 1: x -= 16; y += 8; break;
         case 2: x -= 16; y -= 8; break;
@@ -194,12 +203,9 @@ void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {
         case 5: x += 16; y += 8; break;
     }
 
-    if (tile_view.path_dir >= 0 && tile_view.path_dir < 6) {
-        Image *path_arrow = arrow_images[tile_view.path_dir].image;
-
-        if (path_arrow != NULL)
-            graphics->blit(path_arrow, x - path_arrow->width / 2, y - path_arrow->height / 2 - 6, SDL_BLENDMODE_BLEND);
-    }
+    Image *path_arrow = arrow_images[tile_view.path_dir & 0x7].image;
+    if (path_arrow != NULL)
+        graphics->blit(path_arrow, x - path_arrow->width / 2, y - path_arrow->height / 2 - 6, SDL_BLENDMODE_BLEND);
 }
 
 void LevelRenderer::render_fog(int x, int y, Point tile_pos) {
