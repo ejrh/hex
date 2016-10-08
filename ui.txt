@@ -1,0 +1,5 @@
+ImageSet("CURSORS", ["3dHex.BMP/6-0", "3dHex.BMP/7-1"])
+ImageSet("ARROWS", ["Pointers.BMP/38-9", "Pointers.BMP/39-10", "Pointers.BMP/40-11", "Pointers.BMP/35-12", "Pointers.BMP/36-13", "Pointers.BMP/37-14"])
+ImageSet("FOG", ["FogHex.BMP/3-0"])
+ImageSet("SHADOW", ["FogHex.BMP/1-1"])
+ImageSet("TARGETS", ["FC_Sel.BMP/2-0", "FC_Sel.BMP/3-1"])

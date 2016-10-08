@@ -1,0 +1,9 @@
+# CreateStructureView(name)
+# StructureAnimation(x, y, bpm, images)
+
+CreateStructureView("tower")
+StructureAnimation(23,62, 0, ["str_tower.BMP/0-0"])
+
+CreateStructureView("wizard_tower")
+StructureAnimation(23,112, 0, ["str_wtwr.BMP/0-0"])
+
