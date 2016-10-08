@@ -20,6 +20,7 @@ if(MSVC)
     add_definitions(-D_WIN32_WINNT=0x0501)
     add_definitions("/wd4996")
     set(CMAKE_EXE_LINKER_FLAGS /NODEFAULTLIB:\"msvcrt.lib\")
+    STRING(REGEX REPLACE "/EHs" "/EHa" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 endif(MSVC)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
