@@ -294,7 +294,7 @@ void run() {
     PathfindingView view(&game);
 
     PathfindingRenderer level_renderer(&graphics, &game.level, &view);
-    LevelWindow *level_window = new LevelWindow(graphics.width, graphics.height, &view, &level_renderer, &resources);
+    LevelWindow *level_window = new LevelWindow(graphics.width, graphics.height, &view, &level_renderer, NULL, &resources);
 
     UiLoop loop(&graphics, 25);
     BackgroundWindow *bg_window = new BackgroundWindow(&loop, &graphics, &view);

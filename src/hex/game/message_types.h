@@ -31,6 +31,7 @@ MSG_TYPE(UnitAttackAnimation, WM3(int, int, ImageSeries))
 MSG_TYPE(UnitRecoilAnimation, WM3(int, int, ImageSeries))
 MSG_TYPE(UnitDieAnimation, WM3(int, int, ImageSeries))
 MSG_TYPE(UnitShadowAnimation, WM3(int, int, ImageSeries))
+MSG_TYPE(UnitSounds, WM2(int, SoundSeries))
 
 MSG_TYPE(CreateStructureView, WM(StructureViewDef))
 MSG_TYPE(StructureAnimation, WM4(int, int, int, ImageSeries))
@@ -39,6 +40,7 @@ MSG_TYPE(CreateFactionView, WM(FactionViewDef))
 MSG_TYPE(FactionImageSet, WM2(std::string, ImageSeries))
 
 MSG_TYPE(LoadSong, WM(std::string))
+MSG_TYPE(SoundFile, WM(std::string))
 
 MSG_TYPE(ClearGame, Message)
 MSG_TYPE(CreateUnitType, WM(UnitType))

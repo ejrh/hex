@@ -21,6 +21,7 @@
 #include "hex/messaging/publisher.h"
 #include "hex/messaging/queue.h"
 #include "hex/networking/networking.h"
+#include "hex/view/audio_renderer.h"
 #include "hex/view/level_renderer.h"
 #include "hex/view/level_window.h"
 #include "hex/view/map_window.h"
@@ -46,9 +47,10 @@ struct Options {
     bool fullscreen;
 };
 
-void load_resources(Resources *resources, Graphics *graphics) {
+void load_resources(Resources *resources, Graphics *graphics, Audio *audio) {
     ImageLoader image_loader(resources, graphics);
-    ResourceLoader loader(resources, &image_loader);
+    SoundLoader sound_loader(resources, audio);
+    ResourceLoader loader(resources, &image_loader, &sound_loader);
     loader.load(std::string("data/resources.txt"));
     resources->resolve_references();
 }
@@ -274,7 +276,10 @@ void run(Options& options) {
     graphics.start("Hex", options.width, options.height, options.fullscreen);
 
     Resources resources;
-    load_resources(&resources, &graphics);
+    Audio audio(&resources);  // TODO audio should not depend on resources
+    audio.start();
+
+    load_resources(&resources, &graphics, &audio);
 
     NodeInterface *node_interface = make_node_interface(options);
 
@@ -322,7 +327,8 @@ void run(Options& options) {
 
     UnitRenderer unit_renderer(&graphics, &resources);
     LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view, &unit_renderer);
-    LevelWindow *level_window = new LevelWindow(graphics.width - sidebar_width, graphics.height - StatusWindow::window_height, &game_view, &level_renderer, &resources);
+    AudioRenderer audio_renderer(&audio);
+    LevelWindow *level_window = new LevelWindow(graphics.width - sidebar_width, graphics.height - StatusWindow::window_height, &game_view, &level_renderer, &audio_renderer, &resources);
     ChatWindow *chat_window = new ChatWindow(200, graphics.height, &resources, &graphics, node_interface);
     ChatUpdater chat_updater(chat_window);
     node_interface->subscribe(&chat_updater);
@@ -332,9 +338,6 @@ void run(Options& options) {
     StackWindow *stack_window = new StackWindow(sidebar_position, 200, sidebar_width, StackWindow::window_height, &resources, &graphics, &game_view, &unit_renderer, unit_info_window);
     MessageWindow *message_window = new MessageWindow(sidebar_position, map_window_height + stack_window_height, sidebar_width, message_window_height, &resources, &graphics, &game_view);
     StatusWindow *status_window = new StatusWindow(0, level_window->height, graphics.width, status_window_height, &resources, &graphics, &game_view);
-
-    Audio audio(&resources);
-    audio.start();
 
     BattleViewer battle_viewer(&resources, &graphics, &audio, &game_view, &unit_renderer);
     pre_updater.battle_viewer = &battle_viewer;

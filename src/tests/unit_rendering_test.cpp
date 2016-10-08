@@ -12,7 +12,7 @@
 
 void load_resources(Resources *resources, Graphics *graphics) {
     ImageLoader image_loader(resources, graphics);
-    ResourceLoader loader(resources, &image_loader);
+    ResourceLoader loader(resources, &image_loader, NULL);
     loader.load(std::string("data/resources.txt"));
     resources->resolve_references();
 }

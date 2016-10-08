@@ -4,6 +4,16 @@
 #include "hex/basics/error.h"
 #include "hex/resources/resources.h"
 
+Sound::Sound():
+        sample(NULL) {
+}
+
+Sound::~Sound() {
+    if (sample) {
+        Sample_Free(sample);
+    }
+}
+
 Audio::Audio(Resources *resources): resources(resources), started(false), module(NULL) {
 }
 
@@ -32,6 +42,8 @@ void Audio::start() {
     }
 
     BOOST_LOG_TRIVIAL(debug) << "MikMod drivers: " << MikMod_InfoDriver();
+
+    MikMod_SetNumVoices(-1, 2);
 
     started = true;
     audio_thread = boost::thread(&Audio::run_thread, this);
@@ -69,6 +81,10 @@ void Audio::play(const std::string& filename) {
     Player_Start(module);
 }
 
+void Audio::play_sound(Sound& sound) {
+    Sample_Play(sound.sample, 0, 0);
+}
+
 void Audio::update() {
     if (!started)
         return;
@@ -78,7 +94,17 @@ void Audio::update() {
         std::advance(song_iter, rand() % resources->songs.size());
         play(*song_iter);
     }
+}
 
+Sound *Audio::load_sound(const std::string& filename) {
+    SAMPLE *sample = Sample_Load((char *) filename.c_str());
+    if (!sample) {
+        BOOST_LOG_TRIVIAL(warning) << "Couldn't load sound: " << MikMod_strerror(MikMod_errno);
+        return NULL;
+    }
+    Sound *sound = new Sound();
+    sound->sample = sample;
+    return sound;
 }
 
 void Audio::run_thread() {

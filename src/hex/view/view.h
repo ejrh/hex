@@ -63,7 +63,7 @@ enum UnitPosture {
 class UnitView {
 public:
     UnitView():
-        facing(rand() % 6), posture(Holding), variation(rand()), phase(rand()), selected(false), targetted(false) { }
+        facing(rand() % 6), posture(Holding), variation(rand()), phase(rand()), selected(false), targetted(false), play_sound(false) { }
     ~UnitView() { }
 
     void update(unsigned int update_ms) {
@@ -90,6 +90,7 @@ public:
     unsigned int phase;
     bool selected;
     bool targetted;
+    bool play_sound;
 };
 
 class UnitStackView: public UnitView, public boost::enable_shared_from_this<UnitStackView> {

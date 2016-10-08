@@ -36,6 +36,10 @@ void Resources::resolve_references() {
         for (std::vector<AnimationDef>::iterator anim_iter = def.shadow_animations.begin(); anim_iter != def.shadow_animations.end(); anim_iter++) {
             resolve_image_series(anim_iter->images);
         }
+
+        for (std::array<SoundDef, NUM_POSTURES>::iterator sound_iter = def.sounds.begin(); sound_iter != def.sounds.end(); sound_iter++) {
+            resolve_sound_series(sound_iter->sounds);
+        }
     }
 
     for (StrMap<TileViewDef>::iterator def_iter = tile_view_defs.begin(); def_iter != tile_view_defs.end(); def_iter++) {
@@ -69,6 +73,22 @@ bool Resources::resolve_image_ref(ImageRef& image_ref) {
         return false;
     }
     image_ref.image = images[image_name];
+    return true;
+}
+
+void Resources::resolve_sound_series(SoundSeries& sound_series) {
+    for (SoundSeries::iterator ref_iter = sound_series.begin(); ref_iter != sound_series.end(); ref_iter++) {
+        resolve_sound_ref(*ref_iter);
+    }
+}
+
+bool Resources::resolve_sound_ref(SoundRef& sound_ref) {
+    std::string sound_name = sound_ref.name;
+    if (sounds.find(sound_name) == sounds.end()) {
+        BOOST_LOG_TRIVIAL(warning) << "No sound for reference to: " << sound_name;
+        return false;
+    }
+    sound_ref.sound = sounds[sound_name];
     return true;
 }
 
@@ -112,4 +132,13 @@ TileViewDef::pointer Resources::find_base(const TileViewDef& def) const {
         base = tile_view_defs.get(def.base_name);
     }
     return base;
+}
+
+std::string get_resource_basename(const std::string& filename) {
+    size_t pos = filename.find_last_of("/");
+    std::string basename(filename);
+    if (pos != std::string::npos)
+        basename = filename.substr(pos+1);
+    std::transform(basename.begin(), basename.end(), basename.begin(), ::tolower);
+    return basename;
 }

@@ -6,13 +6,14 @@
 #include "hex/view/level_renderer.h"
 
 
+class AudioRenderer;
 class LevelView;
 class Resources;
 class Ghost;
 
 class LevelWindow: public UiWindow {
 public:
-    LevelWindow(int width, int height, GameView *view, LevelRenderer *level_renderer, Resources *resources);
+    LevelWindow(int width, int height, GameView *view, LevelRenderer *level_renderer, AudioRenderer *audio_renderer, Resources *resources);
     ~LevelWindow();
     void set_mouse_position(int x, int y);
     void mouse_to_tile(int x, int y, Point *tile);
@@ -32,6 +33,7 @@ public:
 public:
     GameView *view;
     LevelRenderer *level_renderer;
+    AudioRenderer *audio_renderer;
     bool terrain_only;
 
 protected:

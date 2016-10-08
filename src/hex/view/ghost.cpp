@@ -19,6 +19,7 @@ Ghost::Ghost(GameView *view, UnitStack::pointer stack, const IntSet selected_uni
     stack_view->moving = true;
     stack_view->posture = Moving;
     stack_view->selected = view->selected_stack_id == stack->id;
+    stack_view->play_sound = true;
 
     // Lock target
     target_view = view->get_stack_view(target_stack->id);
@@ -34,6 +35,7 @@ void Ghost::update(unsigned int update_ms) {
         stack_view->stack->position = stack_view->path[step];
         step++;
         progress -= 1000;
+        stack_view->play_sound = true;
     }
 
     UnitStack::pointer& target = target_view->stack;

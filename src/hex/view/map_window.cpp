@@ -176,7 +176,7 @@ void MapWindow::create_map_image() {
     int total_width = view->level_view.tile_views.width * 32;
     int total_height = view->level_view.tile_views.height * 32;
     LevelRenderer lr(graphics, view->resources, &view->game->level, view, NULL);
-    LevelWindow lw(total_width, total_height, view, &lr, view->resources);
+    LevelWindow lw(total_width, total_height, view, &lr, NULL, view->resources);
     lw.terrain_only = true;
 
     if (!map_image) {

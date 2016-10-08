@@ -87,6 +87,8 @@ set(srcs
         resources/resource_loader.cpp
         resources/resources.cpp
         resources/resources.h
+        resources/sound_loader.cpp
+        resources/sound_ref.h
         resources/view_def.h
         resources/view_def_serialisation.h
         ui/controls.cpp
@@ -100,6 +102,8 @@ set(srcs
         view/combat/battle_window.h
         view/combat/combat_view.cpp
         view/combat/combat_view.h
+        view/audio_renderer.cpp
+        view/audio_renderer.h
         view/game_view.cpp
         view/ghost.cpp
         view/level_renderer.cpp

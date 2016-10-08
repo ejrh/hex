@@ -10,7 +10,7 @@
 
 void run() {
     Resources resources;
-    ResourceLoader loader(&resources, NULL);
+    ResourceLoader loader(&resources, NULL, NULL);
     loader.load("data/resources.txt");
 
     Game game;

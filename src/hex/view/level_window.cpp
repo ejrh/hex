@@ -3,6 +3,7 @@
 #include "hex/basics/point.h"
 #include "hex/basics/hexgrid.h"
 #include "hex/game/game.h"
+#include "hex/view/audio_renderer.h"
 #include "hex/view/level_window.h"
 #include "hex/view/view.h"
 
@@ -14,9 +15,9 @@
 #define SLOPE_WIDTH (TILE_WIDTH - X_SPACING)
 #define SLOPE_HEIGHT (Y_SPACING/2)
 
-LevelWindow::LevelWindow(int width, int height, GameView *view, LevelRenderer *level_renderer, Resources *resources):
+LevelWindow::LevelWindow(int width, int height, GameView *view, LevelRenderer *level_renderer, AudioRenderer *audio_renderer, Resources *resources):
         UiWindow(0, 0, width, height, WindowIsVisible|WindowIsActive|WindowWantsMouseEvents|WindowWantsKeyboardEvents),
-        view(view), level_renderer(level_renderer), terrain_only(false), resources(resources),
+        view(view), level_renderer(level_renderer), audio_renderer(audio_renderer), terrain_only(false), resources(resources),
         shift_x(SLOPE_WIDTH), shift_y(SLOPE_HEIGHT), x_spacing(X_SPACING), y_spacing(Y_SPACING),
         scroll_up(false), scroll_down(false), scroll_left(false), scroll_right(false) {
     shift(0, 0);
@@ -220,4 +221,6 @@ void LevelWindow::draw_ghost(Ghost *ghost) {
     stack_view->selected = false;
     level_renderer->draw_unit_stack(px + TILE_WIDTH / 2, py + Y_SPACING / 2, *stack_view);
     stack_view->selected = selected;
+
+    audio_renderer->render_unit_sound(*stack_view);
 }

@@ -2,6 +2,8 @@
 #define VIEW_DATA_H
 
 #include "hex/resources/image_ref.h"
+#include "hex/resources/sound_ref.h"
+#include "hex/audio/audio.h"
 
 
 class AnimationDef {
@@ -22,6 +24,14 @@ public:
 public:
     int bpm;   // How many frames of the animation are played in one minute
     ImageSeries images;
+};
+
+class SoundDef {
+public:
+    SoundDef() { }
+
+public:
+    SoundSeries sounds;
 };
 
 class FactionViewDef: public boost::enable_shared_from_this<FactionViewDef> {
@@ -72,6 +82,8 @@ public:
     std::vector<FeatureDef> features;
 };
 
+#define NUM_POSTURES 6
+
 class UnitViewDef: public boost::enable_shared_from_this<UnitViewDef> {
 public:
     typedef boost::shared_ptr<UnitViewDef> pointer;
@@ -93,6 +105,7 @@ public:
     std::vector<AnimationDef> die_animations;
     std::vector<AnimationDef> shadow_animations;
     int move_speed; // tiles per minute
+    std::array<SoundDef, NUM_POSTURES> sounds;
 };
 
 class StructureViewDef: public boost::enable_shared_from_this<StructureViewDef> {

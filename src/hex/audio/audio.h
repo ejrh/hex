@@ -3,6 +3,18 @@
 
 class Resources;
 struct MODULE;
+struct SAMPLE;
+
+class Sound {
+public:
+    Sound();
+    ~Sound();
+public:
+    SAMPLE *sample;
+};
+
+typedef std::map<std::string, Sound *> SoundMap;
+
 
 class Audio {
 public:
@@ -12,7 +24,9 @@ public:
     void start();
     void stop();
     void play(const std::string& filename);
+    void play_sound(Sound& sound);
     void update();
+    Sound *load_sound(const std::string& filename);
 
 private:
     void run_thread();

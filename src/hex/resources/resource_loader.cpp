@@ -119,6 +119,12 @@ void ResourceLoader::handle_message(boost::shared_ptr<Message> msg) {
             last_unit_view_def->shadow_animations[facing].images = upd->data3;
         } break;
 
+        case UnitSounds: {
+            boost::shared_ptr<UnitSoundsMessage> upd = boost::dynamic_pointer_cast<UnitSoundsMessage>(msg);
+            int posture = upd->data1;;
+            last_unit_view_def->sounds[posture].sounds = upd->data2;
+        } break;
+
         case CreateStructureView: {
             boost::shared_ptr<CreateStructureViewMessage> upd = boost::dynamic_pointer_cast<CreateStructureViewMessage>(msg);
             last_structure_view_def = resources->create_structure_view(upd->data);
@@ -135,6 +141,18 @@ void ResourceLoader::handle_message(boost::shared_ptr<Message> msg) {
         case LoadSong: {
             boost::shared_ptr<LoadSongMessage> upd = boost::dynamic_pointer_cast<LoadSongMessage>(msg);
             load_song(upd->data);
+        } break;
+
+        case SoundFile: {
+            if (sound_loader == NULL) {
+                if (!warned_sound_loader) {
+                    BOOST_LOG_TRIVIAL(error) << "Sound loader is not defined";
+                    warned_sound_loader = true;
+                }
+                return;
+            }
+            boost::shared_ptr<SoundFileMessage> upd = boost::dynamic_pointer_cast<SoundFileMessage>(msg);
+            load_sound(upd->data);
         } break;
 
         default: {
@@ -157,4 +175,12 @@ void ResourceLoader::load_song(const std::string& filename) {
     std::string relative_filename = path.string();
 
     resources->songs.insert(relative_filename);
+}
+
+void ResourceLoader::load_sound(const std::string& filename) {
+    boost::filesystem::path path = boost::filesystem::path(get_current_file()).parent_path();
+    path /= boost::filesystem::path(filename);
+    std::string relative_filename = path.string();
+
+    sound_loader->load(relative_filename);
 }
