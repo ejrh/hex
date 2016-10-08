@@ -12,7 +12,7 @@ find_package(Boost REQUIRED COMPONENTS system log thread program_options filesys
 
 find_package(Threads)
 
-set(gen_libs SDL2 SDL2_ttf SDL2_image SDL2main ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} mikmod)
+set(gen_libs SDL2 SDL2_ttf SDL2_image SDL2_mixer SDL2main ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 # Set general options
 if(MSVC)

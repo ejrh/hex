@@ -2,15 +2,19 @@
 #define AUDIO_H
 
 class Resources;
-struct MODULE;
-struct SAMPLE;
+
+// Can't define these if also including SDL_mixer.h
+#ifndef _SDL_MIXER_H
+struct Mix_Music;
+struct Mix_Chunk;
+#endif
 
 class Sound {
 public:
     Sound();
     ~Sound();
 public:
-    SAMPLE *sample;
+    Mix_Chunk *chunk;
 };
 
 typedef std::map<std::string, Sound *> SoundMap;
@@ -29,13 +33,10 @@ public:
     Sound *load_sound(const std::string& filename);
 
 private:
-    void run_thread();
-
-private:
     Resources *resources;
     boost::atomic<bool> started;
-    MODULE *module;
-    boost::thread audio_thread;
+    Mix_Music *song;
+    bool no_music, no_sound;
 };
 
 #endif

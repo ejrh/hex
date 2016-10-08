@@ -36,8 +36,8 @@ These are the packages required on Linux.  A similar set is required for Windows
   * libboost-log-dev
   * libsdl2-dev
   * libsdl2-image-dev
+  * libsdl2-mixer-dev
   * libsdl2-ttf-dev
-  * libmikmod2-dev
   * msttcorefonts
 
 [cotire github]: https://github.com/sakra/cotire

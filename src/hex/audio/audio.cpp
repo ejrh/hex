@@ -1,20 +1,23 @@
 #include "common.h"
 
+#include <SDL2/SDL_mixer.h>
+
+#define AUDIO_CPP
 #include "hex/audio/audio.h"
 #include "hex/basics/error.h"
 #include "hex/resources/resources.h"
 
 Sound::Sound():
-        sample(NULL) {
+        chunk(NULL) {
 }
 
 Sound::~Sound() {
-    if (sample) {
-        Sample_Free(sample);
+    if (chunk) {
+        Mix_FreeChunk(chunk);
     }
 }
 
-Audio::Audio(Resources *resources): resources(resources), started(false), module(NULL) {
+Audio::Audio(Resources *resources): resources(resources), started(false), song(NULL), no_music(false), no_sound(false) {
 }
 
 Audio::~Audio() {
@@ -25,71 +28,62 @@ void Audio::start() {
     if (started)
         return;
 
-    MikMod_RegisterAllDrivers();
-
-#ifdef _WIN32
-    // Tell DirectSound to use globalfocus so it plays in the background
-    int ds_id = MikMod_DriverFromAlias("ds");
-    if (ds_id != 0) {
-        MDRIVER *ds = MikMod_DriverByOrdinal(ds_id);
-        ds->CommandLine("globalfocus=1");
+    if (!(Mix_Init(MIX_INIT_MODPLUG) & MIX_INIT_MODPLUG)) {
+        BOOST_LOG_TRIVIAL(error) << "Couldn't initialise music player: " << Mix_GetError();
+        no_music = true;
     }
-#endif
-
-    MikMod_RegisterAllLoaders();
-    if (MikMod_Init((char *) "")) {
-        throw Error() << "Couldn't initialise sound: " << MikMod_strerror(MikMod_errno);
+    if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096) < 0) {
+        BOOST_LOG_TRIVIAL(error) << "Couldn't initialise audio: " << Mix_GetError();
+        no_sound = true;
+        no_music = true;
     }
-
-    BOOST_LOG_TRIVIAL(debug) << "MikMod drivers: " << MikMod_InfoDriver();
-
-    MikMod_SetNumVoices(-1, 2);
 
     started = true;
-    audio_thread = boost::thread(&Audio::run_thread, this);
 }
 
 void Audio::stop() {
     if (!started)
         return;
 
-    started = false;
-    audio_thread.join();
+    if (song != NULL) {
+        Mix_FreeMusic(song);
+        song = NULL;
+    }
 
-    Player_Stop();
-    if (module != NULL)
-        Player_Free(module);
-    MikMod_Exit();
+    Mix_CloseAudio();
 }
 
 void Audio::play(const std::string& filename) {
-    if (!started)
+    if (!started || no_music)
         return;
 
-    if (module != NULL) {
-        Player_Free(module);
+    if (song != NULL) {
+        Mix_FreeMusic(song);
     }
 
-    module = Player_Load((char *) filename.c_str(), 64, 0);
-    if (!module) {
-        BOOST_LOG_TRIVIAL(warning) << "Couldn't load song: " << MikMod_strerror(MikMod_errno);
+    song = Mix_LoadMUS(filename.c_str());
+    if (!song) {
+        BOOST_LOG_TRIVIAL(warning) << "Couldn't load song: " << Mix_GetError();
         return;
     }
 
-    module->loop = 0;
-    BOOST_LOG_TRIVIAL(debug) << "Playing: " << filename;
-    Player_Start(module);
+    if (Mix_PlayMusic(song, 0) < 0) {
+        BOOST_LOG_TRIVIAL(warning) << "Couldn't play music: " << Mix_GetError();
+    }
 }
 
 void Audio::play_sound(Sound& sound) {
-    Sample_Play(sound.sample, 0, 0);
+    if (!started || no_sound)
+        return;
+
+    Mix_PlayChannel(-1, sound.chunk, 0);
 }
 
 void Audio::update() {
     if (!started)
         return;
 
-    if (!Player_Active() && resources->songs.size() > 0) {
+    if (!Mix_PlayingMusic() && resources->songs.size() > 0) {
         std::set<std::string>::iterator song_iter = resources->songs.begin();
         std::advance(song_iter, rand() % resources->songs.size());
         play(*song_iter);
@@ -97,19 +91,13 @@ void Audio::update() {
 }
 
 Sound *Audio::load_sound(const std::string& filename) {
-    SAMPLE *sample = Sample_Load((char *) filename.c_str());
-    if (!sample) {
-        BOOST_LOG_TRIVIAL(warning) << "Couldn't load sound: " << MikMod_strerror(MikMod_errno);
+    Mix_Chunk *chunk = Mix_LoadWAV(filename.c_str());
+    if (!chunk) {
+        BOOST_LOG_TRIVIAL(warning) << "Couldn't load sound: " << Mix_GetError();
         return NULL;
     }
-    Sound *sound = new Sound();
-    sound->sample = sample;
-    return sound;
-}
 
-void Audio::run_thread() {
-    while (started) {
-        MikMod_Update();
-        SDL_Delay(20);
-    }
+    Sound *sound = new Sound();
+    sound->chunk = chunk;
+    return sound;
 }
