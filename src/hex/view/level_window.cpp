@@ -215,6 +215,9 @@ void LevelWindow::draw_ghost(Ghost *ghost) {
     tile_to_pixel(prev_pos, &px1, &py1);
     tile_to_pixel(next_pos, &px2, &py2);
 
+    if (px1 < -X_SPACING || py1 < -Y_SPACING || px2 > width+X_SPACING || py2 > width+Y_SPACING)
+        return;
+
     int px = (px1 * (1000 - ghost->progress) + px2 * ghost->progress) / 1000;
     int py = (py1 * (1000 - ghost->progress) + py2 * ghost->progress) / 1000;
     bool selected = stack_view->selected;
