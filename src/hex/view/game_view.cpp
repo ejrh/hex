@@ -37,7 +37,7 @@ void GameView::update() {
             level_view.tile_views[i][j].phase += frame_incr(view_def->animation.bpm, update_ms);
         }
 
-    for (IntMap<UnitStackView>::iterator iter = unit_stack_views.begin(); iter != unit_stack_views.end(); iter++) {
+    for (auto iter = unit_stack_views.begin(); iter != unit_stack_views.end(); iter++) {
         UnitStackView& stack_view = *iter->second;
         if (stack_view.moving)
             continue;
@@ -48,7 +48,7 @@ void GameView::update() {
     }
 
     level_view.ghost_visibility.clear();
-    std::vector<Ghost>::iterator iter = ghosts.begin();
+    auto iter = ghosts.begin();
     while (iter != ghosts.end()) {
         Ghost& ghost = *iter;
 
@@ -144,7 +144,7 @@ Path GameView::find_path(UnitStack& party, const Point& from_pos, const Point& t
 }
 
 void GameView::clear_drawn_path() {
-    for (std::vector<Point>::const_iterator iter = drawn_path.begin(); iter != drawn_path.end(); iter++) {
+    for (auto iter = drawn_path.begin(); iter != drawn_path.end(); iter++) {
         level_view.tile_views[*iter].path_dir = -1;
     }
 
@@ -153,7 +153,7 @@ void GameView::clear_drawn_path() {
 
 void GameView::set_drawn_path(const Point& start, const Path& path) {
     // Erase existing path
-    for (std::vector<Point>::const_iterator iter = drawn_path.begin(); iter != drawn_path.end(); iter++) {
+    for (auto iter = drawn_path.begin(); iter != drawn_path.end(); iter++) {
         level_view.tile_views[*iter].path_dir = -1;
     }
 
@@ -163,7 +163,7 @@ void GameView::set_drawn_path(const Point& start, const Path& path) {
 
     // Draw new path
     Point last = start;
-    for (std::vector<Point>::const_iterator iter = drawn_path.begin(); iter != drawn_path.end(); iter++) {
+    for (auto iter = drawn_path.begin(); iter != drawn_path.end(); iter++) {
         int arrow_num = get_direction(last, *iter);
         level_view.tile_views[*iter].path_dir = arrow_num;
         last = *iter;
@@ -173,7 +173,7 @@ void GameView::set_drawn_path(const Point& start, const Path& path) {
 
 void GameView::update_visibility() {
     level_view.visibility.clear();
-    for (IntMap<UnitStackView>::iterator iter = unit_stack_views.begin(); iter != unit_stack_views.end(); iter++) {
+    for (auto iter = unit_stack_views.begin(); iter != unit_stack_views.end(); iter++) {
         UnitStack::pointer stack = iter->second->stack;
         if (player->has_view(stack->owner) && !iter->second->moving) {
             level_view.discovered.draw(stack->position, stack->sight(), true);
@@ -236,7 +236,7 @@ void GameView::transfer_units(int stack_id, const IntSet selected_units, Path pa
 }
 
 void GameView::mark_ready() {
-    for (IntMap<FactionView>::const_iterator iter = faction_views.begin(); iter != faction_views.end(); iter++) {
+    for (auto iter = faction_views.begin(); iter != faction_views.end(); iter++) {
         int faction_id = iter->first;
         FactionView& faction_view = *iter->second;
         if (player->has_control(faction_view.faction)) {
@@ -266,7 +266,7 @@ void GameView::set_view_def(UnitStackView& stack_view) const {
 void GameView::fix_stack_views() {
     std::vector<int> to_delete;
 
-    for (IntMap<UnitStackView>::iterator iter = unit_stack_views.begin(); iter != unit_stack_views.end(); iter++) {
+    for (auto iter = unit_stack_views.begin(); iter != unit_stack_views.end(); iter++) {
         UnitStackView& view = *iter->second;
         if (game->stacks.find(view.stack->id) != view.stack) {
             to_delete.push_back(view.stack->id);
@@ -275,7 +275,7 @@ void GameView::fix_stack_views() {
         }
     }
 
-    for (std::vector<int>::iterator iter = to_delete.begin(); iter != to_delete.end(); iter++) {
+    for (auto iter = to_delete.begin(); iter != to_delete.end(); iter++) {
         unit_stack_views.remove(*iter);
     }
 }

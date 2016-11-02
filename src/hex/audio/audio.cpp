@@ -84,7 +84,7 @@ void Audio::update() {
         return;
 
     if (!Mix_PlayingMusic() && resources->songs.size() > 0) {
-        std::set<std::string>::iterator song_iter = resources->songs.begin();
+        auto song_iter = resources->songs.begin();
         std::advance(song_iter, rand() % resources->songs.size());
         play(*song_iter);
     }

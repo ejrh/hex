@@ -70,7 +70,7 @@ void Battle::run() {
 bool Battle::check_finished() {
     int attacking_health = 0;
     int defending_health = 0;
-    for (std::vector<Participant>::const_iterator iter = participants.begin(); iter != participants.end(); iter++) {
+    for (auto iter = participants.begin(); iter != participants.end(); iter++) {
         const Participant& participant = *iter;
         int health = participant.get_health();
         if (participant.side == Attacker)
@@ -93,7 +93,7 @@ bool Battle::check_finished() {
 
 void Battle::step() {
     BOOST_LOG_TRIVIAL(trace) << "Turn " << turn;
-    for (std::vector<Participant>::iterator iter = participants.begin(); iter != participants.end(); iter++) {
+    for (auto iter = participants.begin(); iter != participants.end(); iter++) {
         step_participant(*iter);
     }
     turn++;
@@ -114,9 +114,9 @@ void Battle::make_move(Participant& participant) {
     int best_target = -1;
     float best_value = 0;
     int num_considered = 0;
-    for (std::vector<Participant>::const_iterator iter = participants.begin(); iter != participants.end(); iter++) {
+    for (auto iter = participants.begin(); iter != participants.end(); iter++) {
         const Participant& target = *iter;
-        for (std::vector<const MoveType *>::const_iterator iter2 = move_types.begin(); iter2 != move_types.end(); iter2++) {
+        for (auto iter2 = move_types.begin(); iter2 != move_types.end(); iter2++) {
             const MoveType *type = *iter2;
             if (!type->is_viable(*this, participant, target))
                 continue;
@@ -171,7 +171,7 @@ void Battle::apply_move(const Move& move) {
 }
 
 void Battle::replay() {
-    for (std::vector<Move>::iterator iter = moves.begin(); iter != moves.end(); iter++) {
+    for (auto iter = moves.begin(); iter != moves.end(); iter++) {
         Move& move = *iter;
         replay_move(move);
     }
@@ -184,7 +184,7 @@ void Battle::replay_move(const Move& move) {
 void Battle::commit() {
     BOOST_LOG_TRIVIAL(trace) << "Committing battle results";
 
-    for (std::vector<Participant>::const_iterator iter = participants.begin(); iter != participants.end(); iter++) {
+    for (auto iter = participants.begin(); iter != participants.end(); iter++) {
         const Participant& participant = *iter;
 
         participant.stack->units[participant.unit_number]->type = participant.unit->type;
@@ -195,7 +195,7 @@ void Battle::commit() {
         if (stacks[dir]) {
             UnitStack& stack = *stacks[dir];
             BOOST_LOG_TRIVIAL(trace) << "Stack " << dir << ": " << stack.id;
-            std::vector<Unit::pointer>::iterator iter = stack.units.begin();
+            auto iter = stack.units.begin();
             while (iter != stack.units.end()) {
                 Unit& unit = **iter;
                 if (unit.get_property<int>(Health) <= 0) {

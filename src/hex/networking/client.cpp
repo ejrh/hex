@@ -50,7 +50,7 @@ void Client::receive_from_network(boost::shared_ptr<Message> msg) {
     last_received_id = msg->id;
 
     if (msg->type == StreamState) {
-        boost::shared_ptr<WrapperMessage2<int, int> > state = boost::dynamic_pointer_cast<WrapperMessage2<int, int> >(msg);
+        auto state = boost::dynamic_pointer_cast<StreamStateMessage>(msg);
         game_id = state->data1;
         last_received_id = state->data2;
         BOOST_LOG_TRIVIAL(debug) << "Received state for game " << game_id << " up to message " << last_received_id;
@@ -70,6 +70,6 @@ void Client::handle_connect(const boost::system::error_code& error, tcp::resolve
     }
 
     connection->start();
-    connection->send_message(boost::make_shared<WrapperMessage<std::string> >(StreamOpen, std::string("Hex Client 0.1")));
-    connection->send_message(boost::make_shared<WrapperMessage2<int, int> >(StreamReplay, game_id, last_received_id));
+    connection->send_message(create_message(StreamOpen, std::string("Hex Client 0.1")));
+    connection->send_message(create_message(StreamReplay, game_id, last_received_id));
 }

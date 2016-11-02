@@ -9,10 +9,10 @@
 
 static std::map<PropertyName, PropertyValue> get_all_properties(const Unit& unit) {
     std::map<PropertyName, PropertyValue> properties;
-    for (std::map<PropertyName, PropertyValue>::const_iterator iter = unit.properties.data.begin(); iter != unit.properties.data.end(); iter++) {
+    for (auto iter = unit.properties.data.begin(); iter != unit.properties.data.end(); iter++) {
         properties[iter->first] = iter->second;
     }
-    for (std::map<PropertyName, PropertyValue>::const_iterator iter = unit.type->properties.data.begin(); iter != unit.type->properties.data.end(); iter++) {
+    for (auto iter = unit.type->properties.data.begin(); iter != unit.type->properties.data.end(); iter++) {
         if (properties.find(iter->first) == properties.end())
             properties[iter->first] = iter->second;
     }
@@ -43,7 +43,7 @@ void UnitInfoWindow::draw(const UiContext& context) {
     int x_offset = x + 12;
     int y_offset = y + title_height + 12;
     std::map<PropertyName, PropertyValue> properties = get_all_properties(*current_unit);
-    for (std::map<PropertyName, PropertyValue>::const_iterator iter = properties.begin(); iter != properties.end(); iter++) {
+    for (auto iter = properties.begin(); iter != properties.end(); iter++) {
         std::ostringstream ss;
         ss << get_property_name_str(iter->first);
         ss << ": ";

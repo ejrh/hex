@@ -11,12 +11,12 @@
 void MessageLoader::receive(boost::shared_ptr<Message> msg) {
     switch (msg->type) {
         case IncludeResource: {
-            boost::shared_ptr<WrapperMessage<std::string> > upd = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(msg);
+            auto upd = boost::dynamic_pointer_cast<IncludeResourceMessage>(msg);
             include(upd->data);
         } break;
 
         case IncludeIfResourceExists: {
-            boost::shared_ptr<WrapperMessage<std::string> > upd = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(msg);
+            auto upd = boost::dynamic_pointer_cast<IncludeIfResourceExistsMessage>(msg);
             include(upd->data, true);
         } break;
 

@@ -32,14 +32,14 @@ public:
         }
 
         if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_PAGEDOWN) {
-            ImageMap::iterator iter = resources->images.find(current);
+            auto iter = resources->images.find(current);
             iter++;
             if (iter == resources->images.end()) {
                 iter = resources->images.begin();
             }
             current = iter->first;
         } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_PAGEUP) {
-            ImageMap::iterator iter = resources->images.find(current);
+            auto iter = resources->images.find(current);
             if (iter == resources->images.begin()) {
                 iter = resources->images.end();
             }

@@ -25,7 +25,7 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
 void GameArbiter::process_command(boost::shared_ptr<Message> command) {
     switch (command->type) {
         case UnitMove: {
-            boost::shared_ptr<UnitMoveMessage> cmd = boost::dynamic_pointer_cast<UnitMoveMessage>(command);
+            auto cmd = boost::dynamic_pointer_cast<UnitMoveMessage>(command);
             int stack_id = cmd->data1;
             IntSet units = cmd->data2;
             Path& path = cmd->data3;
@@ -96,7 +96,7 @@ void GameArbiter::process_command(boost::shared_ptr<Message> command) {
         } break;
 
         case FactionReady: {
-            boost::shared_ptr<FactionReadyMessage> cmd = boost::dynamic_pointer_cast<FactionReadyMessage>(command);
+            auto cmd = boost::dynamic_pointer_cast<FactionReadyMessage>(command);
             int faction_id = cmd->data1;
             bool ready = cmd->data2;
             if (game->mark_faction_ready(faction_id, ready)) {
@@ -114,7 +114,7 @@ void GameArbiter::process_command(boost::shared_ptr<Message> command) {
         } break;
 
         case Chat: {
-            boost::shared_ptr<WrapperMessage<std::string> > chat_msg = boost::dynamic_pointer_cast<WrapperMessage<std::string> >(command);
+            auto chat_msg = boost::dynamic_pointer_cast<ChatMessage>(command);
             emit(create_message(Chat, chat_msg->data));
         } break;
 
@@ -149,7 +149,7 @@ void GameArbiter::spawn_units() {
             int spawn_max = (rand() % 8) + 1;
             int spawn_count = 0;
             for (int k = 0; k < spawn_max; k++) {
-                for (StrMap<UnitType>::const_iterator iter = game->unit_types.begin(); iter != game->unit_types.end(); iter++) {
+                for (auto iter = game->unit_types.begin(); iter != game->unit_types.end(); iter++) {
                     const UnitType::pointer type = iter->second;
                     if (type->get_property<int>(SpawnGroup) != spawn_group)
                         continue;

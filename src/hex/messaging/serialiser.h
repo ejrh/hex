@@ -1,20 +1,13 @@
 #ifndef SERIALISER_H
 #define SERIALISER_H
 
-#include "hex/basics/error.h"
+#include "hex/basics/io.h"
 
 
-inline bool is_atom_char(int x) {
-    return std::isalnum(x) || x == '_';
-}
+bool is_atom_char(int x);
+bool needs_quoting(const std::string& str);
+int get_character_escape(int ch);
 
-inline bool needs_quoting(const std::string& str) {
-    for (std::string::const_iterator iter = str.begin(); iter != str.end(); iter++) {
-        if (!is_atom_char(*iter))
-            return true;
-    }
-    return false;
-}
 
 class Serialiser {
 public:
@@ -40,11 +33,7 @@ public:
     Serialiser& operator<<(const std::string& x) {
         if (need_seperator)
             out << ", ";
-        if (needs_quoting(x)) {
-            out << "\"" << x << "\"";
-        } else {
-            out << x;
-        }
+        write_atom(x);
         need_seperator = true;
         return *this;
     }
@@ -70,7 +59,7 @@ public:
     template<typename T>
     inline Serialiser& operator<<(const std::vector<T>& vector) {
         begin_vector(vector.size());
-        for (typename std::vector<T>::const_iterator iter = vector.begin(); iter != vector.end(); iter++) {
+        for (auto iter = vector.begin(); iter != vector.end(); iter++) {
             *this << *iter;
         }
         end_vector();
@@ -80,7 +69,7 @@ public:
     template<typename T>
     inline Serialiser& operator<<(const std::set<T>& set) {
         begin_map(set.size());
-        for (typename std::set<T>::const_iterator iter = set.begin(); iter != set.end(); iter++) {
+        for (auto iter = set.begin(); iter != set.end(); iter++) {
             *this << *iter;
         }
         end_map();
@@ -90,60 +79,22 @@ public:
     template<typename K, typename V>
     inline Serialiser& operator<<(const std::map<K, V>& map) {
         begin_map(map.size());
-        for (typename std::map<K, V>::const_iterator iter = map.begin(); iter != map.end(); iter++) {
+        for (auto iter = map.begin(); iter != map.end(); iter++) {
             *this << *iter;
         }
         end_map();
         return *this;
     }
 
-    void type_begin_tuple(const char *type) {
-        if (need_seperator)
-            out << ", ";
-        out << type << "(";
-        need_seperator = false;
-    }
-
-    void begin_vector(int size) {
-        if (need_seperator)
-            out << ", ";
-        out << "[";
-        need_seperator = false;
-    }
-
-    void end_vector() {
-        out << "]";
-        need_seperator = true;
-    }
-
-    void begin_map(int size) {
-        if (need_seperator)
-            out << ", ";
-        out << "{";
-        need_seperator = false;
-    }
-
-    void end_map() {
-        out << "}";
-        need_seperator = true;
-    }
-
-    void begin_tuple() {
-        if (need_seperator)
-            out << ", ";
-        out << "(";
-        need_seperator = false;
-    }
-
-    void end_tuple() {
-        out << ")";
-        need_seperator = true;
-    }
-
-    void end_record() {
-        out << "\n";
-        need_seperator = false;
-    }
+    void type_begin_tuple(const char *type);
+    void begin_vector(int size);
+    void end_vector();
+    void begin_map(int size);
+    void end_map();
+    void begin_tuple();
+    void end_tuple();
+    void end_record();
+    void write_atom(const std::string& atom);
 
 private:
     std::ostream &out;
@@ -167,29 +118,26 @@ inline default_value_return<int>::type default_value<int>() { return 1; }
 
 class Deserialiser {
 public:
-    Deserialiser(std::istream &in): in(in), expect_seperator(false) { }
+    Deserialiser(std::istream &in): in(in), pos_buf(in), expect_seperator(false) { }
     virtual ~Deserialiser() { }
 
     Deserialiser& operator>>(bool& x) {
-        if (expect_seperator)
-            skip_separator();
-        int ch = in.get();
+        skip_to_next();
+        int ch = get();
         x = (ch == 'y' || ch == 'Y' || ch == '1' || ch == 't' || ch == 'T');
         expect_seperator = true;
         return *this;
     }
 
     Deserialiser& operator>>(int& x) {
-        if (expect_seperator)
-            skip_separator();
+        skip_to_next();
         in >> x;
         expect_seperator = true;
         return *this;
     }
 
     Deserialiser& operator>>(std::string& x) {
-        if (expect_seperator)
-            skip_separator();
+        skip_to_next();
         read_atom(x);
         expect_seperator = true;
         return *this;
@@ -197,8 +145,7 @@ public:
 
     template<typename K, typename V>
     Deserialiser& operator>>(std::pair<K, V>& p) {
-        if (expect_seperator)
-            skip_separator();
+        skip_to_next();
         in >> p.first;
         skip_expected(':');
         in >> p.second;
@@ -211,9 +158,13 @@ public:
         int size;
         begin_vector(size);
         for (int i = 0; i < size; i++) {
-            T x;
-            if (in.peek() == ']')
+            skip_whitespace();
+            if (peek() == ']')
                 break;
+            skip_to_next();
+            if (peek() == ']')
+                break;
+            T x;
             *this >> x;
             vector.push_back(x);
         }
@@ -227,7 +178,7 @@ public:
         begin_map(size);
         for (int i = 0; i < size; i++) {
             T x;
-            if (in.peek() == '}')
+            if (peek() == '}')
                 break;
             *this >> x;
             set.insert(x);
@@ -243,10 +194,10 @@ public:
         for (int i = 0; i < size; i++) {
             K x;
             V y = default_value<V>();
-            if (in.peek() == '}')
+            if (peek() == '}')
                 break;
             *this >> x;
-            if (in.peek() == ':') {
+            if (peek() == ':') {
                 skip_separator(':');
                 *this >> y;
             }
@@ -256,125 +207,37 @@ public:
         return *this;
     }
 
-    void type_begin_tuple(std::string &type_name) {
-        if (expect_seperator)
-            skip_separator();
-        std::stringbuf sbuf;
-        in.get(sbuf, '(');
-        type_name.assign(sbuf.str());
-        skip_expected('(');
-        expect_seperator = false;
-    }
+    void type_begin_tuple(std::string &type_name);
+    void begin_vector(int &size);
+    void end_vector();
+    void begin_map(int &size);
+    void end_map();
+    void begin_tuple();
+    void end_tuple();
+    void end_record();
+    void skip_to_next();
+    void skip_expected(int ch);
+    void skip_separator();
+    void skip_separator(int ch);
+    void skip_whitespace();
+    void read_atom(std::string& atom);
 
-    void begin_vector(int &size) {
-        size = INT_MAX;
-        if (expect_seperator)
-            skip_separator();
-        skip_expected('[');
-        expect_seperator = false;
-    }
-
-    void end_vector() {
-        skip_expected(']');
-        expect_seperator = true;
-    }
-
-    void begin_map(int &size) {
-        size = INT_MAX;
-        if (expect_seperator)
-            skip_separator();
-        skip_expected('{');
-        expect_seperator = false;
-    }
-
-    void end_map() {
-        skip_expected('}');
-        expect_seperator = true;
-    }
-
-    void begin_tuple() {
-        if (expect_seperator)
-            skip_separator();
-        skip_expected('(');
-        expect_seperator = false;
-    }
-
-    void end_tuple() {
-        skip_expected(')');
-        expect_seperator = true;
-    }
-
-    void end_record() {
-        if (peek() == '\r')
-            skip_expected('\r');
-        skip_expected('\n');
-        expect_seperator = false;
-    }
-
-    void skip_expected(int ch) {
-        int x = in.get();
-        if (x == std::char_traits<char>::eof()) {
-            throw Error() << " " << boost::format("Expected character: '%c' (%x) but got EOF") % (char) ch % ch;
-        }
-        if (x != ch) {
-            throw Error() << boost::format("Expected character: '%c' (%x) but got: '%c' (%x)") % (char) ch % ch % (char) x % x;
-        }
-    }
-
-    void skip_separator() {
-        skip_expected(',');
-        while (peek() == ' ')
-            skip_expected(' ');
-        expect_seperator = false;
-    }
-
-    void skip_separator(int ch) {
-        skip_expected(ch);
-        while (peek() == ' ')
-            skip_expected(' ');
-        expect_seperator = false;
-    }
-
-    void read_atom(std::string& atom) {
-        if (in.peek() == '"') {
-            in.get();
-            for (;;) {
-                int x = in.get();
-                if (x == '"')
-                    break;
-                if (x == '\\') {
-                    x = in.get();
-                    if (x == 'n')
-                        x = '\n';
-                }
-                atom.push_back(x);
-            }
-            was_quoted = true;
-        } else {
-            for (;;) {
-                int x = in.peek();
-                if (!is_atom_char(x))
-                    break;
-                atom.push_back(in.get());
-            }
-            was_quoted = false;
-        }
+    int get() {
+        return in.get();
     }
 
     int peek() {
         return in.peek();
     }
 
-    void error(const char *fmt, ...) {
-        va_list args;
-        va_start(args, fmt);
+    void error(const char *fmt, ...);
 
-        char buffer[2048];
-        vsnprintf(buffer, sizeof(buffer), fmt, args);
+    int line() {
+        return pos_buf.line();
+    }
 
-        va_end(args);
-
-        BOOST_LOG_TRIVIAL(warning) << buffer;
+    int column() {
+        return pos_buf.column();
     }
 
 public:
@@ -382,6 +245,7 @@ public:
 
 private:
     std::istream &in;
+    PositionStreambuf pos_buf;
     bool expect_seperator;
 };
 

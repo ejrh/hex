@@ -12,7 +12,7 @@ UnitStack::pointer UnitStack::copy_subset(const IntSet unit_selection) const {
 }
 
 void UnitStack::transfer_units(const IntSet unit_selection, UnitStack& target_stack) {
-    std::vector<Unit::pointer>::iterator iter = units.begin();
+    auto iter = units.begin();
     int i = 0;
     while (iter != units.end()) {
         if (unit_selection.contains(i)) {

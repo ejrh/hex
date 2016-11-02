@@ -92,7 +92,7 @@ public:
         } else if (pathfinder.state == FINISHED) {
             Path new_path;
             pathfinder.build_path(new_path);
-            for (Path::const_iterator iter = new_path.begin(); iter != new_path.end(); iter++) {
+            for (auto iter = new_path.begin(); iter != new_path.end(); iter++) {
                 level_view.tile_views[iter->y][iter->x].phase = 1;
             }
         }

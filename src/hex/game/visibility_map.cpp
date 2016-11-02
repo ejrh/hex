@@ -37,7 +37,7 @@ void VisibilityMap::rebuild() {
             apply(*stack, true);
         }
 
-    //for (std::vector<UnitStack::pointer>::iterator iter = unit_stacks.begin(); iter != unit_stacks.end(); iter++) {
+    //for (auto iter = unit_stacks.begin(); iter != unit_stacks.end(); iter++) {
     //}
 }
 
@@ -52,7 +52,7 @@ void VisibilityMap::update() {
             apply(*stack, true);
         }
 
-    //for (std::vector<UnitStack::pointer>::iterator iter = unit_stacks.begin(); iter != unit_stacks.end(); iter++) {
+    //for (auto iter = unit_stacks.begin(); iter != unit_stacks.end(); iter++) {
     //}
 }
 

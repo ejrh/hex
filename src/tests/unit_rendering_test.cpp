@@ -43,7 +43,7 @@ public:
 
         if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_PAGEDOWN) {
             std::map<std::string,UnitViewDef::pointer>& map = resources->unit_view_defs;
-            std::map<std::string,UnitViewDef::pointer>::iterator iter = map.find(view_def->name);
+            auto iter = map.find(view_def->name);
             iter++;
             if (iter == map.end()) {
                 iter = map.begin();
@@ -51,7 +51,7 @@ public:
             view_def = iter->second;
         } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_PAGEUP) {
             std::map<std::string,UnitViewDef::pointer>& map = resources->unit_view_defs;
-            std::map<std::string,UnitViewDef::pointer>::iterator iter = map.find(view_def->name);
+            auto iter = map.find(view_def->name);
             if (iter == map.begin()) {
                 iter = map.end();
             }

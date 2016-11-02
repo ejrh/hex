@@ -10,7 +10,7 @@ public:
 
     IntSet(const std::set<int>& s) {
         val = 0;
-        for (std::set<int>::iterator iter = s.begin(); iter != s.end(); iter++) {
+        for (auto iter = s.begin(); iter != s.end(); iter++) {
             unsigned int x = *iter;
             if (x >= bitsize)
                 break;

@@ -23,7 +23,7 @@ bool UiWindow::contains(int px, int py) {
 }
 
 UiWindow *UiWindow::find_child(int px, int py) {
-    for (std::vector<UiWindow::pointer>::reverse_iterator iter = children.rbegin(); iter != children.rend(); iter++) {
+    for (auto iter = children.rbegin(); iter != children.rend(); iter++) {
         if ((*iter)->contains(px, py)) {
             return iter->get();
         }
@@ -37,7 +37,7 @@ void UiWindow::add_child(UiWindow *child) {
 }
 
 void UiWindow::remove_child(UiWindow *child) {
-    for (std::vector<UiWindow::pointer>::iterator iter = children.begin(); iter != children.end(); iter++) {
+    for (auto iter = children.begin(); iter != children.end(); iter++) {
         if (iter->get() == child) {
             children.erase(iter);
             return;

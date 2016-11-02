@@ -45,7 +45,7 @@ bool ChatWindow::keypress(SDL_Keycode key) {
     if (open) {
         if (key == SDLK_RETURN) {
             if (chat_line.size() > 0) {
-                dispatcher->receive(boost::make_shared<WrapperMessage<std::string> >(Chat, chat_line));
+                dispatcher->receive(create_message(Chat, chat_line));
                 chat_line.clear();
             }
             open = false;

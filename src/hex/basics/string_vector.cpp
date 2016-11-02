@@ -7,7 +7,7 @@ void compress_string_vector(const std::vector<std::string>& input, std::vector<s
 
     for (unsigned int i = 0; i < input.size(); i++) {
         const std::string& input_str = input[i];
-        std::map<std::string, std::string>::const_iterator found = dictionary.find(input_str);
+        auto found = dictionary.find(input_str);
         if (found != dictionary.end()) {
             const std::string& mapped_str = found->second;
             output.push_back(mapped_str);
@@ -27,7 +27,7 @@ void decompress_string_vector(const std::vector<std::string>& input, std::vector
 
     for (unsigned int i = 0; i < input.size(); i++) {
         const std::string& input_str = input[i];
-        std::map<std::string, std::string>::const_iterator found = dictionary.find(input_str);
+        auto found = dictionary.find(input_str);
         if (found != dictionary.end()) {
             const std::string& mapped_str = found->second;
             output.push_back(mapped_str);

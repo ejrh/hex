@@ -26,7 +26,7 @@ void AiUpdater::receive(boost::shared_ptr<Message> update) {
 void AiUpdater::apply_update(boost::shared_ptr<Message> update) {
     switch (update->type) {
         case CreateFaction: {
-            boost::shared_ptr<CreateFactionMessage> upd = boost::dynamic_pointer_cast<CreateFactionMessage>(update);
+            auto upd = boost::dynamic_pointer_cast<CreateFactionMessage>(update);
             if (upd->data2 == ai->faction_type) {
                 ai->faction = ai->game.factions.get(upd->data1);
             }

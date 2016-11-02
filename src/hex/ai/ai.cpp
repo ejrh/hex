@@ -57,7 +57,7 @@ void Ai::update() {
         return;
     last_update = ticks;
 
-    for (IntMap<UnitStack>::iterator iter = game.stacks.begin(); iter != game.stacks.end(); iter++) {
+    for (auto iter = game.stacks.begin(); iter != game.stacks.end(); iter++) {
         UnitStack& stack = *iter->second;
         if (stack.owner == faction) {
             update_unit_stack(stack);
@@ -109,7 +109,7 @@ void Ai::update_unit_stack(UnitStack& stack) {
 UnitStack::pointer Ai::get_nearest_enemy(UnitStack& stack) {
     std::vector<UnitStack::pointer> stacks;
     game.get_nearby_stacks(stack.position, stack.sight(), stacks);
-    for (std::vector<UnitStack::pointer>::iterator iter = stacks.begin(); iter != stacks.end(); iter++) {
+    for (auto iter = stacks.begin(); iter != stacks.end(); iter++) {
         if ((*iter)->owner != stack.owner)
             return *iter;
     }

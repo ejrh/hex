@@ -36,12 +36,12 @@ typedef std::vector<Point> Path;
 inline std::ostream& operator<<(std::ostream& os, const std::vector<Point> &path) {
     os << "[";
     bool first = true;
-    for (std::vector<Point>::const_iterator i = path.begin(); i != path.end(); i++) {
+    for (auto iter = path.begin(); iter != path.end(); iter++) {
         if (!first)
             os << ", ";
         else
             first = false;
-        os << *i;
+        os << *iter;
     }
     return os << "]";
 }

@@ -47,7 +47,7 @@ void Generator::create_level(MessageReceiver& updater) {
     LevelGenerator level_generator(this, game);
     level_generator.generate_level(width, height);
 
-    updater.receive(boost::make_shared<WrapperMessage2<int, int> >(SetLevel, game->level.width, game->level.height));
+    updater.receive(create_message(SetLevel, game->level.width, game->level.height));
     for (int i = 0; i < game->level.height; i++) {
         Point origin(0, i);
         CompressableStringVector data;
@@ -56,7 +56,7 @@ void Generator::create_level(MessageReceiver& updater) {
             TileType::pointer tile_type = tile.type;
             data.push_back(tile.type->name);
         }
-        updater.receive(boost::make_shared<SetLevelDataMessage>(SetLevelData, origin, data));
+        updater.receive(create_message(SetLevelData, origin, data));
     }
 }
 
@@ -70,7 +70,7 @@ void Generator::create_factions(MessageReceiver& updater) {
 void Generator::create_unit_stacks(MessageReceiver& updater) {
     BOOST_LOG_TRIVIAL(info) << "Creating unit stacks";
     for (int i = 1; i <= 50; i++) {
-        IntMap<Faction>::iterator faction_iter = game->factions.begin();
+        auto faction_iter = game->factions.begin();
         std::advance(faction_iter, rand() % game->factions.size());
         int faction = faction_iter->second->id;
         if (faction == 1)
@@ -137,7 +137,7 @@ void Generator::create_towers(MessageReceiver& updater) {
                     water_count++;
             }
             if (water_count >= 3 && rand() % 4 == 0) {
-                IntMap<Faction>::iterator faction_iter = game->factions.begin();
+                auto faction_iter = game->factions.begin();
                 std::advance(faction_iter, rand() % game->factions.size());
                 int faction = faction_iter->second->id;
 

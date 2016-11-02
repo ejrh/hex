@@ -60,10 +60,10 @@ void TilePainter::paint_transitions(const Point& tile_pos) {
     if (!view_def)
         return;
 
-    for (std::vector<TransitionDef>::iterator iter = view_def->transitions.begin(); iter != view_def->transitions.end(); iter++) {
+    for (auto iter = view_def->transitions.begin(); iter != view_def->transitions.end(); iter++) {
         TransitionDef& def = *iter;
         bool match = true;
-        for (std::set<int>::iterator dir_iter = def.dirs.begin(); dir_iter != def.dirs.end(); dir_iter++) {
+        for (auto dir_iter = def.dirs.begin(); dir_iter != def.dirs.end(); dir_iter++) {
             Point neighbour_pos;
             get_neighbour(tile_pos, *dir_iter, &neighbour_pos);
             if (!game->level.contains(neighbour_pos)) {
@@ -122,7 +122,7 @@ void TilePainter::paint_features(const Point& tile_pos) {
     if (!view_def)
         return;
 
-    for (std::vector<FeatureDef>::iterator iter = view_def->features.begin(); iter != view_def->features.end(); iter++) {
+    for (auto iter = view_def->features.begin(); iter != view_def->features.end(); iter++) {
         tile_view.feature = choose_image(iter->images, tile_view.variation);
         tile_view.feature_x = iter->centre_x;
         tile_view.feature_y = iter->centre_y;

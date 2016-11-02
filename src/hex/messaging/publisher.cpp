@@ -25,12 +25,12 @@ void Publisher::subscribe(MessageReceiver *subscriber) {
 }
 
 void Publisher::unsubscribe(MessageReceiver *subscriber) {
-    std::vector<MessageReceiver *>::iterator iter = std::find(subscribers.begin(), subscribers.end(), subscriber);
+    auto iter = std::find(subscribers.begin(), subscribers.end(), subscriber);
     subscribers.erase(iter);
 }
 
 void Publisher::send_update_to_subscribers(boost::shared_ptr<Message> update) {
-    for (std::vector<MessageReceiver *>::iterator iter = subscribers.begin(); iter != subscribers.end(); iter++) {
+    for (auto iter = subscribers.begin(); iter != subscribers.end(); iter++) {
         MessageReceiver *subscriber = *iter;
         subscriber->receive(update);
     }

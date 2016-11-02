@@ -40,7 +40,7 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
 void LevelRenderer::render_tile_transitions(int x, int y, Point tile_pos) {
     TileView& tile_view = view->level_view.tile_views[tile_pos];
 
-    for (std::vector<Image *>::iterator iter = tile_view.transitions.begin(); iter != tile_view.transitions.end(); iter++) {
+    for (auto iter = tile_view.transitions.begin(); iter != tile_view.transitions.end(); iter++) {
         Image *trans = *iter;
         if (trans != NULL) {
             int trans_x = x - trans->width / 2;
@@ -59,7 +59,7 @@ void LevelRenderer::render_features(int x, int y, Point tile_pos) {
         graphics->blit(tile_view.feature, feature_x, feature_y, SDL_BLENDMODE_BLEND);
     }
 
-    for (std::vector<Image *>::iterator iter = tile_view.roads.begin(); iter != tile_view.roads.end(); iter++) {
+    for (auto iter = tile_view.roads.begin(); iter != tile_view.roads.end(); iter++) {
         Image *road = *iter;
         if (road != NULL) {
             graphics->blit(road, x - road->width / 2, y - road->height / 2, SDL_BLENDMODE_BLEND);

@@ -19,25 +19,25 @@ void GameWriter::write(Game *game) {
 }
 
 void GameWriter::write_unit_types(Game *game) {
-    for (StrMap<UnitType>::iterator iter = game->unit_types.begin(); iter != game->unit_types.end(); iter++) {
+    for (auto iter = game->unit_types.begin(); iter != game->unit_types.end(); iter++) {
         emit(create_message(CreateUnitType, *iter->second));
     }
 }
 
 void GameWriter::write_tile_types(Game *game) {
-    for (StrMap<TileType>::iterator iter = game->tile_types.begin(); iter != game->tile_types.end(); iter++) {
+    for (auto iter = game->tile_types.begin(); iter != game->tile_types.end(); iter++) {
         emit(create_message(CreateTileType, *iter->second));
     }
 }
 
 void GameWriter::write_structure_types(Game *game) {
-    for (StrMap<StructureType>::iterator iter = game->structure_types.begin(); iter != game->structure_types.end(); iter++) {
+    for (auto iter = game->structure_types.begin(); iter != game->structure_types.end(); iter++) {
         emit(create_message(CreateStructureType, *iter->second));
     }
 }
 
 void GameWriter::write_factions(Game *game) {
-    for (IntMap<Faction>::iterator iter = game->factions.begin(); iter != game->factions.end(); iter++) {
+    for (auto iter = game->factions.begin(); iter != game->factions.end(); iter++) {
         Faction& faction = *iter->second;
         emit(create_message(CreateFaction, faction.id, faction.type_name, faction.name));
     }
@@ -56,10 +56,10 @@ void GameWriter::write_levels(Game *game) {
 }
 
 void GameWriter::write_unit_stacks(Game *game) {
-    for (IntMap<UnitStack>::iterator iter = game->stacks.begin(); iter != game->stacks.end(); iter++) {
+    for (auto iter = game->stacks.begin(); iter != game->stacks.end(); iter++) {
         UnitStack& stack = *iter->second;
         emit(create_message(CreateStack, stack.id, stack.position, stack.owner->id));
-        for (std::vector<Unit::pointer>::iterator unit_iter = stack.units.begin(); unit_iter != stack.units.end(); unit_iter++) {
+        for (auto unit_iter = stack.units.begin(); unit_iter != stack.units.end(); unit_iter++) {
             Unit& unit = **unit_iter;
             emit(create_message(CreateUnit, stack.id, unit.type->name));
         }

@@ -37,7 +37,7 @@ public:
 
     template<typename T>
     const T& get(const PropertyName& name) const {
-        std::map<PropertyName, PropertyValue>::const_iterator iter = data.find(name);
+        auto iter = data.find(name);
         if (iter != data.end()) {
             return boost::get<const T>(iter->second.value);
         }

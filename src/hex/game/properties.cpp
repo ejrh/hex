@@ -18,7 +18,7 @@ public:
 PropertyMap property_map;
 
 PropertyName get_property_name(const std::string& name) {
-    std::map<std::string, PropertyName>::iterator iter = property_map.data.find(name);
+    auto iter = property_map.data.find(name);
     if (iter != property_map.data.end())
         return iter->second;
     BOOST_LOG_TRIVIAL(warning) << boost::format("Unknown property name: %s") % name;
@@ -39,7 +39,7 @@ const std::string get_property_name_str(const PropertyName property_name) {
 std::ostream& operator<<(std::ostream& os, const Properties& p) {
     os << "{";
     bool first = true;
-    for (std::map<PropertyName, PropertyValue>::const_iterator iter = p.data.begin(); iter != p.data.end(); iter++) {
+    for (auto iter = p.data.begin(); iter != p.data.end(); iter++) {
         if (!first)
             os << ", ";
         else

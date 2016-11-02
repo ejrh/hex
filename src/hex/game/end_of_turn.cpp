@@ -5,9 +5,9 @@
 
 
 void EndOfTurn::apply() {
-    for (IntMap<UnitStack>::iterator iter = game->stacks.begin(); iter != game->stacks.end(); iter++) {
+    for (auto iter = game->stacks.begin(); iter != game->stacks.end(); iter++) {
         UnitStack::pointer stack = iter->second;
-        for (std::vector<Unit::pointer>::iterator unit_iter = stack->units.begin(); unit_iter != stack->units.end(); unit_iter++) {
+        for (auto unit_iter = stack->units.begin(); unit_iter != stack->units.end(); unit_iter++) {
             Unit& unit = **unit_iter;
             restore_moves(unit);
             restore_health(unit);

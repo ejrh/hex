@@ -9,6 +9,7 @@ set(srcs
         basics/hexgrid.cpp
         basics/hexgrid.h
         basics/intset.h
+        basics/io.h
         basics/noise.cpp
         basics/noise.h
         basics/objmap.h
@@ -76,6 +77,7 @@ set(srcs
         messaging/queue.h
         messaging/receiver.cpp
         messaging/receiver.h
+        messaging/serialiser.cpp
         messaging/serialiser.h
         messaging/writer.h
         networking/client.cpp

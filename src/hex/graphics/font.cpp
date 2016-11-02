@@ -17,7 +17,7 @@ FontCache::FontCache() {
 }
 
 FontCache::~FontCache() {
-    for (std::map<FontId, TTF_Font *>::iterator iter = cache.begin(); iter != cache.end(); iter++) {
+    for (auto iter = cache.begin(); iter != cache.end(); iter++) {
         TTF_CloseFont(iter->second);
     }
 
@@ -122,7 +122,7 @@ Image *TextFormat::write_to_image(Graphics *graphics, const std::string& text) {
 void TextCache::write_text(const std::string& text, int x, int y) {
     Image *image = NULL;
 
-    std::map<std::string, Image *>::iterator iter = cache.find(text);
+    auto iter = cache.find(text);
     if (iter != cache.end()) {
         image = iter->second;
     } else {

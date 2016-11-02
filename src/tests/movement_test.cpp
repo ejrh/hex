@@ -97,8 +97,8 @@ struct Fixture {
     }
 
     void check_received(boost::shared_ptr<Message> msg) {
-        const std::vector<boost::shared_ptr<Message> >& msgs = collector.get_queue();
-        for (std::vector<boost::shared_ptr<Message> >::const_iterator iter = msgs.begin(); iter != msgs.end(); iter++) {
+        const auto& msgs = collector.get_queue();
+        for (auto iter = msgs.begin(); iter != msgs.end(); iter++) {
             msg->id = (*iter)->id;
             msg->origin = (*iter)->origin;
             if (equal(msg, *iter))

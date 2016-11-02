@@ -27,6 +27,11 @@ target_link_libraries(image_test hex)
 target_link_libraries(image_test ${gen_libs})
 target_compile_options(image_test PUBLIC ${gen_opts})
 
+add_executable(messaging_test messaging_test.cpp)
+target_link_libraries(messaging_test hex)
+target_link_libraries(messaging_test ${gen_libs})
+target_compile_options(messaging_test PUBLIC ${gen_opts})
+
 add_executable(movement_test movement_test.cpp)
 target_link_libraries(movement_test hex)
 target_link_libraries(movement_test ${gen_libs})

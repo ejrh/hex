@@ -54,7 +54,7 @@ BattleView::BattleView(Battle *battle, int width, int height, Resources *resourc
             bsv.participants[i] = -1;
     }
 
-    for (std::vector<Participant>::iterator iter = battle->participants.begin(); iter != battle->participants.end(); iter++) {
+    for (auto iter = battle->participants.begin(); iter != battle->participants.end(); iter++) {
         Participant& p = *iter;
         ParticipantView pv(&p);
         pv.view_def = resources->get_unit_view_def(p.unit->type->name);
@@ -75,7 +75,7 @@ void BattleView::update() {
     unsigned int update_ms = ticks - last_update;
     last_update = ticks;
 
-    for (std::vector<ParticipantView>::iterator iter = participant_views.begin(); iter != participant_views.end(); iter++) {
+    for (auto iter = participant_views.begin(); iter != participant_views.end(); iter++) {
         iter->update(update_ms);
     }
 

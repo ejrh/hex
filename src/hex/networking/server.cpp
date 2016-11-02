@@ -35,7 +35,7 @@ void Server::broadcast(boost::shared_ptr<Message> msg) {
     }
 
     message_backlog[msg->id] = msg;
-    for (std::map<int, Connection::pointer>::iterator iter = connections.begin(); iter != connections.end(); iter++) {
+    for (auto iter = connections.begin(); iter != connections.end(); iter++) {
         iter->second->send_message(msg);
     }
     last_message_id = msg->id;
@@ -49,7 +49,7 @@ void Server::receive_from_network(boost::shared_ptr<Message> msg) {
     Connection::pointer source_connection = connections[msg->origin];
 
     if (msg->type == StreamReplay) {
-        boost::shared_ptr<WrapperMessage2<int, int> > replay = boost::dynamic_pointer_cast<WrapperMessage2<int, int> >(msg);
+        auto replay = boost::dynamic_pointer_cast<StreamReplayMessage>(msg);
         int client_game_id = replay->data1;
         int msg_id = replay->data1;
         bool full_state = false;
@@ -74,14 +74,14 @@ void Server::receive_from_network(boost::shared_ptr<Message> msg) {
             //TODO
         } else {
             BOOST_LOG_TRIVIAL(debug) << "Replaying up to " << message_backlog.size() << " messages";
-            for (std::map<int, boost::shared_ptr<Message> >::iterator iter = message_backlog.begin(); iter != message_backlog.end(); iter++) {
+            for (auto iter = message_backlog.begin(); iter != message_backlog.end(); iter++) {
                 if (iter->first > msg_id) {
                     source_connection->send_message(iter->second);
                 }
             }
         }
 
-        source_connection->send_message(boost::make_shared<WrapperMessage2<int, int> >(StreamState, game_id, last_message_id));
+        source_connection->send_message(create_message(StreamState, game_id, last_message_id));
     }
 
     receiver->receive(msg);
@@ -105,7 +105,7 @@ void Server::start_accept() {
 void Server::handle_accept(Connection::pointer new_connection, const boost::system::error_code& error) {
     if (!error) {
         new_connection->start();
-        new_connection->send_message(boost::make_shared<WrapperMessage<std::string> >(StreamOpen, std::string("Hex Server 0.1")));
+        new_connection->send_message(create_message(StreamOpen, std::string("Hex Server 0.1")));
         new_connection->id = next_connection_id++;
         connections[new_connection->id] = new_connection;
     }

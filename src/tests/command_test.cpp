@@ -20,10 +20,7 @@ public:
 
     virtual void receive(boost::shared_ptr<Message> update) {
         writer << update.get();
-        std::ostringstream buf;
-        Serialiser writer2(buf);
-        writer2 << update.get();
-        BOOST_LOG_TRIVIAL(info) << "Recorded: " << buf.str();
+        writer.end_record();
     }
 
 private:
@@ -95,6 +92,7 @@ int main(int argc, char *argv[]) {
             reader >> update_ptr;
             if (update_ptr == NULL)
                 break;
+            reader.end_record();
             boost::shared_ptr<Message> update(update_ptr);
             updater.receive(update);
             if (update->type == StreamClose)

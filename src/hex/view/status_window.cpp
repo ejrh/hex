@@ -12,7 +12,7 @@ StatusWindow::StatusWindow(int x, int y, int width, int height, Resources *resou
 
 void StatusWindow::draw_faction_readiness() {
     int x_offset = x + width - 100;
-    for (IntMap<FactionView>::const_iterator iter = view->faction_views.begin(); iter != view->faction_views.end(); iter++) {
+    for (auto iter = view->faction_views.begin(); iter != view->faction_views.end(); iter++) {
         Faction::pointer faction = iter->second->faction;
         FactionViewDef::pointer view_def = iter->second->view_def;
         graphics->fill_rectangle(view_def->r, view_def->g, view_def->b, x_offset, y+2, 8, height-4);

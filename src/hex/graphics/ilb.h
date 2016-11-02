@@ -84,7 +84,7 @@ class ILBReader: protected Reader {
 public:
     ILBReader(std::istream &file, Graphics *graphics): Reader(file), graphics(graphics) { };
     virtual ~ILBReader() {
-        for (std::vector<SDL_Palette *>::iterator i = palettes.begin(); i != palettes.end(); i++) {
+        for (auto i = palettes.begin(); i != palettes.end(); i++) {
             SDL_FreePalette(*i);
         }
     }

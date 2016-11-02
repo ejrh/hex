@@ -48,7 +48,7 @@ bool UiLoop::deliver_event(UiWindow& window, SDL_Event *event, int offset_x, int
 }
 
 bool UiLoop::deliver_event_to_children(UiWindow& window, SDL_Event *event, int offset_x, int offset_y) {
-    for (std::vector<UiWindow::pointer>::iterator iter = window.children.begin(); iter != window.children.end(); iter++) {
+    for (auto iter = window.children.begin(); iter != window.children.end(); iter++) {
         bool consumed = deliver_event(**iter, event, offset_x, offset_y);
         if (consumed)
             return true;
@@ -64,7 +64,7 @@ void UiLoop::draw_window(UiWindow& window, const UiContext& context) {
 }
 
 void UiLoop::draw_children(UiWindow& window, const UiContext& context) {
-    for (std::vector<UiWindow::pointer>::iterator iter = window.children.begin(); iter != window.children.end(); iter++) {
+    for (auto iter = window.children.begin(); iter != window.children.end(); iter++) {
         UiWindow& child = **iter;
         UiContext new_context = context.get_subcontext(child.x, child.y, child.width, child.height);
         draw_window(child, new_context);

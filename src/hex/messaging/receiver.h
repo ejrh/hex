@@ -10,5 +10,6 @@ public:
 };
 
 extern void replay_messages(const std::string& filename, MessageReceiver& receiver);
+extern void replay_messages(std::istream& input, MessageReceiver& receiver, const std::string& input_name);
 
 #endif

@@ -33,13 +33,13 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         } break;
 
         case SetLevel: {
-            boost::shared_ptr<WrapperMessage2<int, int> > upd = boost::dynamic_pointer_cast<WrapperMessage2<int, int> >(update);
+            auto upd = boost::dynamic_pointer_cast<SetLevelMessage>(update);
             game_view->level_view.level = &game->level;
             game_view->level_view.resize(upd->data1, upd->data2);
         } break;
 
         case SetLevelData: {
-            boost::shared_ptr<SetLevelDataMessage> upd = boost::dynamic_pointer_cast<SetLevelDataMessage>(update);
+            auto upd = boost::dynamic_pointer_cast<SetLevelDataMessage>(update);
             Point offset = upd->data1;
             int len = upd->data2.size();
             TilePainter painter(game, game_view, resources);
@@ -47,14 +47,14 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         } break;
 
         case CreateFaction: {
-            boost::shared_ptr<CreateFactionMessage> upd = boost::dynamic_pointer_cast<CreateFactionMessage>(update);
+            auto upd = boost::dynamic_pointer_cast<CreateFactionMessage>(update);
             Faction::pointer faction = game->factions.get(upd->data1);
             FactionViewDef::pointer view_def = resources->get_faction_view_def(upd->data2);
             game_view->faction_views.put(upd->data1, boost::make_shared<FactionView>(faction, view_def));
         } break;
 
         case CreateStack: {
-            boost::shared_ptr<CreateStackMessage> upd = boost::dynamic_pointer_cast<CreateStackMessage>(update);
+            auto upd = boost::dynamic_pointer_cast<CreateStackMessage>(update);
             UnitStack::pointer stack = game->stacks.get(upd->data1);
             UnitStackView::pointer stack_view = boost::make_shared<UnitStackView>(stack);
             game_view->set_view_def(*stack_view);
@@ -62,7 +62,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         } break;
 
         case CreateUnit: {
-            boost::shared_ptr<CreateUnitMessage> upd = boost::dynamic_pointer_cast<CreateUnitMessage>(update);
+            auto upd = boost::dynamic_pointer_cast<CreateUnitMessage>(update);
             UnitStack::pointer stack = game->stacks.get(upd->data1);
 
             if (stack->units.empty())
@@ -77,7 +77,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         } break;
 
         case TransferUnits: {
-            boost::shared_ptr<UnitMoveMessage> upd = boost::dynamic_pointer_cast<UnitMoveMessage>(update);
+            auto upd = boost::dynamic_pointer_cast<UnitMoveMessage>(update);
             int old_stack_id = upd->data1;
             UnitStackView::pointer old_stack = game_view->unit_stack_views.find(old_stack_id);
             if (old_stack) {
@@ -86,7 +86,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         } break;
 
         case DestroyStack: {
-            boost::shared_ptr<DestroyStackMessage> upd = boost::dynamic_pointer_cast<DestroyStackMessage>(update);
+            auto upd = boost::dynamic_pointer_cast<DestroyStackMessage>(update);
             if (game_view->selected_stack_id == upd->data) {
                 game_view->selected_stack_id = 0;
                 game_view->clear_drawn_path();
@@ -95,7 +95,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         } break;
 
         case CreateStructure: {
-            boost::shared_ptr<CreateStructureMessage> upd = boost::dynamic_pointer_cast<CreateStructureMessage>(update);
+            auto upd = boost::dynamic_pointer_cast<CreateStructureMessage>(update);
             Structure::pointer structure = game->level.tiles[upd->data1].structure;
             if (!structure) {
                 return;
@@ -111,7 +111,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         } break;
 
         case GrantFactionView: {
-            boost::shared_ptr<GrantFactionViewMessage> upd = boost::dynamic_pointer_cast<GrantFactionViewMessage>(update);
+            auto upd = boost::dynamic_pointer_cast<GrantFactionViewMessage>(update);
             if (upd->data1 == game_view->player->id) {
                 Faction::pointer faction = game->factions.get(upd->data2);
                 game_view->player->grant_view(faction, upd->data3);
@@ -123,7 +123,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         } break;
 
         case GrantFactionControl: {
-            boost::shared_ptr<GrantFactionControlMessage> upd = boost::dynamic_pointer_cast<GrantFactionControlMessage>(update);
+            auto upd = boost::dynamic_pointer_cast<GrantFactionControlMessage>(update);
             if (upd->data1 == game_view->player->id) {
                 Faction::pointer faction = game->factions.get(upd->data2);
                 game_view->player->grant_control(faction, upd->data3);
@@ -131,7 +131,7 @@ void ViewUpdater::apply_update(boost::shared_ptr<Message> update) {
         } break;
 
         case TurnBegin: {
-            boost::shared_ptr<TurnBeginMessage> upd = boost::dynamic_pointer_cast<TurnBeginMessage>(update);
+            auto upd = boost::dynamic_pointer_cast<TurnBeginMessage>(update);
             std::ostringstream ss;
             ss << "Day " << upd->data;
             game_view->messages.push_back(InfoMessage(ss.str()));

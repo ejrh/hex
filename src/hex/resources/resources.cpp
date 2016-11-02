@@ -5,63 +5,63 @@
 
 
 void Resources::resolve_references() {
-    for (std::map<std::string, ImageSeries>::iterator iter = image_series.begin(); iter != image_series.end(); iter++) {
+    for (auto iter = image_series.begin(); iter != image_series.end(); iter++) {
         resolve_image_series(iter->second);
     }
 
-    for (StrMap<FactionViewDef>::iterator def_iter = faction_view_defs.begin(); def_iter != faction_view_defs.end(); def_iter++) {
+    for (auto def_iter = faction_view_defs.begin(); def_iter != faction_view_defs.end(); def_iter++) {
         FactionViewDef& def = *def_iter->second;
         resolve_image_series(def.big_flag_images);
         resolve_image_series(def.small_flag_images);
         resolve_image_series(def.shield_images);
     }
 
-    for (StrMap<UnitViewDef>::iterator def_iter = unit_view_defs.begin(); def_iter != unit_view_defs.end(); def_iter++) {
+    for (auto def_iter = unit_view_defs.begin(); def_iter != unit_view_defs.end(); def_iter++) {
         UnitViewDef& def = *def_iter->second;
-        for (std::vector<AnimationDef>::iterator anim_iter = def.hold_animations.begin(); anim_iter != def.hold_animations.end(); anim_iter++) {
+        for (auto anim_iter = def.hold_animations.begin(); anim_iter != def.hold_animations.end(); anim_iter++) {
             resolve_image_series(anim_iter->images);
         }
-        for (std::vector<AnimationDef>::iterator anim_iter = def.move_animations.begin(); anim_iter != def.move_animations.end(); anim_iter++) {
+        for (auto anim_iter = def.move_animations.begin(); anim_iter != def.move_animations.end(); anim_iter++) {
             resolve_image_series(anim_iter->images);
         }
-        for (std::vector<AnimationDef>::iterator anim_iter = def.attack_animations.begin(); anim_iter != def.attack_animations.end(); anim_iter++) {
+        for (auto anim_iter = def.attack_animations.begin(); anim_iter != def.attack_animations.end(); anim_iter++) {
             resolve_image_series(anim_iter->images);
         }
-        for (std::vector<AnimationDef>::iterator anim_iter = def.recoil_animations.begin(); anim_iter != def.recoil_animations.end(); anim_iter++) {
+        for (auto anim_iter = def.recoil_animations.begin(); anim_iter != def.recoil_animations.end(); anim_iter++) {
             resolve_image_series(anim_iter->images);
         }
-        for (std::vector<AnimationDef>::iterator anim_iter = def.die_animations.begin(); anim_iter != def.die_animations.end(); anim_iter++) {
+        for (auto anim_iter = def.die_animations.begin(); anim_iter != def.die_animations.end(); anim_iter++) {
             resolve_image_series(anim_iter->images);
         }
-        for (std::vector<AnimationDef>::iterator anim_iter = def.shadow_animations.begin(); anim_iter != def.shadow_animations.end(); anim_iter++) {
+        for (auto anim_iter = def.shadow_animations.begin(); anim_iter != def.shadow_animations.end(); anim_iter++) {
             resolve_image_series(anim_iter->images);
         }
 
-        for (std::array<SoundDef, NUM_POSTURES>::iterator sound_iter = def.sounds.begin(); sound_iter != def.sounds.end(); sound_iter++) {
+        for (auto sound_iter = def.sounds.begin(); sound_iter != def.sounds.end(); sound_iter++) {
             resolve_sound_series(sound_iter->sounds);
         }
     }
 
-    for (StrMap<TileViewDef>::iterator def_iter = tile_view_defs.begin(); def_iter != tile_view_defs.end(); def_iter++) {
+    for (auto def_iter = tile_view_defs.begin(); def_iter != tile_view_defs.end(); def_iter++) {
         TileViewDef& def = *def_iter->second;
         resolve_image_series(def.animation.images);
-        for (std::vector<TransitionDef>::iterator trans_iter = def.transitions.begin(); trans_iter != def.transitions.end(); trans_iter++) {
+        for (auto trans_iter = def.transitions.begin(); trans_iter != def.transitions.end(); trans_iter++) {
             resolve_image_series(trans_iter->images);
         }
         resolve_image_series(def.roads);
-        for (std::vector<FeatureDef>::iterator feat_iter = def.features.begin(); feat_iter != def.features.end(); feat_iter++) {
+        for (auto feat_iter = def.features.begin(); feat_iter != def.features.end(); feat_iter++) {
             resolve_image_series(feat_iter->images);
         }
     }
 
-    for (StrMap<StructureViewDef>::iterator def_iter = structure_view_defs.begin(); def_iter != structure_view_defs.end(); def_iter++) {
+    for (auto def_iter = structure_view_defs.begin(); def_iter != structure_view_defs.end(); def_iter++) {
         StructureViewDef& def = *def_iter->second;
         resolve_image_series(def.animation.images);
     }
 }
 
 void Resources::resolve_image_series(std::vector<ImageRef>& image_series) {
-    for (std::vector<ImageRef>::iterator ref_iter = image_series.begin(); ref_iter != image_series.end(); ref_iter++) {
+    for (auto ref_iter = image_series.begin(); ref_iter != image_series.end(); ref_iter++) {
         resolve_image_ref(*ref_iter);
     }
 }
@@ -77,7 +77,7 @@ bool Resources::resolve_image_ref(ImageRef& image_ref) {
 }
 
 void Resources::resolve_sound_series(SoundSeries& sound_series) {
-    for (SoundSeries::iterator ref_iter = sound_series.begin(); ref_iter != sound_series.end(); ref_iter++) {
+    for (auto ref_iter = sound_series.begin(); ref_iter != sound_series.end(); ref_iter++) {
         resolve_sound_ref(*ref_iter);
     }
 }

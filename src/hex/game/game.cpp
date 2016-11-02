@@ -103,7 +103,7 @@ void Game::transfer_units(int stack_id, const IntSet selected_units, Path path, 
     UnitStack::pointer target_stack = stacks.get(target_id);
 
     MovementModel movement(&level);
-    for (Path::const_iterator iter = path.begin(); iter != path.end(); iter++) {
+    for (auto iter = path.begin(); iter != path.end(); iter++) {
         Point pos = *iter;
         movement.move(*stack, selected_units, pos);
     }
@@ -132,7 +132,7 @@ bool Game::mark_faction_ready(int faction_id, bool ready) {
 }
 
 bool Game::all_factions_ready() {
-    for (IntMap<Faction>::const_iterator iter = factions.begin(); iter != factions.end(); iter++) {
+    for (auto iter = factions.begin(); iter != factions.end(); iter++) {
         Faction& faction = *iter->second;
         if (!faction.ready)
             return false;
@@ -150,7 +150,7 @@ void Game::end_turn() {
 
 void Game::begin_turn(int turn_number) {
 
-    for (IntMap<Faction>::const_iterator iter = factions.begin(); iter != factions.end(); iter++) {
+    for (auto iter = factions.begin(); iter != factions.end(); iter++) {
         Faction& faction = *iter->second;
         faction.ready = false;
     }
@@ -167,7 +167,7 @@ int Game::get_nearby_stacks(Point position, int radius, std::vector<UnitStack::p
     std::vector<Point> points;
     get_circle_points(position, radius, points, level.width, level.height);
     int num_found = 0;
-    for (std::vector<Point>::const_iterator iter = points.begin(); iter != points.end(); iter++) {
+    for (auto iter = points.begin(); iter != points.end(); iter++) {
         const Tile& tile = level.tiles[*iter];
         if (tile.stack) {
             stacks.push_back(tile.stack);

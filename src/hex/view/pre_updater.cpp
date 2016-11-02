@@ -26,12 +26,12 @@ void PreUpdater::receive(boost::shared_ptr<Message> update) {
 void PreUpdater::apply_update(boost::shared_ptr<Message> update) {
     switch (update->type) {
         case TransferUnits: {
-            boost::shared_ptr<UnitMoveMessage> upd = boost::dynamic_pointer_cast<UnitMoveMessage>(update);
+            auto upd = boost::dynamic_pointer_cast<UnitMoveMessage>(update);
             game_view->transfer_units(upd->data1, upd->data2, upd->data3, upd->data4);
         } break;
 
         case DoBattle: {
-            boost::shared_ptr<DoBattleMessage> upd = boost::dynamic_pointer_cast<DoBattleMessage>(update);
+            auto upd = boost::dynamic_pointer_cast<DoBattleMessage>(update);
             int attacker_id = upd->data1;
             Point attacking_point = game->stacks.get(attacker_id)->position;
             Point attacked_point = upd->data2;

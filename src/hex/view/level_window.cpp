@@ -156,7 +156,7 @@ void LevelWindow::draw(const UiContext& context) {
     if (!terrain_only) {
         draw_level(&LevelRenderer::render_objects);
         draw_level(&LevelRenderer::render_path_arrow);
-        for (std::vector<Ghost>::iterator iter = view->ghosts.begin(); iter != view->ghosts.end(); iter++) {
+        for (auto iter = view->ghosts.begin(); iter != view->ghosts.end(); iter++) {
             draw_ghost(&*iter);
         }
         if (!view->debug_mode)

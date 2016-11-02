@@ -32,7 +32,7 @@ int MovementModel::cost_to(const UnitStack& party, const Point& tile_pos) const 
     //TODO if one unit is a transport, then the others move for free
 
     int total_cost = 0;
-    for (std::vector<Unit::pointer>::const_iterator iter = party.units.begin(); iter != party.units.end(); iter++) {
+    for (auto iter = party.units.begin(); iter != party.units.end(); iter++) {
         Unit& unit = **iter;
         int cost = cost_to(unit, tile_pos);
         if (cost == INT_MAX) {

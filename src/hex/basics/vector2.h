@@ -16,7 +16,7 @@ struct Vector2 {
 
     void resize(int new_width, int new_height) {
         data.resize(new_height);
-        for (typename V2::iterator iter = data.begin(); iter != data.end(); iter++) {
+        for (auto iter = data.begin(); iter != data.end(); iter++) {
             iter->resize(new_width);
         }
 
@@ -26,7 +26,7 @@ struct Vector2 {
 
     bool contains(const Point point) const { return point.x >= 0 && point.y >= 0 && point.x < width && point.y < height; }
     void fill(const T& val) {
-        for (typename V2::iterator iter = data.begin(); iter != data.end(); iter++) {
+        for (auto iter = data.begin(); iter != data.end(); iter++) {
             std::fill(iter->begin(), iter->end(), val);
         }
     }
@@ -49,7 +49,7 @@ struct Vector2<bool> {
 
     void resize(int new_width, int new_height) {
         data.resize(new_height);
-        for (V2::iterator iter = data.begin(); iter != data.end(); iter++) {
+        for (auto iter = data.begin(); iter != data.end(); iter++) {
             iter->resize(new_width);
         }
 
@@ -59,7 +59,7 @@ struct Vector2<bool> {
 
     bool contains(const Point point) const { return point.x >= 0 && point.y >= 0 && point.x < width && point.y < height; }
     void fill(const bool val) {
-        for (V2::iterator iter = data.begin(); iter != data.end(); iter++) {
+        for (auto iter = data.begin(); iter != data.end(); iter++) {
             std::fill(iter->begin(), iter->end(), val);
         }
     }

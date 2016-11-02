@@ -15,7 +15,6 @@ Serialiser& operator<<(Serialiser& serialiser, const Message *msg) {
     serialiser.type_begin_tuple(type_name.c_str());
     msg->write(serialiser);
     serialiser.end_tuple();
-    serialiser.end_record();
 
     return serialiser;
 }
@@ -23,6 +22,7 @@ Serialiser& operator<<(Serialiser& serialiser, const Message *msg) {
 Deserialiser& operator>>(Deserialiser& deserialiser, Message *& msg) {
     int origin = 0;
     int id = 0;
+    deserialiser.skip_to_next();
     if (deserialiser.peek() == '(') {
         deserialiser.begin_tuple();
         deserialiser >> origin;
@@ -41,7 +41,6 @@ Deserialiser& operator>>(Deserialiser& deserialiser, Message *& msg) {
     msg->id = id;
     msg->read(deserialiser);
     deserialiser.end_tuple();
-    deserialiser.end_record();
 
     return deserialiser;
 }

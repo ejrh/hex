@@ -91,14 +91,14 @@ public:
     }
 
     virtual void start() {
-        for (std::vector<Ai *>::iterator iter = ais.begin(); iter != ais.end(); iter++) {
+        for (auto iter = ais.begin(); iter != ais.end(); iter++) {
             Ai *ai = *iter;
             ai->start();
         }
     }
 
     virtual void stop() {
-        for (std::vector<Ai *>::iterator iter = ais.begin(); iter != ais.end(); iter++) {
+        for (auto iter = ais.begin(); iter != ais.end(); iter++) {
             Ai *ai = *iter;
             ai->stop();
             delete ai;

@@ -37,6 +37,7 @@ void Connection::continue_writing() {
     std::ostringstream stream;
     Serialiser writer(stream);
     writer << msg.get();
+    writer.end_record();
     out_message = stream.str();
 
     boost::asio::async_write(socket, boost::asio::buffer(out_message),
@@ -73,6 +74,7 @@ void Connection::handle_read(const boost::system::error_code& error, size_t byte
             BOOST_LOG_TRIVIAL(warning) << "Message not read";
             return;
         }
+        reader.end_record();
     } catch (Error &ex) {
         BOOST_LOG_TRIVIAL(error) << "Failed reading message from network with: " << ex.what();
         return;

@@ -17,7 +17,7 @@ public:
         }
     }
     bool exhausted() const {
-        for (std::vector<int>::const_iterator iter = points.begin(); iter != points.end(); iter++) {
+        for (auto iter = points.begin(); iter != points.end(); iter++) {
             if (*iter < 0)
                 return true;
         }

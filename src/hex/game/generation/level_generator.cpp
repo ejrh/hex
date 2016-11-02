@@ -236,7 +236,7 @@ void LevelGenerator::add_roads() {
         Path path;
         pathfinder.build_path(path);
         path.resize(30);
-        for (Path::iterator iter = path.begin(); iter != path.end(); iter++) {
+        for (auto iter = path.begin(); iter != path.end(); iter++) {
             Tile& tile = level.tiles[*iter];
             if (tile.type->has_property(Roadable) && rand() % 6 != 0) {
                 Point neighbours[6];
