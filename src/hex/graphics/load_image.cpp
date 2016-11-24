@@ -1,6 +1,7 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
+#include "hexutil/basics/error.h"
+
 #include "hex/graphics/graphics.h"
 
 void load_image(const std::string& filename, Graphics *graphics, ImageMap& image_set) {

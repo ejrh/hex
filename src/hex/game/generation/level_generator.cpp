@@ -1,7 +1,8 @@
 #include "common.h"
 
-#include "hex/basics/hexgrid.h"
-#include "hex/basics/noise.h"
+#include "hexutil/basics/hexgrid.h"
+#include "hexutil/basics/noise.h"
+
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/game_updater.h"

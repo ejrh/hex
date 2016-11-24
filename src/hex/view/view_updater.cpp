@@ -1,8 +1,9 @@
 #include "common.h"
 
+#include "hexutil/messaging/message.h"
+
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
-#include "hex/messaging/message.h"
 #include "hex/view/player.h"
 #include "hex/view/tile_painter.h"
 #include "hex/view/view.h"

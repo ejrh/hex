@@ -1,11 +1,13 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
+#include "hexutil/basics/error.h"
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/receiver.h"
+
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
 #include "hex/resources/resources.h"
+#include "hex/resources/resource_messages.h"
 
 
 void ResourceLoader::handle_message(boost::shared_ptr<Message> msg) {
@@ -156,7 +158,7 @@ void ResourceLoader::handle_message(boost::shared_ptr<Message> msg) {
         } break;
 
         default: {
-            BOOST_LOG_TRIVIAL(warning) << "Don't know how to read resources from message type: " << get_message_type_name(msg->type);
+            BOOST_LOG_TRIVIAL(warning) << "Don't know how to read resources from message type: " << MessageTypeRegistry::get_message_type_name(msg->type);
         }
     }
 }

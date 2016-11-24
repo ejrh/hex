@@ -1,7 +1,8 @@
 #ifndef CHAT_H
 #define CHAT_H
 
-#include "hex/messaging/receiver.h"
+#include "hexutil/messaging/receiver.h"
+
 #include "hex/ui/ui.h"
 
 

@@ -1,6 +1,7 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
+#include "hexutil/basics/error.h"
+
 #include "hex/game/game.h"
 #include "hex/game/game_arbiter.h"
 #include "hex/game/game_messages.h"

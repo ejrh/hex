@@ -1,7 +1,8 @@
 #ifndef VIEW_DATA_SERIALISATION
 #define VIEW_DATA_SERIALISATION
 
-#include "hex/messaging/serialiser.h"
+#include "hexutil/messaging/serialiser.h"
+
 #include "hex/resources/view_def.h"
 
 

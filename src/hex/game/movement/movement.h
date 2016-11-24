@@ -1,7 +1,7 @@
 #ifndef MOVEMENT_H
 #define MOVEMENT_H
 
-#include "hex/basics/point.h"
+#include "hexutil/basics/point.h"
 
 class UnitStack;
 class Tile;

@@ -1,8 +1,8 @@
 #ifndef PRE_UPDATER_H
 #define PRE_UPDATER_H
 
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/receiver.h"
 
 
 class Game;

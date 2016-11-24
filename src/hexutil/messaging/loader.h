@@ -1,10 +1,9 @@
 #ifndef MESSAGE_LOADER_H
 #define MESSAGE_LOADER_H
 
-#include "hex/basics/objmap.h"
-#include "hex/graphics/graphics.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
+#include "hexutil/basics/objmap.h"
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/receiver.h"
 
 class MessageLoader: public MessageReceiver {
 public:

@@ -1,9 +1,10 @@
 #include "common.h"
 
+#include "hexutil/messaging/message.h"
+
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/combat/combat.h"
-#include "hex/messaging/message.h"
 #include "hex/view/pre_updater.h"
 #include "hex/view/view.h"
 #include "hex/view/combat/battle_viewer.h"

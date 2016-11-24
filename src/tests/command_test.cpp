@@ -1,13 +1,15 @@
 #include "common.h"
 
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/publisher.h"
+#include "hexutil/messaging/receiver.h"
+#include "hexutil/messaging/serialiser.h"
+#include "hexutil/messaging/builtin_messages.h"
+
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/game_serialisation.h"
 #include "hex/game/game_updater.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/publisher.h"
-#include "hex/messaging/receiver.h"
-#include "hex/messaging/serialiser.h"
 
 
 #define ORIGIN 1
@@ -43,7 +45,8 @@ public:
 
 
 int main(int argc, char *argv[]) {
-
+    register_builtin_messages();
+    register_game_messages();
     Game game;
     Publisher updater(ORIGIN);
     GameUpdater game_updater(&game);

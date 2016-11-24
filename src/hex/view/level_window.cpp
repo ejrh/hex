@@ -1,7 +1,8 @@
 #include "common.h"
 
-#include "hex/basics/point.h"
-#include "hex/basics/hexgrid.h"
+#include "hexutil/basics/point.h"
+#include "hexutil/basics/hexgrid.h"
+
 #include "hex/game/game.h"
 #include "hex/view/audio_renderer.h"
 #include "hex/view/level_window.h"

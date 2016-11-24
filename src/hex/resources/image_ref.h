@@ -1,7 +1,7 @@
 #ifndef IMAGE_REF_H
 #define IMAGE_REF_H
 
-#include "hex/messaging/serialiser.h"
+#include "hexutil/messaging/serialiser.h"
 
 
 class Image;

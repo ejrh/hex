@@ -1,7 +1,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include "hex/messaging/receiver.h"
+#include "hexutil/messaging/receiver.h"
 
 
 class MessageQueue: public MessageReceiver {

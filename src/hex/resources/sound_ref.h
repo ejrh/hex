@@ -1,7 +1,7 @@
 #ifndef SOUND_REF_H
 #define SOUND_REF_H
 
-#include "hex/messaging/serialiser.h"
+#include "hexutil/messaging/serialiser.h"
 
 
 class Sound;

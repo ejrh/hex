@@ -1,17 +1,18 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
+#include "hexutil/basics/error.h"
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/checksum.h"
+#include "hexutil/messaging/publisher.h"
+#include "hexutil/messaging/queue.h"
+#include "hexutil/messaging/writer.h"
+
 #include "hex/game/game.h"
 #include "hex/game/game_arbiter.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/game_serialisation.h"
 #include "hex/game/game_updater.h"
 #include "hex/game/game_writer.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/checksum.h"
-#include "hex/messaging/publisher.h"
-#include "hex/messaging/queue.h"
-#include "hex/messaging/writer.h"
 
 #define BOOST_TEST_MODULE MovementTest
 #include <boost/test/included/unit_test.hpp>
@@ -84,6 +85,7 @@ unsigned long game_checksum(Game& game) {
 struct Fixture {
     Fixture():
              game_updater(&game), writer(std::cout), updater(1000), arbiter(&game, &updater), collector(1000) {
+        register_game_messages();
         updater.subscribe(&game_updater);
         create_game(updater);
         updater.subscribe(&writer);

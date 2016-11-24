@@ -1,7 +1,8 @@
 #ifndef MAP_WINDOW_H
 #define MAP_WINDOW_H
 
-#include "hex/basics/point.h"
+#include "hexutil/basics/point.h"
+
 #include "hex/ui/ui.h"
 
 

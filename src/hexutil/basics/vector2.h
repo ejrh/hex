@@ -1,7 +1,7 @@
 #ifndef VECTOR2_H
 #define VECTOR2_H
 
-#include "hex/basics/point.h"
+#include "hexutil/basics/point.h"
 
 
 template <typename T>

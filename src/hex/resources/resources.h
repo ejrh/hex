@@ -1,11 +1,12 @@
 #ifndef RESOURCES_H
 #define RESOURCES_H
 
-#include "hex/basics/objmap.h"
+#include "hexutil/basics/objmap.h"
+#include "hexutil/messaging/loader.h"
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/receiver.h"
+
 #include "hex/graphics/graphics.h"
-#include "hex/messaging/loader.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
 #include "hex/resources/view_def.h"
 
 

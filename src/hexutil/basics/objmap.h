@@ -1,7 +1,7 @@
 #ifndef OBJMAP_H
 #define OBJMAP_H
 
-#include "hex/basics/error.h"
+#include "hexutil/basics/error.h"
 
 template<typename K, typename T>
 class ObjMap {

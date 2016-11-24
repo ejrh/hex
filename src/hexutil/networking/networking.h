@@ -7,8 +7,8 @@
 #include <boost/asio.hpp>
 #include <boost/thread/thread.hpp>
 
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/receiver.h"
 
 
 using boost::asio::ip::tcp;

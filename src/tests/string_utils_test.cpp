@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "hex/basics/string_vector.h"
+#include "hexutil/basics/string_vector.h"
 
 #define BOOST_TEST_MODULE StringUtilsTest
 #include <boost/test/included/unit_test.hpp>

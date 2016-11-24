@@ -1,38 +1,35 @@
 #include "common.h"
 
+#include "hexutil/messaging/message.h"
+
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/game_serialisation.h"
-#include "hex/messaging/message.h"
 
 
-#define MSG_TYPE(s, c) #s,
-const char *msg_type_names[] = {
-    "UndefinedMessageType",
-#include "hex/game/message_types.h"
-    "NUM_MESSAGE_TYPES"
-};
-#undef MSG_TYPE
-
-int get_message_type(const std::string& name) {
-    for (int i = 0; i < NUM_MESSAGE_TYPES; i++) {
-        if (name == msg_type_names[i])
-            return (MessageType) i;
+class GameMessageFactory: public AbstractMessageFactory {
+public:
+    GameMessageFactory(): AbstractMessageFactory(FirstGameMessage + 1, LastGameMessage - 1) {
+        populate_names();
     }
-    return UndefinedMessageType;
-}
 
-const std::string get_message_type_name(int type) {
-    if (type >= 0 && type < NUM_MESSAGE_TYPES) {
-        return std::string(msg_type_names[type]);
-    } else {
-        return std::string("unknown");
-    }
-}
-
+    Message *new_message(int type) {
 #define MSG_TYPE(s, c) if (type == s) { Message *m = new c; m->type = s; return m; } else
-Message *new_message(int type) {
 #include "hex/game/message_types.h"
-    return NULL;
-}
 #undef MSG_TYPE
+        return nullptr;
+    }
+
+protected:
+    void populate_names() {
+#define MSG_TYPE(s, c) msg_type_names.push_back(#s);
+#include "hex/game/message_types.h"
+#undef MSG_TYPE
+    }
+};
+
+static GameMessageFactory game_messages_factory;
+
+void register_game_messages() {
+    MessageTypeRegistry::add_factory(&game_messages_factory);
+}

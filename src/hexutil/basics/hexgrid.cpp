@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "hex/basics/hexgrid.h"
+#include "hexutil/basics/hexgrid.h"
 
 
 void get_neighbour(const Point point, int dir, Point *neighbour) {

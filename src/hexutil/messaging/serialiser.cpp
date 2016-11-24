@@ -1,7 +1,7 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
-#include "hex/messaging/serialiser.h"
+#include "hexutil/basics/error.h"
+#include "hexutil/messaging/serialiser.h"
 
 bool is_atom_char(int x) {
     return std::isalnum(x) || x == '_';

@@ -5,9 +5,18 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
 
+#include "hexutil/basics/error.h"
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/serialiser.h"
+#include "hexutil/messaging/writer.h"
+#include "hexutil/messaging/receiver.h"
+#include "hexutil/messaging/publisher.h"
+#include "hexutil/messaging/queue.h"
+#include "hexutil/networking/networking.h"
+#include "hexutil/messaging/builtin_messages.h"
+
 #include "hex/ai/ai.h"
 #include "hex/audio/audio.h"
-#include "hex/basics/error.h"
 #include "hex/chat/chat.h"
 #include "hex/game/game.h"
 #include "hex/game/game_arbiter.h"
@@ -16,11 +25,7 @@
 #include "hex/game/game_writer.h"
 #include "hex/game/generation/generator.h"
 #include "hex/graphics/graphics.h"
-#include "hex/messaging/writer.h"
-#include "hex/messaging/receiver.h"
-#include "hex/messaging/publisher.h"
-#include "hex/messaging/queue.h"
-#include "hex/networking/networking.h"
+#include "hex/resources/resource_messages.h"
 #include "hex/view/audio_renderer.h"
 #include "hex/view/level_renderer.h"
 #include "hex/view/level_window.h"
@@ -271,8 +276,11 @@ private:
 };
 
 void run(Options& options) {
-    Graphics graphics;
+    register_builtin_messages();
+    register_game_messages();
+    register_resource_messages();
 
+    Graphics graphics;
     graphics.start("Hex", options.width, options.height, options.fullscreen);
 
     Resources resources;

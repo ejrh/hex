@@ -1,13 +1,20 @@
 #include "common.h"
 
+#include "hexutil/messaging/receiver.h"
+#include "hexutil/messaging/queue.h"
+#include "hexutil/messaging/builtin_messages.h"
+
 #include "hex/game/game_messages.h"
-#include "hex/messaging/receiver.h"
-#include "hex/messaging/queue.h"
 
 #define BOOST_TEST_MODULE MessagingTest
 #include <boost/test/included/unit_test.hpp>
 
 struct Fixture {
+    Fixture() {
+        register_builtin_messages();
+        register_game_messages();
+    }
+
     std::vector<boost::shared_ptr<Message> > parse_messages(const char *input) {
         MessageQueue collector(1000);
         std::istringstream is(input);

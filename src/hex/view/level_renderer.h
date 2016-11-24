@@ -1,7 +1,8 @@
 #ifndef LEVEL_RENDERER_H
 #define LEVEL_RENDERER_H
 
-#include "hex/basics/point.h"
+#include "hexutil/basics/point.h"
+
 #include "hex/resources/image_ref.h"
 
 

@@ -1,12 +1,13 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
-#include "hex/basics/hexgrid.h"
+#include "hexutil/basics/error.h"
+#include "hexutil/basics/hexgrid.h"
+#include "hexutil/messaging/message.h"
+
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/movement/movement.h"
 #include "hex/game/movement/pathfinding.h"
-#include "hex/messaging/message.h"
 #include "hex/resources/view_def.h"
 #include "hex/view/player.h"
 #include "hex/view/view.h"

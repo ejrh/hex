@@ -1,7 +1,8 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
-#include "hex/basics/vector2.h"
+#include "hexutil/basics/error.h"
+#include "hexutil/basics/vector2.h"
+
 #include "hex/graphics/font.h"
 #include "hex/graphics/graphics.h"
 #include "hex/game/game.h"

@@ -1,7 +1,7 @@
 #ifndef WRITER_H
 #define WRITER_H
 
-#include "hex/messaging/receiver.h"
+#include "hexutil/messaging/receiver.h"
 
 
 class MessageWriter: public MessageReceiver {

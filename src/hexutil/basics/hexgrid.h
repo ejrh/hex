@@ -1,7 +1,7 @@
 #ifndef HEXGRID_H
 #define HEXGRID_H
 
-#include "hex/basics/point.h"
+#include "hexutil/basics/point.h"
 
 extern void get_neighbour(const Point point, int dir, Point *neighbour);
 extern void get_neighbours(const Point point, Point *neighbours);

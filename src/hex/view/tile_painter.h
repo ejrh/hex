@@ -1,7 +1,7 @@
 #ifndef TILE_PAINTER_H
 #define TILE_PAINTER_H
 
-#include "hex/basics/point.h"
+#include "hexutil/basics/point.h"
 
 class Game;
 class GameView;

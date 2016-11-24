@@ -1,15 +1,11 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-#include "hex/messaging/serialiser.h"
+#include "hexutil/messaging/serialiser.h"
 
-
-class Message;
-
-/* These be defined by implementation. */
-extern int get_message_type(const std::string& name);
-extern const std::string get_message_type_name(int type);
-extern Message *new_message(int type);
+enum {
+    UndefinedMessageType = 0
+};
 
 class Message {
 public:
@@ -139,5 +135,81 @@ protected:
 extern Serialiser& operator<<(Serialiser& serialiser, const Message *msg);
 
 extern Deserialiser& operator>>(Deserialiser& deserialiser, Message *& msg);
+
+class MessageFactory {
+public:
+    virtual ~MessageFactory() { }
+
+    virtual int min_type() = 0;
+    virtual int max_type() = 0;
+
+    virtual int get_message_type(const std::string& name) = 0;
+    virtual const std::string& get_message_type_name(int type) = 0;
+    virtual Message *new_message(int type) = 0;
+
+public:
+    static const std::string empty_string;
+};
+
+
+class AbstractMessageFactory: public MessageFactory {
+public:
+    AbstractMessageFactory(int min_message_type, int max_message_type):
+            min_message_type(min_message_type), max_message_type(max_message_type) {
+    }
+
+    int min_type() {
+        return min_message_type;
+    }
+
+    int max_type() {
+        return max_message_type;
+    }
+
+    int get_message_type(const std::string& name) {
+        for (int i = min_message_type; i <= max_message_type; i++) {
+            if (name == msg_type_names[i - min_message_type])
+                return i;
+        }
+        return UndefinedMessageType;
+    }
+
+    const std::string& get_message_type_name(int type) {
+        if (type >= min_message_type && type <= max_message_type) {
+            return msg_type_names[type - min_message_type];
+        } else {
+            return empty_string;
+        }
+    }
+
+    virtual Message *new_message(int type) = 0;
+
+protected:
+    int min_message_type, max_message_type;
+    std::vector<std::string> msg_type_names;
+};
+
+
+class MessageTypeRegistry {
+public:
+    static void add_factory(MessageFactory *factory);
+
+    static int get_message_type(const std::string& name);
+    static const std::string& get_message_type_name(int type);
+    static Message *new_message(int type);
+
+private:
+    static MessageTypeRegistry& get_instance() {
+        return instance;
+    }
+
+private:
+    std::vector<MessageFactory *> factories;
+
+    static MessageTypeRegistry instance;
+    static std::string undefined_message_type_str;
+};
+
+#define create_message(s, ...) boost::make_shared<s ## Message>(s, ##__VA_ARGS__)
 
 #endif

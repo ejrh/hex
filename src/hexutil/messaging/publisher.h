@@ -1,7 +1,7 @@
 #ifndef PUBLISHER_H
 #define PUBLISHER_H
 
-#include "hex/messaging/receiver.h"
+#include "hexutil/messaging/receiver.h"
 
 
 class Publisher: public MessageReceiver {

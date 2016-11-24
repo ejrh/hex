@@ -1,7 +1,7 @@
 #ifndef CHECKSUM_H
 #define CHECKSUM_H
 
-#include "hex/messaging/receiver.h"
+#include "hexutil/messaging/receiver.h"
 
 
 class MessageChecksum: public MessageReceiver {

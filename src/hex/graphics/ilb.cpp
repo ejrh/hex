@@ -1,6 +1,7 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
+#include "hexutil/basics/error.h"
+
 #include "hex/graphics/graphics.h"
 #include "hex/graphics/ilb.h"
 

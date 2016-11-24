@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "hex/basics/hexgrid.h"
+#include "hexutil/basics/hexgrid.h"
 
 #define BOOST_TEST_MODULE HexgridTest
 #include <boost/test/included/unit_test.hpp>

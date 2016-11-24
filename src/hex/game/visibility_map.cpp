@@ -1,6 +1,7 @@
 #include "common.h"
 
-#include "hex/basics/hexgrid.h"
+#include "hexutil/basics/hexgrid.h"
+
 #include "hex/game/game.h"
 #include "hex/game/visibility_map.h"
 

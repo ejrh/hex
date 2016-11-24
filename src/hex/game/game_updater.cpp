@@ -1,11 +1,12 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
+#include "hexutil/basics/error.h"
+#include "hexutil/messaging/message.h"
+
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/game_updater.h"
 #include "hex/game/combat/combat.h"
-#include "hex/messaging/message.h"
 
 
 GameUpdater::GameUpdater(Game *game): game(game) {

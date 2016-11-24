@@ -1,7 +1,7 @@
 #ifndef GAME_ARBITER_H
 #define GAME_ARBITER_H
 
-#include "hex/messaging/receiver.h"
+#include "hexutil/messaging/receiver.h"
 
 
 class Game;

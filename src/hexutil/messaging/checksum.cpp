@@ -1,8 +1,8 @@
 #include "common.h"
 
-#include "hex/messaging/checksum.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/serialiser.h"
+#include "hexutil/messaging/checksum.h"
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/serialiser.h"
 
 
 void MessageChecksum::receive(boost::shared_ptr<Message> msg) {

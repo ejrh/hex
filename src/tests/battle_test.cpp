@@ -1,6 +1,11 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
+#include "hexutil/basics/error.h"
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/checksum.h"
+#include "hexutil/messaging/publisher.h"
+#include "hexutil/messaging/writer.h"
+
 #include "hex/game/game.h"
 #include "hex/game/game_arbiter.h"
 #include "hex/game/game_messages.h"
@@ -8,10 +13,6 @@
 #include "hex/game/game_updater.h"
 #include "hex/game/game_writer.h"
 #include "hex/game/combat/combat.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/checksum.h"
-#include "hex/messaging/publisher.h"
-#include "hex/messaging/writer.h"
 
 #define BOOST_TEST_MODULE BattleTest
 #include <boost/test/included/unit_test.hpp>

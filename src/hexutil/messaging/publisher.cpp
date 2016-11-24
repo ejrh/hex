@@ -1,8 +1,8 @@
 #include "common.h"
 
-#include "hex/messaging/message.h"
-#include "hex/messaging/publisher.h"
-#include "hex/messaging/receiver.h"
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/publisher.h"
+#include "hexutil/messaging/receiver.h"
 
 
 Publisher::Publisher(): id(0), next_message_id(1) {

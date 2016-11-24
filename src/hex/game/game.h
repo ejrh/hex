@@ -1,10 +1,11 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "hex/basics/intset.h"
-#include "hex/basics/objmap.h"
-#include "hex/basics/point.h"
-#include "hex/basics/vector2.h"
+#include "hexutil/basics/intset.h"
+#include "hexutil/basics/objmap.h"
+#include "hexutil/basics/point.h"
+#include "hexutil/basics/vector2.h"
+
 #include "hex/game/properties.h"
 #include "hex/game/visibility_map.h"
 

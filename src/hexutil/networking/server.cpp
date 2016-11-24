@@ -1,10 +1,9 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
-#include "hex/game/game.h"
-#include "hex/game/game_messages.h"
-#include "hex/messaging/message.h"
-#include "hex/networking/networking.h"
+#include "hexutil/basics/error.h"
+#include "hexutil/messaging/message.h"
+#include "hexutil/networking/networking.h"
+#include "hexutil/messaging/builtin_messages.h"
 
 
 Server::Server(int port, MessageReceiver *receiver):

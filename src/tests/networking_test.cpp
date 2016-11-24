@@ -1,9 +1,10 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
-#include "hex/messaging/queue.h"
-#include "hex/messaging/receiver.h"
-#include "hex/networking/networking.h"
+#include "hexutil/basics/error.h"
+#include "hexutil/messaging/queue.h"
+#include "hexutil/messaging/receiver.h"
+#include "hexutil/messaging/builtin_messages.h"
+#include "hexutil/networking/networking.h"
 
 
 #define SERVER_PORT 9999
@@ -20,6 +21,8 @@ public:
 };
 
 void run() {
+    register_builtin_messages();
+
     MessageQueue dispatch_queue(1000);
     Server server(SERVER_PORT, &dispatch_queue);
     PrintingMessageReceiver printer;

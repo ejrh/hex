@@ -1,8 +1,8 @@
 #ifndef VISIBILITY_MAP_H
 #define VISIBILITY_MAP_H
 
-#include "hex/basics/point.h"
-#include "hex/basics/vector2.h"
+#include "hexutil/basics/point.h"
+#include "hexutil/basics/vector2.h"
 
 
 class UnitStack;

@@ -1,14 +1,18 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
-#include "hex/basics/hexgrid.h"
-#include "hex/basics/noise.h"
+#include "hexutil/basics/error.h"
+#include "hexutil/basics/hexgrid.h"
+#include "hexutil/basics/noise.h"
+#include "hexutil/messaging/builtin_messages.h"
+
 #include "hex/graphics/font.h"
 #include "hex/graphics/graphics.h"
 #include "hex/game/game.h"
+#include "hex/resources/resource_messages.h"
 #include "hex/ui/ui.h"
 #include "hex/view/unit_renderer.h"
 #include "hex/view/view.h"
+
 
 void load_resources(Resources *resources, Graphics *graphics) {
     ImageLoader image_loader(resources, graphics);
@@ -135,6 +139,9 @@ private:
 };
 
 void run() {
+    register_builtin_messages();
+    register_resource_messages();
+
     Graphics graphics;
     graphics.start("Unit rendering test", 800, 600, false);
 

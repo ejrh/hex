@@ -1,11 +1,10 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
-#include "hex/messaging/loader.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
-
-#include "hex/game/game_messages.h"
+#include "hexutil/basics/error.h"
+#include "hexutil/messaging/loader.h"
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/receiver.h"
+#include "hexutil/messaging/builtin_messages.h"
 
 
 void MessageLoader::receive(boost::shared_ptr<Message> msg) {

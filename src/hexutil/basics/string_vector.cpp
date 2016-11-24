@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "hex/basics/string_vector.h"
+#include "hexutil/basics/string_vector.h"
 
 void compress_string_vector(const std::vector<std::string>& input, std::vector<std::string>& output) {
     std::map<std::string, std::string> dictionary;

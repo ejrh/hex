@@ -1,13 +1,14 @@
 #include "common.h"
 
+#include "hexutil/basics/error.h"
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/receiver.h"
+
 #include "hex/ai/ai.h"
 #include "hex/ai/ai_updater.h"
-#include "hex/basics/error.h"
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/game_updater.h"
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
 
 
 AiUpdater::AiUpdater(Ai *ai): ai(ai) {

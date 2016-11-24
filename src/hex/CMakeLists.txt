@@ -5,18 +5,6 @@ set(srcs
         ai/ai_updater.h
         audio/audio.cpp
         audio/audio.h
-        basics/error.h
-        basics/hexgrid.cpp
-        basics/hexgrid.h
-        basics/intset.h
-        basics/io.h
-        basics/noise.cpp
-        basics/noise.h
-        basics/objmap.h
-        basics/point.h
-        basics/string_vector.cpp
-        basics/string_vector.h
-        basics/vector2.h
         chat/chat.h
         chat/chat_updater.cpp
         chat/chat_window.cpp
@@ -65,30 +53,14 @@ set(srcs
         graphics/ilb.cpp
         graphics/ilb.h
         graphics/load_image.cpp
-        messaging/checksum.cpp
-        messaging/checksum.h
-        messaging/loader.cpp
-        messaging/loader.h
-        messaging/message.cpp
-        messaging/message.h
-        messaging/publisher.cpp
-        messaging/publisher.h
-        messaging/queue.cpp
-        messaging/queue.h
-        messaging/receiver.cpp
-        messaging/receiver.h
-        messaging/serialiser.cpp
-        messaging/serialiser.h
-        messaging/writer.h
-        networking/client.cpp
-        networking/connection.cpp
-        networking/networking.h
-        networking/server.cpp
         resources/image_loader.cpp
         resources/image_ref.h
+        resources/message_types.h
         resources/resource_loader.cpp
         resources/resources.cpp
         resources/resources.h
+        resources/resource_messages.cpp
+        resources/resource_messages.h
         resources/sound_loader.cpp
         resources/sound_ref.h
         resources/view_def.h
@@ -139,15 +111,12 @@ set(srcs
 source_group(Sources REGULAR_EXPRESSION cpp|h)
 source_group(Sources\\ai REGULAR_EXPRESSION /ai/)
 source_group(Sources\\audio REGULAR_EXPRESSION /audio/)
-source_group(Sources\\basics REGULAR_EXPRESSION /basics/)
 source_group(Sources\\chat REGULAR_EXPRESSION /chat/)
 source_group(Sources\\game REGULAR_EXPRESSION /game/)
 source_group(Sources\\game\\combat REGULAR_EXPRESSION /game/combat/)
 source_group(Sources\\game\\generation REGULAR_EXPRESSION /game/generation/)
 source_group(Sources\\game\\movement REGULAR_EXPRESSION /game/movement/)
 source_group(Sources\\graphics REGULAR_EXPRESSION /graphics/)
-source_group(Sources\\messaging REGULAR_EXPRESSION /messaging/)
-source_group(Sources\\networking REGULAR_EXPRESSION /networking/)
 source_group(Sources\\resources REGULAR_EXPRESSION /resources/)
 source_group(Sources\\ui REGULAR_EXPRESSION /ui/)
 source_group(Sources\\view REGULAR_EXPRESSION /view/)

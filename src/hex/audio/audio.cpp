@@ -2,9 +2,10 @@
 
 #include <SDL2/SDL_mixer.h>
 
+#include "hexutil/basics/error.h"
+
 #define AUDIO_CPP
 #include "hex/audio/audio.h"
-#include "hex/basics/error.h"
 #include "hex/resources/resources.h"
 
 Sound::Sound():

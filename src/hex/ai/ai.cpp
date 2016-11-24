@@ -1,14 +1,15 @@
 #include "common.h"
 
+#include "hexutil/basics/error.h"
+#include "hexutil/messaging/receiver.h"
+#include "hexutil/messaging/queue.h"
+
 #include "hex/ai/ai.h"
 #include "hex/ai/ai_updater.h"
-#include "hex/basics/error.h"
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/movement/movement.h"
 #include "hex/game/movement/pathfinding.h"
-#include "hex/messaging/receiver.h"
-#include "hex/messaging/queue.h"
 
 
 Ai::Ai(const std::string& faction_type, MessageReceiver *dispatcher):

@@ -1,8 +1,8 @@
 #include "common.h"
 
-#include "hex/messaging/message.h"
-#include "hex/messaging/receiver.h"
-#include "hex/messaging/queue.h"
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/receiver.h"
+#include "hexutil/messaging/queue.h"
 
 
 MessageQueue::MessageQueue(unsigned int capacity):

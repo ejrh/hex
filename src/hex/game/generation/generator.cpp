@@ -1,7 +1,10 @@
 #include "common.h"
 
-#include "hex/basics/hexgrid.h"
-#include "hex/basics/noise.h"
+#include "hexutil/basics/hexgrid.h"
+#include "hexutil/basics/noise.h"
+#include "hexutil/messaging/loader.h"
+#include "hexutil/messaging/publisher.h"
+
 #include "hex/game/game.h"
 #include "hex/game/game_messages.h"
 #include "hex/game/game_updater.h"
@@ -9,8 +12,6 @@
 #include "hex/game/generation/level_generator.h"
 #include "hex/game/movement/movement.h"
 #include "hex/game/movement/pathfinding.h"
-#include "hex/messaging/loader.h"
-#include "hex/messaging/publisher.h"
 
 
 void Generator::create_game(MessageReceiver& updater) {

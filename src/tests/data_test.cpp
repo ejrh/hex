@@ -1,14 +1,20 @@
 #include "common.h"
 
-#include "hex/basics/error.h"
+#include "hexutil/basics/error.h"
+#include "hexutil/messaging/loader.h"
+#include "hexutil/messaging/builtin_messages.h"
+
 #include "hex/game/game.h"
 #include "hex/game/game_updater.h"
-#include "hex/messaging/loader.h"
+#include "hex/game/game_messages.h"
 #include "hex/resources/resources.h"
-#include "hex/resources/view_def.h"
+#include "hex/resources/resource_messages.h"
 
 
 void run() {
+    register_builtin_messages();
+    register_game_messages();
+    register_resource_messages();
     Resources resources;
     ResourceLoader loader(&resources, NULL, NULL);
     loader.load("data/resources.txt");

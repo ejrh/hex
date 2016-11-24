@@ -1,7 +1,7 @@
 #ifndef AI_UPDATER_H
 #define AI_UPDATER_H
 
-#include "hex/messaging/receiver.h"
+#include "hexutil/messaging/receiver.h"
 
 class Ai;
 class GameUpdater;

@@ -1,6 +1,7 @@
 #include "common.h"
 
-#include "hex/basics/hexgrid.h"
+#include "hexutil/basics/hexgrid.h"
+
 #include "hex/game/game.h"
 #include "hex/resources/resources.h"
 #include "hex/view/tile_painter.h"

@@ -1,8 +1,8 @@
 #ifndef PATHFINDING_H
 #define PATHFINDING_H
 
-#include "hex/basics/point.h"
-#include "hex/basics/vector2.h"
+#include "hexutil/basics/point.h"
+#include "hexutil/basics/vector2.h"
 
 
 class Level;
