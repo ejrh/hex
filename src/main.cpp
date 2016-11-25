@@ -279,6 +279,7 @@ void run(Options& options) {
     register_builtin_messages();
     register_game_messages();
     register_resource_messages();
+    register_property_names();
 
     Graphics graphics;
     graphics.start("Hex", options.width, options.height, options.fullscreen);

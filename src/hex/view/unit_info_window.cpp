@@ -7,8 +7,8 @@
 #include "hex/view/view.h"
 
 
-static std::map<PropertyName, PropertyValue> get_all_properties(const Unit& unit) {
-    std::map<PropertyName, PropertyValue> properties;
+static std::map<Atom, PropertyValue> get_all_properties(const Unit& unit) {
+    std::map<Atom, PropertyValue> properties;
     for (auto iter = unit.properties.data.begin(); iter != unit.properties.data.end(); iter++) {
         properties[iter->first] = iter->second;
     }
@@ -42,10 +42,10 @@ void UnitInfoWindow::draw(const UiContext& context) {
     TextFormat tf2(SmallFont10, false, 192,192,192);
     int x_offset = x + 12;
     int y_offset = y + title_height + 12;
-    std::map<PropertyName, PropertyValue> properties = get_all_properties(*current_unit);
+    std::map<Atom, PropertyValue> properties = get_all_properties(*current_unit);
     for (auto iter = properties.begin(); iter != properties.end(); iter++) {
         std::ostringstream ss;
-        ss << get_property_name_str(iter->first);
+        ss << iter->first;
         ss << ": ";
         ss << iter->second.value;
         tf2.write_text(graphics, ss.str(), x_offset, y_offset);

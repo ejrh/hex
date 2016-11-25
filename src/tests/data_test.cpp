@@ -15,6 +15,8 @@ void run() {
     register_builtin_messages();
     register_game_messages();
     register_resource_messages();
+    register_property_names();
+
     Resources resources;
     ResourceLoader loader(&resources, NULL, NULL);
     loader.load("data/resources.txt");

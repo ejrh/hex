@@ -277,6 +277,8 @@ private:
 
 
 void run() {
+    register_property_names();
+
     open_tile->properties[Walkable] = 1;
 
     UnitType::pointer type = boost::make_shared<UnitType>();

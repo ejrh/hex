@@ -17,7 +17,7 @@ std::vector<const MoveType *> CombatModel::get_available_move_types(const Battle
     std::vector<const MoveType *> types;
 
     for (auto iter = move_types.begin(); iter != move_types.end(); iter++) {
-        PropertyName type = iter->first;
+        Atom type = iter->first;
         const MoveType *move_type = iter->second;
         if (participant.unit->get_property<int>(type) > 0) {
             types.push_back(move_type);
@@ -29,7 +29,7 @@ std::vector<const MoveType *> CombatModel::get_available_move_types(const Battle
 const MoveType *CombatModel::get_move_type(const Move& move) const {
     auto iter = move_types.find(move.type);
     if (iter == move_types.end()) {
-        throw Error() << "Cannot find move type for " << get_property_name_str(move.type);
+        throw Error() << "Cannot find move type for " << move.type;
     }
 
     return iter->second;

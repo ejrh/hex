@@ -49,7 +49,7 @@ void BattleWindow::draw_stack(int stack_num) {
         if (pv.selected) {
             Move& move = view->battle->moves[view->current_move];
             TextFormat tf(SmallFont14, true, 250, 250, 250);
-            tf.write_text(graphics, get_property_name_str(move.type), pv.x, pv.y + 20);
+            tf.write_text(graphics, move.type, pv.x, pv.y + 20);
         }
 
         if (pv.targetted) {

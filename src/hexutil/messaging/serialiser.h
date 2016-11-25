@@ -1,6 +1,7 @@
 #ifndef SERIALISER_H
 #define SERIALISER_H
 
+#include "hexutil/basics/atom.h"
 #include "hexutil/basics/io.h"
 
 
@@ -83,6 +84,11 @@ public:
             *this << *iter;
         }
         end_map();
+        return *this;
+    }
+
+    Serialiser& operator<<(const Atom& t) {
+        *this << AtomRegistry::name(t);
         return *this;
     }
 
@@ -207,6 +213,13 @@ public:
         return *this;
     }
 
+    Deserialiser& operator>>(Atom& t) {
+        std::string name;
+        *this >> name;
+        t = AtomRegistry::atom(name);
+        return *this;
+    }
+
     void type_begin_tuple(std::string &type_name);
     void begin_vector(int &size);
     void end_vector();
@@ -248,6 +261,5 @@ private:
     PositionStreambuf pos_buf;
     bool expect_seperator;
 };
-
 
 #endif

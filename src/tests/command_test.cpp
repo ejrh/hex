@@ -47,6 +47,8 @@ public:
 int main(int argc, char *argv[]) {
     register_builtin_messages();
     register_game_messages();
+    register_property_names();
+
     Game game;
     Publisher updater(ORIGIN);
     GameUpdater game_updater(&game);

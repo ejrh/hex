@@ -86,6 +86,8 @@ struct Fixture {
     Fixture():
              game_updater(&game), writer(std::cout), updater(1000), arbiter(&game, &updater), collector(1000) {
         register_game_messages();
+        register_property_names();
+
         updater.subscribe(&game_updater);
         create_game(updater);
         updater.subscribe(&writer);

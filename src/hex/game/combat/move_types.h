@@ -14,8 +14,8 @@ enum MoveDirection {
 
 class MoveType {
 public:
-    MoveType(): type(UnknownPropertyName), direction(UnknownMoveDirection), num_repeats(1) { }
-    MoveType(PropertyName type, MoveDirection direction, int num_repeats = 1): type(type), direction(direction), num_repeats(num_repeats) { }
+    MoveType(): type(0), direction(UnknownMoveDirection), num_repeats(1) { }
+    MoveType(Atom type, MoveDirection direction, int num_repeats = 1): type(type), direction(direction), num_repeats(num_repeats) { }
     virtual ~MoveType() { }
 
     virtual bool is_viable(const Battle& battle, const Participant& participant, const Participant& target) const;
@@ -25,7 +25,7 @@ public:
     virtual void apply(Battle& battle, const Move& move) const;
 
 public:
-    PropertyName type;
+    Atom type;
     MoveDirection direction;
 
 protected:
@@ -73,7 +73,7 @@ int damage_roll(const Participant& participant, const Participant& target);
 float average_damage_roll(const Participant& participant, const Participant& target, int num_trials = 5);
 
 inline std::ostream& operator<<(std::ostream& os, const MoveType& t) {
-    os << get_property_name_str(t.type);
+    os << t.type;
     return os;
 }
 

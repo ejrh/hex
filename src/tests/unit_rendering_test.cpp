@@ -141,6 +141,7 @@ private:
 void run() {
     register_builtin_messages();
     register_resource_messages();
+    register_property_names();
 
     Graphics graphics;
     graphics.start("Unit rendering test", 800, 600, false);

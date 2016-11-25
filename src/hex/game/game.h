@@ -31,11 +31,11 @@ public:
 
     UnitType() { }
     ~UnitType() { }
-    bool has_property(PropertyName property) const {
+    bool has_property(Atom property) const {
         return properties.contains(property);
     }
     template<typename T>
-    T get_property(PropertyName property) const {
+    T get_property(Atom property) const {
         return properties.get<T>(property);
     }
 
@@ -58,15 +58,15 @@ public:
         return unit;
     }
 
-    bool has_property(PropertyName property) const {
+    bool has_property(Atom property) const {
         return properties.contains(property, type->properties);
     }
     template<typename T>
-    int get_property(PropertyName property) const {
+    int get_property(Atom property) const {
         return properties.get<T>(property, type->properties);
     }
     template<typename T>
-    void set_property(PropertyName property, const T& value) {
+    void set_property(Atom property, const T& value) {
         properties.set<T>(property, value);
     }
 
@@ -109,11 +109,11 @@ public:
     typedef boost::shared_ptr<StructureType> pointer;
 
     StructureType() { }
-    bool has_property(PropertyName property) const {
+    bool has_property(Atom property) const {
         return properties.contains(property);
     }
     template<typename T>
-    T get_property(PropertyName property) const {
+    T get_property(Atom property) const {
         return properties.get<T>(property);
     }
 
@@ -144,11 +144,11 @@ public:
     TileType() { }
     ~TileType() { }
 
-    bool has_property(PropertyName property) const {
+    bool has_property(Atom property) const {
         return properties.contains(property);
     }
     template<typename T>
-    T get_property(PropertyName property) const {
+    T get_property(Atom property) const {
         return properties.get<T>(property);
     }
 
@@ -162,11 +162,11 @@ public:
     Tile(): type(), stack(), structure() { }
     Tile(TileType::pointer type): type(type), stack(), structure() { }
 
-    bool has_property(PropertyName property) const {
+    bool has_property(Atom property) const {
         return type && type->has_property(property);
     }
     template<typename T>
-    T get_property(PropertyName property) const {
+    T get_property(Atom property) const {
         if (!type) {
             static T default_value;
             return default_value;

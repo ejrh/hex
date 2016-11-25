@@ -22,20 +22,6 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, CompressableStringVe
 }
 
 template<typename Serialiser>
-inline Serialiser& operator<<(Serialiser& serialiser, const PropertyName& t) {
-    serialiser << get_property_name_str(t);
-    return serialiser;
-}
-
-template<typename Deserialiser>
-inline Deserialiser& operator>>(Deserialiser& deserialiser, PropertyName& t) {
-    std::string name;
-    deserialiser >> name;
-    t = get_property_name(name);
-    return deserialiser;
-}
-
-template<typename Serialiser>
 class serialise_visitor: public boost::static_visitor<> {
 public:
     serialise_visitor(Serialiser& serialiser): serialiser(serialiser) { }

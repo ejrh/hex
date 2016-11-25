@@ -94,6 +94,8 @@ private:
 void run() {
     register_builtin_messages();
     register_resource_messages();
+    register_property_names();
+
     Graphics graphics;
     graphics.start("Image test", 800, 600, false);
 

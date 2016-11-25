@@ -1,4 +1,6 @@
 set(srcs
+        basics/atom.cpp
+        basics/atom.h
         basics/error.h
         basics/hexgrid.cpp
         basics/hexgrid.h
