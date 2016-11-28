@@ -24,8 +24,8 @@ void Server::stop() {
     server_thread.join();
 }
 
-void Server::receive(boost::shared_ptr<Message> msg) {
-    io_service.post(boost::bind(&Server::broadcast, this, msg));
+void Server::receive(Message *msg) {
+    io_service.post(boost::bind(&Server::broadcast, this, msg->shared_from_this()));
 }
 
 void Server::broadcast(boost::shared_ptr<Message> msg) {
@@ -44,11 +44,11 @@ void Server::broadcast(boost::shared_ptr<Message> msg) {
     }
 }
 
-void Server::receive_from_network(boost::shared_ptr<Message> msg) {
+void Server::receive_from_network(Message *msg) {
     Connection::pointer source_connection = connections[msg->origin];
 
     if (msg->type == StreamReplay) {
-        auto replay = boost::dynamic_pointer_cast<StreamReplayMessage>(msg);
+        auto replay = dynamic_cast<StreamReplayMessage *>(msg);
         int client_game_id = replay->data1;
         int msg_id = replay->data1;
         bool full_state = false;

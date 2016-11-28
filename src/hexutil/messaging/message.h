@@ -7,7 +7,7 @@ enum {
     UndefinedMessageType = 0
 };
 
-class Message {
+class Message: public boost::enable_shared_from_this<Message> {
 public:
     Message(): type(0), origin(0), id(0) { }
     Message(int type): type(type), origin(0), id(0) { }
@@ -32,13 +32,18 @@ inline std::ostream& operator<<(std::ostream& os, const Message *msg) {
     return os;
 }
 
-static inline bool equal(boost::shared_ptr<Message> m1, boost::shared_ptr<Message> m2) {
+static inline bool equal(Message *m1, Message *m2) {
     std::ostringstream s1;
-    s1 << m1.get();
+    s1 << m1;
     std::ostringstream s2;
-    s2 << m2.get();
+    s2 << m2;
     return s1.str() == s2.str();
 }
+
+static inline bool equal(const boost::shared_ptr<Message>& m1, const boost::shared_ptr<Message>& m2) {
+    return equal(m1.get(), m2.get());
+}
+
 
 template<typename T>
 class WrapperMessage: public Message {

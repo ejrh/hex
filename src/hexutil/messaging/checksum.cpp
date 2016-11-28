@@ -5,10 +5,10 @@
 #include "hexutil/messaging/serialiser.h"
 
 
-void MessageChecksum::receive(boost::shared_ptr<Message> msg) {
+void MessageChecksum::receive(Message *msg) {
     std::ostringstream stream;
     Serialiser writer(stream);
-    writer << msg.get();
+    writer << msg;
     std::string buffer(stream.str());
 
     boost::crc_32_type result(checksum);

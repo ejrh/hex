@@ -41,15 +41,15 @@ void Client::disconnect() {
     client_thread.join();
 }
 
-void Client::receive(boost::shared_ptr<Message> msg) {
-    io_service.post(boost::bind(&Connection::send_message, connection, msg));
+void Client::receive(Message *msg) {
+    io_service.post(boost::bind(&Connection::send_message, connection, msg->shared_from_this()));
 }
 
-void Client::receive_from_network(boost::shared_ptr<Message> msg) {
+void Client::receive_from_network(Message *msg) {
     last_received_id = msg->id;
 
     if (msg->type == StreamState) {
-        auto state = boost::dynamic_pointer_cast<StreamStateMessage>(msg);
+        auto state = dynamic_cast<StreamStateMessage *>(msg);
         game_id = state->data1;
         last_received_id = state->data2;
         BOOST_LOG_TRIVIAL(debug) << "Received state for game " << game_id << " up to message " << last_received_id;

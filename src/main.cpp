@@ -87,7 +87,7 @@ public:
         publisher.subscribe(&game_updater);
     }
 
-    virtual void receive(boost::shared_ptr<Message> command) {
+    virtual void receive(Message *command) {
         dispatch_queue.receive(command);
     }
 
@@ -158,7 +158,7 @@ public:
             host_addr(host_addr), update_queue(1000), client(&update_queue) {
     }
 
-    virtual void receive(boost::shared_ptr<Message> command) {
+    virtual void receive(Message *command) {
         client.receive(command);
     }
 

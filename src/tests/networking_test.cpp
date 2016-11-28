@@ -11,10 +11,10 @@
 
 class PrintingMessageReceiver: public MessageReceiver {
 public:
-    void receive(boost::shared_ptr<Message> msg) {
+    void receive(Message *msg) {
         std::ostringstream ss;
         Serialiser writer(ss);
-        writer << msg.get();
+        writer << msg;
         std::string msg_str(ss.str());
         BOOST_LOG_TRIVIAL(info) << "Received: " << msg_str;
     }

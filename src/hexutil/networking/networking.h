@@ -15,7 +15,7 @@ using boost::asio::ip::tcp;
 
 class NetworkInterface: public MessageReceiver {
 public:
-    virtual void receive_from_network(boost::shared_ptr<Message> msg) = 0;
+    virtual void receive_from_network(Message *msg) = 0;
 };
 
 class Connection: public boost::enable_shared_from_this<Connection> {
@@ -54,11 +54,11 @@ public:
     virtual ~Server();
     void start();
     void stop();
-    virtual void receive(boost::shared_ptr<Message> msg);
+    virtual void receive(Message *msg);
 
 private:
     void broadcast(boost::shared_ptr<Message> msg);
-    void receive_from_network(boost::shared_ptr<Message> msg);
+    void receive_from_network(Message *msg);
     void run_thread();
     void start_accept();
     void handle_accept(Connection::pointer new_connection, const boost::system::error_code& error);
@@ -86,10 +86,10 @@ public:
     virtual ~Client();
     void connect(std::string server);
     void disconnect();
-    virtual void receive(boost::shared_ptr<Message> msg);
+    virtual void receive(Message *msg);
 
 private:
-    void receive_from_network(boost::shared_ptr<Message> msg);
+    void receive_from_network(Message *msg);
     void run_thread();
     void handle_connect(const boost::system::error_code& error, tcp::resolver::iterator iterator);
 

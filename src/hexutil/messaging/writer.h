@@ -8,8 +8,8 @@ class MessageWriter: public MessageReceiver {
 public:
     MessageWriter(std::ostream& os): writer(os) { }
 
-    virtual void receive(boost::shared_ptr<Message> msg) {
-        writer << msg.get();
+    virtual void receive(Message *msg) {
+        writer << msg;
         writer.end_record();
     }
 

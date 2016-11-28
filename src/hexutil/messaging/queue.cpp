@@ -12,9 +12,9 @@ MessageQueue::MessageQueue(unsigned int capacity):
 MessageQueue::~MessageQueue() {
 }
 
-void MessageQueue::receive(boost::shared_ptr<Message> msg) {
+void MessageQueue::receive(Message *msg) {
     boost::lock_guard<boost::mutex> guard(mtx);
-    queue.push_back(msg);
+    queue.push_back(msg->shared_from_this());
     if (queue.size() > capacity) {
         BOOST_LOG_TRIVIAL(warning) << "Queue size exceeds capacity";
     }
@@ -32,11 +32,8 @@ boost::shared_ptr<Message> MessageQueue::fetch_message() {
 
 int MessageQueue::fetch_messages(std::vector<boost::shared_ptr<Message> >& results) {
     boost::lock_guard<boost::mutex> guard(mtx);
-    for (unsigned int i = 0; i < queue.size(); i++) {
-        results.push_back(queue[i]);
-    }
-    int num = queue.size();
-    queue.clear();
+    std::swap(queue, results);
+    int num = results.size();
     return num;
 }
 
@@ -44,7 +41,7 @@ int MessageQueue::flush(MessageReceiver *receiver) {
     boost::lock_guard<boost::mutex> guard(mtx);
     int num = queue.size();
     for (unsigned int i = 0; i < queue.size(); i++) {
-        receiver->receive(queue[i]);
+        receiver->receive(queue[i].get());
     }
     queue.clear();
     return num;

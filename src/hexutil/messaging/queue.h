@@ -8,7 +8,7 @@ class MessageQueue: public MessageReceiver {
 public:
     MessageQueue(unsigned int capacity);
     virtual ~MessageQueue();
-    virtual void receive(boost::shared_ptr<Message> msg);
+    virtual void receive(Message *msg);
 
     boost::shared_ptr<Message> fetch_message();
     int fetch_messages(std::vector<boost::shared_ptr<Message> >& results);

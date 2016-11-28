@@ -12,10 +12,11 @@ public:
     GameArbiter(Game *game, MessageReceiver *publisher);
     virtual ~GameArbiter();
 
-    virtual void receive(boost::shared_ptr<Message> update);
+    virtual void receive(Message *update);
+    using MessageReceiver::receive;
 
 private:
-    void process_command(boost::shared_ptr<Message> update);
+    void process_command(Message *update);
     void spawn_units();
     void emit(boost::shared_ptr<Message> update);
 

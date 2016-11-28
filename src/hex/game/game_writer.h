@@ -21,7 +21,7 @@ private:
     void write_structures(Game *game);
     void write_turn(Game *game);
 
-    void emit(boost::shared_ptr<Message> message);
+    void emit(const boost::shared_ptr<Message>& message);
 
 private:
     MessageReceiver *receiver;

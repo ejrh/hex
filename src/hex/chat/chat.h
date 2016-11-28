@@ -33,7 +33,7 @@ private:
 class ChatUpdater: public MessageReceiver {
 public:
     ChatUpdater(ChatWindow *chat_window);
-    void receive(boost::shared_ptr<Message> update);
+    void receive(Message *update);
 
 private:
     ChatWindow *chat_window;

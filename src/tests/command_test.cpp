@@ -20,8 +20,8 @@ public:
     RecordUpdateListener(Serialiser &writer): writer(writer) { }
     virtual ~RecordUpdateListener() { }
 
-    virtual void receive(boost::shared_ptr<Message> update) {
-        writer << update.get();
+    virtual void receive(Message *update) {
+        writer << update;
         writer.end_record();
     }
 
@@ -35,10 +35,10 @@ public:
     DebugUpdateListener() { }
     virtual ~DebugUpdateListener() { }
 
-    virtual void receive(boost::shared_ptr<Message> update) {
+    virtual void receive(Message *update) {
         std::ostringstream buf;
         Serialiser writer(buf);
-        writer << update.get();
+        writer << update;
         BOOST_LOG_TRIVIAL(info) << "Applied: " << buf.str();
     }
 };

@@ -8,7 +8,7 @@ class MessageChecksum: public MessageReceiver {
 public:
     MessageChecksum(): checksum(0) { }
 
-    virtual void receive(boost::shared_ptr<Message> msg);
+    virtual void receive(Message *msg);
 
 public:
     unsigned long checksum;

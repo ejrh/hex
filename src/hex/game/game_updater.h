@@ -11,10 +11,10 @@ public:
     GameUpdater(Game *game);
     virtual ~GameUpdater();
 
-    virtual void receive(boost::shared_ptr<Message> update);
+    virtual void receive(Message *update);
 
 private:
-    void apply_update(boost::shared_ptr<Message> update);
+    void apply_update(Message *update);
 
 private:
     Game *game;

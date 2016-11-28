@@ -91,7 +91,7 @@ void Connection::handle_read(const boost::system::error_code& error, size_t byte
         BOOST_LOG_TRIVIAL(debug) << boost::format("Connection %d recv %s") % id % in_message;
     }
 
-    iface->receive_from_network(msg);
+    iface->receive_from_network(msg.get());
 
     continue_reading();
 }

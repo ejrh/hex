@@ -14,7 +14,7 @@ Publisher::Publisher(int id): id(id), next_message_id(1) {
 Publisher::~Publisher() {
 }
 
-void Publisher::receive(boost::shared_ptr<Message> msg) {
+void Publisher::receive(Message *msg) {
     msg->origin = id;
     msg->id = next_message_id++;
     send_update_to_subscribers(msg);
@@ -29,7 +29,7 @@ void Publisher::unsubscribe(MessageReceiver *subscriber) {
     subscribers.erase(iter);
 }
 
-void Publisher::send_update_to_subscribers(boost::shared_ptr<Message> update) {
+void Publisher::send_update_to_subscribers(Message *update) {
     for (auto iter = subscribers.begin(); iter != subscribers.end(); iter++) {
         MessageReceiver *subscriber = *iter;
         subscriber->receive(update);

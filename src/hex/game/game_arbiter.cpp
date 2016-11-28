@@ -15,7 +15,7 @@ GameArbiter::GameArbiter(Game *game, MessageReceiver *publisher): game(game), pu
 GameArbiter::~GameArbiter() {
 }
 
-void GameArbiter::receive(boost::shared_ptr<Message> command) {
+void GameArbiter::receive(Message *command) {
     try {
         process_command(command);
     } catch (const DataError& err) {
@@ -23,10 +23,10 @@ void GameArbiter::receive(boost::shared_ptr<Message> command) {
     }
 }
 
-void GameArbiter::process_command(boost::shared_ptr<Message> command) {
+void GameArbiter::process_command(Message *command) {
     switch (command->type) {
         case UnitMove: {
-            auto cmd = boost::dynamic_pointer_cast<UnitMoveMessage>(command);
+            auto cmd = dynamic_cast<UnitMoveMessage *>(command);
             int stack_id = cmd->data1;
             IntSet units = cmd->data2;
             Path& path = cmd->data3;
@@ -97,7 +97,7 @@ void GameArbiter::process_command(boost::shared_ptr<Message> command) {
         } break;
 
         case FactionReady: {
-            auto cmd = boost::dynamic_pointer_cast<FactionReadyMessage>(command);
+            auto cmd = dynamic_cast<FactionReadyMessage *>(command);
             int faction_id = cmd->data1;
             bool ready = cmd->data2;
             if (game->mark_faction_ready(faction_id, ready)) {
@@ -115,7 +115,7 @@ void GameArbiter::process_command(boost::shared_ptr<Message> command) {
         } break;
 
         case Chat: {
-            auto chat_msg = boost::dynamic_pointer_cast<ChatMessage>(command);
+            auto chat_msg = dynamic_cast<ChatMessage *>(command);
             emit(create_message(Chat, chat_msg->data));
         } break;
 

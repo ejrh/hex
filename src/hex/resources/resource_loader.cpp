@@ -10,7 +10,7 @@
 #include "hex/resources/resource_messages.h"
 
 
-void ResourceLoader::handle_message(boost::shared_ptr<Message> msg) {
+void ResourceLoader::handle_message(Message *msg) {
     switch (msg->type) {
         case ImageFile: {
             if (image_loader == NULL) {
@@ -20,24 +20,24 @@ void ResourceLoader::handle_message(boost::shared_ptr<Message> msg) {
                 }
                 return;
             }
-            auto upd = boost::dynamic_pointer_cast<ImageFileMessage>(msg);
+            auto upd = dynamic_cast<ImageFileMessage *>(msg);
             load_image(upd->data);
         } break;
 
         case ImageSet: {
-            auto upd = boost::dynamic_pointer_cast<ImageSetMessage>(msg);
+            auto upd = dynamic_cast<ImageSetMessage *>(msg);
             resources->image_series[upd->data1] = upd->data2;
         } break;
 
         case CreateFactionView: {
-            auto upd = boost::dynamic_pointer_cast<CreateFactionViewMessage>(msg);
+            auto upd = dynamic_cast<CreateFactionViewMessage *>(msg);
             FactionViewDef::pointer def = boost::make_shared<FactionViewDef>(upd->data);
             resources->faction_view_defs.put_and_warn(def->name, def);
             last_faction_view_def = def;
         } break;
 
         case FactionImageSet: {
-            auto upd = boost::dynamic_pointer_cast<FactionImageSetMessage>(msg);
+            auto upd = dynamic_cast<FactionImageSetMessage *>(msg);
             if (upd->data1 == "BIG_FLAGS")
                 last_faction_view_def->big_flag_images = upd->data2;
             else if (upd->data1 == "SMALL_FLAGS")
@@ -47,93 +47,93 @@ void ResourceLoader::handle_message(boost::shared_ptr<Message> msg) {
         } break;
 
         case CreateTileView: {
-            auto upd = boost::dynamic_pointer_cast<CreateTileViewMessage>(msg);
+            auto upd = dynamic_cast<CreateTileViewMessage *>(msg);
             last_tile_view_def = resources->create_tile_view(upd->data);
         } break;
 
         case TileAnimation: {
-            auto upd = boost::dynamic_pointer_cast<TileAnimationMessage>(msg);
+            auto upd = dynamic_cast<TileAnimationMessage *>(msg);
             last_tile_view_def->animation.bpm = upd->data1;
             last_tile_view_def->animation.images = upd->data2;
         } break;
 
         case TileTransition: {
-            auto upd = boost::dynamic_pointer_cast<TileTransitionMessage>(msg);
+            auto upd = dynamic_cast<TileTransitionMessage *>(msg);
             last_tile_view_def->transitions.push_back(upd->data);
         } break;
 
         case TileRoads: {
-            auto upd = boost::dynamic_pointer_cast<TileRoadsMessage>(msg);
+            auto upd = dynamic_cast<TileRoadsMessage *>(msg);
             last_tile_view_def->roads = upd->data;
         } break;
 
         case TileFeature: {
-            auto upd = boost::dynamic_pointer_cast<TileFeatureMessage>(msg);
+            auto upd = dynamic_cast<TileFeatureMessage *>(msg);
             last_tile_view_def->features.push_back(upd->data);
         } break;
 
         case CreateUnitView: {
-            auto upd = boost::dynamic_pointer_cast<CreateUnitViewMessage>(msg);
+            auto upd = dynamic_cast<CreateUnitViewMessage *>(msg);
             UnitViewDef::pointer def = boost::make_shared<UnitViewDef>(upd->data);
             resources->unit_view_defs.put_and_warn(def->name, def);
             last_unit_view_def = def;
         } break;
 
         case UnitHoldAnimation: {
-            auto upd = boost::dynamic_pointer_cast<UnitHoldAnimationMessage>(msg);
+            auto upd = dynamic_cast<UnitHoldAnimationMessage *>(msg);
             int facing = upd->data1;
             last_unit_view_def->hold_animations[facing].bpm = upd->data2;
             last_unit_view_def->hold_animations[facing].images = upd->data3;
         } break;
 
         case UnitMoveAnimation: {
-            auto upd = boost::dynamic_pointer_cast<UnitMoveAnimationMessage>(msg);
+            auto upd = dynamic_cast<UnitMoveAnimationMessage *>(msg);
             int facing = upd->data1;
             last_unit_view_def->move_animations[facing].bpm = upd->data2;
             last_unit_view_def->move_animations[facing].images = upd->data3;
         } break;
 
         case UnitAttackAnimation: {
-            auto upd = boost::dynamic_pointer_cast<UnitAttackAnimationMessage>(msg);
+            auto upd = dynamic_cast<UnitAttackAnimationMessage *>(msg);
             int facing = upd->data1;
             last_unit_view_def->attack_animations[facing].bpm = upd->data2;
             last_unit_view_def->attack_animations[facing].images = upd->data3;
         } break;
 
         case UnitRecoilAnimation: {
-            auto upd = boost::dynamic_pointer_cast<UnitRecoilAnimationMessage>(msg);
+            auto upd = dynamic_cast<UnitRecoilAnimationMessage *>(msg);
             int facing = upd->data1;
             last_unit_view_def->recoil_animations[facing].bpm = upd->data2;
             last_unit_view_def->recoil_animations[facing].images = upd->data3;
         } break;
 
         case UnitDieAnimation: {
-            auto upd = boost::dynamic_pointer_cast<UnitDieAnimationMessage>(msg);
+            auto upd = dynamic_cast<UnitDieAnimationMessage *>(msg);
             int facing = upd->data1;
             last_unit_view_def->die_animations[facing].bpm = upd->data2;
             last_unit_view_def->die_animations[facing].images = upd->data3;
         } break;
 
         case UnitShadowAnimation: {
-            auto upd = boost::dynamic_pointer_cast<UnitShadowAnimationMessage>(msg);
+            auto upd = dynamic_cast<UnitShadowAnimationMessage *>(msg);
             int facing = upd->data1;
             last_unit_view_def->shadow_animations[facing].bpm = upd->data2;
             last_unit_view_def->shadow_animations[facing].images = upd->data3;
         } break;
 
         case UnitSounds: {
-            auto upd = boost::dynamic_pointer_cast<UnitSoundsMessage>(msg);
+            auto upd = dynamic_cast<UnitSoundsMessage *>(msg);
             int posture = upd->data1;;
             last_unit_view_def->sounds[posture].sounds = upd->data2;
         } break;
 
         case CreateStructureView: {
-            auto upd = boost::dynamic_pointer_cast<CreateStructureViewMessage>(msg);
+            auto upd = dynamic_cast<CreateStructureViewMessage *>(msg);
             last_structure_view_def = resources->create_structure_view(upd->data);
         } break;
 
         case StructureAnimation: {
-            auto upd = boost::dynamic_pointer_cast<StructureAnimationMessage>(msg);
+            auto upd = dynamic_cast<StructureAnimationMessage *>(msg);
             last_structure_view_def->centre_x = upd->data1;
             last_structure_view_def->centre_y = upd->data2;
             last_structure_view_def->animation.bpm = upd->data3;
@@ -141,7 +141,7 @@ void ResourceLoader::handle_message(boost::shared_ptr<Message> msg) {
         } break;
 
         case LoadSong: {
-            auto upd = boost::dynamic_pointer_cast<LoadSongMessage>(msg);
+            auto upd = dynamic_cast<LoadSongMessage *>(msg);
             load_song(upd->data);
         } break;
 
@@ -153,7 +153,7 @@ void ResourceLoader::handle_message(boost::shared_ptr<Message> msg) {
                 }
                 return;
             }
-            auto upd = boost::dynamic_pointer_cast<SoundFileMessage>(msg);
+            auto upd = dynamic_cast<SoundFileMessage *>(msg);
             load_sound(upd->data);
         } break;
 

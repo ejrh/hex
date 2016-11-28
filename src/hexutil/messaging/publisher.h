@@ -12,10 +12,12 @@ public:
 
     void subscribe(MessageReceiver *receiver);
     void unsubscribe(MessageReceiver *receiver);
-    virtual void receive(boost::shared_ptr<Message> msg);
+
+    virtual void receive(Message *msg);
+    using MessageReceiver::receive;
 
 private:
-    void send_update_to_subscribers(boost::shared_ptr<Message> update);
+    void send_update_to_subscribers(Message *update);
 
 private:
     int id;

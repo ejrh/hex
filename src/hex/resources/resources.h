@@ -75,7 +75,7 @@ public:
             last_faction_view_def(), last_tile_view_def(), last_unit_view_def(), last_structure_view_def(),
             warned_image_loader(false), warned_sound_loader(false) { }
 
-    void handle_message(boost::shared_ptr<Message> msg);
+    void handle_message(Message *msg);
 
     void load_image(const std::string& filename);
     void load_song(const std::string& filename);

@@ -84,6 +84,6 @@ void GameWriter::write_turn(Game *game) {
     emit(create_message(TurnBegin, game->turn_number));
 }
 
-void GameWriter::emit(boost::shared_ptr<Message> message) {
+void GameWriter::emit(const boost::shared_ptr<Message>& message) {
     receiver->receive(message);
 }

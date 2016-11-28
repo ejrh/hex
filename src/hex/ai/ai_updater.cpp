@@ -19,15 +19,15 @@ AiUpdater::~AiUpdater() {
     delete game_updater;
 }
 
-void AiUpdater::receive(boost::shared_ptr<Message> update) {
+void AiUpdater::receive(Message *update) {
     game_updater->receive(update);
     apply_update(update);
 }
 
-void AiUpdater::apply_update(boost::shared_ptr<Message> update) {
+void AiUpdater::apply_update(Message *update) {
     switch (update->type) {
         case CreateFaction: {
-            auto upd = boost::dynamic_pointer_cast<CreateFactionMessage>(update);
+            auto upd = dynamic_cast<CreateFactionMessage *>(update);
             if (upd->data2 == ai->faction_type) {
                 ai->faction = ai->game.factions.get(upd->data1);
             }

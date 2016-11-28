@@ -7,15 +7,15 @@
 #include "hexutil/messaging/builtin_messages.h"
 
 
-void MessageLoader::receive(boost::shared_ptr<Message> msg) {
+void MessageLoader::receive(Message *msg) {
     switch (msg->type) {
         case IncludeResource: {
-            auto upd = boost::dynamic_pointer_cast<IncludeResourceMessage>(msg);
+            auto upd = dynamic_cast<IncludeResourceMessage *>(msg);
             include(upd->data);
         } break;
 
         case IncludeIfResourceExists: {
-            auto upd = boost::dynamic_pointer_cast<IncludeIfResourceExistsMessage>(msg);
+            auto upd = dynamic_cast<IncludeIfResourceExistsMessage *>(msg);
             include(upd->data, true);
         } break;
 
