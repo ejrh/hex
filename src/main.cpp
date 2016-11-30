@@ -11,6 +11,7 @@
 #include "hexutil/messaging/writer.h"
 #include "hexutil/messaging/receiver.h"
 #include "hexutil/messaging/publisher.h"
+#include "hexutil/messaging/logger.h"
 #include "hexutil/messaging/queue.h"
 #include "hexutil/networking/networking.h"
 #include "hexutil/messaging/builtin_messages.h"
@@ -83,7 +84,8 @@ public:
 class LocalNode: public NodeInterface {
 public:
     LocalNode():
-            game(), game_updater(&game), publisher(1000), arbiter(&game, &publisher), dispatch_queue(1000) {
+            game(), game_updater(&game), publisher(1000), arbiter(&game, &publisher), dispatch_queue(1000), update_logger("Update: ") {
+        publisher.subscribe(&update_logger);
         publisher.subscribe(&game_updater);
     }
 
@@ -130,6 +132,7 @@ protected:
     Publisher publisher;
     GameArbiter arbiter;
     MessageQueue dispatch_queue;
+    MessageLogger update_logger;
     std::vector<Ai *> ais;
 };
 

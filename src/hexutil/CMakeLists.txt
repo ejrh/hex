@@ -19,6 +19,8 @@ set(srcs
         messaging/checksum.h
         messaging/loader.cpp
         messaging/loader.h
+        messaging/logger.cpp
+        messaging/logger.h
         messaging/message_types.h
         messaging/message.cpp
         messaging/message.h

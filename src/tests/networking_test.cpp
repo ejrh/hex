@@ -2,6 +2,7 @@
 
 #include "hexutil/basics/error.h"
 #include "hexutil/messaging/queue.h"
+#include "hexutil/messaging/logger.h"
 #include "hexutil/messaging/receiver.h"
 #include "hexutil/messaging/builtin_messages.h"
 #include "hexutil/networking/networking.h"
@@ -9,23 +10,12 @@
 
 #define SERVER_PORT 9999
 
-class PrintingMessageReceiver: public MessageReceiver {
-public:
-    void receive(Message *msg) {
-        std::ostringstream ss;
-        Serialiser writer(ss);
-        writer << msg;
-        std::string msg_str(ss.str());
-        BOOST_LOG_TRIVIAL(info) << "Received: " << msg_str;
-    }
-};
-
 void run() {
     register_builtin_messages();
 
     MessageQueue dispatch_queue(1000);
     Server server(SERVER_PORT, &dispatch_queue);
-    PrintingMessageReceiver printer;
+    MessageLogger logger("Received: ");
 
     server.start();
 
@@ -42,9 +32,9 @@ void run() {
         if (SDL_WaitEventTimeout(&evt, 1000)) {
             if (evt.type == SDL_QUIT)
                 running = false;
-
-            dispatch_queue.flush(&printer);
         }
+
+        dispatch_queue.flush(&logger);
     }
 
     server.stop();

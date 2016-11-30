@@ -2,6 +2,7 @@
 
 #include "hexutil/messaging/message.h"
 #include "hexutil/messaging/publisher.h"
+#include "hexutil/messaging/logger.h"
 #include "hexutil/messaging/receiver.h"
 #include "hexutil/messaging/serialiser.h"
 #include "hexutil/messaging/builtin_messages.h"
@@ -27,20 +28,6 @@ public:
 
 private:
     Serialiser &writer;
-};
-
-
-class DebugUpdateListener: public MessageReceiver {
-public:
-    DebugUpdateListener() { }
-    virtual ~DebugUpdateListener() { }
-
-    virtual void receive(Message *update) {
-        std::ostringstream buf;
-        Serialiser writer(buf);
-        writer << update;
-        BOOST_LOG_TRIVIAL(info) << "Applied: " << buf.str();
-    }
 };
 
 
@@ -87,8 +74,8 @@ int main(int argc, char *argv[]) {
 
         updater.receive(create_message(StreamClose));
     } else if (!strcmp(argv[1], "replay")) {
-        DebugUpdateListener listener;
-        updater.subscribe(&listener);
+        MessageLogger logger("Applied: ");
+        updater.subscribe(&logger);
 
         Deserialiser reader(std::cin);
 
