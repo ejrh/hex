@@ -1,6 +1,8 @@
 set(srcs
         basics/atom.cpp
         basics/atom.h
+        basics/datum.cpp
+        basics/datum.h
         basics/error.h
         basics/hexgrid.cpp
         basics/hexgrid.h
@@ -10,6 +12,8 @@ set(srcs
         basics/noise.h
         basics/objmap.h
         basics/point.h
+        basics/properties.cpp
+        basics/properties.h
         basics/string_vector.cpp
         basics/string_vector.h
         basics/vector2.h

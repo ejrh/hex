@@ -16,6 +16,8 @@ set(srcs
         game/game_arbiter.h
         game/game_messages.cpp
         game/game_messages.h
+        game/game_properties.cpp
+        game/game_properties.h
         game/game_serialisation.h
         game/game_updater.cpp
         game/game_updater.h
@@ -40,8 +42,6 @@ set(srcs
         game/movement/pathfinding.cpp
         game/movement/pathfinding.h
         game/property_names.h
-        game/properties.cpp
-        game/properties.h
         game/unit_stack.cpp
         game/visibility_map.cpp
         game/visibility_map.h

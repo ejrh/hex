@@ -28,6 +28,28 @@ int get_character_escape(int ch) {
 }
 
 
+class serialise_visitor: public boost::static_visitor<> {
+public:
+    serialise_visitor(Serialiser& serialiser): serialiser(serialiser) { }
+
+    void operator()(const int& i) const {
+        serialiser << i;
+    }
+
+    void operator()(const std::string& str) const {
+        serialiser << str;
+    }
+
+private:
+    Serialiser& serialiser;
+};
+
+
+Serialiser& Serialiser::operator<<(const Datum& datum) {
+    boost::apply_visitor(serialise_visitor(*this), datum.value);
+    return *this;
+}
+
 void Serialiser::type_begin_tuple(const char *type) {
     if (need_seperator)
         out << ", ";
@@ -93,6 +115,23 @@ void Serialiser::write_atom(const std::string& atom) {
     }
 }
 
+
+Deserialiser& Deserialiser::operator>>(Datum& datum) {
+    std::string word;
+    *this >> word;
+    if (was_quoted) {
+        datum.value = word;
+    } else {
+        char *end;
+        int intval = std::strtol(word.c_str(), &end, 0);
+        if (*end == '\0') {
+            datum.value = intval;
+        } else {
+            datum.value = word;
+        }
+    }
+    return *this;
+}
 
 void Deserialiser::type_begin_tuple(std::string &type_name) {
     skip_to_next();

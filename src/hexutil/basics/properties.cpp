@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "hex/game/properties.h"
+#include "hexutil/basics/properties.h"
 
 
 std::ostream& operator<<(std::ostream& os, const Properties& p) {
@@ -16,10 +16,4 @@ std::ostream& operator<<(std::ostream& os, const Properties& p) {
     }
     os << "}";
     return os;
-}
-
-void register_property_names() {
-#define PROPERTY_NAME(n) AtomRegistry::register_atom(#n, n);
-#include "hex/game/property_names.h"
-#undef PROPERTY_NAME
 }

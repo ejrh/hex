@@ -2,24 +2,8 @@
 #define PROPERTIES_H
 
 #include "hexutil/basics/atom.h"
+#include "hexutil/basics/datum.h"
 
-
-enum {
-    FirstGameAtom = 0,
-    #define PROPERTY_NAME(n) n,
-    #include "hex/game/property_names.h"
-    #undef PROPERTY_NAME
-    LastGameAtom
-};
-
-
-// The variant must be wrapped like this, otherwise the compiler will get confused about which overload to use
-struct PropertyValue {
-    PropertyValue(): value(1) { }
-    boost::variant<int, float, std::string> value;
-    PropertyValue& operator=(const int& x) { value = x; return *this; }
-    bool operator==(const int& x) const { return boost::get<int>(value) == x; }
-};
 
 class Properties {
 public:
@@ -27,7 +11,7 @@ public:
         return data.count(name);
     }
 
-    std::map<Atom, PropertyValue>::const_iterator find(const Atom& name) const {
+    std::map<Atom, Datum>::const_iterator find(const Atom& name) const {
         return data.find(name);
     }
 
@@ -68,14 +52,13 @@ public:
         return get<T>(name);
     }
 
-    PropertyValue& operator[](const Atom& name) { return data[name]; }
+    Datum& operator[](const Atom& name) { return data[name]; }
 
 public:
-    std::map<Atom, PropertyValue> data;
+    std::map<Atom, Datum> data;
 };
 
 std::ostream& operator<<(std::ostream& os, const Properties& p);
 
-void register_property_names();
 
 #endif

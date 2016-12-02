@@ -2,7 +2,9 @@
 #define SERIALISER_H
 
 #include "hexutil/basics/atom.h"
+#include "hexutil/basics/datum.h"
 #include "hexutil/basics/io.h"
+#include "hexutil/basics/properties.h"
 
 
 bool is_atom_char(int x);
@@ -89,6 +91,13 @@ public:
 
     Serialiser& operator<<(const Atom& t) {
         *this << AtomRegistry::name(t);
+        return *this;
+    }
+
+    Serialiser& operator<<(const Datum& datum);
+
+    Serialiser& operator<<(const Properties& p) {
+        *this << p.data;
         return *this;
     }
 
@@ -217,6 +226,13 @@ public:
         std::string name;
         *this >> name;
         t = AtomRegistry::atom(name);
+        return *this;
+    }
+
+    Deserialiser& operator>>(Datum& datum);
+
+    Deserialiser& operator>>(Properties& p) {
+        *this >> p.data;
         return *this;
     }
 

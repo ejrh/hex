@@ -4,9 +4,10 @@
 #include "hexutil/basics/intset.h"
 #include "hexutil/basics/objmap.h"
 #include "hexutil/basics/point.h"
+#include "hexutil/basics/properties.h"
 #include "hexutil/basics/vector2.h"
 
-#include "hex/game/properties.h"
+#include "hex/game/game_properties.h"
 #include "hex/game/visibility_map.h"
 
 #define MOVE_SCALE 1

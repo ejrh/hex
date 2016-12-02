@@ -1,7 +1,7 @@
 #ifndef COMBAT_MODEL
 #define COMBAT_MODEL
 
-#include "hex/game/properties.h"
+#include "hexutil/basics/properties.h"
 
 class Battle;
 class Participant;

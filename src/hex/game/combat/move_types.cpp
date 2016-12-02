@@ -1,7 +1,8 @@
 #include "common.h"
 
+#include "hexutil/basics/properties.h"
+
 #include "hex/game/game.h"
-#include "hex/game/properties.h"
 #include "hex/game/combat/combat.h"
 #include "hex/game/combat/move.h"
 #include "hex/game/combat/move_types.h"
