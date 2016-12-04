@@ -3,8 +3,6 @@ set(srcs
         ai/ai.h
         ai/ai_updater.cpp
         ai/ai_updater.h
-        audio/audio.cpp
-        audio/audio.h
         chat/chat.h
         chat/chat_updater.cpp
         chat/chat_window.cpp
@@ -45,14 +43,6 @@ set(srcs
         game/unit_stack.cpp
         game/visibility_map.cpp
         game/visibility_map.h
-        graphics/font.cpp
-        graphics/font.h
-        graphics/graphics.cpp
-        graphics/graphics.h
-        graphics/hss.cpp
-        graphics/ilb.cpp
-        graphics/ilb.h
-        graphics/load_image.cpp
         resources/image_loader.cpp
         resources/image_ref.h
         resources/message_types.h
@@ -65,11 +55,6 @@ set(srcs
         resources/sound_ref.h
         resources/view_def.h
         resources/view_def_serialisation.h
-        ui/controls.cpp
-        ui/controls.h
-        ui/loop.cpp
-        ui/ui.h
-        ui/ui_window.cpp
         view/combat/battle_viewer.cpp
         view/combat/battle_viewer.h
         view/combat/battle_window.cpp
@@ -110,15 +95,12 @@ set(srcs
 
 source_group(Sources REGULAR_EXPRESSION cpp|h)
 source_group(Sources\\ai REGULAR_EXPRESSION /ai/)
-source_group(Sources\\audio REGULAR_EXPRESSION /audio/)
 source_group(Sources\\chat REGULAR_EXPRESSION /chat/)
 source_group(Sources\\game REGULAR_EXPRESSION /game/)
 source_group(Sources\\game\\combat REGULAR_EXPRESSION /game/combat/)
 source_group(Sources\\game\\generation REGULAR_EXPRESSION /game/generation/)
 source_group(Sources\\game\\movement REGULAR_EXPRESSION /game/movement/)
-source_group(Sources\\graphics REGULAR_EXPRESSION /graphics/)
 source_group(Sources\\resources REGULAR_EXPRESSION /resources/)
-source_group(Sources\\ui REGULAR_EXPRESSION /ui/)
 source_group(Sources\\view REGULAR_EXPRESSION /view/)
 source_group(Sources\\view\\combat REGULAR_EXPRESSION /view/combat/)
 add_library(hex ${srcs})

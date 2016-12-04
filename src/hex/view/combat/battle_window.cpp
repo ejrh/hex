@@ -1,9 +1,10 @@
 #include "common.h"
 
+#include "hexav/graphics/font.h"
+#include "hexav/graphics/graphics.h"
+
 #include "hex/game/game.h"
 #include "hex/game/combat/combat.h"
-#include "hex/graphics/font.h"
-#include "hex/graphics/graphics.h"
 #include "hex/view/unit_renderer.h"
 #include "hex/view/view.h"
 #include "hex/view/combat/combat_view.h"

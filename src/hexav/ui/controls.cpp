@@ -1,8 +1,8 @@
 #include "common.h"
 
-#include "hex/graphics/graphics.h"
-#include "hex/graphics/font.h"
-#include "hex/ui/controls.h"
+#include "hexav/graphics/graphics.h"
+#include "hexav/graphics/font.h"
+#include "hexav/ui/controls.h"
 
 
 UiLabel::UiLabel(int x, int y, int width, int height):

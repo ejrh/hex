@@ -16,8 +16,10 @@
 #include "hexutil/networking/networking.h"
 #include "hexutil/messaging/builtin_messages.h"
 
+#include "hexav/audio/audio.h"
+#include "hexav/graphics/graphics.h"
+
 #include "hex/ai/ai.h"
-#include "hex/audio/audio.h"
 #include "hex/chat/chat.h"
 #include "hex/game/game.h"
 #include "hex/game/game_arbiter.h"
@@ -25,7 +27,6 @@
 #include "hex/game/game_updater.h"
 #include "hex/game/game_writer.h"
 #include "hex/game/generation/generator.h"
-#include "hex/graphics/graphics.h"
 #include "hex/resources/resource_messages.h"
 #include "hex/view/audio_renderer.h"
 #include "hex/view/level_renderer.h"

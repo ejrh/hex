@@ -1,7 +1,7 @@
 #ifndef BATTLE_WINDOW_H
 #define BATTLE_WINDOW_H
 
-#include "hex/ui/ui.h"
+#include "hexav/ui/ui.h"
 
 
 class Resources;

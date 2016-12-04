@@ -1,7 +1,8 @@
 #include "common.h"
 
+#include "hexav/graphics/graphics.h"
+
 #include "hex/game/game.h"
-#include "hex/graphics/graphics.h"
 #include "hex/view/view.h"
 #include "hex/view/level_renderer.h"
 #include "hex/view/level_window.h"

@@ -1,8 +1,8 @@
 #ifndef UNIT_INFO_WINDOW_H
 #define UNIT_INFO_WINDOW_H
 
-#include "hex/ui/ui.h"
-#include "hex/ui/controls.h"
+#include "hexav/ui/ui.h"
+#include "hexav/ui/controls.h"
 
 
 class Resources;

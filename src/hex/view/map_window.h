@@ -3,7 +3,7 @@
 
 #include "hexutil/basics/point.h"
 
-#include "hex/ui/ui.h"
+#include "hexav/ui/ui.h"
 
 
 class GameView;

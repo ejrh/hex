@@ -5,11 +5,12 @@
 #include "hexutil/basics/noise.h"
 #include "hexutil/messaging/builtin_messages.h"
 
-#include "hex/graphics/font.h"
-#include "hex/graphics/graphics.h"
+#include "hexav/graphics/font.h"
+#include "hexav/graphics/graphics.h"
+#include "hexav/ui/ui.h"
+
 #include "hex/game/game.h"
 #include "hex/resources/resource_messages.h"
-#include "hex/ui/ui.h"
 #include "hex/view/unit_renderer.h"
 #include "hex/view/view.h"
 

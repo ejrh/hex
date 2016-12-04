@@ -2,10 +2,10 @@
 
 #include "hexutil/basics/error.h"
 
-#include "hex/graphics/font.h"
-#include "hex/graphics/graphics.h"
-#include "hex/ui/ui.h"
-#include "hex/ui/controls.h"
+#include "hexav/graphics/font.h"
+#include "hexav/graphics/graphics.h"
+#include "hexav/ui/ui.h"
+#include "hexav/ui/controls.h"
 
 class TestWindow: public UiWindow {
 public:

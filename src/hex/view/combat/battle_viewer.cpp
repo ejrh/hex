@@ -1,10 +1,11 @@
 #include "common.h"
 
-#include "hex/audio/audio.h"
+#include "hexav/audio/audio.h"
+#include "hexav/graphics/font.h"
+#include "hexav/graphics/graphics.h"
+#include "hexav/ui/ui.h"
+
 #include "hex/game/game.h"
-#include "hex/graphics/font.h"
-#include "hex/graphics/graphics.h"
-#include "hex/ui/ui.h"
 #include "hex/view/level_renderer.h"
 #include "hex/view/combat/combat_view.h"
 #include "hex/view/combat/battle_viewer.h"

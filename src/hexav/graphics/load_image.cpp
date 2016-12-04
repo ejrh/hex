@@ -2,7 +2,7 @@
 
 #include "hexutil/basics/error.h"
 
-#include "hex/graphics/graphics.h"
+#include "hexav/graphics/graphics.h"
 
 void load_image(const std::string& filename, Graphics *graphics, ImageMap& image_set) {
     SDL_Surface *surface = IMG_Load(filename.c_str());

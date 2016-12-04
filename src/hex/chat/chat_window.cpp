@@ -1,9 +1,10 @@
 #include "common.h"
 
+#include "hexav/graphics/font.h"
+#include "hexav/graphics/graphics.h"
+
 #include "hex/chat/chat.h"
 #include "hex/game/game_messages.h"
-#include "hex/graphics/font.h"
-#include "hex/graphics/graphics.h"
 
 
 ChatWindow::ChatWindow(int width, int height, Resources *resources, Graphics *graphics, MessageReceiver *dispatcher):

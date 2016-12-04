@@ -5,7 +5,7 @@
 #include "hexutil/basics/error.h"
 
 #define AUDIO_CPP
-#include "hex/audio/audio.h"
+#include "hexav/audio/audio.h"
 #include "hex/resources/resources.h"
 
 Sound::Sound():

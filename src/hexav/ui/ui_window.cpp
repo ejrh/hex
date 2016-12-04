@@ -1,7 +1,7 @@
 #include "common.h"
 
-#include "hex/graphics/graphics.h"
-#include "hex/ui/ui.h"
+#include "hexav/graphics/graphics.h"
+#include "hexav/ui/ui.h"
 
 
 UiWindow::UiWindow(int x, int y, int width, int height, UiWindowFlags flags):

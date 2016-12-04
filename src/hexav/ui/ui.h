@@ -1,7 +1,7 @@
 #ifndef UI_H
 #define UI_H
 
-#include "hex/graphics/graphics.h"
+#include "hexav/graphics/graphics.h"
 
 enum UiWindowFlags {
     WindowIsVisible = 1,

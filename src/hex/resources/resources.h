@@ -6,7 +6,8 @@
 #include "hexutil/messaging/message.h"
 #include "hexutil/messaging/receiver.h"
 
-#include "hex/graphics/graphics.h"
+#include "hexav/graphics/graphics.h"
+
 #include "hex/resources/view_def.h"
 
 

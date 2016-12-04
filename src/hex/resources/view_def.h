@@ -1,9 +1,10 @@
 #ifndef VIEW_DATA_H
 #define VIEW_DATA_H
 
+#include "hexav/audio/audio.h"
+
 #include "hex/resources/image_ref.h"
 #include "hex/resources/sound_ref.h"
-#include "hex/audio/audio.h"
 
 
 class AnimationDef {

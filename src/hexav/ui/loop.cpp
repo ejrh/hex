@@ -1,6 +1,6 @@
 #include "common.h"
 
-#include "hex/ui/ui.h"
+#include "hexav/ui/ui.h"
 
 Uint32 drag_event_type = 0;
 

@@ -1,6 +1,7 @@
 #include "common.h"
 
-#include "hex/audio/audio.h"
+#include "hexav/audio/audio.h"
+
 #include "hex/view/audio_renderer.h"
 #include "hex/view/view.h"
 

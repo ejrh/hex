@@ -2,7 +2,7 @@
 
 #include "hexutil/basics/error.h"
 
-#include "hex/graphics/graphics.h"
+#include "hexav/graphics/graphics.h"
 
 Image::Image(int id, SDL_Texture *texture):
     id(id), clip_x_offset(0), clip_y_offset(0), texture(texture) {

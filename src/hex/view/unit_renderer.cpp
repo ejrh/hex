@@ -3,8 +3,9 @@
 #include "hexutil/basics/error.h"
 #include "hexutil/basics/vector2.h"
 
-#include "hex/graphics/font.h"
-#include "hex/graphics/graphics.h"
+#include "hexav/graphics/font.h"
+#include "hexav/graphics/graphics.h"
+
 #include "hex/view/unit_renderer.h"
 #include "hex/view/view.h"
 

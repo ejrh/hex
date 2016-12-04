@@ -4,8 +4,9 @@
 #include "hexutil/basics/hexgrid.h"
 #include "hexutil/basics/noise.h"
 
-#include "hex/graphics/font.h"
-#include "hex/graphics/graphics.h"
+#include "hexav/graphics/font.h"
+#include "hexav/graphics/graphics.h"
+
 #include "hex/game/game.h"
 #include "hex/game/movement/movement.h"
 #include "hex/game/movement/pathfinding.h"

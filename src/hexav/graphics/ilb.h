@@ -1,7 +1,7 @@
 #ifndef ILB_H
 #define ILB_H
 
-#include "hex/graphics/graphics.h"
+#include "hexav/graphics/graphics.h"
 
 #define ILB_MAGIC 0x424C4904
 #define ILB_VERSION_3 0x40400000

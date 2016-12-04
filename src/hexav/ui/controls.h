@@ -1,9 +1,9 @@
 #ifndef CONTROLS_H
 #define CONTROLS_H
 
-#include "hex/graphics/graphics.h"
-#include "hex/graphics/font.h"
-#include "hex/ui/ui.h"
+#include "hexav/graphics/graphics.h"
+#include "hexav/graphics/font.h"
+#include "hexav/ui/ui.h"
 
 class UiLabel: public UiWindow {
 public:

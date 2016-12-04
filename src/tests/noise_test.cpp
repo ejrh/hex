@@ -3,8 +3,8 @@
 #include "hexutil/basics/error.h"
 #include "hexutil/basics/noise.h"
 
-#include "hex/graphics/graphics.h"
-#include "hex/graphics/font.h"
+#include "hexav/graphics/graphics.h"
+#include "hexav/graphics/font.h"
 
 static bool show_gradients;
 

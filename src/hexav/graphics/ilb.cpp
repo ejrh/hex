@@ -2,8 +2,8 @@
 
 #include "hexutil/basics/error.h"
 
-#include "hex/graphics/graphics.h"
-#include "hex/graphics/ilb.h"
+#include "hexav/graphics/graphics.h"
+#include "hexav/graphics/ilb.h"
 
 #define MAX_NAME_LENGTH 100
 
