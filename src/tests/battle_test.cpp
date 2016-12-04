@@ -6,13 +6,13 @@
 #include "hexutil/messaging/publisher.h"
 #include "hexutil/messaging/writer.h"
 
-#include "hex/game/game.h"
-#include "hex/game/game_arbiter.h"
-#include "hex/game/game_messages.h"
-#include "hex/game/game_serialisation.h"
-#include "hex/game/game_updater.h"
-#include "hex/game/game_writer.h"
-#include "hex/game/combat/combat.h"
+#include "hexgame/game/game.h"
+#include "hexgame/game/game_arbiter.h"
+#include "hexgame/game/game_messages.h"
+#include "hexgame/game/game_serialisation.h"
+#include "hexgame/game/game_updater.h"
+#include "hexgame/game/game_writer.h"
+#include "hexgame/game/combat/combat.h"
 
 #define BOOST_TEST_MODULE BattleTest
 #include <boost/test/included/unit_test.hpp>

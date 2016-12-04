@@ -4,11 +4,12 @@
 #include "hexutil/messaging/loader.h"
 #include "hexutil/messaging/builtin_messages.h"
 
-#include "hex/game/game.h"
-#include "hex/game/game_updater.h"
-#include "hex/game/game_messages.h"
-#include "hex/resources/resources.h"
-#include "hex/resources/resource_messages.h"
+#include "hexgame/game/game.h"
+#include "hexgame/game/game_updater.h"
+#include "hexgame/game/game_messages.h"
+
+#include "hexview/resources/resources.h"
+#include "hexview/resources/resource_messages.h"
 
 
 void run() {

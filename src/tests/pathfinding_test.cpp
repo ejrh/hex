@@ -7,12 +7,13 @@
 #include "hexav/graphics/font.h"
 #include "hexav/graphics/graphics.h"
 
-#include "hex/game/game.h"
-#include "hex/game/movement/movement.h"
-#include "hex/game/movement/pathfinding.h"
-#include "hex/view/level_renderer.h"
-#include "hex/view/level_window.h"
-#include "hex/view/view.h"
+#include "hexgame/game/game.h"
+#include "hexgame/game/movement/movement.h"
+#include "hexgame/game/movement/pathfinding.h"
+
+#include "hexview/view/level_renderer.h"
+#include "hexview/view/level_window.h"
+#include "hexview/view/view.h"
 
 
 #define TILE_WIDTH 48

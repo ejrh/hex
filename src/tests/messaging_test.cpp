@@ -4,7 +4,7 @@
 #include "hexutil/messaging/queue.h"
 #include "hexutil/messaging/builtin_messages.h"
 
-#include "hex/game/game_messages.h"
+#include "hexgame/game/game_messages.h"
 
 #define BOOST_TEST_MODULE MessagingTest
 #include <boost/test/included/unit_test.hpp>

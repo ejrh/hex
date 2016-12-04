@@ -7,10 +7,10 @@
 #include "hexutil/messaging/serialiser.h"
 #include "hexutil/messaging/builtin_messages.h"
 
-#include "hex/game/game.h"
-#include "hex/game/game_messages.h"
-#include "hex/game/game_serialisation.h"
-#include "hex/game/game_updater.h"
+#include "hexgame/game/game.h"
+#include "hexgame/game/game_messages.h"
+#include "hexgame/game/game_serialisation.h"
+#include "hexgame/game/game_updater.h"
 
 
 #define ORIGIN 1

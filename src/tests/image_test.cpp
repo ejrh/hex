@@ -8,9 +8,10 @@
 #include "hexav/graphics/graphics.h"
 #include "hexav/ui/ui.h"
 
-#include "hex/game/game.h"
-#include "hex/resources/resources.h"
-#include "hex/resources/resource_messages.h"
+#include "hexgame/game/game.h"
+
+#include "hexview/resources/resources.h"
+#include "hexview/resources/resource_messages.h"
 
 
 void load_resources(Resources *resources, Graphics *graphics) {

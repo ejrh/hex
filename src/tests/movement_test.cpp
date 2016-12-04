@@ -7,11 +7,11 @@
 #include "hexutil/messaging/queue.h"
 #include "hexutil/messaging/writer.h"
 
-#include "hex/game/game.h"
-#include "hex/game/game_arbiter.h"
-#include "hex/game/game_messages.h"
-#include "hex/game/game_updater.h"
-#include "hex/game/game_writer.h"
+#include "hexgame/game/game.h"
+#include "hexgame/game/game_arbiter.h"
+#include "hexgame/game/game_messages.h"
+#include "hexgame/game/game_updater.h"
+#include "hexgame/game/game_writer.h"
 
 #define BOOST_TEST_MODULE MovementTest
 #include <boost/test/included/unit_test.hpp>

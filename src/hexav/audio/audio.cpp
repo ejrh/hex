@@ -6,7 +6,9 @@
 
 #define AUDIO_CPP
 #include "hexav/audio/audio.h"
-#include "hex/resources/resources.h"
+
+//TODO remove dependency on resources!
+#include "hexview/resources/resources.h"
 
 Sound::Sound():
         chunk(NULL) {
