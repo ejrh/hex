@@ -14,7 +14,7 @@
 
 Ai::Ai(const std::string& faction_type, MessageReceiver *dispatcher):
         faction_type(faction_type), dispatcher(dispatcher),
-        last_update(0), started(false) {
+        update_step(0), started(false) {
     updater = new AiUpdater(this);
     receiver = new MessageQueue(1000);
 }
@@ -41,7 +41,8 @@ MessageReceiver *Ai::get_receiver() const {
 void Ai::run_thread() {
     while (started) {
         update();
-        SDL_Delay(100);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+        update_step++;
     }
 }
 
@@ -52,12 +53,10 @@ void Ai::update() {
         BOOST_LOG_TRIVIAL(debug) << "Ai received " << num_messages << " incoming messages";
     }
 
-    // Perform periodic update
-    unsigned int ticks = SDL_GetTicks();
-    if (ticks < last_update + 10000)
+    if (update_step % 10 != 0)
         return;
-    last_update = ticks;
 
+    // Perform periodic update
     for (auto iter = game.stacks.begin(); iter != game.stacks.end(); iter++) {
         UnitStack& stack = *iter->second;
         if (stack.owner == faction) {

@@ -29,7 +29,7 @@ private:
     AiUpdater *updater;
     MessageQueue *receiver;
     MessageReceiver *dispatcher;
-    unsigned int last_update;
+    unsigned int update_step;
     Faction::pointer faction;
     boost::atomic<bool> started;
     boost::thread ai_thread;

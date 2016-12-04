@@ -31,10 +31,6 @@
 #include <boost/crc.hpp>
 #include <boost/variant.hpp>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-
 
 #ifdef _WIN32
 #define vsnprintf(dest, sz, fmt, args) vsnprintf_s(dest, sz, sz, fmt, args)

@@ -1,6 +1,9 @@
 #ifndef FONT_H
 #define FONT_H
 
+#include <SDL2/SDL_ttf.h>
+
+
 enum FontId {
     SmallFont10,
     SmallFont14

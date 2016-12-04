@@ -19,20 +19,11 @@ void run() {
 
     server.start();
 
-    SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS);
-    SDL_Delay(1000);
-
     Client client(&dispatch_queue);
     client.connect(std::string("localhost:9999"));
 
-    bool running = true;
-    while (running) {
-        SDL_Event evt;
-
-        if (SDL_WaitEventTimeout(&evt, 1000)) {
-            if (evt.type == SDL_QUIT)
-                running = false;
-        }
+    for (int i = 0; i < 5; i++) {
+        boost::this_thread::sleep(boost::posix_time::seconds(1));
 
         dispatch_queue.flush(&logger);
     }

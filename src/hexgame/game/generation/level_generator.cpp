@@ -1,5 +1,10 @@
 #include "common.h"
 
+#ifdef _WIN32
+#define _USE_MATH_DEFINES
+#include <math.h>
+#endif
+
 #include "hexutil/basics/hexgrid.h"
 #include "hexutil/basics/noise.h"
 
