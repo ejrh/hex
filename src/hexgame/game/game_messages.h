@@ -9,18 +9,11 @@
 #include "hexgame/game/game_serialisation.h"
 
 
-enum GameMessageType {
-    FirstGameMessage = 1000,
-#define MSG_TYPE(s, c) s,
-#include "hexgame/game/message_types.h"
-#undef MSG_TYPE
-    LastGameMessage
-};
+#define MESSAGE_TEMPLATE_NAME Game
+#define MESSAGE_TEMPLATE_INCLUDE_FILE "hexgame/game/message_types.h"
+#define MESSAGE_TEMPLATE_START_ID 1000
+#include "hexutil/messaging/message_h_template.h"
 
-
-#define MSG_TYPE(s, c) typedef c s##Message;
-#include "hexgame/game/message_types.h"
-#undef MSG_TYPE
 
 void register_game_messages();
 

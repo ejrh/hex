@@ -7,18 +7,11 @@
 #include "hexview/resources/view_def_serialisation.h"
 
 
-enum ResourceMessageType {
-    FirstResourceMessage = 2000,
-#define MSG_TYPE(s, c) s,
-#include "hexview/resources/message_types.h"
-#undef MSG_TYPE
-    LastResourceMessage
-};
+#define MESSAGE_TEMPLATE_NAME Resource
+#define MESSAGE_TEMPLATE_INCLUDE_FILE "hexview/resources/message_types.h"
+#define MESSAGE_TEMPLATE_START_ID 2000
+#include "hexutil/messaging/message_h_template.h"
 
-
-#define MSG_TYPE(s, c) typedef c s##Message;
-#include "hexview/resources/message_types.h"
-#undef MSG_TYPE
 
 void register_resource_messages();
 

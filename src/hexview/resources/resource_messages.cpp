@@ -5,26 +5,11 @@
 #include "hexview/resources/resource_messages.h"
 
 
-class ResourceMessageFactory: public AbstractMessageFactory {
-public:
-    ResourceMessageFactory(): AbstractMessageFactory(FirstResourceMessage + 1, LastResourceMessage - 1) {
-        populate_names();
-    }
+#define MESSAGE_TEMPLATE_NAME Resource
+#define MESSAGE_TEMPLATE_INCLUDE_FILE "hexview/resources/message_types.h"
+#define MESSAGE_TEMPLATE_START_ID 2000
+#include "hexutil/messaging/message_cpp_template.h"
 
-    Message *new_message(int type) {
-#define MSG_TYPE(s, c) if (type == s) { Message *m = new c; m->type = s; return m; } else
-#include "hexview/resources/message_types.h"
-#undef MSG_TYPE
-        return nullptr;
-    }
-
-protected:
-    void populate_names() {
-#define MSG_TYPE(s, c) msg_type_names.push_back(#s);
-#include "hexview/resources/message_types.h"
-#undef MSG_TYPE
-    }
-};
 
 static ResourceMessageFactory resource_messages_factory;
 

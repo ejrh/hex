@@ -28,6 +28,8 @@ set(srcs
         messaging/message_types.h
         messaging/message.cpp
         messaging/message.h
+        messaging/message_h_template.h
+        messaging/message_cpp_template.h
         messaging/publisher.cpp
         messaging/publisher.h
         messaging/queue.cpp

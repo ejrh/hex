@@ -6,28 +6,11 @@
 #include "hexutil/messaging/message.h"
 
 
-enum BuiltinMessageType {
-    FirstBuiltinMessage = 0,
-#define MSG_TYPE(s, c) s,
-#include "hexutil/messaging/message_types.h"
-#undef MSG_TYPE
-    LastBuiltinMessage
-};
+#define MESSAGE_TEMPLATE_NAME Builtin
+#define MESSAGE_TEMPLATE_INCLUDE_FILE "hexutil/messaging/message_types.h"
+#define MESSAGE_TEMPLATE_START_ID 0
+#include "hexutil/messaging/message_h_template.h"
 
-
-#define MSG_TYPE(s, c) typedef c s##Message;
-#include "hexutil/messaging/message_types.h"
-#undef MSG_TYPE
-
-
-class BuiltinMessageFactory: public AbstractMessageFactory {
-public:
-    BuiltinMessageFactory();
-    Message *new_message(int type);
-
-protected:
-    void populate_names();
-};
 
 void register_builtin_messages();
 
