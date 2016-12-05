@@ -6,6 +6,9 @@ Hex is developed in these environments:
   * Windows 7, compiled with Visual C++ 2010 in x86 (i.e. 32 bit) mode.
   * Ubuntu, compiled with Clang or GCC in x64 mode.
 
+Windows
+-------
+
 On Windows, this is what I do:
 
   - Open Visual Sudio command prompt and change to "hex" directory
@@ -14,9 +17,14 @@ On Windows, this is what I do:
   - Open hex.sln, and compile
   - Fix the inevitable errors and repeat
 
+The build type can be changed in Visual Studio from Debug (default) to Release.
+
 I use Visual Studio 10 because I find the new features of successive versions to not be
 worth the pain of setting up a development environment on Windows.  There is no reason why it
 should not compile with other versions of Visual C++.
+
+Linux
+-----
 
 On Linux:
 
@@ -31,10 +39,16 @@ put `cotire.cmake` in it, and rerun cmake.
 
 The executable and tests should be run from the main project directory.
 
+To set the build type, use one of these commands:
+
+    (cd build; rm -f CMakeCache.txt; cmake -D CMAKE_BUILD_TYPE=Debug ..)
+    (cd build; rm -f CMakeCache.txt; cmake -D CMAKE_BUILD_TYPE=Release ..)
+
 Dependencies
 ------------
 
-These are the packages required on Linux.  A similar set is required for Windows but must be installed and configured manually.
+These are the packages required on Linux.  A similar set is required for Windows but must be
+installed and configured manually.
 
   * cmake
   * libboost-dev
