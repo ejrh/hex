@@ -44,6 +44,7 @@ static inline bool equal(const boost::shared_ptr<Message>& m1, const boost::shar
     return equal(m1.get(), m2.get());
 }
 
+typedef std::vector<boost::shared_ptr<Message> > MessageSequence;
 
 template<typename T>
 class WrapperMessage: public Message {
@@ -138,8 +139,10 @@ protected:
 
 
 extern Serialiser& operator<<(Serialiser& serialiser, const Message *msg);
-
 extern Deserialiser& operator>>(Deserialiser& deserialiser, Message *& msg);
+
+extern Serialiser& operator<<(Serialiser& serialiser, const MessageSequence& sequence);
+extern Deserialiser& operator>>(Deserialiser& deserialiser, MessageSequence& sequence);
 
 class MessageFactory {
 public:

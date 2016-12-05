@@ -52,6 +52,11 @@ target_link_libraries(pathfinding_test hexview hexgame hexav hexutil)
 target_link_libraries(pathfinding_test ${gen_libs} ${av_libs})
 target_compile_options(pathfinding_test PUBLIC ${gen_opts})
 
+add_executable(scripting_test scripting_test.cpp)
+target_link_libraries(scripting_test hexutil)
+target_link_libraries(scripting_test ${gen_libs})
+target_compile_options(scripting_test PUBLIC ${gen_opts})
+
 add_executable(string_utils_test string_utils_test.cpp)
 target_link_libraries(string_utils_test hexutil)
 target_link_libraries(string_utils_test ${gen_libs})

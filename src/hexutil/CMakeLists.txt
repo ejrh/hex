@@ -43,12 +43,17 @@ set(srcs
         networking/connection.cpp
         networking/networking.h
         networking/server.cpp
+        scripting/builtin_instructions.cpp
+        scripting/compiler.cpp
+        scripting/execution.cpp
+        scripting/scripting.h
 )
 
 source_group(Sources REGULAR_EXPRESSION cpp|h)
 source_group(Sources\\basics REGULAR_EXPRESSION /basics/)
 source_group(Sources\\messaging REGULAR_EXPRESSION /messaging/)
 source_group(Sources\\networking REGULAR_EXPRESSION /networking/)
+source_group(Sources\\scripting REGULAR_EXPRESSION /scripting/)
 add_library(hexutil ${srcs})
 target_compile_options(hexutil PUBLIC ${gen_opts})
 if (COMMAND cotire)

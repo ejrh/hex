@@ -1,6 +1,7 @@
 #ifndef BUILTIN_MESSAGES_H
 #define BUILTIN_MESSAGES_H
 
+#include "hexutil/basics/datum.h"
 #include "hexutil/basics/point.h"
 #include "hexutil/basics/string_vector.h"
 #include "hexutil/messaging/message.h"

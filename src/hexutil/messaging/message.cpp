@@ -45,6 +45,23 @@ Deserialiser& operator>>(Deserialiser& deserialiser, Message *& msg) {
     return deserialiser;
 }
 
+Serialiser& operator<<(Serialiser& serialiser, const MessageSequence& sequence) {
+    std::vector<Message *> msgs;
+    for (auto iter = sequence.begin(); iter != sequence.end(); iter++)
+        msgs.push_back(iter->get());
+    serialiser << msgs;
+    return serialiser;
+}
+
+Deserialiser& operator>>(Deserialiser& deserialiser, MessageSequence& sequence) {
+    std::vector<Message *> msgs;
+    deserialiser >> msgs;
+    sequence.clear();
+    for (auto iter = msgs.begin(); iter != msgs.end(); iter++)
+        sequence.push_back(boost::shared_ptr<Message>(*iter));
+    return deserialiser;
+}
+
 
 const std::string MessageFactory::empty_string;
 

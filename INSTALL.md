@@ -43,6 +43,7 @@ These are the packages required on Linux.  A similar set is required for Windows
   * libboost-thread-dev
   * libboost-filesystem-dev
   * libboost-log-dev
+  * libboost-regex-dev
   * libsdl2-dev
   * libsdl2-image-dev
   * libsdl2-mixer-dev

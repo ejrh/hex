@@ -30,6 +30,7 @@
 #include <boost/format.hpp>
 #include <boost/crc.hpp>
 #include <boost/variant.hpp>
+#include <boost/regex.hpp>
 
 
 #ifdef _WIN32
