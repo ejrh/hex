@@ -77,3 +77,32 @@ void UiButton::draw(const UiContext& context) {
     context.fill_rectangle(200,150,150, 0, 0, width, height);
     context.fill_rectangle(0,0,0, 2, 2, width-4, height-4);
 }
+
+
+UiTextList::UiTextList(int x, int y, int width, int height):
+        UiWindow(x, y, width, height, WindowIsVisible) {
+}
+
+UiTextList::~UiTextList() {
+}
+
+void UiTextList::draw(const UiContext& context) {
+    context.draw_rectangle(200,150,150, 0, 0, width, height);
+}
+
+void UiTextList::add_line(const std::string& text) {
+    int next_label_y = 5 + 16 * children.size();
+    if (next_label_y > height-16) {
+        children.erase(children.begin());
+        for (int i = 0; i < children.size(); i++)
+            children[i]->y -= 16;
+        next_label_y -= 16;
+    }
+    UiLabel *new_label = new UiLabel(5, next_label_y, width-10, 16);
+    new_label->set_text(text);
+    add_child(new_label);
+}
+
+void UiTextList::clear() {
+    children.clear();
+}

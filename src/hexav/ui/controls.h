@@ -47,4 +47,15 @@ public:
     UiLabel *label;
 };
 
+class UiTextList: public UiWindow {
+public:
+    UiTextList(int x, int y, int width, int height);
+    virtual ~UiTextList();
+
+    virtual void draw(const UiContext& context);
+
+    void add_line(const std::string& text);
+    void clear();
+};
+
 #endif

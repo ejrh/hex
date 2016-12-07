@@ -19,13 +19,15 @@ public:
     void close();
 
     static const int unit_info_window_width = 400;
-    static const int unit_info_window_height = 200;
+    static const int unit_info_window_height = 400;
 
 private:
     Resources *resources;
     Graphics *graphics;
     GameView *view;
     Unit::pointer current_unit;
+
+    UiTextList *abilities_list;
 };
 
 #endif
