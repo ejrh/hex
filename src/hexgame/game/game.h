@@ -136,6 +136,7 @@ public:
     Point position;
     StructureType::pointer type;
     Faction::pointer owner;
+    Properties properties;
 };
 
 class TileType: public boost::enable_shared_from_this<TileType> {

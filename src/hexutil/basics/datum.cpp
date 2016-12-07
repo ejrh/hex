@@ -7,6 +7,10 @@ class ostream_visitor: public boost::static_visitor<> {
 public:
     ostream_visitor(std::ostream& os): os(os) { }
 
+    void operator()(const Atom& atom) const {
+        os << atom;
+    }
+
     void operator()(const int& i) const {
         os << i;
     }

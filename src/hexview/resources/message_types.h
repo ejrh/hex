@@ -14,6 +14,7 @@
 #define WM4(t1,t2,t3,t4) WrapperMessage4<t1,t2,t3,t4>
 
 MSG_TYPE(ImageFile, WM(std::string))
+MSG_TYPE(ImageLibrary, WM2(Atom, std::string))
 MSG_TYPE(ImageSet, WM2(std::string, ImageSeries))
 
 MSG_TYPE(CreateTileView, WM(TileViewDef))
@@ -33,11 +34,15 @@ MSG_TYPE(UnitSounds, WM2(int, SoundSeries))
 
 MSG_TYPE(CreateStructureView, WM(StructureViewDef))
 MSG_TYPE(StructureAnimation, WM4(int, int, int, ImageSeries))
+MSG_TYPE(StructurePaint, WM(MessageSequence))
 
 MSG_TYPE(CreateFactionView, WM(FactionViewDef))
 MSG_TYPE(FactionImageSet, WM2(std::string, ImageSeries))
 
 MSG_TYPE(LoadSong, WM(std::string))
 MSG_TYPE(SoundFile, WM(std::string))
+
+MSG_TYPE(PaintFrame, WM(int))
+MSG_TYPE(PaintAnimation, WM2(int, std::vector<int>))
 
 #undef P

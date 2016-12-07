@@ -3,10 +3,13 @@
 #include "hexutil/basics/error.h"
 #include "hexutil/messaging/message.h"
 #include "hexutil/messaging/receiver.h"
+#include "hexutil/messaging/builtin_messages.h"
+#include "hexutil/scripting/scripting.h"
 
 #include "hexgame/game/game.h"
 #include "hexgame/game/game_messages.h"
 
+#include "hexview/resources/paint.h"
 #include "hexview/resources/resources.h"
 #include "hexview/resources/resource_loader.h"
 #include "hexview/resources/resource_messages.h"
@@ -24,6 +27,18 @@ void ResourceLoader::handle_message(Message *msg) {
             }
             auto upd = dynamic_cast<ImageFileMessage *>(msg);
             load_image(upd->data);
+        } break;
+
+        case ImageLibrary: {
+            if (image_loader == NULL) {
+                if (!warned_image_loader) {
+                    BOOST_LOG_TRIVIAL(error) << "Image loader is not defined";
+                    warned_image_loader = true;
+                }
+                return;
+            }
+            auto upd = dynamic_cast<ImageLibraryMessage *>(msg);
+            load_image_library(upd->data1, upd->data2);
         } break;
 
         case ImageSet: {
@@ -142,6 +157,15 @@ void ResourceLoader::handle_message(Message *msg) {
             last_structure_view_def->animation.images = upd->data4;
         } break;
 
+        case StructurePaint: {
+            auto upd = dynamic_cast<StructurePaintMessage *>(msg);
+            Compiler compiler;
+            compiler.register_instruction_compiler(new PaintInstructionCompiler);
+            std::string name = "<" + last_structure_view_def->name + ">";
+            Script::pointer script = compiler.compile(name, upd->data);
+            last_structure_view_def->script = script;
+        } break;
+
         case LoadSong: {
             auto upd = dynamic_cast<LoadSongMessage *>(msg);
             load_song(upd->data);
@@ -159,6 +183,11 @@ void ResourceLoader::handle_message(Message *msg) {
             load_sound(upd->data);
         } break;
 
+        case DefineScript: {
+            auto upd = dynamic_cast<DefineScriptMessage *>(msg);
+            define_script(upd->data1, upd->data2);
+        } break;
+
         default: {
             BOOST_LOG_TRIVIAL(warning) << "Don't know how to read resources from message type: " << MessageTypeRegistry::get_message_type_name(msg->type);
         }
@@ -171,6 +200,17 @@ void ResourceLoader::load_image(const std::string& filename) {
     std::string relative_filename = path.string();
 
     image_loader->load(relative_filename);
+}
+
+void ResourceLoader::load_image_library(Atom name, const std::string& filename) {
+    boost::filesystem::path path = boost::filesystem::path(get_current_file()).parent_path();
+    path /= boost::filesystem::path(filename);
+    if (!boost::filesystem::exists(path)) {
+        BOOST_LOG_TRIVIAL(warning) << "Image library does not exist: " << filename;
+    }
+    std::string relative_filename = path.string();
+    resources->image_libraries[name].reset(new ImageLibraryResource(relative_filename));
+    image_loader->load_library(name, relative_filename);
 }
 
 void ResourceLoader::load_song(const std::string& filename) {
@@ -187,6 +227,14 @@ void ResourceLoader::load_sound(const std::string& filename) {
     std::string relative_filename = path.string();
 
     sound_loader->load(relative_filename);
+}
+
+void ResourceLoader::define_script(const std::string& name, MessageSequence& sequence) {
+    Compiler compiler;
+    compiler.register_instruction_compiler(new PaintInstructionCompiler);
+    Script::pointer script = compiler.compile(name, sequence);
+    BOOST_LOG_TRIVIAL(info) << "Compiled script: " << name;
+    resources->scripts.put_and_warn(name, script);
 }
 
 std::string get_resource_basename(const std::string& filename) {

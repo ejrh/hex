@@ -127,6 +127,32 @@ FactionViewDef::pointer Resources::get_faction_view_def(const std::string& name)
     return faction_view_defs.get_and_warn(name);
 }
 
+ImageLibraryResource *Resources::get_image_library(Atom name) {
+    auto found = image_libraries.find(name);
+    if (found == image_libraries.end()) {
+        return nullptr;
+    }
+
+    ImageLibraryResource *image_lib = found->second.get();
+    if (!image_lib->loaded) {
+    }
+    return image_lib;
+}
+
+Image *Resources::get_library_image(Atom library_name, int image_num) {
+    ImageLibraryResource *lib = get_image_library(library_name);
+    if (!lib) {
+        BOOST_LOG_TRIVIAL(warning) << "No image library: " << library_name;
+        return nullptr;
+    }
+    auto found = lib->images.find(image_num);
+    if (found == lib->images.end()) {
+        BOOST_LOG_TRIVIAL(warning) << "No image at position " << image_num << " in library " << library_name;
+        return nullptr;
+    }
+    return found->second.get();
+}
+
 TileViewDef::pointer Resources::find_base(const TileViewDef& def) const {
     TileViewDef::pointer base;
     if (def.base_name != def.name) {

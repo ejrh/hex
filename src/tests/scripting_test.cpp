@@ -53,7 +53,7 @@ public:
 BOOST_FIXTURE_TEST_SUITE(scripting_test, Fixture)
 
 BOOST_AUTO_TEST_CASE(set_var) {
-    play_message("DefineScript(t, [SetVariable(VarX, xyz)])");
+    play_message("DefineScript(t, [SetVariable(VarX, \"xyz\")])");
 
     Execution execution(&scripts);
     execution.variables.set<std::string>(VarX, "abc");
@@ -66,8 +66,8 @@ BOOST_AUTO_TEST_CASE(set_var) {
 }
 
 BOOST_AUTO_TEST_CASE(include_script) {
-    play_message("DefineScript(u, [SetVariable(VarX, xyz)])");
-    play_message("DefineScript(t, [SetVariable(VarX, abc), IncludeScript(u)])");
+    play_message("DefineScript(u, [SetVariable(VarX, \"xyz\")])");
+    play_message("DefineScript(t, [SetVariable(VarX, \"abc\"), IncludeScript(u)])");
 
     Execution execution(&scripts);
     execution.run("t");
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(include_script) {
 BOOST_AUTO_TEST_CASE(if_match) {
     play_message("DefineScript(t, ["
         "SetVariable(VarX, 32),"
-        "SetVariable(StrVar, abc),"
+        "SetVariable(StrVar, \"abc\"),"
         "IfMatch(StrVar, \"a.+\", SetVariable(VarX, 40)),"
         "SetVariable(VarY, 4),"
         "IfMatch(StrVar, \"x.+\", SetVariable(VarY, 7))])");

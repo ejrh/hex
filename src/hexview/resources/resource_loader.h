@@ -12,6 +12,7 @@ class ImageLoader {
 public:
     ImageLoader(Resources *resources, Graphics *graphics): resources(resources), graphics(graphics) { }
     void load(const std::string& filename);
+    void load_library(Atom name, const std::string& filename);
 
 private:
     Resources *resources;
@@ -40,8 +41,10 @@ public:
     void handle_message(Message *msg);
 
     void load_image(const std::string& filename);
+    void load_image_library(Atom name, const std::string& filename);
     void load_song(const std::string& filename);
     void load_sound(const std::string& filename);
+    void define_script(const std::string& name, MessageSequence& sequence);
 
 private:
     Resources *resources;
@@ -58,6 +61,5 @@ private:
 
 std::string get_resource_basename(const std::string& filename);
 bool has_extension(const std::string& filename, const std::string& ext);
-
 
 #endif

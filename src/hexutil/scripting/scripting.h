@@ -1,11 +1,12 @@
 #ifndef SCRIPTING_H
 #define SCRIPTING_H
 
-#include "hexutil/messaging/message.h"
-#include "hexutil/messaging/builtin_messages.h"
-
+#include "hexutil/basics/error.h"
 #include "hexutil/basics/objmap.h"
 #include "hexutil/basics/properties.h"
+
+#include "hexutil/messaging/message.h"
+#include "hexutil/messaging/builtin_messages.h"
 
 
 class Compiler;
@@ -60,14 +61,16 @@ private:
 
 class Execution {
 public:
-    Execution(StrMap<Script> *scripts): scripts(scripts) { }
+    Execution(StrMap<Script> *scripts): scripts(scripts), return_active(false) { }
+    virtual ~Execution() { }
 
     void add_properties(Properties *properties);
 
     void run(Script *script);
     void run(const std::string& script_name);
 
-    void execute_sequence(InstructionSequence instructions);
+    void execute_script(Script *script);
+    void execute_sequence(InstructionSequence& instructions);
     void execute_instruction(Instruction *instr);
 
     template<typename T>
@@ -86,6 +89,11 @@ public:
     StrMap<Script> *scripts;
     Properties variables;
     std::vector<Properties *> properties_list;
+    bool return_active;
 };
+
+class ScriptError: public BaseError<ScriptError> {
+};
+
 
 #endif

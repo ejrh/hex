@@ -4,7 +4,7 @@
 #include "hexutil/messaging/serialiser.h"
 
 bool is_atom_char(int x) {
-    return std::isalnum(x) || x == '_';
+    return std::isalnum(x) || x == '_' || x == '-';
 }
 
 bool needs_quoting(const std::string& str) {
@@ -31,6 +31,10 @@ int get_character_escape(int ch) {
 class serialise_visitor: public boost::static_visitor<> {
 public:
     serialise_visitor(Serialiser& serialiser): serialiser(serialiser) { }
+
+    void operator()(const Atom& atom) const {
+        serialiser << atom;
+    }
 
     void operator()(const int& i) const {
         serialiser << i;
@@ -127,7 +131,8 @@ Deserialiser& Deserialiser::operator>>(Datum& datum) {
         if (*end == '\0') {
             datum.value = intval;
         } else {
-            datum.value = word;
+            Atom atom = AtomRegistry::atom(word);
+            datum.value = atom;
         }
     }
     return *this;

@@ -6,6 +6,7 @@
 #include "hexgame/game/game_messages.h"
 
 #include "hexview/view/player.h"
+#include "hexview/view/structure_painter.h"
 #include "hexview/view/tile_painter.h"
 #include "hexview/view/view.h"
 #include "hexview/view/view_updater.h"
@@ -106,6 +107,9 @@ void ViewUpdater::apply_update(Message *update) {
             StructureViewDef::pointer view_def = resources->get_structure_view_def(structure_type->name);
             StructureView::pointer structure_view = boost::make_shared<StructureView>(structure, view_def);
             game_view->level_view.tile_views[upd->data1].structure_view = structure_view;
+
+            StructurePainter painter(game, game_view, resources);
+            painter.repaint(*structure_view);
 
             if (game_view->player->has_view(structure->owner)) {
                 game_view->update_visibility();

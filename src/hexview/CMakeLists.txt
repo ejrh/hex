@@ -5,7 +5,11 @@ set(srcs
         resources/image_loader.cpp
         resources/image_ref.h
         resources/message_types.h
+        resources/paint.h
+        resources/paint.cpp
+        resources/paint_instructions.cpp
         resources/resource_loader.cpp
+        resources/resource_loader.h
         resources/resources.cpp
         resources/resources.h
         resources/resource_messages.cpp
@@ -41,6 +45,8 @@ set(srcs
         view/stack_window.h
         view/status_window.cpp
         view/status_window.h
+        view/structure_painter.cpp
+        view/structure_painter.h
         view/tile_painter.cpp
         view/tile_painter.h
         view/unit_info_window.cpp

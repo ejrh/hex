@@ -23,3 +23,13 @@ void ImageLoader::load(const std::string& filename) {
         BOOST_LOG_TRIVIAL(warning) << "Don't know how to load images from: " << filename;
     }
 }
+
+void ImageLoader::load_library(Atom name, const std::string& filename) {
+    ImageMap images;
+    load_ilb(filename, graphics, images);
+    ImageLibraryResource *lib = resources->image_libraries[name].get();
+    for (auto iter = images.begin(); iter != images.end(); iter++) {
+        Image *image = iter->second;
+        lib->images[image->id].reset(image);
+    }
+}

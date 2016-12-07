@@ -3,6 +3,7 @@
 
 #include "hexgame/game/game.h"
 
+#include "hexview/resources/paint.h"
 #include "hexview/resources/resources.h"
 #include "hexview/resources/view_def.h"
 
@@ -32,6 +33,7 @@ public:
 public:
     Structure::pointer structure;
     StructureViewDef::pointer view_def;
+    Paint paint;
     bool selected;
 };
 

@@ -22,8 +22,10 @@ MSG_TYPE(StreamReplay, WM2(int, int))
 MSG_TYPE(StreamState, WM2(int, int))
 
 MSG_TYPE(DefineScript, WM2(std::string, MessageSequence))
+
 MSG_TYPE(IncludeScript, WM(std::string))
 MSG_TYPE(SetVariable, WM2(Atom, Datum))
 MSG_TYPE(IfMatch, WM3(Atom, std::string, MessageSequence))
+MSG_TYPE(Return, Message)
 
 #undef P

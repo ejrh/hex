@@ -12,7 +12,7 @@ public:
     void execute(Execution *execution) {
         StrMap<Script>& scripts = *execution->scripts;
         Script *script = scripts.get(script_name).get();
-        execution->execute_sequence(script->instructions);
+        execution->execute_script(script);
     }
 
 public:
@@ -55,6 +55,16 @@ public:
 };
 
 
+class ReturnInstruction: public Instruction {
+public:
+    ReturnInstruction() { }
+
+    void execute(Execution *execution) {
+        execution->return_active = true;
+    }
+};
+
+
 Instruction *BuiltinInstructionCompiler::compile(Message *message, Compiler *compiler) {
     switch (message->type) {
         case IncludeScript: {
@@ -70,6 +80,10 @@ Instruction *BuiltinInstructionCompiler::compile(Message *message, Compiler *com
         case IfMatch: {
             auto instr = dynamic_cast<IfMatchMessage *>(message);
             return new IfMatchInstruction(instr->data1, instr->data2, compiler->compile_sequence(instr->data3));
+        } break;
+
+        case Return: {
+            return new ReturnInstruction();
         } break;
 
         default: {

@@ -5,6 +5,7 @@
 
 #include "hexview/resources/image_ref.h"
 #include "hexview/resources/sound_ref.h"
+#include "hexview/resources/paint.h"
 
 
 class AnimationDef {
@@ -114,9 +115,10 @@ public:
     typedef boost::shared_ptr<StructureViewDef> pointer;
 
     StructureViewDef() { }
-    StructureViewDef(const std::string& name): name(name), centre_x(0), centre_y(0) { }
+    StructureViewDef(const std::string& name): name(name), script(nullptr), centre_x(0), centre_y(0) { }
 
     std::string name;
+    Script::pointer script;
     int centre_x, centre_y;
     AnimationDef animation;
 };

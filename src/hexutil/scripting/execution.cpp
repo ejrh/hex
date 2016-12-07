@@ -9,18 +9,25 @@ void Execution::add_properties(Properties *properties) {
 }
 
 void Execution::run(Script *script) {
-    execute_sequence(script->instructions);
+    execute_script(script);
 }
 
 void Execution::run(const std::string& script_name) {
     Script *script = scripts->get(script_name).get();
-    execute_sequence(script->instructions);
+    execute_script(script);
 }
 
-void Execution::execute_sequence(InstructionSequence instructions) {
+void Execution::execute_script(Script *script) {
+    execute_sequence(script->instructions);
+    return_active = false;
+}
+
+void Execution::execute_sequence(InstructionSequence& instructions) {
     for (auto iter = instructions.begin(); iter != instructions.end(); iter++) {
         Instruction *instr = *iter;
         execute_instruction(instr);
+        if (return_active)
+            break;
     }
 }
 
