@@ -39,7 +39,9 @@ void LevelGenerator::generate_level(int width, int height) {
 
     generate_terrain();
     coalesce_mountains();
+    add_rivers();
     add_forests();
+    add_bridges();
     add_roads();
 }
 
@@ -196,6 +198,33 @@ void LevelGenerator::coalesce_mountains() {
     }
 }
 
+void LevelGenerator::add_rivers() {
+    BOOST_LOG_TRIVIAL(info) << "Adding rivers";
+    TileType::pointer water_type = types["water"];
+
+    for (int i = 0; i < 50; i++) {
+        Point start_pos;
+        int attempts = 0;
+        do {
+            start_pos = Point(rand() % level.width, rand() % level.height);
+        } while (attempts++ < 20 && level.tiles[start_pos].type != water_type);
+        if (attempts >= 20)
+            continue;
+        for (int j = 0; j < 30; j++) {
+            Point next_pos;
+            int attempts = 0;
+            do {
+                get_neighbour(start_pos, rand() % 6, &next_pos);
+            } while (attempts++ < 20 && (!level.contains(next_pos) || !level.tiles[next_pos].has_property(Roadable)));
+            if (attempts >= 20)
+                continue;
+            Tile& tile = level.tiles[next_pos];
+            tile.type = water_type;
+            start_pos = next_pos;
+        }
+    }
+}
+
 void LevelGenerator::add_forests() {
     PerlinNoise forest_noise(6, 6);
 
@@ -219,6 +248,39 @@ void LevelGenerator::add_forests() {
                 if (types.find(forest_type) != types.end())
                     tile.type = types[forest_type];
             }
+        }
+    }
+}
+
+void LevelGenerator::add_bridges() {
+    BOOST_LOG_TRIVIAL(info) << "Adding bridges";
+    TileType::pointer water_type = types["water"];
+    TileType::pointer bridge_types[] = { types["water_bridge0"], types["water_bridge1"], types["water_bridge2"] };
+
+    for (int i = 0; i < level.width * level.height; i++) {
+        Point tile_pos(rand() % level.width, rand() % level.height);
+        Tile& tile = level.tiles[tile_pos];
+        if (tile.type != water_type)
+            continue;
+        int water_neighbours = 0;
+        int best_dir = -1;
+        for (int dir = 0; dir < 3; dir++) {
+            Point n1, n2;
+            get_neighbour(tile_pos, dir, &n1);
+            get_neighbour(tile_pos, dir + 3, &n2);
+            if (!level.contains(n1) || !level.contains(n2))
+                continue;
+
+            if (level.tiles[n1].type == water_type)
+                water_neighbours++;
+            if (level.tiles[n2].type == water_type)
+                water_neighbours++;
+
+            if (level.tiles[n1].has_property(Roadable) && level.tiles[n2].has_property(Roadable))
+                best_dir = dir;
+        }
+        if (water_neighbours >= 3 && best_dir >= 0) {
+            tile.type = bridge_types[best_dir];
         }
     }
 }

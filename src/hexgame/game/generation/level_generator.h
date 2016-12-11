@@ -20,7 +20,9 @@ public:
 private:
     void generate_terrain();
     void coalesce_mountains();
+    void add_rivers();
     void add_forests();
+    void add_bridges();
     void add_roads();
 
 private:

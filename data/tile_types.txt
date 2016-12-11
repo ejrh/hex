@@ -82,3 +82,7 @@ CreateTileType("wasteland_mountain0", {"Climbable", "Flyable", "SlowFlying"})
 CreateTileType("wasteland_mountain1", {"Climbable", "Flyable"})
 CreateTileType("wasteland_mountain2", {"Climbable", "Flyable", "SlowFlying"})
 CreateTileType("wasteland_mountain3", {})
+
+CreateTileType("water_bridge0", {"Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
+CreateTileType("water_bridge1", {"Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
+CreateTileType("water_bridge2", {"Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
