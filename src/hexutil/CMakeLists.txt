@@ -14,6 +14,8 @@ set(srcs
         basics/point.h
         basics/properties.cpp
         basics/properties.h
+        basics/statistics.cpp
+        basics/statistics.h
         basics/string_vector.cpp
         basics/string_vector.h
         basics/vector2.h
@@ -21,6 +23,8 @@ set(srcs
         messaging/builtin_messages.h
         messaging/checksum.cpp
         messaging/checksum.h
+        messaging/counter.cpp
+        messaging/counter.h
         messaging/loader.cpp
         messaging/loader.h
         messaging/logger.cpp

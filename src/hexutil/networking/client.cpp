@@ -7,7 +7,8 @@
 
 
 Client::Client(MessageReceiver *receiver):
-        receiver(receiver), io_service(), resolver(io_service), game_id(0), last_received_id(0) {
+        receiver(receiver), io_service(), resolver(io_service), game_id(0), last_received_id(0),
+        receive_counter("network.client.receive"), send_counter("network.client.broadcast") {
 }
 
 Client::~Client() {
@@ -43,6 +44,8 @@ void Client::disconnect() {
 
 void Client::receive(Message *msg) {
     io_service.post(boost::bind(&Connection::send_message, connection, msg->shared_from_this()));
+
+    ++send_counter;
 }
 
 void Client::receive_from_network(Message *msg) {
@@ -56,6 +59,8 @@ void Client::receive_from_network(Message *msg) {
     }
 
     receiver->receive(msg);
+
+    ++receive_counter;
 }
 
 void Client::run_thread() {

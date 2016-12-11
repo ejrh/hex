@@ -20,6 +20,8 @@ private:
     Game *game;
     GameView *view;
     Resources *resources;
+
+    Counter tile_paint_counter;
 };
 
 #endif

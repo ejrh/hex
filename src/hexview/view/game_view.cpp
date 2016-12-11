@@ -18,7 +18,8 @@ GameView::GameView(Game *game, Player *player, Resources *resources, MessageRece
         game(game), player(player), level_view(&game->level), resources(resources), dispatcher(dispatcher),
         last_update(0), phase(0),
         faction_views("faction_views"), unit_stack_views("unit_stack_views"),
-        selected_stack_id(0), selected_structure(), debug_mode(false) {
+        selected_stack_id(0), selected_structure(), debug_mode(false),
+        ghost_counter("view.ghost") {
 }
 
 void GameView::update() {
@@ -235,6 +236,8 @@ void GameView::transfer_units(int stack_id, const IntSet selected_units, Path pa
 
     Ghost ghost(this, stack, selected_units, path, target_stack);
     ghosts.push_back(ghost);
+
+    ++ghost_counter;
 }
 
 void GameView::mark_ready() {

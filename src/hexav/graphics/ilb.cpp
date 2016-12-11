@@ -379,6 +379,9 @@ Image *ILBReader::create_image(char *pixel_data, ImageData &image) {
     im->clip_y_offset = image.clip_y_offset;
     im->width = image.width;
     im->height = image.height;
+
+    ++graphics->ilb_image_load_counter;
+
     return im;
 }
 

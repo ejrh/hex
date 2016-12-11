@@ -6,6 +6,7 @@
 #include <boost/program_options/variables_map.hpp>
 
 #include "hexutil/basics/error.h"
+#include "hexutil/basics/statistics.h"
 #include "hexutil/messaging/message.h"
 #include "hexutil/messaging/serialiser.h"
 #include "hexutil/messaging/writer.h"
@@ -369,7 +370,9 @@ void run(Options& options) {
     bw->add_child(unit_info_window);
     TopWindow *tw = new TopWindow(&graphics, &audio);
     bw->add_child(tw);
+    log_statistics("beginning of loop");
     loop.run();
+    log_statistics("end of loop");
 
     node_interface->stop();
     delete node_interface;

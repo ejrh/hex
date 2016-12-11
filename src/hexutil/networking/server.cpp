@@ -8,7 +8,8 @@
 
 Server::Server(int port, MessageReceiver *receiver):
         port(port), receiver(receiver), io_service(), acceptor(io_service), shutdown_requested(false),
-        next_connection_id(1), game_id(0), last_message_id(0), last_dropped_id(0), max_backlog_size(1000) {
+        next_connection_id(1), game_id(0), last_message_id(0), last_dropped_id(0), max_backlog_size(1000),
+        receive_counter("network.server.receive"), broadcast_counter("network.server.broadcast"), connect_counter("network.server.connect") {
 }
 
 Server::~Server() {
@@ -42,6 +43,8 @@ void Server::broadcast(boost::shared_ptr<Message> msg) {
         last_dropped_id = message_backlog.begin()->second->id;
         message_backlog.erase(message_backlog.begin());
     }
+
+    ++broadcast_counter;
 }
 
 void Server::receive_from_network(Message *msg) {
@@ -84,6 +87,8 @@ void Server::receive_from_network(Message *msg) {
     }
 
     receiver->receive(msg);
+
+    ++receive_counter;
 }
 
 void Server::run_thread() {
@@ -110,4 +115,6 @@ void Server::handle_accept(Connection::pointer new_connection, const boost::syst
     }
     if (!shutdown_requested)
         start_accept();
+
+    ++connect_counter;
 }

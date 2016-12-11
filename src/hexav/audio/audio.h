@@ -1,6 +1,9 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
+#include "hexutil/basics/statistics.h"
+
+
 class Resources;
 
 // Can't define these if also including SDL_mixer.h
@@ -37,6 +40,10 @@ private:
     boost::atomic<bool> started;
     Mix_Music *song;
     bool no_music, no_sound;
+
+    Counter sounds_counter;
+    Counter sounds_loaded_counter;
+    Counter songs_counter;
 };
 
 #endif

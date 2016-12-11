@@ -9,7 +9,9 @@
 #include "hexgame/game/movement/movement.h"
 
 
-GameArbiter::GameArbiter(Game *game, MessageReceiver *publisher): game(game), publisher(publisher) {
+GameArbiter::GameArbiter(Game *game, MessageReceiver *publisher):
+        game(game), publisher(publisher),
+        command_counter("arbiter.command"), update_counter("arbiter.update") {
 }
 
 GameArbiter::~GameArbiter() {
@@ -18,6 +20,7 @@ GameArbiter::~GameArbiter() {
 void GameArbiter::receive(Message *command) {
     try {
         process_command(command);
+        command_counter.receive(command);
     } catch (const DataError& err) {
         BOOST_LOG_TRIVIAL(error) << "Invalid command received; " << err.what();
     }
@@ -174,4 +177,5 @@ void GameArbiter::spawn_units() {
 
 void GameArbiter::emit(boost::shared_ptr<Message> update) {
     publisher->receive(update);
+    update_counter.receive(update.get());
 }

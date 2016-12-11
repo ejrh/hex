@@ -18,6 +18,13 @@ Image::~Image() {
         SDL_DestroyTexture(texture);
 }
 
+
+Graphics::Graphics():
+    blit_counter("graphics.blit"), blit_pixel_counter("graphics.blit.pixels"), draw_counter("graphics.draw"),
+    frame_counter("graphics.frame"),
+    font_render_counter("graphics.font.render"),
+    ilb_image_load_counter("graphics.image.ilb") { }
+
 void Graphics::start(const std::string& title, int width, int height, bool fullscreen) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
         throw Error() << "SDL error while initialising SDL: " << SDL_GetError();
@@ -60,32 +67,45 @@ void Graphics::blit(Image *im, int x, int y, SDL_BlendMode mode, int alpha_mod, 
     SDL_Rect destrect = { x, y, im->clip_width, im->clip_height };
     if (SDL_RenderCopy(renderer, im->texture, NULL, &destrect) != 0)
         BOOST_LOG_TRIVIAL(error) << "SDL error while blitting image: " << SDL_GetError();
+
+    ++blit_counter;
+    blit_pixel_counter += im->clip_width * im->clip_height;
 }
 
 void Graphics::draw_lines(Uint8 R, Uint8 G, Uint8 B, SDL_Point *points, int count) {
     SDL_SetRenderDrawColor(renderer, R, G, B, 255);
     SDL_RenderDrawLines(renderer, points, count);
+
+    ++draw_counter;
 }
 
 void Graphics::draw_rectangle(Uint8 R, Uint8 G, Uint8 B, int x, int y, int w, int h) {
     SDL_SetRenderDrawColor(renderer, R, G, B, 255);
     SDL_Rect rect = { x, y, w, h };
     SDL_RenderDrawRect(renderer, &rect);
+
+    ++draw_counter;
 }
 
 void Graphics::fill_rectangle(Uint8 R, Uint8 G, Uint8 B, int x, int y, int w, int h) {
     SDL_SetRenderDrawColor(renderer, R, G, B, 255);
     SDL_Rect rect = { x, y, w, h };
     SDL_RenderFillRect(renderer, &rect);
+
+    ++draw_counter;
 }
 
 void Graphics::fill_rectangle(Uint8 R, Uint8 G, Uint8 B, SDL_Rect& rect) {
     SDL_SetRenderDrawColor(renderer, R, G, B, 255);
     SDL_RenderFillRect(renderer, &rect);
+
+    ++draw_counter;
 }
 
 void Graphics::update() {
     SDL_RenderPresent(renderer);
+
+    ++frame_counter;
 }
 
 void Graphics::set_target_image(Image *target) {

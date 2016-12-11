@@ -192,6 +192,8 @@ void ResourceLoader::handle_message(Message *msg) {
             BOOST_LOG_TRIVIAL(warning) << "Don't know how to read resources from message type: " << MessageTypeRegistry::get_message_type_name(msg->type);
         }
     }
+
+    ++message_counter;
 }
 
 void ResourceLoader::load_image(const std::string& filename) {

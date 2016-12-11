@@ -49,4 +49,6 @@ void StructurePainter::repaint(StructureView& structure_view) {
     execution.variables.set<bool>(selected_atom, structure_view.selected);
 
     execution.run(script);
+
+    ++structure_paint_counter;
 }

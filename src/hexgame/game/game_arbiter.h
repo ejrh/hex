@@ -1,6 +1,8 @@
 #ifndef GAME_ARBITER_H
 #define GAME_ARBITER_H
 
+#include "hexutil/basics/statistics.h"
+#include "hexutil/messaging/counter.h"
 #include "hexutil/messaging/receiver.h"
 
 
@@ -23,6 +25,9 @@ private:
 private:
     Game *game;
     MessageReceiver *publisher;
+
+    MessageCounter command_counter;
+    MessageCounter update_counter;
 };
 
 

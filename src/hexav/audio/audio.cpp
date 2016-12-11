@@ -20,7 +20,9 @@ Sound::~Sound() {
     }
 }
 
-Audio::Audio(Resources *resources): resources(resources), started(false), song(NULL), no_music(false), no_sound(false) {
+Audio::Audio(Resources *resources):
+        resources(resources), started(false), song(NULL), no_music(false), no_sound(false),
+        sounds_counter("audio.sound.play"), sounds_loaded_counter("audio.sound.load"), songs_counter("audio.song.play") {
 }
 
 Audio::~Audio() {
@@ -73,6 +75,8 @@ void Audio::play(const std::string& filename) {
     if (Mix_PlayMusic(song, 0) < 0) {
         BOOST_LOG_TRIVIAL(warning) << "Couldn't play music: " << Mix_GetError();
     }
+
+    ++songs_counter;
 }
 
 void Audio::play_sound(Sound& sound) {
@@ -80,6 +84,8 @@ void Audio::play_sound(Sound& sound) {
         return;
 
     Mix_PlayChannel(-1, sound.chunk, 0);
+
+    ++sounds_counter;
 }
 
 void Audio::update() {
@@ -102,5 +108,8 @@ Sound *Audio::load_sound(const std::string& filename) {
 
     Sound *sound = new Sound();
     sound->chunk = chunk;
+
+    ++sounds_loaded_counter;
+
     return sound;
 }

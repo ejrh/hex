@@ -66,6 +66,8 @@ void TextFormat::write_text(Graphics *graphics, const std::string& text, int x, 
 
     SDL_DestroyTexture(text_texture);
     SDL_FreeSurface(text_surface);
+
+    ++graphics->font_render_counter;
 }
 
 Image *TextFormat::write_to_image(Graphics *graphics, const std::string& text) {
@@ -116,6 +118,9 @@ Image *TextFormat::write_to_image(Graphics *graphics, const std::string& text) {
         image->clip_x_offset -= image->width/2;
         image->clip_y_offset -= image->height/2;
     }
+
+    ++graphics->font_render_counter;
+
     return image;
 }
 

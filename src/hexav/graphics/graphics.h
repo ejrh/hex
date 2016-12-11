@@ -4,6 +4,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "hexutil/basics/statistics.h"
+
 
 class Image {
 public:
@@ -24,6 +26,8 @@ typedef std::map<std::string, Image *> ImageMap;
 
 class Graphics {
 public:
+    Graphics();
+
     void start(const std::string& title, int width, int height, bool fullscreen);
     void stop();
     void blit(Image *im, int x, int y, SDL_BlendMode mode = SDL_BLENDMODE_NONE, int alpha_mod = 255, int mod_r = 255, int mod_g = 255, int mod_b = 255);
@@ -46,6 +50,17 @@ public:
     int width;
     int height;
     SDL_Texture *target_texture;
+
+private:
+    Counter blit_counter;
+    Counter blit_pixel_counter;
+    Counter draw_counter;
+    Counter frame_counter;
+    Counter font_render_counter;
+    Counter ilb_image_load_counter;
+
+    friend class TextFormat;
+    friend class ILBReader;
 };
 
 inline bool rect_contains(const SDL_Rect& rect, int px, int py) {

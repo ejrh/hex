@@ -202,6 +202,9 @@ public:
     Path drawn_path;
 
     bool debug_mode;
+
+private:
+    Counter ghost_counter;
 };
 
 #endif

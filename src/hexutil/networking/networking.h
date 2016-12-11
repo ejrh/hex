@@ -7,6 +7,7 @@
 #include <boost/asio.hpp>
 #include <boost/thread/thread.hpp>
 
+#include "hexutil/basics/statistics.h"
 #include "hexutil/messaging/message.h"
 #include "hexutil/messaging/receiver.h"
 
@@ -78,6 +79,10 @@ private:
     int last_dropped_id;
     unsigned int max_backlog_size;
     std::map<int, boost::shared_ptr<Message> > message_backlog;
+
+    Counter receive_counter;
+    Counter broadcast_counter;
+    Counter connect_counter;
 };
 
 class Client: public NetworkInterface {
@@ -102,6 +107,9 @@ private:
     Connection::pointer connection;
     int game_id;
     int last_received_id;
+
+    Counter receive_counter;
+    Counter send_counter;
 };
 
 #endif

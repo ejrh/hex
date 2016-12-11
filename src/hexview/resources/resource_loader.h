@@ -56,6 +56,8 @@ private:
     StructureViewDef::pointer last_structure_view_def;
     bool warned_image_loader;
     bool warned_sound_loader;
+
+    Counter message_counter;
 };
 
 

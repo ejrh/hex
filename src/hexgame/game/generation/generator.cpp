@@ -2,6 +2,7 @@
 
 #include "hexutil/basics/hexgrid.h"
 #include "hexutil/basics/noise.h"
+#include "hexutil/messaging/counter.h"
 #include "hexutil/messaging/loader.h"
 #include "hexutil/messaging/publisher.h"
 
@@ -38,12 +39,14 @@ void Generator::create_game(MessageReceiver& updater) {
 
     game = new Game();
     GameUpdater game_updater(game);
+    MessageCounter generation_counter("generator");
 
     // Wrap the updater in a publisher that will also keep the private game instance up to date
     // with every update emitted by the generator.
     Publisher publisher;
     publisher.subscribe(&game_updater);
     publisher.subscribe(&updater);
+    publisher.subscribe(&generation_counter);
 
     ReceiverMessageLoader loader(publisher);
     loader.load("data/game.txt");

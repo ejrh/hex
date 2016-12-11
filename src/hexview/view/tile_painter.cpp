@@ -10,7 +10,8 @@
 
 
 TilePainter::TilePainter(Game *game, GameView *view, Resources *resources):
-        game(game), view(view), resources(resources) {
+        game(game), view(view), resources(resources),
+        tile_paint_counter("paint.tile") {
 }
 
 void TilePainter::repaint(Point offset, int len) {
@@ -49,6 +50,8 @@ void TilePainter::repaint(Point offset, int len) {
             paint_transitions(tile_pos);
             paint_roads(tile_pos);
             paint_features(tile_pos);
+
+            ++tile_paint_counter;
         }
     }
 }
