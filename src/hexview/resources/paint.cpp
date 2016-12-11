@@ -15,8 +15,10 @@ void Paint::render(int x, int y, int phase, Graphics *graphics) {
         if (!frame)
             continue;
 
-        if (item.blend_addition != 0) {
+        if (item.blend_addition > 0) {
             graphics->blit(frame, x + item.offset_x, y + item.offset_y, SDL_BLENDMODE_ADD, item.blend_addition);
+        } else if (item.blend_addition < 0) {
+            graphics->blit(frame, x + item.offset_x, y + item.offset_y, SDL_BLENDMODE_MOD);
         } else {
             graphics->blit(frame, x + item.offset_x, y + item.offset_y, SDL_BLENDMODE_BLEND);
         }

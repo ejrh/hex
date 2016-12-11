@@ -4,6 +4,10 @@
 class Generator;
 class Game;
 
+std::string type(Tile& tile);
+std::string subtype(Tile& tile);
+
+
 class LevelGenerator {
 public:
     LevelGenerator(Generator *generator, Game *game):

@@ -14,6 +14,23 @@
 #include "hexgame/game/movement/pathfinding.h"
 
 
+int get_random_faction(IntMap<Faction>& factions) {
+    auto faction_iter = factions.begin();
+    std::advance(faction_iter, rand() % factions.size());
+    return faction_iter->second->id;
+}
+
+void create_structure(MessageReceiver& updater, Tile& tile, Point tile_pos, std::string structure_type, int faction) {
+    if (structure_type != "water_node") {
+        CompressableStringVector data;
+        data.push_back(type(tile) + "_structure");
+        updater.receive(create_message(SetLevelData, tile_pos, data));
+    }
+
+    updater.receive(create_message(CreateStructure, tile_pos, structure_type, faction));
+}
+
+
 void Generator::create_game(MessageReceiver& updater) {
     updater.receive(create_message(ClearGame));
 
@@ -35,6 +52,9 @@ void Generator::create_game(MessageReceiver& updater) {
     create_factions(publisher);
     create_unit_stacks(publisher);
     create_towers(publisher);
+    create_mines(publisher);
+    create_farms(publisher);
+    create_nodes(publisher);
 
     game->turn_number = 1;
     publisher.receive(create_message(TurnBegin, game->turn_number));
@@ -71,9 +91,7 @@ void Generator::create_factions(MessageReceiver& updater) {
 void Generator::create_unit_stacks(MessageReceiver& updater) {
     BOOST_LOG_TRIVIAL(info) << "Creating unit stacks";
     for (int i = 1; i <= 50; i++) {
-        auto faction_iter = game->factions.begin();
-        std::advance(faction_iter, rand() % game->factions.size());
-        int faction = faction_iter->second->id;
+        int faction = get_random_faction(game->factions);
         if (faction == 1)
             continue;
 
@@ -138,13 +156,67 @@ void Generator::create_towers(MessageReceiver& updater) {
                     water_count++;
             }
             if (water_count >= 3 && rand() % 4 == 0) {
-                auto faction_iter = game->factions.begin();
-                std::advance(faction_iter, rand() % game->factions.size());
-                int faction = faction_iter->second->id;
+                int faction = get_random_faction(game->factions);
 
-                updater.receive(create_message(CreateStructure, tile_pos, "tower", faction));
+                create_structure(updater, tile, tile_pos, "tower", faction);
             } else if (rand() % 100 == 0) {
-                updater.receive(create_message(CreateStructure, tile_pos, "wizard_tower", 0));
+                create_structure(updater, tile, tile_pos, "wizard_tower", 0);
+            }
+        }
+    }
+}
+
+void Generator::create_mines(MessageReceiver& updater) {
+    BOOST_LOG_TRIVIAL(info) << "Placing mines";
+    for (int i = 0; i < game->level.height; i++) {
+        for (int j = 0; j < game->level.width; j++) {
+            Point tile_pos(j, i);
+            Tile& tile = game->level.tiles[tile_pos];
+            if (subtype(tile) == "" && tile.has_property(Roadable) && rand() % 40 == 0 && !tile.structure) {
+                int faction = get_random_faction(game->factions);
+
+                create_structure(updater, tile, tile_pos, "mine", faction);
+            }
+        }
+    }
+}
+
+void Generator::create_farms(MessageReceiver& updater) {
+    BOOST_LOG_TRIVIAL(info) << "Placing farms";
+    for (int i = 0; i < game->level.height; i++) {
+        for (int j = 0; j < game->level.width; j++) {
+            Point tile_pos(j, i);
+            Tile& tile = game->level.tiles[tile_pos];
+            if (subtype(tile) == "" && tile.has_property(Roadable) && rand() % 40 == 0 && !tile.structure) {
+                int faction = get_random_faction(game->factions);
+
+                create_structure(updater, tile, tile_pos, "farm", faction);
+            }
+        }
+    }
+}
+
+void Generator::create_nodes(MessageReceiver& updater) {
+    BOOST_LOG_TRIVIAL(info) << "Placing nodes";
+    for (int i = 0; i < game->level.height; i++) {
+        for (int j = 0; j < game->level.width; j++) {
+            Point tile_pos(j, i);
+            Tile& tile = game->level.tiles[tile_pos];
+            int type_num = rand() % 7;
+            if (subtype(tile) == "" && tile.has_property((type_num == 4) ? Swimmable : Roadable) && rand() % 20 == 0 && !tile.structure) {
+                int faction = get_random_faction(game->factions);
+
+                std::string type;
+                switch (type_num) {
+                    case 0: type = "power_node"; break;
+                    case 1: type = "life_node"; break;
+                    case 2: type = "death_node"; break;
+                    case 3: type = "fire_node"; break;
+                    case 4: type = "water_node"; break;
+                    case 5: type = "earth_node"; break;
+                    case 6: type = "air_node"; break;
+                }
+                create_structure(updater, tile, tile_pos, type, faction);
             }
         }
     }

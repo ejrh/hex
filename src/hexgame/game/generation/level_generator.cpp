@@ -16,13 +16,13 @@
 #include "hexgame/game/movement/movement.h"
 #include "hexgame/game/movement/pathfinding.h"
 
-static std::string type(Tile& tile) {
+std::string type(Tile& tile) {
     std::vector<std::string> parts;
     boost::split(parts, tile.type->name, boost::is_any_of("_"));
     return parts[0];
 }
 
-static std::string subtype(Tile& tile) {
+std::string subtype(Tile& tile) {
     std::vector<std::string> parts;
     boost::split(parts, tile.type->name, boost::is_any_of("_"));
     if (parts.size() > 1)
