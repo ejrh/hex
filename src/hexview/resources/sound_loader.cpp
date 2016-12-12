@@ -1,11 +1,12 @@
 #include "common.h"
 
 #include "hexview/resources/resources.h"
+#include "hexview/resources/resource_loader.h"
 
 
 void SoundLoader::load(const std::string& filename) {
     std::string basename = get_resource_basename(filename);
-    if (basename.rfind(".wav") == basename.size() - 4) {
+    if (has_extension(basename, ".wav")) {
         BOOST_LOG_TRIVIAL(info) << "Loading sound from: " << filename;
         Sound *sound = audio->load_sound(filename);
         if (!sound) {

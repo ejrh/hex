@@ -9,6 +9,7 @@
 #include "hexgame/game/game_messages.h"
 
 #include "hexview/resources/resources.h"
+#include "hexview/resources/resource_loader.h"
 #include "hexview/resources/resource_messages.h"
 
 

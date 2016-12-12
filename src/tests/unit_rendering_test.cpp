@@ -11,6 +11,7 @@
 
 #include "hexgame/game/game.h"
 
+#include "hexview/resources/resource_loader.h"
 #include "hexview/resources/resource_messages.h"
 #include "hexview/view/unit_renderer.h"
 #include "hexview/view/view.h"

@@ -8,6 +8,7 @@
 #include "hexgame/game/game_messages.h"
 
 #include "hexview/resources/resources.h"
+#include "hexview/resources/resource_loader.h"
 #include "hexview/resources/resource_messages.h"
 
 
@@ -186,4 +187,17 @@ void ResourceLoader::load_sound(const std::string& filename) {
     std::string relative_filename = path.string();
 
     sound_loader->load(relative_filename);
+}
+
+std::string get_resource_basename(const std::string& filename) {
+    size_t pos = filename.find_last_of("/");
+    std::string basename(filename);
+    if (pos != std::string::npos)
+        basename = filename.substr(pos+1);
+    std::transform(basename.begin(), basename.end(), basename.begin(), ::tolower);
+    return basename;
+}
+
+bool has_extension(const std::string& filename, const std::string& ext) {
+    return boost::algorithm::iends_with(filename, ext);
 }

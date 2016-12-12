@@ -134,12 +134,3 @@ TileViewDef::pointer Resources::find_base(const TileViewDef& def) const {
     }
     return base;
 }
-
-std::string get_resource_basename(const std::string& filename) {
-    size_t pos = filename.find_last_of("/");
-    std::string basename(filename);
-    if (pos != std::string::npos)
-        basename = filename.substr(pos+1);
-    std::transform(basename.begin(), basename.end(), basename.begin(), ::tolower);
-    return basename;
-}

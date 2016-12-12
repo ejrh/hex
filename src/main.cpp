@@ -28,6 +28,7 @@
 #include "hexgame/game/generation/generator.h"
 
 #include "hexview/chat/chat.h"
+#include "hexview/resources/resource_loader.h"
 #include "hexview/resources/resource_messages.h"
 #include "hexview/view/audio_renderer.h"
 #include "hexview/view/level_renderer.h"
