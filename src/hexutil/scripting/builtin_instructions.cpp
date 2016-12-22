@@ -55,6 +55,25 @@ public:
 };
 
 
+class IfEqInstruction: public Instruction {
+public:
+    IfEqInstruction(const Atom property, const Datum& test_value, const InstructionSequence& sequence):
+        property(property), test_value(test_value), sequence(sequence) { }
+
+    void execute(Execution *execution) {
+        Datum current_value = execution->get(property);
+        if (current_value == test_value) {
+            execution->execute_sequence(sequence);
+        }
+    }
+
+public:
+    Atom property;
+    Datum test_value;
+    InstructionSequence sequence;
+};
+
+
 class ReturnInstruction: public Instruction {
 public:
     ReturnInstruction() { }
@@ -75,6 +94,11 @@ Instruction *BuiltinInstructionCompiler::compile(Message *message, Compiler *com
         case SetVariable: {
             auto instr = dynamic_cast<SetVariableMessage *>(message);
             return new SetVariableInstruction(instr->data1, instr->data2);
+        } break;
+
+        case IfEq: {
+            auto instr = dynamic_cast<IfEqMessage *>(message);
+            return new IfEqInstruction(instr->data1, instr->data2, compiler->compile_sequence(instr->data3));
         } break;
 
         case IfMatch: {

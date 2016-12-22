@@ -25,6 +25,7 @@ MSG_TYPE(DefineScript, WM2(std::string, MessageSequence))
 
 MSG_TYPE(IncludeScript, WM(std::string))
 MSG_TYPE(SetVariable, WM2(Atom, Datum))
+MSG_TYPE(IfEq, WM3(Atom, Datum, MessageSequence))
 MSG_TYPE(IfMatch, WM3(Atom, std::string, MessageSequence))
 MSG_TYPE(Return, Message)
 
