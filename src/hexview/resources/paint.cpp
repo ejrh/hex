@@ -48,3 +48,10 @@ void PaintExecution::paint_animation(Atom image_library, int frame_rate, std::ve
     }
     paint->items.push_back(pi);
 }
+
+void PaintExecution::run(Script *script) {
+    variables.set<int>(paint_offset_x_atom, 0);
+    variables.set<int>(paint_offset_y_atom, 0);
+    variables.set<int>(paint_blend_addition_atom, 0);
+    Execution::run(script);
+}

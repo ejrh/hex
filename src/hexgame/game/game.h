@@ -37,7 +37,7 @@ public:
     }
     template<typename T>
     T get_property(Atom property) const {
-        return properties.get<T>(property);
+        return properties.get(property);
     }
 
 public:
@@ -64,7 +64,7 @@ public:
     }
     template<typename T>
     int get_property(Atom property) const {
-        return properties.get<T>(property, type->properties);
+        return properties.get(property, type->properties);
     }
     template<typename T>
     void set_property(Atom property, const T& value) {
@@ -115,7 +115,7 @@ public:
     }
     template<typename T>
     T get_property(Atom property) const {
-        return properties.get<T>(property);
+        return properties.get(property);
     }
 
 public:
@@ -151,7 +151,7 @@ public:
     }
     template<typename T>
     T get_property(Atom property) const {
-        return properties.get<T>(property);
+        return properties.get(property);
     }
 
 public:

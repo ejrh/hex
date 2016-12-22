@@ -11,6 +11,9 @@ struct Datum {
 
     Datum& operator=(const int& x) { value = x; return *this; }
     bool operator==(const int& x) const { return boost::get<int>(value) == x; }
+
+    template<typename T>
+    operator T() const { return boost::get<T>(value); }
 };
 
 std::ostream& operator<<(std::ostream& os, const Datum& atom);

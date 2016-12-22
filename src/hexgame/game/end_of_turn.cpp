@@ -20,6 +20,8 @@ void EndOfTurn::restore_moves(Unit& unit) {
 }
 
 void EndOfTurn::restore_health(Unit& unit) {
-    if (unit.properties.get<int>(Health) > 0 && unit.properties.get<int>(Health) < unit.type->properties.get<int>(Health))
-        unit.properties.increment<int>(Health, 1);
+    int health = unit.properties.get(Health);
+    int max_health = unit.type->properties.get(Health);
+    if (health > 0 && health < max_health)
+        unit.properties.increment(Health, 1);
 }

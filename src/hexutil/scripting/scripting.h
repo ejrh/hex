@@ -73,16 +73,15 @@ public:
     void execute_sequence(InstructionSequence& instructions);
     void execute_instruction(Instruction *instr);
 
-    template<typename T>
-    const T& get(const Atom& name) const {
+    const Datum& get(const Atom& name) const {
         if (variables.contains(name))
-            return variables.get<T>(name);
+            return variables.get(name);
         for (auto iter = properties_list.begin(); iter != properties_list.end(); iter++) {
             Properties& properties = **iter;
             if (properties.contains(name))
-                return properties.get<T>(name);
+                return properties.get(name);
         }
-        return variables.get<T>(name);
+        return variables.get(name);
     }
 
 public:

@@ -57,12 +57,12 @@ BOOST_AUTO_TEST_CASE(set_var) {
 
     Execution execution(&scripts);
     execution.variables.set<std::string>(VarX, "abc");
-    std::string var_value = execution.variables.get<std::string>(VarX);
+    std::string var_value = execution.variables.get(VarX);
     BOOST_CHECK_EQUAL(var_value, "abc");
 
     execution.run("t");
-    var_value = execution.variables.get<std::string>(VarX);
-    BOOST_CHECK_EQUAL(var_value, "xyz");
+    std::string var_value2 = execution.variables.get(VarX);
+    BOOST_CHECK_EQUAL(var_value2, "xyz");
 }
 
 BOOST_AUTO_TEST_CASE(include_script) {
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(include_script) {
 
     Execution execution(&scripts);
     execution.run("t");
-    std::string var_value = execution.variables.get<std::string>(VarX);
+    std::string var_value = execution.variables.get(VarX);
     BOOST_CHECK_EQUAL(var_value, "xyz");
 }
 
@@ -85,9 +85,9 @@ BOOST_AUTO_TEST_CASE(if_match) {
 
     Execution execution(&scripts);
     execution.run("t");
-    int var_value = execution.variables.get<int>(VarX);
+    int var_value = execution.variables.get(VarX);
     BOOST_CHECK_EQUAL(var_value, 40);
-    var_value = execution.variables.get<int>(VarY);
+    var_value = execution.variables.get(VarY);
     BOOST_CHECK_EQUAL(var_value, 4);
 }
 

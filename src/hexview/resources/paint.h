@@ -43,6 +43,8 @@ public:
     void paint_frame(Atom image_libary, int frame_num, int offset_x, int offset_y, int blend_addition);
     void paint_animation(Atom image_libary, int frame_rate, std::vector<int>& frame_nums, int offset_x, int offset_y, int blend_addition);
 
+    void run(Script *script);
+
 public:
     Resources *resources;
     Paint *paint;

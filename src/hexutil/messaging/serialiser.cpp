@@ -4,7 +4,7 @@
 #include "hexutil/messaging/serialiser.h"
 
 bool is_atom_char(int x) {
-    return std::isalnum(x) || x == '_' || x == '-';
+    return std::isalnum(x) || x == '_' || x == '-' || x == '$';
 }
 
 bool needs_quoting(const std::string& str) {

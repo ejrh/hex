@@ -23,21 +23,19 @@ public:
         return contains(name) || parent.contains(name);
     }
 
-    template<typename T>
-    const T& get(const Atom& name) const {
+    const Datum& get(const Atom& name) const {
         auto iter = data.find(name);
         if (iter != data.end()) {
-            return boost::get<const T>(iter->second.value);
+            return iter->second;
         }
-        static T default_value;
+        static Datum default_value;
         return default_value;
     }
 
-    template<typename T>
-    const T& get(const Atom& name, const Properties& parent) const {
+    const Datum& get(const Atom& name, const Properties& parent) const {
         if (contains(name))
-            return get<T>(name);
-        return parent.get<T>(name);
+            return get(name);
+        return parent.get(name);
     }
 
     template<typename T>
@@ -46,10 +44,10 @@ public:
     }
 
     template<typename T>
-    const T& increment(const Atom& name, const T& delta) {
-        const T& current = get<T>(name);
+    const Datum& increment(const Atom& name, const T& delta) {
+        const T& current = get(name);
         set<T>(name, current + delta);
-        return get<T>(name);
+        return get(name);
     }
 
     Datum& operator[](const Atom& name) { return data[name]; }

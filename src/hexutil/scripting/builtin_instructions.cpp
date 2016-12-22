@@ -41,7 +41,7 @@ public:
         property(property), pattern(pattern), sequence(sequence) { }
 
     void execute(Execution *execution) {
-        std::string var_value = execution->get<std::string>(property);
+        std::string var_value = execution->get(property);
         boost::regex pattern_re(pattern);
         if (boost::regex_match(var_value, pattern_re)) {
             execution->execute_sequence(sequence);

@@ -17,10 +17,10 @@ public:
         PaintExecution* pe = dynamic_cast<PaintExecution *>(execution);
         if (!pe)
             throw ScriptError() << "PaintFrame can only be executed in a PaintExecution";
-        Atom paint_library = execution->get<Atom>(pe->paint_library_atom);
-        int offset_x = execution->get<int>(pe->paint_offset_x_atom);
-        int offset_y = execution->get<int>(pe->paint_offset_y_atom);
-        int blend_addition = execution->get<int>(pe->paint_blend_addition_atom);
+        Atom paint_library = execution->get(pe->paint_library_atom);
+        int offset_x = execution->get(pe->paint_offset_x_atom);
+        int offset_y = execution->get(pe->paint_offset_y_atom);
+        int blend_addition = execution->get(pe->paint_blend_addition_atom);
         pe->paint_frame(paint_library, frame_num, offset_x, offset_y, blend_addition);
     }
 
@@ -38,10 +38,10 @@ public:
         PaintExecution* pe = dynamic_cast<PaintExecution *>(execution);
         if (!pe)
             throw ScriptError() << "PaintAnimation can only be executed in a PaintExecution";
-        Atom paint_library = execution->get<Atom>(pe->paint_library_atom);
-        int offset_x = execution->get<int>(pe->paint_offset_x_atom);
-        int offset_y = execution->get<int>(pe->paint_offset_y_atom);
-        int blend_addition = execution->get<int>(pe->paint_blend_addition_atom);
+        Atom paint_library = execution->get(pe->paint_library_atom);
+        int offset_x = execution->get(pe->paint_offset_x_atom);
+        int offset_y = execution->get(pe->paint_offset_y_atom);
+        int blend_addition = execution->get(pe->paint_blend_addition_atom);
         pe->paint_animation(paint_library, frame_rate, frame_nums, offset_x, offset_y, blend_addition);
     }
 
