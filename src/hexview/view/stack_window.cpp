@@ -85,6 +85,10 @@ void StackWindow::draw(const UiContext& context) {
             int py = unit_rectangles[i].y + StackWindow::unit_height / 2;
             renderer->draw_unit_centered(px, py, unit_view);
 
+            int health = unit.get_property<int>(Health);
+            int max_health = unit.type->get_property<int>(Health);
+            renderer->draw_health_bar(px - 20, unit_rectangles[i].y, 40, 5, health, max_health);
+
             std::ostringstream ss;
             ss << unit.get_property<int>(Moves) / MOVE_SCALE;
             px = unit_rectangles[i].x + StackWindow::unit_width;

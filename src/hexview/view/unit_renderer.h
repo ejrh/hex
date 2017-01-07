@@ -16,6 +16,7 @@ public:
     ~UnitRenderer();
     virtual void draw_unit(int x, int y, UnitView& unit_view);
     virtual void draw_unit_centered(int x, int y, UnitView& unit_view);
+    void draw_health_bar(int x, int y, int w, int h, int health, int max_health);
 
 public:
     bool generate_placeholders;

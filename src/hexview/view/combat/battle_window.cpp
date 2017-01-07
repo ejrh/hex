@@ -62,14 +62,7 @@ void BattleWindow::draw_stack(int stack_num) {
         }
 
         if (pv.participant->is_alive()) {
-            graphics->fill_rectangle(0, 0, 0, pv.x - 21, pv.y - 43, 42, 5);
-            float health = pv.participant->get_health() / (float) pv.participant->get_max_health();
-            float health2 = (pv.participant->get_health() - 1) / (float) (pv.participant->get_max_health() - 1);
-            int r = (1.0 - health2) * 255;
-            int g = health2 * 255;
-            int b = 0;
-            int w = health * 40;
-            graphics->fill_rectangle(r, g, b, pv.x - 20, pv.y - 42, w, 3);
+            renderer->draw_health_bar(pv.x - BattleView::participant_width / 2 + 8, pv.y - BattleView::participant_height + 8, BattleView::participant_width - 16, 5, pv.participant->get_health(), pv.participant->get_max_health());
         }
     }
 }
