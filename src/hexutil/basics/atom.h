@@ -22,6 +22,8 @@ public:
 
     // Defined below as it references AtomRegistry
     operator const std::string&() const;
+    Atom(const char *name);
+    Atom(const std::string& name);
 
 private:
     int id;
@@ -58,6 +60,10 @@ private:
 inline Atom::operator const std::string&() const {
     return AtomRegistry::name(*this);
 }
+
+inline Atom::Atom(const char *name): id(AtomRegistry::atom(name)) { }
+
+inline Atom::Atom(const std::string& name): id(AtomRegistry::atom(name)) { }
 
 inline std::ostream& operator<<(std::ostream& os, const Atom& atom) {
     return os << AtomRegistry::name(atom);

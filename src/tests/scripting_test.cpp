@@ -1,5 +1,6 @@
 #include "common.h"
 
+#include "hexutil/messaging/builtin_messages.h"
 #include "hexutil/messaging/message.h"
 #include "hexutil/messaging/receiver.h"
 #include "hexutil/scripting/scripting.h"
@@ -23,9 +24,8 @@ public:
         }
     }
 
-    void define_script(const std::string& name, MessageSequence& sequence) {
-        Compiler compiler;
-        Script::pointer script = compiler.compile(name, sequence);
+    void define_script(const std::string& name, Term *instruction) {
+        Script::pointer script = boost::make_shared<Script>(name, std::unique_ptr<Term>(instruction));
         BOOST_LOG_TRIVIAL(info) << "Compiled script: " << name;
         scripts->put_and_warn(name, script);
     }
@@ -37,6 +37,7 @@ private:
 struct Fixture {
     Fixture(): scripts("scripts"), VarX(AtomRegistry::atom("VarX")), VarY(AtomRegistry::atom("VarY")) {
         register_builtin_messages();
+        register_builtin_interpreters();
     }
 
     void play_message(const char *input) {
@@ -79,9 +80,9 @@ BOOST_AUTO_TEST_CASE(if_match) {
     play_message("DefineScript(t, ["
         "SetVariable(VarX, 32),"
         "SetVariable(StrVar, \"abc\"),"
-        "IfMatch(StrVar, \"a.+\", SetVariable(VarX, 40)),"
+        "IfMatch($StrVar, \"a.+\", SetVariable(VarX, 40)),"
         "SetVariable(VarY, 4),"
-        "IfMatch(StrVar, \"x.+\", SetVariable(VarY, 7))])");
+        "IfMatch($StrVar, \"x.+\", SetVariable(VarY, 7))])");
 
     Execution execution(&scripts);
     execution.run("t");

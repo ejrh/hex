@@ -7,13 +7,13 @@
 #include "hexview/resources/resource_messages.h"
 #include "hexview/resources/paint.h"
 
-class PaintFrameInstruction: public Instruction {
+class PaintFrameInterpreter: public Interpreter {
 public:
-    PaintFrameInstruction(int frame_num):
-        frame_num(frame_num) {
-    }
+    PaintFrameInterpreter(): Interpreter("PaintFrame") { }
 
-    void execute(Execution *execution) {
+    void execute(const Term *instruction, Execution *execution) const {
+        int frame_num = execution->get_argument(instruction, 0);
+
         PaintExecution* pe = dynamic_cast<PaintExecution *>(execution);
         if (!pe)
             throw ScriptError() << "PaintFrame can only be executed in a PaintExecution";
@@ -23,18 +23,22 @@ public:
         int blend_addition = execution->get(pe->paint_blend_addition_atom);
         pe->paint_frame(paint_library, frame_num, offset_x, offset_y, blend_addition);
     }
-
-public:
-    int frame_num;
 };
 
-class PaintAnimationInstruction: public Instruction {
-public:
-    PaintAnimationInstruction(int frame_rate, std::vector<int>& frame_nums):
-        frame_rate(frame_rate), frame_nums(frame_nums) {
-    }
 
-    void execute(Execution *execution) {
+class PaintAnimationInterpreter: public Interpreter {
+public:
+    PaintAnimationInterpreter(): Interpreter("PaintAnimation") { }
+
+    void execute(const Term *instruction, Execution *execution) const {
+        int frame_rate = execution->get_argument(instruction, 0);
+        std::vector<int> frame_nums;
+        const CompoundTerm *frame_nums_subterm = dynamic_cast<const CompoundTerm *>(execution->get_subterm(instruction, 1));
+        for (int i = 0; i < frame_nums_subterm->subterms.size(); i++) {
+            int frame_num = execution->get_argument(frame_nums_subterm, i);
+            frame_nums.push_back(frame_num);
+        }
+
         PaintExecution* pe = dynamic_cast<PaintExecution *>(execution);
         if (!pe)
             throw ScriptError() << "PaintAnimation can only be executed in a PaintExecution";
@@ -44,26 +48,9 @@ public:
         int blend_addition = execution->get(pe->paint_blend_addition_atom);
         pe->paint_animation(paint_library, frame_rate, frame_nums, offset_x, offset_y, blend_addition);
     }
-
-public:
-    int frame_rate;
-    std::vector<int> frame_nums;
 };
 
-Instruction *PaintInstructionCompiler::compile(Message *message, Compiler *compiler) {
-    switch (message->type) {
-        case PaintFrame: {
-            auto instr = dynamic_cast<PaintFrameMessage *>(message);
-            return new PaintFrameInstruction(instr->data);
-        } break;
-
-        case PaintAnimation: {
-            auto instr = dynamic_cast<PaintAnimationMessage *>(message);
-            return new PaintAnimationInstruction(instr->data1, instr->data2);
-        } break;
-
-        default: {
-            return nullptr;
-        }
-    }
+void register_paint_interpreters() {
+    InterpreterRegistry::register_interpreter(new PaintFrameInterpreter());
+    InterpreterRegistry::register_interpreter(new PaintAnimationInterpreter());
 }

@@ -34,15 +34,12 @@ MSG_TYPE(UnitSounds, WM2(int, SoundSeries))
 
 MSG_TYPE(CreateStructureView, WM(StructureViewDef))
 MSG_TYPE(StructureAnimation, WM4(int, int, int, ImageSeries))
-MSG_TYPE(StructurePaint, WM(MessageSequence))
+MSG_TYPE(StructurePaint, WM(Term *))
 
 MSG_TYPE(CreateFactionView, WM(FactionViewDef))
 MSG_TYPE(FactionImageSet, WM2(std::string, ImageSeries))
 
 MSG_TYPE(LoadSong, WM(std::string))
 MSG_TYPE(SoundFile, WM(std::string))
-
-MSG_TYPE(PaintFrame, WM(int))
-MSG_TYPE(PaintAnimation, WM2(int, std::vector<int>))
 
 #undef P

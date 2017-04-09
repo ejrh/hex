@@ -14,6 +14,19 @@ struct Datum {
 
     template<typename T>
     operator T() const { return boost::get<T>(value); }
+
+    template<typename T>
+    bool is() const {
+        return boost::get<T>(&value) != nullptr;
+    }
+
+    template<typename T>
+    const T& get() const {
+        return boost::get<T>(value);
+    }
+
+    std::string get_as_str() const;
+    Atom get_as_atom() const;
 };
 
 std::ostream& operator<<(std::ostream& os, const Datum& atom);

@@ -159,11 +159,7 @@ void ResourceLoader::handle_message(Message *msg) {
 
         case StructurePaint: {
             auto upd = dynamic_cast<StructurePaintMessage *>(msg);
-            Compiler compiler;
-            compiler.register_instruction_compiler(new PaintInstructionCompiler);
-            std::string name = "<" + last_structure_view_def->name + ">";
-            Script::pointer script = compiler.compile(name, upd->data);
-            last_structure_view_def->script = script;
+            last_structure_view_def->script = define_script("<" + last_structure_view_def->name + ">", upd->data);
         } break;
 
         case LoadSong: {
@@ -231,12 +227,11 @@ void ResourceLoader::load_sound(const std::string& filename) {
     sound_loader->load(relative_filename);
 }
 
-void ResourceLoader::define_script(const std::string& name, MessageSequence& sequence) {
-    Compiler compiler;
-    compiler.register_instruction_compiler(new PaintInstructionCompiler);
-    Script::pointer script = compiler.compile(name, sequence);
+Script::pointer ResourceLoader::define_script(const std::string& name, Term *instruction) {
+    Script::pointer script = boost::make_shared<Script>(name, std::unique_ptr<Term>(instruction));
     BOOST_LOG_TRIVIAL(info) << "Compiled script: " << name;
     resources->scripts.put_and_warn(name, script);
+    return script;
 }
 
 std::string get_resource_basename(const std::string& filename) {

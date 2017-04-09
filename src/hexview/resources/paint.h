@@ -7,10 +7,6 @@
 
 class Resources;
 
-class PaintInstructionCompiler: public InstructionCompiler {
-    virtual Instruction *compile(Message *message, Compiler *compiler);
-};
-
 class PaintItem {
 public:
     int offset_x, offset_y;
@@ -54,5 +50,8 @@ public:
     Atom paint_offset_y_atom;
     Atom paint_blend_addition_atom;
 };
+
+
+void register_paint_interpreters();
 
 #endif

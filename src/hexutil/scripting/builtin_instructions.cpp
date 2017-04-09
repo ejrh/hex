@@ -4,114 +4,96 @@
 #include "hexutil/scripting/scripting.h"
 
 
-class IncludeScriptInstruction: public Instruction {
+class ListInterpreter: public Interpreter {
 public:
-    IncludeScriptInstruction(const std::string& script_name):
-        script_name(script_name) { }
+    ListInterpreter(): Interpreter("[]") { }
 
-    void execute(Execution *execution) {
+    void execute(const Term *instruction, Execution *execution) const {
+        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
+
+        for (auto iter = list_term->subterms.begin(); iter != list_term->subterms.end(); iter++) {
+            const Term *instr = iter->get();
+            execution->execute_instruction(instr);
+            if (execution->return_active)
+                break;
+        }
+    }
+};
+
+
+class IncludeScriptInterpreter: public Interpreter {
+public:
+    IncludeScriptInterpreter(): Interpreter("IncludeScript") { }
+
+    void execute(const Term *instruction, Execution *execution) const {
+        const Atom script_name = execution->get_argument(instruction, 0).get_as_atom();
         StrMap<Script>& scripts = *execution->scripts;
         Script *script = scripts.get(script_name).get();
         execution->execute_script(script);
     }
-
-public:
-    std::string script_name;
 };
 
 
-class SetVariableInstruction: public Instruction {
+class SetVariableInterpreter: public Interpreter {
 public:
-    SetVariableInstruction(const Atom property, const Datum value):
-        property(property), value(value) { }
+    SetVariableInterpreter(): Interpreter("SetVariable") { }
 
-    void execute(Execution *execution) {
+    void execute(const Term *instruction, Execution *execution) const {
+        const Atom& property = execution->get_argument(instruction, 0);
+        const Datum& value = execution->get_argument(instruction, 1);
         execution->variables[property] = value;
     }
-
-public:
-    Atom property;
-    Datum value;
 };
 
 
-class IfMatchInstruction: public Instruction {
+class IfMatchInterpreter: public Interpreter {
 public:
-    IfMatchInstruction(const Atom property, const std::string& pattern, const InstructionSequence& sequence):
-        property(property), pattern(pattern), sequence(sequence) { }
+    IfMatchInterpreter(): Interpreter("IfMatch") { }
 
-    void execute(Execution *execution) {
-        std::string var_value = execution->get(property);
+    void execute(const Term *instruction, Execution *execution) const {
+        const std::string& value = execution->get_argument(instruction, 0);
+        const std::string& pattern = execution->get_argument(instruction, 1);
+        const Term *body = execution->get_subterm(instruction, 2);
+
         boost::regex pattern_re(pattern);
-        if (boost::regex_match(var_value, pattern_re)) {
-            execution->execute_sequence(sequence);
+        if (boost::regex_match(value, pattern_re)) {
+            execution->execute_instruction(body);
         }
     }
-
-public:
-    Atom property;
-    std::string pattern;
-    InstructionSequence sequence;
 };
 
 
-class IfEqInstruction: public Instruction {
+class IfEqInterpreter: public Interpreter {
 public:
-    IfEqInstruction(const Atom property, const Datum& test_value, const InstructionSequence& sequence):
-        property(property), test_value(test_value), sequence(sequence) { }
+    IfEqInterpreter(): Interpreter("IfEq") { }
 
-    void execute(Execution *execution) {
-        Datum current_value = execution->get(property);
-        if (current_value == test_value) {
-            execution->execute_sequence(sequence);
+    void execute(const Term *instruction, Execution *execution) const {
+        const Datum& value = execution->get_argument(instruction, 0);
+        const Datum& value2 = execution->get_argument(instruction, 1);
+        const Term *body = execution->get_subterm(instruction, 2);
+
+        if (value == value2) {
+            execution->execute_instruction(body);
         }
     }
-
-public:
-    Atom property;
-    Datum test_value;
-    InstructionSequence sequence;
 };
 
 
-class ReturnInstruction: public Instruction {
+class ReturnInterpreter: public Interpreter {
 public:
-    ReturnInstruction() { }
+    ReturnInterpreter(): Interpreter("Return") { }
 
-    void execute(Execution *execution) {
+    void execute(const Term *instruction, Execution *execution) const {
         execution->return_active = true;
     }
 };
 
 
-Instruction *BuiltinInstructionCompiler::compile(Message *message, Compiler *compiler) {
-    switch (message->type) {
-        case IncludeScript: {
-            auto instr = dynamic_cast<IncludeScriptMessage *>(message);
-            return new IncludeScriptInstruction(instr->data);
-        } break;
-
-        case SetVariable: {
-            auto instr = dynamic_cast<SetVariableMessage *>(message);
-            return new SetVariableInstruction(instr->data1, instr->data2);
-        } break;
-
-        case IfEq: {
-            auto instr = dynamic_cast<IfEqMessage *>(message);
-            return new IfEqInstruction(instr->data1, instr->data2, compiler->compile_sequence(instr->data3));
-        } break;
-
-        case IfMatch: {
-            auto instr = dynamic_cast<IfMatchMessage *>(message);
-            return new IfMatchInstruction(instr->data1, instr->data2, compiler->compile_sequence(instr->data3));
-        } break;
-
-        case Return: {
-            return new ReturnInstruction();
-        } break;
-
-        default: {
-            return nullptr;
-        }
-    }
+void register_builtin_interpreters() {
+    InterpreterRegistry::register_interpreter(new ListInterpreter());
+    InterpreterRegistry::register_interpreter(new IncludeScriptInterpreter());
+    InterpreterRegistry::register_interpreter(new SetVariableInterpreter());
+    InterpreterRegistry::register_interpreter(new IfMatchInterpreter());
+    InterpreterRegistry::register_interpreter(new IfEqInterpreter());
+    InterpreterRegistry::register_interpreter(new ReturnInterpreter());
 }

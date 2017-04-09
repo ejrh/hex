@@ -1,6 +1,7 @@
 set(srcs
         basics/atom.cpp
         basics/atom.h
+        basics/atom_h_template.h
         basics/datum.cpp
         basics/datum.h
         basics/error.h
@@ -18,6 +19,8 @@ set(srcs
         basics/statistics.h
         basics/string_vector.cpp
         basics/string_vector.h
+        basics/term.cpp
+        basics/term.h
         basics/vector2.h
         messaging/builtin_messages.cpp
         messaging/builtin_messages.h
@@ -48,7 +51,6 @@ set(srcs
         networking/networking.h
         networking/server.cpp
         scripting/builtin_instructions.cpp
-        scripting/compiler.cpp
         scripting/execution.cpp
         scripting/scripting.h
 )

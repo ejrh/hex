@@ -9,6 +9,7 @@ The markdown (`*.md`) files found in this directory pertain to the implementatio
   - [PROTOCOL.md](PROTOCOL.md) - the network protocol.
   - [SERIALISATION.md](SERIALISATION.md) - the serialisation format used for networking messages
     and resource and game definition files.
+  - [SCRIPTING.md](SCRIPTING.md) - the scripting language.
   - [UI.md](UI.md) - the UI system.
 
 Components of Hex

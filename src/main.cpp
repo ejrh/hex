@@ -288,6 +288,9 @@ void run(Options& options) {
     register_resource_messages();
     register_property_names();
 
+    register_builtin_interpreters();
+    register_paint_interpreters();
+
     Graphics graphics;
     graphics.start("Hex", options.width, options.height, options.fullscreen);
 

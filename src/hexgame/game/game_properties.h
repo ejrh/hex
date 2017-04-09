@@ -5,7 +5,7 @@
 
 
 enum GameAtom {
-    FirstGameAtom = 0,
+    FirstGameAtom = 2000,
     #define PROPERTY_NAME(n) n,
     #include "hexgame/game/property_names.h"
     #undef PROPERTY_NAME

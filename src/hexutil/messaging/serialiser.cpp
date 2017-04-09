@@ -138,6 +138,43 @@ Deserialiser& Deserialiser::operator>>(Datum& datum) {
     return *this;
 }
 
+Deserialiser& Deserialiser::operator>>(Term *& term) {
+    skip_to_next();
+    int line_no = line();
+    if (peek() == '[') {
+        std::vector<Term *> terms;
+        *this >> terms;
+        term = new CompoundTerm(terms);
+    } else {
+        Datum datum;
+        *this >> datum;
+        if (datum.is<Atom>() && peek() == '(') {
+            //TODO reuse list parsing code for arguments
+            CompoundTerm *compound_term = new CompoundTerm(datum.get<Atom>());
+            skip_expected('(');
+            expect_seperator = false;
+            while (true) {
+                skip_whitespace();
+                int ch = peek();
+                if (ch == ')')
+                    break;
+                skip_to_next();
+                Term *subterm;
+                *this >> subterm;
+                compound_term->add_subterm(subterm);
+            }
+            skip_expected(')');
+            term = compound_term;
+        } else {
+            term = new DatumTerm(datum);
+        }
+    }
+
+    term->line_no = line_no;
+    expect_seperator = true;
+    return *this;
+}
+
 void Deserialiser::type_begin_tuple(std::string &type_name) {
     skip_to_next();
     std::stringbuf sbuf;

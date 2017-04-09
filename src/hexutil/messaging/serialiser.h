@@ -5,6 +5,7 @@
 #include "hexutil/basics/datum.h"
 #include "hexutil/basics/io.h"
 #include "hexutil/basics/properties.h"
+#include "hexutil/basics/term.h"
 
 
 bool is_atom_char(int x);
@@ -98,6 +99,11 @@ public:
 
     Serialiser& operator<<(const Properties& p) {
         *this << p.data;
+        return *this;
+    }
+
+    Serialiser& operator<<(const Term *term) {
+        *this << "term!";
         return *this;
     }
 
@@ -235,6 +241,8 @@ public:
         *this >> p.data;
         return *this;
     }
+
+    Deserialiser& operator>>(Term *& term);
 
     void type_begin_tuple(std::string &type_name);
     void begin_vector(int &size);
