@@ -40,7 +40,7 @@ void BattleWindow::draw_stack(int stack_num) {
         if (pv.selected) {
             Image *target = target_images[0].image;
             if (target != NULL) {
-                graphics->blit(target, pv.x - target->width / 2, pv.y - target->height, SDL_BLENDMODE_BLEND, 128);
+                graphics->blit(target, pv.x - target->width / 2, pv.y - target->height / 2, SDL_BLENDMODE_BLEND, 128);
             }
         }
 
@@ -51,18 +51,18 @@ void BattleWindow::draw_stack(int stack_num) {
         if (pv.selected) {
             Move& move = view->battle->moves[view->current_move];
             TextFormat tf(SmallFont14, true, 250, 250, 250);
-            tf.write_text(graphics, move.type, pv.x, pv.y + 20);
+            tf.write_text(graphics, move.type, pv.x, pv.y + BattleView::participant_height / 2 + 8);
         }
 
         if (pv.targetted) {
             Image *target = target_images[1].image;
             if (target != NULL) {
-                graphics->blit(target, pv.x - target->width / 2, pv.y - target->height, SDL_BLENDMODE_BLEND);
+                graphics->blit(target, pv.x - target->width / 2, pv.y - target->height / 2, SDL_BLENDMODE_BLEND);
             }
         }
 
         if (pv.participant->is_alive()) {
-            renderer->draw_health_bar(pv.x - BattleView::participant_width / 2 + 8, pv.y - BattleView::participant_height + 8, BattleView::participant_width - 16, 5, pv.participant->get_health(), pv.participant->get_max_health());
+            renderer->draw_health_bar(pv.x - BattleView::participant_width / 2 + 8, pv.y - BattleView::participant_height / 2 + 8, BattleView::participant_width - 16, 5, pv.participant->get_health(), pv.participant->get_max_health());
         }
     }
 }

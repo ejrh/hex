@@ -19,25 +19,6 @@ void Resources::resolve_references() {
 
     for (auto def_iter = unit_view_defs.begin(); def_iter != unit_view_defs.end(); def_iter++) {
         UnitViewDef& def = *def_iter->second;
-        for (auto anim_iter = def.hold_animations.begin(); anim_iter != def.hold_animations.end(); anim_iter++) {
-            resolve_image_series(anim_iter->images);
-        }
-        for (auto anim_iter = def.move_animations.begin(); anim_iter != def.move_animations.end(); anim_iter++) {
-            resolve_image_series(anim_iter->images);
-        }
-        for (auto anim_iter = def.attack_animations.begin(); anim_iter != def.attack_animations.end(); anim_iter++) {
-            resolve_image_series(anim_iter->images);
-        }
-        for (auto anim_iter = def.recoil_animations.begin(); anim_iter != def.recoil_animations.end(); anim_iter++) {
-            resolve_image_series(anim_iter->images);
-        }
-        for (auto anim_iter = def.die_animations.begin(); anim_iter != def.die_animations.end(); anim_iter++) {
-            resolve_image_series(anim_iter->images);
-        }
-        for (auto anim_iter = def.shadow_animations.begin(); anim_iter != def.shadow_animations.end(); anim_iter++) {
-            resolve_image_series(anim_iter->images);
-        }
-
         for (auto sound_iter = def.sounds.begin(); sound_iter != def.sounds.end(); sound_iter++) {
             resolve_sound_series(sound_iter->sounds);
         }

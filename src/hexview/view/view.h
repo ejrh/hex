@@ -6,6 +6,7 @@
 #include "hexview/resources/paint.h"
 #include "hexview/resources/resources.h"
 #include "hexview/resources/view_def.h"
+#include "hexview/view/unit_painter.h"
 
 
 // Assumes 1000 increments between frames
@@ -72,19 +73,8 @@ public:
     ~UnitView() { }
 
     void update(unsigned int update_ms) {
-        AnimationDef& animation = get_animation_def();
-        phase += frame_incr(animation.bpm, update_ms);
-    }
-
-    AnimationDef& get_animation_def() const {
-        switch (posture) {
-            case Holding: return view_def->hold_animations[facing];
-            case Moving: return view_def->move_animations[facing];
-            case Attacking: return view_def->attack_animations[facing];
-            case Recoiling: return view_def->recoil_animations[facing];
-            case Dying: return view_def->die_animations[facing];
-            default: return view_def->hold_animations[facing];
-        }
+        //TODO figure out unit animation
+        phase += frame_incr(40, update_ms);
     }
 
 public:
@@ -96,6 +86,7 @@ public:
     bool selected;
     bool targetted;
     bool play_sound;
+    Paint paint;
 };
 
 class UnitStackView: public UnitView, public boost::enable_shared_from_this<UnitStackView> {
@@ -107,17 +98,21 @@ public:
         moving(false), locked(false) { }
     ~UnitStackView() { }
 
+    void set_representative(Resources *resources);
+
 public:
     UnitStack::pointer stack;
+    int representative;
     bool moving, locked;
     Path path;
 };
 
 class GameView;
+class UnitPainter;
 
 class Ghost {
 public:
-    Ghost(GameView *view, UnitStack::pointer stack, const IntSet selected_units, Path path, UnitStack::pointer target_stack);
+    Ghost(GameView *view, UnitPainter *unit_painter, UnitStack::pointer& stack, const IntSet selected_units, Path path, UnitStack::pointer& target_stack);
     void update(unsigned int update_ms);
 
 public:
@@ -125,6 +120,7 @@ public:
     GameView *view;
 
 private:
+    UnitPainter *unit_painter;
     UnitStackView::pointer target_view;
     UnitStackView::pointer stack_view;
     unsigned int step;
@@ -190,6 +186,7 @@ public:
     std::vector<InfoMessage> messages;
     LevelView level_view;
     Resources *resources;
+    UnitPainter unit_painter;
     MessageReceiver *dispatcher;
     unsigned int last_update;
     unsigned int phase;

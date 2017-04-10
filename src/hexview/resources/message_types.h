@@ -24,12 +24,7 @@ MSG_TYPE(TileRoads, WM(ImageSeries))
 MSG_TYPE(TileFeature, WM(FeatureDef))
 
 MSG_TYPE(CreateUnitView, WM(UnitViewDef))
-MSG_TYPE(UnitHoldAnimation, WM3(int, int, ImageSeries))
-MSG_TYPE(UnitMoveAnimation, WM3(int, int, ImageSeries))
-MSG_TYPE(UnitAttackAnimation, WM3(int, int, ImageSeries))
-MSG_TYPE(UnitRecoilAnimation, WM3(int, int, ImageSeries))
-MSG_TYPE(UnitDieAnimation, WM3(int, int, ImageSeries))
-MSG_TYPE(UnitShadowAnimation, WM3(int, int, ImageSeries))
+MSG_TYPE(UnitPaint, WM(Term *))
 MSG_TYPE(UnitSounds, WM2(int, SoundSeries))
 
 MSG_TYPE(CreateStructureView, WM(StructureViewDef))

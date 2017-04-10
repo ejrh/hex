@@ -11,11 +11,12 @@
 
 #include "hexview/resources/view_def.h"
 #include "hexview/view/player.h"
+#include "hexview/view/unit_painter.h"
 #include "hexview/view/view.h"
 
 
 GameView::GameView(Game *game, Player *player, Resources *resources, MessageReceiver *dispatcher):
-        game(game), player(player), level_view(&game->level), resources(resources), dispatcher(dispatcher),
+        game(game), player(player), level_view(&game->level), resources(resources), unit_painter(game, this, resources), dispatcher(dispatcher),
         last_update(0), phase(0),
         faction_views("faction_views"), unit_stack_views("unit_stack_views"),
         selected_stack_id(0), selected_structure(), debug_mode(false),
@@ -234,7 +235,7 @@ void GameView::transfer_units(int stack_id, const IntSet selected_units, Path pa
         clear_drawn_path();
     }
 
-    Ghost ghost(this, stack, selected_units, path, target_stack);
+    Ghost ghost(this, &unit_painter, stack, selected_units, path, target_stack);
     ghosts.push_back(ghost);
 
     ++ghost_counter;
@@ -251,21 +252,7 @@ void GameView::mark_ready() {
 }
 
 void GameView::set_view_def(UnitStackView& stack_view) const {
-    UnitStack::pointer& stack = stack_view.stack;
-    if (!stack->units.empty()) {
-        int representative = 0;
-        for (int i = 1; i < stack->units.size(); i++) {
-            if (stack->units[i]->has_property(Transport)) {
-                representative = i;
-                break;
-            }
-            //TODO pick most valuable
-        }
-        UnitType& unit_type = *stack->units[representative]->type;
-        stack_view.view_def = resources->get_unit_view_def(unit_type.name);
-    } else {
-        stack_view.view_def.reset();
-    }
+    stack_view.set_representative(resources);
 }
 
 void GameView::fix_stack_views() {

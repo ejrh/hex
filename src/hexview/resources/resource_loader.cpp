@@ -96,52 +96,15 @@ void ResourceLoader::handle_message(Message *msg) {
             last_unit_view_def = def;
         } break;
 
-        case UnitHoldAnimation: {
-            auto upd = dynamic_cast<UnitHoldAnimationMessage *>(msg);
-            int facing = upd->data1;
-            last_unit_view_def->hold_animations[facing].bpm = upd->data2;
-            last_unit_view_def->hold_animations[facing].images = upd->data3;
-        } break;
-
-        case UnitMoveAnimation: {
-            auto upd = dynamic_cast<UnitMoveAnimationMessage *>(msg);
-            int facing = upd->data1;
-            last_unit_view_def->move_animations[facing].bpm = upd->data2;
-            last_unit_view_def->move_animations[facing].images = upd->data3;
-        } break;
-
-        case UnitAttackAnimation: {
-            auto upd = dynamic_cast<UnitAttackAnimationMessage *>(msg);
-            int facing = upd->data1;
-            last_unit_view_def->attack_animations[facing].bpm = upd->data2;
-            last_unit_view_def->attack_animations[facing].images = upd->data3;
-        } break;
-
-        case UnitRecoilAnimation: {
-            auto upd = dynamic_cast<UnitRecoilAnimationMessage *>(msg);
-            int facing = upd->data1;
-            last_unit_view_def->recoil_animations[facing].bpm = upd->data2;
-            last_unit_view_def->recoil_animations[facing].images = upd->data3;
-        } break;
-
-        case UnitDieAnimation: {
-            auto upd = dynamic_cast<UnitDieAnimationMessage *>(msg);
-            int facing = upd->data1;
-            last_unit_view_def->die_animations[facing].bpm = upd->data2;
-            last_unit_view_def->die_animations[facing].images = upd->data3;
-        } break;
-
-        case UnitShadowAnimation: {
-            auto upd = dynamic_cast<UnitShadowAnimationMessage *>(msg);
-            int facing = upd->data1;
-            last_unit_view_def->shadow_animations[facing].bpm = upd->data2;
-            last_unit_view_def->shadow_animations[facing].images = upd->data3;
-        } break;
-
         case UnitSounds: {
             auto upd = dynamic_cast<UnitSoundsMessage *>(msg);
             int posture = upd->data1;;
             last_unit_view_def->sounds[posture].sounds = upd->data2;
+        } break;
+
+        case UnitPaint: {
+            auto upd = dynamic_cast<UnitPaintMessage *>(msg);
+            last_unit_view_def->script = define_script("<" + last_unit_view_def->name + ">", upd->data);
         } break;
 
         case CreateStructureView: {

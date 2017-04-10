@@ -1,6 +1,250 @@
-# CreateUnitView(name, move_speed)
-# UnitHoldAnimation(facing, bpm, images)
-# UnitMoveAnimation(facing, bpm, images)
+ImageLibrary(ushadow, "images/units/ushadow.ilb")
+ImageLibrary(deadunit, "images/units/deadunit.ilb")
+
+DefineScript(facing_ps, [
+    If(Eq($unit_facing, 0), SetVariable(paint_frame_offset, 400)),
+    If(Eq($unit_facing, 1), SetVariable(paint_frame_offset, 300)),
+    If(Eq($unit_facing, 2), SetVariable(paint_frame_offset, 200)),
+    If(Eq($unit_facing, 3), SetVariable(paint_frame_offset, 100)),
+    If(Eq($unit_facing, 4), SetVariable(paint_frame_offset, 600)),
+    If(Eq($unit_facing, 5), SetVariable(paint_frame_offset, 500))
+])
+
+DefineScript(small_shadow_ps, [
+    If(Eq($unit_posture, dying), Return()),
+    SetVariable(paint_library, ushadow),
+    SetVariable(paint_frame_offset, 0),
+    SetVariable(paint_blend_alpha, 96),
+    If(Eq($unit_facing, 0), PaintFrame(1)),
+    If(Eq($unit_facing, 1), PaintFrame(1)),
+    If(Eq($unit_facing, 2), PaintFrame(0)),
+    If(Eq($unit_facing, 3), PaintFrame(1)),
+    If(Eq($unit_facing, 4), PaintFrame(1)),
+    If(Eq($unit_facing, 5), PaintFrame(0)),
+    SetVariable(paint_blend_alpha, 0)
+])
+
+DefineScript(mounted_shadow_ps, [
+    If(Eq($unit_posture, dying), Return()),
+    SetVariable(paint_library, ushadow),
+    SetVariable(paint_frame_offset, 0),
+    SetVariable(paint_blend_alpha, 96),
+    If(Eq($unit_facing, 0), PaintFrame(26)),
+    If(Eq($unit_facing, 1), PaintFrame(6)),
+    If(Eq($unit_facing, 2), PaintFrame(7)),
+    If(Eq($unit_facing, 3), PaintFrame(26)),
+    If(Eq($unit_facing, 4), PaintFrame(6)),
+    If(Eq($unit_facing, 5), PaintFrame(7)),
+    SetVariable(paint_blend_alpha, 0)
+])
+
+DefineScript(monster_shadow_ps, [
+    If(Eq($unit_posture, dying), Return()),
+    SetVariable(paint_library, ushadow),
+    SetVariable(paint_frame_offset, 0),
+    SetVariable(paint_blend_alpha, 96),
+    If(Eq($unit_facing, 0), PaintFrame(10)),
+    If(Eq($unit_facing, 1), PaintFrame(10)),
+    If(Eq($unit_facing, 2), PaintFrame(10)),
+    If(Eq($unit_facing, 3), PaintFrame(10)),
+    If(Eq($unit_facing, 4), PaintFrame(10)),
+    If(Eq($unit_facing, 5), PaintFrame(10)),
+    SetVariable(paint_blend_alpha, 0)
+])
+
+DefineScript(machine_shadow_ps, [
+    If(Eq($unit_posture, dying), Return()),
+    SetVariable(paint_library, ushadow),
+    SetVariable(paint_frame_offset, 0),
+    SetVariable(paint_blend_alpha, 96),
+    If(Eq($unit_facing, 0), PaintFrame(10)),
+    If(Eq($unit_facing, 1), PaintFrame(9)),
+    If(Eq($unit_facing, 2), PaintFrame(8)),
+    If(Eq($unit_facing, 3), PaintFrame(10)),
+    If(Eq($unit_facing, 4), PaintFrame(9)),
+    If(Eq($unit_facing, 5), PaintFrame(8)),
+    SetVariable(paint_blend_alpha, 0)
+])
+
+DefineScript(flying_shadow_ps, [
+    If(Eq($unit_posture, dying), Return()),
+    SetVariable(paint_library, ushadow),
+    SetVariable(paint_frame_offset, 0),
+    SetVariable(paint_blend_alpha, 96),
+    If(Eq($unit_facing, 0), PaintAnimation(3, [22,23,24,25,24,23])),
+    If(Eq($unit_facing, 1), PaintAnimation(3, [18,19,20,21,20,19])),
+    If(Eq($unit_facing, 2), PaintAnimation(3, [14,15,16,17,16,15])),
+    If(Eq($unit_facing, 3), PaintAnimation(3, [22,23,24,25,24,23])),
+    If(Eq($unit_facing, 4), PaintAnimation(3, [18,19,20,21,20,19])),
+    If(Eq($unit_facing, 5), PaintAnimation(3, [14,15,16,17,16,15])),
+    SetVariable(paint_blend_alpha, 0)
+])
+
+# TODO - some uses of this script may need to override default values, e.g. position or shadow type
+DefineScript(archer_ps, [
+    SetVariable(paint_offset_x, -32),
+    SetVariable(paint_offset_y, -40),
+    IncludeScript(small_shadow_ps),
+    IncludeScript(facing_ps),
+    SetVariable(paint_library, $unit_lib),
+    If(Eq($unit_posture, holding), PaintFrame(9)),
+    If(Eq($unit_posture, moving), PaintAnimation(2, [1,2,3,4,5,6,7,8])),
+    If(Eq($unit_posture, attacking), PaintAnimation(2, [10,11])),
+    If(Eq($unit_posture, recoiling), PaintFrame(12)),
+    If(Eq($unit_posture, dying), [
+        If(Eq($death_lib, 1), SetVariable(death_lib, "deadunit")),
+        SetVariable(paint_library, $death_lib),
+        SetVariable(paint_frame_offset, $death_frame),
+        PaintFrame(0)
+    ]),
+])
+
+# TODO - only differs from archer_ps, because attacking animation may be different; otherwise the same!
+DefineScript(infantry_ps, [
+    IncludeScript(archer_ps)
+])
+
+# TODO - again, similar to archer_ps
+DefineScript(mounted_ps, [
+    SetVariable(paint_offset_x, -32),
+    SetVariable(paint_offset_y, -40),
+    IncludeScript(mounted_shadow_ps),
+    IncludeScript(facing_ps),
+    SetVariable(paint_library, $unit_lib),
+    If(Eq($unit_posture, holding), PaintFrame(9)),
+    If(Eq($unit_posture, moving), PaintAnimation(2, [1,2,3,4,5,6,7,8])),
+    If(Eq($unit_posture, attacking), PaintAnimation(2, [10,11])),
+    If(Eq($unit_posture, recoiling), PaintFrame(12)),
+    If(Eq($unit_posture, dying), [
+        If(Eq($death_lib, 1), SetVariable(death_lib, "deadunit")),
+        SetVariable(paint_library, $death_lib),
+        SetVariable(paint_frame_offset, $death_frame),
+        PaintFrame(0)
+    ]),
+])
+
+DefineScript(monster_ps, [
+    SetVariable(paint_offset_x, -32),
+    SetVariable(paint_offset_y, -40),
+    IncludeScript(monster_shadow_ps),
+    IncludeScript(facing_ps),
+    SetVariable(paint_library, $unit_lib),
+    If(Eq($unit_posture, holding), PaintFrame(9)),
+    If(Eq($unit_posture, moving), PaintAnimation(2, [1,2,3,4,5,6,7,8])),
+    If(Eq($unit_posture, attacking), PaintAnimation(2, [10,11])),
+    If(Eq($unit_posture, recoiling), PaintFrame(12)),
+    If(Eq($unit_posture, dying), [
+        If(Eq($death_lib, 1), SetVariable(death_lib, "deadunit")),
+        SetVariable(paint_library, $death_lib),
+        SetVariable(paint_frame_offset, $death_frame),
+        PaintFrame(0)
+    ]),
+])
+
+DefineScript(machine_ps, [
+    SetVariable(paint_offset_x, -32),
+    SetVariable(paint_offset_y, -40),
+    IncludeScript(machine_shadow_ps),
+    IncludeScript(facing_ps),
+    SetVariable(paint_library, $unit_lib),
+    If(Eq($unit_posture, holding), PaintFrame(0)),
+    If(Eq($unit_posture, moving), PaintAnimation(2, [0,1,2,3,4,5])),
+    If(Eq($unit_posture, attacking), PaintAnimation(2, [5,6,5])),
+    If(Eq($unit_posture, recoiling), PaintFrame(5)),
+    If(Eq($unit_posture, dying), [
+        If(Eq($death_lib, 1), SetVariable(death_lib, "deadunit")),
+        SetVariable(paint_library, $death_lib),
+        SetVariable(paint_frame_offset, $death_frame),
+        PaintFrame(0)
+    ]),
+])
+
+DefineScript(turtle_machine_ps, [
+    IncludeScript(machine_ps)
+])
+
+DefineScript(flying_ps, [
+    SetVariable(paint_offset_x, -32),
+    SetVariable(paint_offset_y, -40),
+    IncludeScript(flying_shadow_ps),
+    IncludeScript(facing_ps),
+    SetVariable(paint_library, $unit_lib),
+    If(Eq($unit_posture, holding), PaintAnimation(2, [1,2,3,4,5,6,7,8])),
+    If(Eq($unit_posture, moving), PaintAnimation(2, [1,2,3,4,5,6,7,8])),
+    If(Eq($unit_posture, attacking), PaintAnimation(2, [9,10,11,12])),
+    If(Eq($unit_posture, recoiling), PaintAnimation(2, [13,14,15])),
+    If(Eq($unit_posture, dying), [
+        If(Eq($death_lib, 1), SetVariable(death_lib, "deadunit")),
+        SetVariable(paint_library, $death_lib),
+        SetVariable(paint_frame_offset, $death_frame),
+        PaintFrame(0)
+    ]),
+])
+
+DefineScript(dragon_ps, [
+    IncludeScript(flying_ps)
+])
+
+DefineScript(hovering_ps, [
+    SetVariable(paint_offset_x, -32),
+    SetVariable(paint_offset_y, -40),
+    IncludeScript(monster_shadow_ps),
+    IncludeScript(facing_ps),
+    SetVariable(paint_library, $unit_lib),
+    If(Eq($unit_posture, holding), PaintAnimation(2, [1,2,3,4,5,6,7,8])),
+    If(Eq($unit_posture, moving), PaintAnimation(2, [1,2,3,4,5,6,7,8])),
+    If(Eq($unit_posture, attacking), PaintAnimation(2, [9,10])),
+    If(Eq($unit_posture, recoiling), PaintFrame(11)),
+    If(Eq($unit_posture, dying), [
+        If(Eq($death_lib, 1), SetVariable(death_lib, "deadunit")),
+        SetVariable(paint_library, $death_lib),
+        SetVariable(paint_frame_offset, $death_frame),
+        PaintFrame(0)
+    ]),
+])
+
+# TODO - differs because it has fewer frames than other flying units
+DefineScript(fairy_ps, [
+    SetVariable(paint_offset_x, -32),
+    SetVariable(paint_offset_y, -40),
+    IncludeScript(flying_shadow_ps),
+    IncludeScript(facing_ps),
+    SetVariable(paint_library, $unit_lib),
+    If(Eq($unit_posture, holding), PaintAnimation(2, [1,2,3,4,5,6])),
+    If(Eq($unit_posture, moving), PaintAnimation(2, [1,2,3,4,5,6])),
+    If(Eq($unit_posture, attacking), PaintAnimation(2, [7,8])),
+    If(Eq($unit_posture, recoiling), PaintAnimation(2, [9])),
+    If(Eq($unit_posture, dying), [
+        If(Eq($death_lib, 1), SetVariable(death_lib, "deadunit")),
+        SetVariable(paint_library, $death_lib),
+        SetVariable(paint_frame_offset, $death_frame),
+        PaintFrame(0)
+    ]),
+])
+
+DefineScript(ship_ps, [
+    SetVariable(paint_offset_x, -32),
+    SetVariable(paint_offset_y, -40),
+    IncludeScript(facing_ps),
+    SetVariable(paint_library, $unit_lib),
+    If(Eq($unit_posture, moving), [PaintAnimation(2, [1,2,3,4,5,6]), Return()]),
+    PaintAnimation(2, [1,2,3,4,5,6])
+])
+
+DefineScript(airship_ps, [
+    SetVariable(paint_offset_x, -32),
+    SetVariable(paint_offset_y, -40),
+    IncludeScript(facing_ps),
+    SetVariable(paint_library, $unit_lib),
+    If(Match($unit_posture, "holding|attacking|recoiling"), PaintAnimation(2, [1,2,3,4,5,6])),
+    If(Eq($unit_posture, moving), PaintAnimation(2, [1,2,3,4,5,6])),
+    If(Eq($unit_posture, dying), [
+        If(Eq($death_lib, 1), SetVariable(death_lib, "deadunit")),
+        SetVariable(paint_library, $death_lib),
+        SetVariable(paint_frame_offset, $death_frame),
+        PaintFrame(0)
+    ]),
+])
 
 IncludeResource("human_unit_views.txt")
 IncludeResource("azrac_unit_views.txt")
@@ -10,4 +254,3 @@ IncludeResource("elf_unit_views.txt")
 IncludeResource("orc_unit_views.txt")
 IncludeResource("machine_unit_views.txt")
 IncludeResource("ship_unit_views.txt")
-

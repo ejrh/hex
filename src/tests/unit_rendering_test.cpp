@@ -13,6 +13,7 @@
 
 #include "hexview/resources/resource_loader.h"
 #include "hexview/resources/resource_messages.h"
+#include "hexview/view/unit_painter.h"
 #include "hexview/view/unit_renderer.h"
 #include "hexview/view/view.h"
 
@@ -34,10 +35,10 @@ static std::string posture_names[] = {
 
 class TestWindow: public UiWindow {
 public:
-    TestWindow(UiLoop *loop, Graphics *graphics, Resources *resources, Game *game, UnitRenderer *unit_renderer, UnitViewDef::pointer view_def):
+    TestWindow(UiLoop *loop, Graphics *graphics, Resources *resources, Game *game, UnitPainter *unit_painter, UnitRenderer *unit_renderer, UnitViewDef::pointer view_def):
             UiWindow(0, 0, 0, 0, WindowIsVisible|WindowIsActive|WindowWantsKeyboardEvents),
             loop(loop), graphics(graphics), resources(resources),
-            game(game), unit_renderer(unit_renderer), view_def(view_def),
+            game(game), unit_painter(unit_painter), unit_renderer(unit_renderer), view_def(view_def),
             last_update(0) {
     }
 
@@ -84,14 +85,6 @@ public:
             unit_views[i].view_def = view_def;
             unit_views[i].posture = (UnitPosture) i;
             unit_views[i].update(update_ms);
-            if ((UnitPosture) i == Attacking || (UnitPosture) i == Recoiling) {
-                AnimationDef& animation = unit_views[i].get_animation_def();
-                if (unit_views[i].phase / 1000 >= animation.images.size() && animation.images.size() > 0) {
-                    unit_views[i].posture = Holding;
-                    if (unit_views[i].phase > 10000)
-                        unit_views[i].phase = 0;
-                }
-            }
         }
 
         /* Draw view */
@@ -104,6 +97,8 @@ public:
             for (int j = 0; j < 6; j++) {
                 int cx = (int) ((graphics->width / 6) * (j + 0.5));
                 unit_views[i].facing = j;
+                Unit unit;
+                unit_painter->repaint(unit_views[i], unit);
 
                 TileViewDef::pointer tile_view_def = resources->tile_view_defs.get("grass");
                 Image *ground = tile_view_def->animation.images[0].image;
@@ -116,8 +111,7 @@ public:
 
             TextFormat tf2(SmallFont14, true, 150, 150, 150);
             std::ostringstream ss;
-            AnimationDef& animation = unit_views[i].get_animation_def();
-            ss << posture_names[unit_views[i].posture] << " (" << animation.bpm << " bpm, duration " << animation.duration() << "ms)";
+            ss << posture_names[unit_views[i].posture] << " (" << "???" << " bpm, duration " << "???" << "ms)";
             tf2.write_text(graphics, ss.str(), graphics->width / 2, cy + 32);
         }
 
@@ -135,6 +129,7 @@ private:
     Graphics *graphics;
     Resources *resources;
     Game *game;
+    UnitPainter *unit_painter;
     UnitRenderer *unit_renderer;
     UnitViewDef::pointer view_def;
     UnitView unit_views[5];
@@ -145,6 +140,8 @@ void run() {
     register_builtin_messages();
     register_resource_messages();
     register_property_names();
+    register_builtin_interpreters();
+    register_paint_interpreters();
 
     Graphics graphics;
     graphics.start("Unit rendering test", 800, 600, false);
@@ -154,13 +151,14 @@ void run() {
     Resources resources;
     load_resources(&resources, &graphics);
 
+    UnitPainter unit_painter(&game, NULL, &resources);
     UnitRenderer unit_renderer(&graphics, &resources);
     unit_renderer.generate_placeholders = false;
 
     UnitViewDef::pointer view_def = resources.unit_view_defs.begin()->second;
 
     UiLoop loop(&graphics, 25);
-    TestWindow *test_window = new TestWindow(&loop, &graphics, &resources, &game, &unit_renderer, view_def);
+    TestWindow *test_window = new TestWindow(&loop, &graphics, &resources, &game, &unit_painter, &unit_renderer, view_def);
     loop.set_root_window(test_window);
     loop.run();
 

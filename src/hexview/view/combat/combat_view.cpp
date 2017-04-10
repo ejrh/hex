@@ -8,6 +8,7 @@
 #include "hexgame/game/combat/move_types.h"
 
 #include "hexview/view/combat/combat_view.h"
+#include "hexview/view/unit_painter.h"
 
 
 ParticipantView::ParticipantView(Participant *participant):
@@ -36,11 +37,12 @@ void BattleStackView::add_participant(ParticipantView& pv) {
 
     participants[num] = pv.participant->id;
     pv.x = x + (num % 4) * BattleView::participant_width + BattleView::participant_width / 2;
-    pv.y = y + (num / 4) * BattleView::participant_height + BattleView::participant_height;
+    pv.y = y + (num / 4) * BattleView::participant_height + BattleView::participant_height / 2;
 }
 
 BattleView::BattleView(Battle *battle, int width, int height, Resources *resources):
-        battle(battle), width(width), height(height), resources(resources), last_update(0),
+        battle(battle), width(width), height(height), resources(resources), unit_painter(battle->game, NULL, resources),
+        last_update(0),
         phase(0), current_move(0), current_step(0), phase_end(1000) {
     Point centre(0, 0);
     int centre_x = width/2;
@@ -62,6 +64,7 @@ BattleView::BattleView(Battle *battle, int width, int height, Resources *resourc
         pv.view_def = resources->get_unit_view_def(p.unit->type->name);
         pv.facing = 2;
         pv.posture = Holding;
+        unit_painter.repaint(pv, *p.unit);
 
         BattleStackView& bsv = battle_stack_views[p.stack_num];
         bsv.add_participant(pv);
@@ -115,7 +118,7 @@ void BattleView::step() {
             tv.targetted = true;
             pv.phase = 0;
             pv.posture = Attacking;
-            phase_end = pv.get_animation_def().duration();
+            phase_end = 200;  // TODO - determine when animation would end
         } break;
 
         case 2: {
@@ -123,7 +126,7 @@ void BattleView::step() {
             bool hurt = move_type->direction == Detrimental && move.effect != 0;
             tv.phase = 0;
             tv.posture = hurt ? Recoiling : Holding;
-            phase_end = tv.get_animation_def().duration();
+            phase_end = 100;  // TODO - determine when animation would end
         } break;
 
         case 3: {
@@ -134,7 +137,10 @@ void BattleView::step() {
             if (tv.posture == Dying) {
                 tv.facing = rand() % 6;
             }
-            phase_end = tv.get_animation_def().duration();
+            phase_end = 100;  // TODO - determine when animation would end
         }
     }
+
+    unit_painter.repaint(pv, *pv.participant->unit);
+    unit_painter.repaint(tv, *tv.participant->unit);
 }

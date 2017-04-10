@@ -51,8 +51,11 @@ set(srcs
         view/tile_painter.h
         view/unit_info_window.cpp
         view/unit_info_window.h
+        view/unit_painter.cpp
+        view/unit_painter.h
         view/unit_renderer.cpp
         view/unit_renderer.h
+        view/unit_stack_view.cpp
         view/view.h
         view/view_updater.cpp
         view/view_updater.h

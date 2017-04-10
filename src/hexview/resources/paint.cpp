@@ -20,38 +20,53 @@ void Paint::render(int x, int y, int phase, Graphics *graphics) {
         } else if (item.blend_addition < 0) {
             graphics->blit(frame, x + item.offset_x, y + item.offset_y, SDL_BLENDMODE_MOD);
         } else {
-            graphics->blit(frame, x + item.offset_x, y + item.offset_y, SDL_BLENDMODE_BLEND);
+            if (item.blend_alpha != 0) {
+                graphics->blit(frame, x + item.offset_x, y + item.offset_y, SDL_BLENDMODE_BLEND, item.blend_alpha);
+            } else {
+                graphics->blit(frame, x + item.offset_x, y + item.offset_y, SDL_BLENDMODE_BLEND);
+            }
         }
     }
 }
 
-void PaintExecution::paint_frame(Atom image_library, int frame_num, int offset_x, int offset_y, int blend_addition) {
+void PaintExecution::paint_frame(Atom image_library, int frame_num, int offset_x, int offset_y, int blend_alpha, int blend_addition) {
     PaintItem pi;
     pi.offset_x = offset_x;
     pi.offset_y = offset_y;
     pi.frame_rate = 0;
+    pi.blend_alpha = blend_alpha;
     pi.blend_addition = blend_addition;
     Image *image = resources->get_library_image(image_library, frame_num);
     pi.frames.push_back(image);
     paint->items.push_back(pi);
+    std::cerr << boost::format("paint frame %s %d (%d,%d) %d %d") % image_library % frame_num % offset_x % offset_y % blend_alpha % blend_addition << std:: endl;
 }
 
-void PaintExecution::paint_animation(Atom image_library, int frame_rate, std::vector<int>& frame_nums, int offset_x, int offset_y, int blend_addition) {
+void PaintExecution::paint_animation(Atom image_library, int frame_rate, const std::vector<int>& frame_nums, int offset_x, int offset_y, int blend_alpha, int blend_addition) {
     PaintItem pi;
     pi.offset_x = offset_x;
     pi.offset_y = offset_y;
     pi.frame_rate = frame_rate;
+    pi.blend_alpha = blend_alpha;
     pi.blend_addition = blend_addition;
     for (auto iter = frame_nums.begin(); iter != frame_nums.end(); iter++) {
         Image *image = resources->get_library_image(image_library, *iter);
         pi.frames.push_back(image);
     }
     paint->items.push_back(pi);
+
+    std::ostringstream ss;
+    for (auto iter = frame_nums.begin(); iter != frame_nums.end(); iter++) {
+        ss << " " << *iter;
+    }
+    std::cerr << boost::format("paint animation %s %s [%s] (%d,%d) %d %d") % image_library % frame_rate % (ss.str()) % offset_x % offset_y % blend_alpha % blend_addition << std:: endl;
 }
 
 void PaintExecution::run(Script *script) {
     variables.set<int>(paint_offset_x_atom, 0);
     variables.set<int>(paint_offset_y_atom, 0);
     variables.set<int>(paint_blend_addition_atom, 0);
+    variables.set<int>(paint_blend_alpha_atom, 0);
+    variables.set<int>(paint_frame_offset_atom, 0);
     Execution::run(script);
 }

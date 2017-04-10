@@ -45,6 +45,7 @@ public:
     Battle *battle;
     int width, height;
     Resources *resources;
+    UnitPainter unit_painter;
     BattleStackView battle_stack_views[7];
     std::vector<ParticipantView> participant_views;
     unsigned int last_update;

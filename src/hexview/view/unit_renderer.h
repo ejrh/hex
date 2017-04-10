@@ -22,10 +22,6 @@ public:
     bool generate_placeholders;
 
 protected:
-    const ImageSeries& get_image_series(const UnitView& unit_view) const;
-    Image *get_image_or_placeholder(ImageSeries& image_series, int pos, const std::string name);
-
-protected:
     Graphics *graphics;
     Resources *resources;
 

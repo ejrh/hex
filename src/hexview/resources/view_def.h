@@ -91,21 +91,14 @@ public:
     typedef boost::shared_ptr<UnitViewDef> pointer;
 
     UnitViewDef():
-    hold_animations(6), move_animations(6), attack_animations(6), recoil_animations(6), die_animations(6), shadow_animations(6),
     move_speed(60) { }
     UnitViewDef(std::string name):
         name(name),
-        hold_animations(6), move_animations(6), attack_animations(6), recoil_animations(6), die_animations(6), shadow_animations(6),
     move_speed(60) { }
     ~UnitViewDef() { }
 
     std::string name;
-    std::vector<AnimationDef> hold_animations;
-    std::vector<AnimationDef> move_animations;
-    std::vector<AnimationDef> attack_animations;
-    std::vector<AnimationDef> recoil_animations;
-    std::vector<AnimationDef> die_animations;
-    std::vector<AnimationDef> shadow_animations;
+    Script::pointer script;
     int move_speed; // tiles per minute
     std::array<SoundDef, NUM_POSTURES> sounds;
 };

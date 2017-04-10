@@ -20,13 +20,14 @@ public:
         Atom paint_library = execution->get(pe->paint_library_atom);
         int offset_x = execution->get(pe->paint_offset_x_atom);
         int offset_y = execution->get(pe->paint_offset_y_atom);
+        int blend_alpha = execution->get(pe->paint_blend_alpha_atom);
         int blend_addition = execution->get(pe->paint_blend_addition_atom);
-        pe->paint_frame(paint_library, frame_num, offset_x, offset_y, blend_addition);
+        int frame_offset = execution->get(pe->paint_frame_offset_atom);
+        pe->paint_frame(paint_library, frame_offset + frame_num, offset_x, offset_y, blend_alpha, blend_addition);
 
         return 0;
     }
 };
-
 
 class PaintAnimationInterpreter: public Interpreter {
 public:
@@ -47,8 +48,14 @@ public:
         Atom paint_library = execution->get(pe->paint_library_atom);
         int offset_x = execution->get(pe->paint_offset_x_atom);
         int offset_y = execution->get(pe->paint_offset_y_atom);
+        int blend_alpha = execution->get(pe->paint_blend_alpha_atom);
         int blend_addition = execution->get(pe->paint_blend_addition_atom);
-        pe->paint_animation(paint_library, frame_rate, frame_nums, offset_x, offset_y, blend_addition);
+        int frame_offset = execution->get(pe->paint_frame_offset_atom);
+        std::vector<int> adjusted_frame_nums;
+        for (auto iter = frame_nums.begin(); iter != frame_nums.end(); iter++) {
+            adjusted_frame_nums.push_back(frame_offset + *iter);
+        }
+        pe->paint_animation(paint_library, frame_rate, adjusted_frame_nums, offset_x, offset_y, blend_alpha, blend_addition);
 
         return 0;
     }

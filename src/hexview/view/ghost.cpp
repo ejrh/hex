@@ -7,11 +7,12 @@
 
 #include "hexview/resources/view_def.h"
 #include "hexview/view/player.h"
+#include "hexview/view/unit_painter.h"
 #include "hexview/view/view.h"
 
 
-Ghost::Ghost(GameView *view, UnitStack::pointer stack, const IntSet selected_units, Path path, UnitStack::pointer target_stack):
-        finished(false), view(view), step(0), progress(0) {
+Ghost::Ghost(GameView *view, UnitPainter *unit_painter, UnitStack::pointer& stack, const IntSet selected_units, Path path, UnitStack::pointer& target_stack):
+        finished(false), view(view), unit_painter(unit_painter), step(0), progress(0) {
 
     // Create ghost
     UnitStack::pointer ghost_stack = stack->copy_subset(selected_units);
@@ -22,6 +23,8 @@ Ghost::Ghost(GameView *view, UnitStack::pointer stack, const IntSet selected_uni
     stack_view->posture = Moving;
     stack_view->selected = view->selected_stack_id == stack->id;
     stack_view->play_sound = true;
+    stack_view->facing = get_direction(stack_view->stack->position, stack_view->path[0]);
+    unit_painter->repaint(*stack_view, *stack_view->stack);
 
     // Lock target
     target_view = view->get_stack_view(target_stack->id);
@@ -36,8 +39,11 @@ void Ghost::update(unsigned int update_ms) {
     if (progress > 1000) {
         stack_view->stack->position = stack_view->path[step];
         step++;
+        if (step < stack_view->path.size())
+            stack_view->facing = get_direction(stack_view->stack->position, stack_view->path[step]);
         progress -= 1000;
         stack_view->play_sound = true;
+        unit_painter->repaint(*stack_view, *stack_view->stack);
     }
 
     UnitStack::pointer& target = target_view->stack;
@@ -47,6 +53,7 @@ void Ghost::update(unsigned int update_ms) {
         if (target_view->moving) {
             target_view->moving = false;
             target_view->facing = stack_view->facing;
+            unit_painter->repaint(*target_view, *target_view->stack);
         }
         if (view->player->has_view(target->owner)) {
             view->level_view.visibility.unmask(*target);
@@ -60,8 +67,7 @@ void Ghost::update(unsigned int update_ms) {
     }
 
     Point next_pos = stack_view->path[step];
-    stack_view->facing = get_direction(stack_view->stack->position, next_pos);
-    stack_view->phase += frame_incr(view_def->move_animations[stack_view->facing].bpm, update_ms);
+    stack_view->phase += frame_incr(60, update_ms);  // TODO - figure out animation
     if (view->player->has_view(target->owner)) {
         view->level_view.discovered.draw(next_pos, target->sight(), true);
         view->level_view.ghost_visibility.draw(next_pos, target->sight(), true);
