@@ -14,7 +14,7 @@ public:
     Interpreter(Atom functor): functor(functor) { }
     virtual ~Interpreter() { }
 
-    virtual void execute(const Term *instruction, Execution *execution) const = 0;
+    virtual Datum execute(const Term *instruction, Execution *execution) const = 0;
 
 public:
     Atom functor;
@@ -42,11 +42,11 @@ public:
     void run(Script *script);
     void run(const std::string& script_name);
 
-    void execute_script(Script *script);
-    void execute_instruction(const Term *script_term);
+    Datum execute_script(Script *script);
+    Datum execute_instruction(const Term *script_term);
 
     const Datum& get(const Atom& name) const;
-    const Datum& get_argument(const Term *term, int position);
+    const Datum get_argument(const Term *term, int position);
     const Term *get_subterm(const Term *term, int position);
 
 public:

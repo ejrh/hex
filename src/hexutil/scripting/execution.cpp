@@ -17,20 +17,22 @@ void Execution::run(const std::string& script_name) {
     execute_script(script);
 }
 
-void Execution::execute_script(Script *script) {
-    execute_instruction(script->instructions.get());
+Datum Execution::execute_script(Script *script) {
+    Datum rv = execute_instruction(script->instructions.get());
     return_active = false;
+    return rv;
 }
 
-void Execution::execute_instruction(const Term *script_term) {
+Datum Execution::execute_instruction(const Term *script_term) {
     const Interpreter *interpreter = InterpreterRegistry::get_interpreter(script_term);
     if (interpreter) {
+        Datum rv;
         try {
-            interpreter->execute(script_term, this);
+            rv = interpreter->execute(script_term, this);
         } catch (const boost::bad_get& err) {
             throw ScriptError() << "Exception in instruction defined in line " << script_term->line_no << ": " << script_term;
         }
-        return;
+        return rv;
     }
 
     throw ScriptError() << "Can't find interpreter for term: " << script_term << "\n";
@@ -48,7 +50,7 @@ const Datum& Execution::get(const Atom& name) const {
     return variables.get(name);
 }
 
-const Datum& Execution::get_argument(const Term *term, int position) {
+const Datum Execution::get_argument(const Term *term, int position) {
     const CompoundTerm *script_term = dynamic_cast<const CompoundTerm *>(term);
     if (!script_term) {
         throw ScriptError() << "Cannot get argument from non-list term!";
@@ -58,19 +60,27 @@ const Datum& Execution::get_argument(const Term *term, int position) {
     }
 
     const Term *subterm = script_term->subterms[position].get();
+
+    // If it's a compound term, it needs to be executed and its result used
+    const CompoundTerm *compound_term = dynamic_cast<const CompoundTerm *>(subterm);
+    if (compound_term) {
+        Datum rv = execute_instruction(compound_term);
+        return rv;
+    }
+
     const DatumTerm *arg_term = dynamic_cast<const DatumTerm *>(subterm);
     if (!arg_term) {
         throw ScriptError() << "Argument is not a datum!";
     }
-    const Datum *datum_ptr = &arg_term->datum;
-    while (datum_ptr->is<Atom>()) {
-        const std::string& atom_name = static_cast<const std::string>(datum_ptr->get<Atom>());
+    Datum datum = arg_term->datum;
+    while (datum.is<Atom>()) {
+        const std::string& atom_name = static_cast<const std::string>(datum.get<Atom>());
         if (atom_name.at(0) != '$')
             break;
         const char *var_str = atom_name.c_str() + 1;
-        datum_ptr = &get(static_cast<Atom>(var_str));
+        datum = get(static_cast<Atom>(var_str));
     }
-    return *datum_ptr;
+    return datum;
 }
 
 const Term *Execution::get_subterm(const Term *term, int position) {

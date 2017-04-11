@@ -39,3 +39,13 @@ Atom Datum::get_as_atom() const {
     ss << *this;
     return Atom(ss.str());
 }
+
+int Datum::get_as_int() const {
+    if (is<int>()) {
+        return get<int>();
+    } else if (is<float>()) {
+        return get<float>();
+    } else {
+        return 0;
+    }
+}

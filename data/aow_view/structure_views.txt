@@ -1,30 +1,30 @@
 # CreateStructureView(name)
 # StructureAnimation(x, y, bpm, images)
 
-DefineScript("pad1_ps", [
+DefineScript(pad1_ps, [
     SetVariable(paint_library, pad1),
     SetVariable(paint_offset_x, -29),
     SetVariable(paint_offset_y, -46),
-    IfMatch(terrain_type, "grass.*", PaintFrame(1)),
-    IfMatch(terrain_type, "desert.*", PaintFrame(2)),
-    IfMatch(terrain_type, "snow.*", PaintFrame(3)),
-    IfMatch(terrain_type, "steppe.*", PaintFrame(4)),
-    IfMatch(terrain_type, "wasteland.*", PaintFrame(5))
+    If(Match($terrain_type, "grass.*"), PaintFrame(1)),
+    If(Match($terrain_type, "desert.*"), PaintFrame(2)),
+    If(Match($terrain_type, "snow.*"), PaintFrame(3)),
+    If(Match($terrain_type, "steppe.*"), PaintFrame(4)),
+    If(Match($terrain_type, "wasteland.*"), PaintFrame(5))
 ])
 
 
-DefineScript("big_flag_ps", [
+DefineScript(big_flag_ps, [
     SetVariable(paint_library, none),
     SetVariable(paint_offset_x, 12),
     SetVariable(paint_offset_y, -52),
-    IfMatch(faction_type, "orcs", SetVariable(paint_library, rorc)),
-    IfMatch(faction_type, "drow", SetVariable(paint_library, rdarkelf)),
+    If(Match($faction_type, "orcs"), SetVariable(paint_library, rorc)),
+    If(Match($faction_type, "drow"), SetVariable(paint_library, rdarkelf)),
     PaintAnimation(2, [0,1,2,3,4,5,6,7,8,9,10,11])
 ])
 
 
-DefineScript("small_flag_ps", [
-    IfMatch(faction_type, "|independent", Return()),
+DefineScript(small_flag_ps, [
+    If(Match($faction_type, "|independent"), Return()),
     SetVariable(paint_library, flags),
     SetVariable(paint_offset_x, 12),
     SetVariable(paint_offset_y, -52),
@@ -32,36 +32,36 @@ DefineScript("small_flag_ps", [
     SetVariable(paint_library, none),
     SetVariable(paint_offset_x, -12),
     SetVariable(paint_offset_y, -66),
-    IfMatch(faction_type, "orcs", SetVariable(paint_library, rorc)),
-    IfMatch(faction_type, "drow", SetVariable(paint_library, rdarkelf)),
+    If(Match($faction_type, "orcs"), SetVariable(paint_library, rorc)),
+    If(Match($faction_type, "drow"), SetVariable(paint_library, rdarkelf)),
     PaintAnimation(2, [12,13,14,15,16,17,18,19,20,21,22,23])
 ])
 
 
 CreateStructureView("farm")
 StructurePaint([
-    IncludeScript("pad1_ps"),
-    IncludeScript("small_flag_ps"),
+    IncludeScript(pad1_ps),
+    IncludeScript(small_flag_ps),
     SetVariable(paint_library, str_farm),
     SetVariable(paint_offset_x, -28),
     SetVariable(paint_offset_y, -46),
-    IfMatch(terrain_type, "grass.*|desert.*|steppe.*", PaintAnimation(1, [0,1,2,3])),
-    IfMatch(terrain_type, "snow.*", PaintAnimation(1, [8,9,10,11])),
-    IfMatch(terrain_type, "wasteland.*", PaintFrame(16)),
+    If(Match($terrain_type, "grass.*|desert.*|steppe.*"), PaintAnimation(1, [0,1,2,3])),
+    If(Match($terrain_type, "snow.*"), PaintAnimation(1, [8,9,10,11])),
+    If(Match($terrain_type, "wasteland.*"), PaintFrame(16)),
 ])
 
 
 CreateStructureView("mine")
 StructurePaint([
-    IncludeScript("small_flag_ps"),
+    IncludeScript(small_flag_ps),
     SetVariable(paint_library, str_mine),
     SetVariable(paint_offset_x, -30),
     SetVariable(paint_offset_y, -38),
-    IfMatch(terrain_type, "grass.*", PaintFrame(0)),
-    IfMatch(terrain_type, "desert.*", PaintFrame(2)),
-    IfMatch(terrain_type, "snow.*", PaintFrame(3)),
-    IfMatch(terrain_type, "steppe.*", PaintFrame(1)),
-    IfMatch(terrain_type, "wasteland.*", PaintFrame(4)),
+    If(Match($terrain_type, "grass.*"), PaintFrame(0)),
+    If(Match($terrain_type, "desert.*"), PaintFrame(2)),
+    If(Match($terrain_type, "snow.*"), PaintFrame(3)),
+    If(Match($terrain_type, "steppe.*"), PaintFrame(1)),
+    If(Match($terrain_type, "wasteland.*"), PaintFrame(4)),
     SetVariable(paint_blend_addition, 120),
     PaintAnimation(2, [10,11,12,13,14,15])
 ])
@@ -69,15 +69,15 @@ StructurePaint([
 
 CreateStructureView("power_node")
 StructurePaint([
-    IncludeScript("small_flag_ps"),
+    IncludeScript(small_flag_ps),
     SetVariable(paint_library, str_node),
     SetVariable(paint_offset_x, -30),
     SetVariable(paint_offset_y, -57),
-    IfMatch(terrain_type, "grass.*", PaintFrame(0)),
-    IfMatch(terrain_type, "desert.*", PaintFrame(1)),
-    IfMatch(terrain_type, "snow.*", PaintFrame(2)),
-    IfMatch(terrain_type, "steppe.*", PaintFrame(3)),
-    IfMatch(terrain_type, "wasteland.*", PaintFrame(4)),
+    If(Match($terrain_type, "grass.*"), PaintFrame(0)),
+    If(Match($terrain_type, "desert.*"), PaintFrame(1)),
+    If(Match($terrain_type, "snow.*"), PaintFrame(2)),
+    If(Match($terrain_type, "steppe.*"), PaintFrame(3)),
+    If(Match($terrain_type, "wasteland.*"), PaintFrame(4)),
     SetVariable(paint_blend_addition, 120),
     PaintAnimation(1, [10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33])
 ])
@@ -85,12 +85,12 @@ StructurePaint([
 
 CreateStructureView("life_node")
 StructurePaint([
-    IncludeScript("small_flag_ps"),
+    IncludeScript(small_flag_ps),
     SetVariable(paint_library, pro_grov),
     SetVariable(paint_offset_x, -30),
     SetVariable(paint_offset_y, -40),
-    IfMatch(terrain_type, "grass.*|desert.*|steppe.*|wasteland.*", PaintAnimation(1, [0,1,2,3,4,5,6,7,8,9])),
-    IfMatch(terrain_type, "snow.*", PaintAnimation(1, [20,21,22,23,24,25,26,27,28,29])),
+    If(Match($terrain_type, "grass.*|desert.*|steppe.*|wasteland.*"), PaintAnimation(1, [0,1,2,3,4,5,6,7,8,9])),
+    If(Match($terrain_type, "snow.*"), PaintAnimation(1, [20,21,22,23,24,25,26,27,28,29])),
     SetVariable(paint_library, str_node),
     SetVariable(paint_offset_x, -35),
     SetVariable(paint_offset_y, -161),
@@ -101,13 +101,13 @@ StructurePaint([
 
 CreateStructureView("death_node")
 StructurePaint([
-    IncludeScript("small_flag_ps"),
+    IncludeScript(small_flag_ps),
     SetVariable(paint_library, str_node),
     SetVariable(paint_offset_x, -35),
     SetVariable(paint_offset_y, -128),
-    IfMatch(terrain_type, "grass.*|desert.*|steppe.*", PaintFrame(120)),
-    IfMatch(terrain_type, "snow.*", PaintFrame(121)),
-    IfMatch(terrain_type, "wasteland.*", PaintFrame(122)),
+    If(Match($terrain_type, "grass.*|desert.*|steppe.*"), PaintFrame(120)),
+    If(Match($terrain_type, "snow.*"), PaintFrame(121)),
+    If(Match($terrain_type, "wasteland.*"), PaintFrame(122)),
     SetVariable(paint_offset_x, -35),
     SetVariable(paint_offset_y, -128),
     SetVariable(paint_blend_addition, -1),
@@ -117,13 +117,13 @@ StructurePaint([
 
 CreateStructureView("fire_node")
 StructurePaint([
-    IncludeScript("small_flag_ps"),
+    IncludeScript(small_flag_ps),
     SetVariable(paint_library, str_node),
     SetVariable(paint_offset_x, -35),
     SetVariable(paint_offset_y, -128),
-    IfMatch(terrain_type, "grass.*|desert.*|steppe.*", PaintFrame(40)),
-    IfMatch(terrain_type, "snow.*", PaintFrame(41)),
-    IfMatch(terrain_type, "wasteland.*", PaintFrame(42)),
+    If(Match($terrain_type, "grass.*|desert.*|steppe.*"), PaintFrame(40)),
+    If(Match($terrain_type, "snow.*"), PaintFrame(41)),
+    If(Match($terrain_type, "wasteland.*"), PaintFrame(42)),
     SetVariable(paint_offset_x, -15),
     SetVariable(paint_offset_y, -8),
     PaintAnimation(2, [45,46,47,48,49,50,51,52,53,54,55,56]),
@@ -136,12 +136,12 @@ StructurePaint([
 
 CreateStructureView("water_node")
 StructurePaint([
-    IncludeScript("small_flag_ps"),
+    IncludeScript(small_flag_ps),
     SetVariable(paint_library, str_nrck),
     SetVariable(paint_offset_x, -30),
     SetVariable(paint_offset_y, -36),
-    IfMatch(terrain_type, "water.*", PaintAnimation(2, [0,1,2,3,4,5,6,7,8,9])),
-    IfMatch(terrain_type, "ice.*", PaintFrame(10)),
+    If(Match($terrain_type, "water.*"), PaintAnimation(2, [0,1,2,3,4,5,6,7,8,9])),
+    If(Match($terrain_type, "ice.*"), PaintFrame(10)),
     SetVariable(paint_library, str_node),
     SetVariable(paint_offset_x, -33),
     SetVariable(paint_offset_y, -67),
@@ -152,13 +152,13 @@ StructurePaint([
 
 CreateStructureView("earth_node")
 StructurePaint([
-    IncludeScript("small_flag_ps"),
+    IncludeScript(small_flag_ps),
     SetVariable(paint_library, str_node),
     SetVariable(paint_offset_x, -35),
     SetVariable(paint_offset_y, -128),
-    IfMatch(terrain_type, "grass.*|desert.*|steppe.*", PaintFrame(80)),
-    IfMatch(terrain_type, "snow.*", PaintFrame(81)),
-    IfMatch(terrain_type, "wasteland.*", PaintFrame(82)),
+    If(Match($terrain_type, "grass.*|desert.*|steppe.*"), PaintFrame(80)),
+    If(Match($terrain_type, "snow.*"), PaintFrame(81)),
+    If(Match($terrain_type, "wasteland.*"), PaintFrame(82)),
     SetVariable(paint_offset_x, -15),
     SetVariable(paint_offset_y, -8),
     PaintAnimation(1, [85,86,87,88,89,90,91,92,93,94,95]),
@@ -171,13 +171,13 @@ StructurePaint([
 
 CreateStructureView("air_node")
 StructurePaint([
-    IncludeScript("small_flag_ps"),
+    IncludeScript(small_flag_ps),
     SetVariable(paint_library, str_node),
     SetVariable(paint_offset_x, -37),
     SetVariable(paint_offset_y, -132),
-    IfMatch(terrain_type, "grass.*|desert.*|steppe.*", PaintFrame(195)),
-    IfMatch(terrain_type, "snow.*", PaintFrame(196)),
-    IfMatch(terrain_type, "wasteland.*", PaintFrame(197)),
+    If(Match($terrain_type, "grass.*|desert.*|steppe.*"), PaintFrame(195)),
+    If(Match($terrain_type, "snow.*"), PaintFrame(196)),
+    If(Match($terrain_type, "wasteland.*"), PaintFrame(197)),
     SetVariable(paint_offset_x, -49),
     SetVariable(paint_offset_y, -80),
     SetVariable(paint_blend_addition, 160),
@@ -187,26 +187,26 @@ StructurePaint([
 
 CreateStructureView("tower")
 StructurePaint([
-    IncludeScript("pad1_ps"),
-    IncludeScript("small_flag_ps"),
+    IncludeScript(pad1_ps),
+    IncludeScript(small_flag_ps),
     SetVariable(paint_library, str_towr),
     SetVariable(paint_offset_x, -25),
     SetVariable(paint_offset_y, -64),
-    IfMatch(terrain_type, "grass.*|desert.*|steppe.*", PaintFrame(0)),
-    IfMatch(terrain_type, "snow.*", PaintFrame(1)),
-    IfMatch(terrain_type, "wasteland.*", PaintFrame(2)),
+    If(Match($terrain_type, "grass.*|desert.*|steppe.*"), PaintFrame(0)),
+    If(Match($terrain_type, "snow.*"), PaintFrame(1)),
+    If(Match($terrain_type, "wasteland.*"), PaintFrame(2)),
 ])
 
 
 CreateStructureView("wizard_tower")
 StructurePaint([
-    IncludeScript("pad1_ps"),
+    IncludeScript(pad1_ps),
     SetVariable(paint_library, str_wtwr),
     SetVariable(paint_offset_x, -26),
     SetVariable(paint_offset_y, -106),
-    IfMatch(terrain_type, "grass.*|desert.*|steppe.*", PaintFrame(0)),
-    IfMatch(terrain_type, "snow.*", PaintFrame(1)),
-    IfMatch(terrain_type, "wasteland.*", PaintFrame(2)),
+    If(Match($terrain_type, "grass.*|desert.*|steppe.*"), PaintFrame(0)),
+    If(Match($terrain_type, "snow.*"), PaintFrame(1)),
+    If(Match($terrain_type, "wasteland.*"), PaintFrame(2)),
     SetVariable(paint_blend_addition, 120),
     PaintAnimation(1, [10,11,12,13,14,15,16,17,18,19,20,21])
 ])

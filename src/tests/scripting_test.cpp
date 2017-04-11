@@ -35,7 +35,7 @@ private:
 };
 
 struct Fixture {
-    Fixture(): scripts("scripts"), VarX(AtomRegistry::atom("VarX")), VarY(AtomRegistry::atom("VarY")) {
+    Fixture(): scripts("scripts"), VarX("VarX"), VarY("VarY"), VarZ("VarZ") {
         register_builtin_messages();
         register_builtin_interpreters();
     }
@@ -48,7 +48,7 @@ struct Fixture {
 
 public:
     StrMap<Script> scripts;
-    Atom VarX, VarY;
+    Atom VarX, VarY, VarZ;
 };
 
 BOOST_FIXTURE_TEST_SUITE(scripting_test, Fixture)
@@ -80,9 +80,9 @@ BOOST_AUTO_TEST_CASE(if_match) {
     play_message("DefineScript(t, ["
         "SetVariable(VarX, 32),"
         "SetVariable(StrVar, \"abc\"),"
-        "IfMatch($StrVar, \"a.+\", SetVariable(VarX, 40)),"
+        "If(Match($StrVar, \"a.+\"), SetVariable(VarX, 40)),"
         "SetVariable(VarY, 4),"
-        "IfMatch($StrVar, \"x.+\", SetVariable(VarY, 7))])");
+        "If(Match($StrVar, \"x.+\"), SetVariable(VarY, 7))])");
 
     Execution execution(&scripts);
     execution.run("t");
@@ -90,6 +90,32 @@ BOOST_AUTO_TEST_CASE(if_match) {
     BOOST_CHECK_EQUAL(var_value, 40);
     var_value = execution.variables.get(VarY);
     BOOST_CHECK_EQUAL(var_value, 4);
+}
+
+BOOST_AUTO_TEST_CASE(choose) {
+    play_message("DefineScript(t, ["
+        "SetVariable(VarX, 6),"
+        "SetVariable(VarY, Choose($VarX, [abc, def])),"
+        "SetVariable(VarX, 7),"
+        "SetVariable(VarZ, Choose($VarX, [abc, def]))])");
+
+    Execution execution(&scripts);
+    execution.run("t");
+    Atom var_value = execution.variables.get(VarY);
+    BOOST_CHECK_EQUAL(var_value, Atom("abc"));
+    var_value = execution.variables.get(VarZ);
+    BOOST_CHECK_EQUAL(var_value, Atom("def"));
+}
+
+BOOST_AUTO_TEST_CASE(return_value) {
+    play_message("DefineScript(u, [Return(\"xyz\")])");
+    play_message("DefineScript(t, ["
+        "SetVariable(VarX, [IncludeScript(u)])])");
+
+    Execution execution(&scripts);
+    execution.run("t");
+    const std::string& var_value = execution.variables.get(VarX);
+    BOOST_CHECK_EQUAL(var_value, "xyz");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
