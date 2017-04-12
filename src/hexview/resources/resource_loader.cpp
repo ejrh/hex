@@ -171,7 +171,9 @@ void ResourceLoader::load_image_library(Atom name, const std::string& filename) 
     }
     std::string relative_filename = path.string();
     resources->image_libraries[name].reset(new ImageLibraryResource(relative_filename));
-    image_loader->load_library(name, relative_filename);
+
+    // Set the image_loader on the Resources object, so it can lazily load the actual library when needed
+    resources->image_loader = std::unique_ptr<ImageLoader>(new ImageLoader(*image_loader));
 }
 
 void ResourceLoader::load_song(const std::string& filename) {

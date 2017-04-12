@@ -31,6 +31,14 @@ private:
     friend class AtomRegistry;
 };
 
+template<>
+struct std::hash<Atom> {
+    std::size_t operator()(const Atom& atom) const {
+        return atom;
+    }
+};
+
+
 class AtomRegistry {
 public:
     static const Atom atom(const std::string& name) {

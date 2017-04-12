@@ -9,6 +9,7 @@ set(srcs
         basics/hexgrid.h
         basics/intset.h
         basics/io.h
+        basics/logging.h
         basics/noise.cpp
         basics/noise.h
         basics/objmap.h

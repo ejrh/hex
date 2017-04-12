@@ -13,7 +13,7 @@
 
 
 struct ImageLibraryResource {
-    ImageLibraryResource(const std::string& path): path(path) { }
+    ImageLibraryResource(const std::string& path): path(path), loaded(false) { }
 
     std::string path;
     bool loaded;
@@ -21,12 +21,13 @@ struct ImageLibraryResource {
 };
 
 
+class ImageLoader;
+
+
 class Resources {
 public:
-    Resources():
-            tile_view_defs("tile_view_defs"), unit_view_defs("unit_view_defs"), structure_view_defs("structure_view_defs"),
-            faction_view_defs("faction_view_defs"), scripts("scripts") { }
-    virtual ~Resources() { }
+    Resources();
+    virtual ~Resources();
     void resolve_references();
     void resolve_image_series(std::vector<ImageRef>& image_series);
     bool resolve_image_ref(ImageRef& image_ref);
@@ -57,6 +58,9 @@ public:
     StrMap<FactionViewDef> faction_view_defs;
     StrMap<Script> scripts;
     std::set<std::string> songs;
+
+private:
+    std::unique_ptr<ImageLoader> image_loader;
 
     friend class ResourceLoader;
 };

@@ -10,12 +10,14 @@
 #include <map>
 #include <unordered_map>
 #include <set>
+#include <unordered_set>
 #include <vector>
 #include <queue>
 #include <algorithm>
 #include <numeric>
 #include <cctype>
 #include <memory>
+#include <utility>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>

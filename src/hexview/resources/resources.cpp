@@ -1,8 +1,19 @@
 #include "common.h"
 
 #include "hexutil/basics/error.h"
+#include "hexutil/basics/logging.h"
 
 #include "hexview/resources/resources.h"
+#include "hexview/resources/resource_loader.h"
+
+
+Resources::Resources():
+        tile_view_defs("tile_view_defs"), unit_view_defs("unit_view_defs"), structure_view_defs("structure_view_defs"),
+        faction_view_defs("faction_view_defs"), scripts("scripts") {
+}
+
+
+Resources::~Resources() { }
 
 
 void Resources::resolve_references() {
@@ -116,19 +127,23 @@ ImageLibraryResource *Resources::get_image_library(Atom name) {
 
     ImageLibraryResource *image_lib = found->second.get();
     if (!image_lib->loaded) {
+        image_loader->load_library(name, image_lib->path);
     }
     return image_lib;
 }
 
 Image *Resources::get_library_image(Atom library_name, int image_num) {
+    static std::unordered_set<Atom> library_warnings;
+    static std::unordered_set<std::pair<Atom, int>> library_image_warnings;
+
     ImageLibraryResource *lib = get_image_library(library_name);
     if (!lib) {
-        BOOST_LOG_TRIVIAL(warning) << "No image library: " << library_name;
+        log_once(warning, library_warnings, library_name, "No image library: " << library_name);
         return nullptr;
     }
     auto found = lib->images.find(image_num);
     if (found == lib->images.end()) {
-        BOOST_LOG_TRIVIAL(warning) << "No image at position " << image_num << " in library " << library_name;
+        log_once(warning, library_image_warnings, std::make_pair(library_name, image_num), "No image at position " << image_num << " in library " << library_name);
         return nullptr;
     }
     return found->second.get();
