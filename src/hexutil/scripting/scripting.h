@@ -9,6 +9,9 @@
 
 class Execution;
 
+class ScriptError: public BaseError<ScriptError> {
+};
+
 class Interpreter {
 public:
     Interpreter(Atom functor): functor(functor) { }
@@ -49,6 +52,15 @@ public:
     const Datum get_argument(const Term *term, int position);
     const Term *get_subterm(const Term *term, int position);
 
+    template<typename T>
+    const T& get_as(const Atom& name) const {
+        try {
+            return get(name).get<T>();
+        } catch (const boost::bad_get& err) {
+            throw ScriptError() << boost::format("Can't get variable %s as specified type (value is %s)") % name % get(name);
+        }
+    }
+
 public:
     StrMap<Script> *scripts;
     Properties variables;
@@ -56,8 +68,6 @@ public:
     bool return_active;
 };
 
-class ScriptError: public BaseError<ScriptError> {
-};
 
 class InterpreterRegistry {
 public:

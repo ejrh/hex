@@ -56,6 +56,9 @@ void UnitPainter::repaint(UnitView& unit_view, Unit& unit) {
     Atom posture_atoms[] = { AtomRegistry::atom("holding"), AtomRegistry::atom("moving"), AtomRegistry::atom("attacking"), AtomRegistry::atom("recoiling"), AtomRegistry::atom("dying") };
     execution.variables.set<Atom>(unit_posture_atom, posture_atoms[unit_view.posture]);
 
+    Atom unit_variation_atom = AtomRegistry::atom("unit_variation");
+    execution.variables.set<int>(unit_variation_atom, unit_view.variation);
+
     try {
         execution.run(script);
     } catch (ScriptError& err) {

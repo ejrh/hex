@@ -39,7 +39,6 @@ void PaintExecution::paint_frame(Atom image_library, int frame_num, int offset_x
     Image *image = resources->get_library_image(image_library, frame_num);
     pi.frames.push_back(image);
     paint->items.push_back(pi);
-    std::cerr << boost::format("paint frame %s %d (%d,%d) %d %d") % image_library % frame_num % offset_x % offset_y % blend_alpha % blend_addition << std:: endl;
 }
 
 void PaintExecution::paint_animation(Atom image_library, int frame_rate, const std::vector<int>& frame_nums, int offset_x, int offset_y, int blend_alpha, int blend_addition) {
@@ -54,12 +53,6 @@ void PaintExecution::paint_animation(Atom image_library, int frame_rate, const s
         pi.frames.push_back(image);
     }
     paint->items.push_back(pi);
-
-    std::ostringstream ss;
-    for (auto iter = frame_nums.begin(); iter != frame_nums.end(); iter++) {
-        ss << " " << *iter;
-    }
-    std::cerr << boost::format("paint animation %s %s [%s] (%d,%d) %d %d") % image_library % frame_rate % (ss.str()) % offset_x % offset_y % blend_alpha % blend_addition << std:: endl;
 }
 
 void PaintExecution::run(Script *script) {

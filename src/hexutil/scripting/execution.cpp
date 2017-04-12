@@ -30,7 +30,7 @@ Datum Execution::execute_instruction(const Term *script_term) {
         try {
             rv = interpreter->execute(script_term, this);
         } catch (const boost::bad_get& err) {
-            throw ScriptError() << "Exception in instruction defined in line " << script_term->line_no << ": " << script_term;
+            throw ScriptError() << "Line " << script_term->line_no << " '" << script_term << "': " << err.what();
         }
         return rv;
     }
@@ -75,7 +75,7 @@ const Datum Execution::get_argument(const Term *term, int position) {
     Datum datum = arg_term->datum;
     while (datum.is<Atom>()) {
         const std::string& atom_name = static_cast<const std::string>(datum.get<Atom>());
-        if (atom_name.at(0) != '$')
+        if (atom_name.empty() || atom_name.at(0) != '$')
             break;
         const char *var_str = atom_name.c_str() + 1;
         datum = get(static_cast<Atom>(var_str));

@@ -17,12 +17,12 @@ public:
         PaintExecution* pe = dynamic_cast<PaintExecution *>(execution);
         if (!pe)
             throw ScriptError() << "PaintFrame can only be executed in a PaintExecution";
-        Atom paint_library = execution->get(pe->paint_library_atom);
-        int offset_x = execution->get(pe->paint_offset_x_atom);
-        int offset_y = execution->get(pe->paint_offset_y_atom);
-        int blend_alpha = execution->get(pe->paint_blend_alpha_atom);
-        int blend_addition = execution->get(pe->paint_blend_addition_atom);
-        int frame_offset = execution->get(pe->paint_frame_offset_atom);
+        Atom paint_library = execution->get(pe->paint_library_atom).get_as_atom();
+        int offset_x = execution->get_as<int>(pe->paint_offset_x_atom);
+        int offset_y = execution->get_as<int>(pe->paint_offset_y_atom);
+        int blend_alpha = execution->get_as<int>(pe->paint_blend_alpha_atom);
+        int blend_addition = execution->get_as<int>(pe->paint_blend_addition_atom);
+        int frame_offset = execution->get_as<int>(pe->paint_frame_offset_atom);
         pe->paint_frame(paint_library, frame_offset + frame_num, offset_x, offset_y, blend_alpha, blend_addition);
 
         return 0;

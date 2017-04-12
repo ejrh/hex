@@ -97,6 +97,7 @@ public:
             for (int j = 0; j < 6; j++) {
                 int cx = (int) ((graphics->width / 6) * (j + 0.5));
                 unit_views[i].facing = j;
+                unit_views[i].variation = j;
                 Unit unit;
                 unit_painter->repaint(unit_views[i], unit);
 
@@ -155,6 +156,8 @@ void run() {
     UnitRenderer unit_renderer(&graphics, &resources);
     unit_renderer.generate_placeholders = false;
 
+    if (resources.unit_view_defs.size() == 0)
+        throw Error() << "No unit views to show";
     UnitViewDef::pointer view_def = resources.unit_view_defs.begin()->second;
 
     UiLoop loop(&graphics, 25);

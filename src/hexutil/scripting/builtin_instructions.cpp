@@ -31,8 +31,10 @@ public:
     Datum execute(const Term *instruction, Execution *execution) const {
         const Atom script_name = execution->get_argument(instruction, 0).get_as_atom();
         StrMap<Script>& scripts = *execution->scripts;
-        Script *script = scripts.get(script_name).get();
-        return execution->execute_script(script);
+        Script::pointer script = scripts.find(script_name);
+        if (!script)
+            throw ScriptError() << "Script not found: " << script_name;
+        return execution->execute_script(script.get());
     }
 };
 
@@ -72,8 +74,8 @@ public:
     MatchInterpreter(): Interpreter("Match") { }
 
     Datum execute(const Term *instruction, Execution *execution) const {
-        const std::string& value = execution->get_argument(instruction, 0);
-        const std::string& pattern = execution->get_argument(instruction, 1);
+        const std::string& value = execution->get_argument(instruction, 0).get_as_str();
+        const std::string& pattern = execution->get_argument(instruction, 1).get_as_str();
 
         boost::regex pattern_re(pattern);
         if (boost::regex_match(value, pattern_re)) {

@@ -48,5 +48,6 @@ public:
 
 
 std::ostream& operator<<(std::ostream& os, const Term *term);
+std::ostream& operator<<(std::ostream& os, const Term& term);
 
 #endif

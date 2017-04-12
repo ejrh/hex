@@ -41,4 +41,10 @@ std::ostream& operator<<(std::ostream& os, const Term *term) {
 }
 
 
+std::ostream& operator<<(std::ostream& os, const Term& term) {
+    term.print_to_stream(os);
+    return os;
+}
+
+
 Atom CompoundTerm::list_functor("[]");
