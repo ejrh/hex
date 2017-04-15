@@ -35,7 +35,6 @@ void TilePainter::repaint(Point offset, int len) {
         TileViewDef::pointer view_def = resources->get_tile_view_def(tile_type.name);
         tile_view.view_def = view_def;
         tile_view.variation = rand();
-        tile_view.phase = rand();
     }
 
     for (int i = offset.y - 1; i <= offset.y + 1; i++) {

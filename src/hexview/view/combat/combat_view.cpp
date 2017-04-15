@@ -118,7 +118,6 @@ void BattleView::step() {
             tv.targetted = true;
             pv.phase = 0;
             pv.posture = Attacking;
-            phase_end = 200;  // TODO - determine when animation would end
         } break;
 
         case 2: {
@@ -126,7 +125,6 @@ void BattleView::step() {
             bool hurt = move_type->direction == Detrimental && move.effect != 0;
             tv.phase = 0;
             tv.posture = hurt ? Recoiling : Holding;
-            phase_end = 100;  // TODO - determine when animation would end
         } break;
 
         case 3: {
@@ -134,13 +132,20 @@ void BattleView::step() {
             pv.selected = false;
             tv.targetted = false;
             tv.posture = tv.participant->is_alive() ? Holding : Dying;
-            if (tv.posture == Dying) {
-                tv.facing = rand() % 6;
-            }
-            phase_end = 100;  // TODO - determine when animation would end
+            phase_end = 100;
         }
     }
 
     unit_painter.repaint(pv, *pv.participant->unit);
     unit_painter.repaint(tv, *tv.participant->unit);
+
+    switch (current_step) {
+        case 1: {
+            phase_end = pv.paint.get_duration();
+        } break;
+
+        case 2: {
+            phase_end = tv.paint.get_duration();
+        } break;
+    }
 }

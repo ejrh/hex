@@ -7,7 +7,22 @@
 
 class Resources;
 
+#define FRAME_RATE_BASE 1048576
+
+inline int frame_ms_to_rate(int ms) {
+    return FRAME_RATE_BASE / ms;
+}
+
+inline int frame_rate_to_ms(int rate) {
+    return FRAME_RATE_BASE / rate;
+}
+
 class PaintItem {
+public:
+    int get_duration() const {
+        return frames.size() * frame_rate_to_ms(frame_rate);
+    }
+
 public:
     int offset_x, offset_y;
     std::vector<Image *> frames;
@@ -18,14 +33,20 @@ public:
 
 class Paint {
 public:
+    Paint(): duration(0) { }
+
     void render(int x, int y, int phase, Graphics *graphics);
 
-    void clear() {
-        items.clear();
+    void clear();
+    void add(const PaintItem& item);
+
+    int get_duration() const {
+        return duration;
     }
 
-public:
+private:
     std::vector<PaintItem> items;
+    int duration;
 };
 
 class PaintExecution: public Execution {

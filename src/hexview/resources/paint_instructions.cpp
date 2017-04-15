@@ -34,7 +34,7 @@ public:
     PaintAnimationInterpreter(): Interpreter("PaintAnimation") { }
 
     Datum execute(const Term *instruction, Execution *execution) const {
-        int frame_rate = execution->get_argument(instruction, 0);
+        int frame_time = execution->get_argument(instruction, 0);
         std::vector<int> frame_nums;
         const CompoundTerm *frame_nums_subterm = dynamic_cast<const CompoundTerm *>(execution->get_subterm(instruction, 1));
         for (int i = 0; i < frame_nums_subterm->subterms.size(); i++) {
@@ -55,6 +55,7 @@ public:
         for (auto iter = frame_nums.begin(); iter != frame_nums.end(); iter++) {
             adjusted_frame_nums.push_back(frame_offset + *iter);
         }
+        int frame_rate = frame_ms_to_rate(frame_time);
         pe->paint_animation(paint_library, frame_rate, adjusted_frame_nums, offset_x, offset_y, blend_alpha, blend_addition);
 
         return 0;

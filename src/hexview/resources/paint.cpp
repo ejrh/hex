@@ -8,8 +8,10 @@ void Paint::render(int x, int y, int phase, Graphics *graphics) {
             continue;
 
         Image *frame = item.frames[0];
-        if (item.frames.size() > 1) {
-            int pos = (phase * item.frame_rate / 4000) % item.frames.size();
+        if (item.frame_rate != -1) {
+            int pos = (phase * item.frame_rate / FRAME_RATE_BASE);
+            if (pos >= item.frames.size())
+                pos %= item.frames.size();
             frame = item.frames[pos];
         }
         if (!frame)
@@ -29,30 +31,46 @@ void Paint::render(int x, int y, int phase, Graphics *graphics) {
     }
 }
 
+void Paint::clear() {
+    items.clear();
+    duration = 0;
+}
+
+void Paint::add(const PaintItem& item) {
+    items.push_back(item);
+    if (item.frame_rate != -1) {
+        int item_duration = item.get_duration();
+        if (item_duration > duration) {
+            duration = item_duration;
+        }
+    }
+}
+
+
 void PaintExecution::paint_frame(Atom image_library, int frame_num, int offset_x, int offset_y, int blend_alpha, int blend_addition) {
     PaintItem pi;
     pi.offset_x = offset_x;
     pi.offset_y = offset_y;
-    pi.frame_rate = 0;
+    pi.frame_rate = -1;
     pi.blend_alpha = blend_alpha;
     pi.blend_addition = blend_addition;
     Image *image = resources->get_library_image(image_library, frame_num);
     pi.frames.push_back(image);
-    paint->items.push_back(pi);
+    paint->add(pi);
 }
 
-void PaintExecution::paint_animation(Atom image_library, int frame_rate, const std::vector<int>& frame_nums, int offset_x, int offset_y, int blend_alpha, int blend_addition) {
+void PaintExecution::paint_animation(Atom image_library, int frame_time, const std::vector<int>& frame_nums, int offset_x, int offset_y, int blend_alpha, int blend_addition) {
     PaintItem pi;
     pi.offset_x = offset_x;
     pi.offset_y = offset_y;
-    pi.frame_rate = frame_rate;
+    pi.frame_rate = frame_time;
     pi.blend_alpha = blend_alpha;
     pi.blend_addition = blend_addition;
     for (auto iter = frame_nums.begin(); iter != frame_nums.end(); iter++) {
         Image *image = resources->get_library_image(image_library, *iter);
         pi.frames.push_back(image);
     }
-    paint->items.push_back(pi);
+    paint->add(pi);
 }
 
 void PaintExecution::run(Script *script) {

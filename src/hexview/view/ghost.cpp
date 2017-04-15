@@ -34,8 +34,7 @@ Ghost::Ghost(GameView *view, UnitPainter *unit_painter, UnitStack::pointer& stac
 }
 
 void Ghost::update(unsigned int update_ms) {
-    UnitViewDef::pointer& view_def = stack_view->view_def;
-    progress += frame_incr(view_def->move_speed, update_ms);
+    progress += update_ms;
     if (progress > 1000) {
         stack_view->stack->position = stack_view->path[step];
         step++;
@@ -67,7 +66,7 @@ void Ghost::update(unsigned int update_ms) {
     }
 
     Point next_pos = stack_view->path[step];
-    stack_view->phase += frame_incr(60, update_ms);  // TODO - figure out animation
+    stack_view->update(update_ms);
     if (view->player->has_view(target->owner)) {
         view->level_view.discovered.draw(next_pos, target->sight(), true);
         view->level_view.ghost_visibility.draw(next_pos, target->sight(), true);

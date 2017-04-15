@@ -90,16 +90,13 @@ class UnitViewDef: public boost::enable_shared_from_this<UnitViewDef> {
 public:
     typedef boost::shared_ptr<UnitViewDef> pointer;
 
-    UnitViewDef():
-    move_speed(60) { }
+    UnitViewDef() { }
     UnitViewDef(std::string name):
-        name(name),
-    move_speed(60) { }
+        name(name) { }
     ~UnitViewDef() { }
 
     std::string name;
     Script::pointer script;
-    int move_speed; // tiles per minute
     std::array<SoundDef, NUM_POSTURES> sounds;
 };
 

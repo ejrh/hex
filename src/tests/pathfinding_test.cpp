@@ -45,7 +45,7 @@ public:
     void reset() {
         for (int i = 0; i < level_view.tile_views.height; i++)
             for (int j = 0; j < level_view.tile_views.width; j++) {
-                level_view.tile_views[i][j].phase = 0;
+                level_view.tile_views[i][j].variation = 0;
             }
 
         pathfinder.clear();
@@ -96,7 +96,7 @@ public:
             Path new_path;
             pathfinder.build_path(new_path);
             for (auto iter = new_path.begin(); iter != new_path.end(); iter++) {
-                level_view.tile_views[iter->y][iter->x].phase = 1;
+                level_view.tile_views[iter->y][iter->x].variation = 1;
             }
         }
     }
@@ -157,7 +157,7 @@ void PathfindingRenderer::render_tile(int x, int y, Point tile_pos) {
         SDL_Rect rect = { x + 16, y + 8, TILE_WIDTH - 32, TILE_HEIGHT - 16 };
         SDL_SetRenderDrawColor(graphics->renderer, 200,100,100, 255);
         SDL_RenderFillRect(graphics->renderer, &rect);
-    } else if (tile_view.phase == 1) {
+    } else if (tile_view.variation == 1) {
         SDL_Rect rect = { x + 16, y + 8, TILE_WIDTH - 32, TILE_HEIGHT - 16 };
         SDL_SetRenderDrawColor(graphics->renderer, 200,200,100, 255);
         SDL_RenderFillRect(graphics->renderer, &rect);

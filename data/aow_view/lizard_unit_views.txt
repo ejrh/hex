@@ -7,7 +7,7 @@ ImageLibrary(baslk, "images/units/liz/baslk.ilb")
 
 #TODO - lizard infantry are usually bigger so may need to be customised
 
-CreateUnitView("lizard_archer", 120)
+CreateUnitView("lizard_archer")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [212, 213])),
     SetVariable(unit_lib, lizar),
@@ -15,7 +15,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("lizard_swordsman", 120)
+CreateUnitView("lizard_swordsman")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [210, 211])),
     SetVariable(unit_lib, lizwr),
@@ -23,7 +23,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("lizard_shaman", 120)
+CreateUnitView("lizard_shaman")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [218, 219])),
     SetVariable(unit_lib, lizcl),
@@ -32,7 +32,7 @@ UnitPaint([
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
 #TODO - shadow is different
-CreateUnitView("lizard_frog_rider", 120)
+CreateUnitView("lizard_frog_rider")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [216, 217])),
     SetVariable(unit_lib, lizfr),
@@ -41,7 +41,7 @@ UnitPaint([
 UnitSounds(1, ["slimes1.wav", "slimes2.wav", "slimes3.wav", "slimes4.wav"])
 
 #TODO - shadow is different
-CreateUnitView("lizard_salamander", 120)
+CreateUnitView("lizard_salamander")
 UnitPaint([
     SetVariable(death_frame, 221),
     SetVariable(unit_lib, lizsm),
@@ -49,7 +49,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("lizard_basilisk", 120)
+CreateUnitView("lizard_basilisk")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [225, 226])),
     SetVariable(unit_lib, baslk),

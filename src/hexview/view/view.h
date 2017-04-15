@@ -9,10 +9,6 @@
 #include "hexview/view/unit_painter.h"
 
 
-// Assumes 1000 increments between frames
-#define frame_incr(bpm, update_ms) ((bpm) * (update_ms) / 60)
-
-
 class FactionView: public boost::enable_shared_from_this<FactionView> {
 public:
     typedef boost::shared_ptr<FactionView> pointer;
@@ -40,7 +36,7 @@ public:
 
 class TileView {
 public:
-    TileView(): view_def(), highlighted(false), path_dir(-1), variation(0), phase(0), feature(NULL), structure_view() { }
+    TileView(): view_def(), highlighted(false), path_dir(-1), variation(0), feature(NULL), structure_view() { }
     ~TileView() { }
 
     static const int PATH_END = 8;
@@ -50,7 +46,6 @@ public:
     bool highlighted;
     int path_dir;
     unsigned int variation;
-    unsigned int phase;
     std::vector<Image *> transitions;
     std::vector<Image *> roads;
     Image *feature;
@@ -73,8 +68,7 @@ public:
     ~UnitView() { }
 
     void update(unsigned int update_ms) {
-        //TODO figure out unit animation
-        phase += frame_incr(40, update_ms);
+        phase += update_ms;
     }
 
 public:

@@ -34,7 +34,7 @@ void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
     if (!def)
         return;
 
-    Image *ground = choose_image(def->animation.images, tile_view.phase / 1000);
+    Image *ground = choose_image(def->animation.images, tile_view.variation);
     if (ground != NULL) {
         graphics->blit(ground, x - ground->width / 2, y - ground->height / 2, SDL_BLENDMODE_BLEND);
     }

@@ -47,12 +47,12 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, FeatureDef& d) {
 }
 
 inline Serialiser& operator<<(Serialiser& serialiser, const UnitViewDef& d) {
-    serialiser << d.name << d.move_speed;
+    serialiser << d.name;
     return serialiser;
 }
 
 inline Deserialiser& operator>>(Deserialiser& deserialiser, UnitViewDef& d) {
-    deserialiser >> d.name >> d.move_speed;
+    deserialiser >> d.name;
     return deserialiser;
 }
 

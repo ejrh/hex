@@ -30,15 +30,13 @@ void GameView::update() {
     unsigned int update_ms = ticks - last_update;
     last_update = ticks;
 
-    int level_bpm = 60 * 40;
-    phase += frame_incr(level_bpm, update_ms);
+    phase += update_ms;
 
     for (int i = 0; i < level_view.level->height; i++)
         for (int j = 0; j < level_view.level->width; j++) {
             TileViewDef::pointer view_def = level_view.tile_views[i][j].view_def;
             if (!view_def)
                 continue;
-            level_view.tile_views[i][j].phase += frame_incr(view_def->animation.bpm, update_ms);
         }
 
     for (auto iter = unit_stack_views.begin(); iter != unit_stack_views.end(); iter++) {

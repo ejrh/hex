@@ -7,7 +7,7 @@ ImageLibrary(unicn, "images/units/elv/unicn.ilb")
 ImageLibrary(fairy, "images/units/elv/fairy.ilb")
 ImageLibrary(nymph, "images/units/elv/nymph.ilb")
 
-CreateUnitView("elf_archer", 120)
+CreateUnitView("elf_archer")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [112, 113])),
     SetVariable(unit_lib, elvar),
@@ -15,7 +15,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("elf_swordsman", 120)
+CreateUnitView("elf_swordsman")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [110, 111])),
     SetVariable(unit_lib, elvwr),
@@ -23,7 +23,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("elf_priest", 120)
+CreateUnitView("elf_priest")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [118, 119])),
     SetVariable(unit_lib, elvcl),
@@ -31,7 +31,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("elf_rider", 120)
+CreateUnitView("elf_rider")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [116, 117])),
     SetVariable(unit_lib, elvhr),
@@ -39,7 +39,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
-CreateUnitView("elf_ranger", 120)
+CreateUnitView("elf_ranger")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [124, 125])),
     SetVariable(unit_lib, elvrn),
@@ -47,7 +47,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("elf_unicorn", 120)
+CreateUnitView("elf_unicorn")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [112, 113])),
     SetVariable(unit_lib, unicn),
@@ -55,7 +55,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
-CreateUnitView("elf_fairy", 120)
+CreateUnitView("elf_fairy")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [120, 121])),
     SetVariable(unit_lib, fairy),
@@ -63,7 +63,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["flutter.wav"])
 
-CreateUnitView("elf_nymph", 120)
+CreateUnitView("elf_nymph")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [114, 115])),
     SetVariable(unit_lib, nymph),
