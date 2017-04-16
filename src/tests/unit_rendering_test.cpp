@@ -35,11 +35,12 @@ static std::string posture_names[] = {
 
 class TestWindow: public UiWindow {
 public:
-    TestWindow(UiLoop *loop, Graphics *graphics, Resources *resources, Game *game, UnitPainter *unit_painter, UnitRenderer *unit_renderer, UnitViewDef::pointer view_def):
+    TestWindow(UiLoop *loop, Graphics *graphics, Resources *resources, UnitPainter *unit_painter, UnitRenderer *unit_renderer, UnitViewDef::pointer initial_view_def):
             UiWindow(0, 0, 0, 0, WindowIsVisible|WindowIsActive|WindowWantsKeyboardEvents),
             loop(loop), graphics(graphics), resources(resources),
-            game(game), unit_painter(unit_painter), unit_renderer(unit_renderer), view_def(view_def),
+            unit_painter(unit_painter), unit_renderer(unit_renderer),
             last_update(0) {
+        set_view_def(initial_view_def);
     }
 
     bool receive_keyboard_event(SDL_Event *evt) {
@@ -56,7 +57,7 @@ public:
             if (iter == map.end()) {
                 iter = map.begin();
             }
-            view_def = iter->second;
+            set_view_def(iter->second);
         } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_PAGEUP) {
             std::map<std::string,UnitViewDef::pointer>& map = resources->unit_view_defs;
             auto iter = map.find(view_def->name);
@@ -64,7 +65,7 @@ public:
                 iter = map.end();
             }
             iter--;
-            view_def = iter->second;
+            set_view_def(iter->second);
         } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_r) {
             resources->unit_view_defs.clear();
             resources->tile_view_defs.clear();
@@ -73,6 +74,20 @@ public:
         }
 
         return false;
+    }
+
+    void set_view_def(UnitViewDef::pointer new_view_def) {
+        view_def = new_view_def;
+        std::string background_name;
+        boost::regex pattern_re(".*_ship|gall.*|sea_.*|mermaid");
+        if (boost::regex_match(view_def->name, pattern_re)) {
+            background_name = "water";
+        } else {
+            background_name = "grass";
+        }
+
+        TileViewDef::pointer tile_view_def = resources->tile_view_defs.get(background_name);
+        background = tile_view_def->animation.images[0].image;
     }
 
     void draw(const UiContext& context) {
@@ -101,9 +116,7 @@ public:
                 Unit unit;
                 unit_painter->repaint(unit_views[i], unit);
 
-                TileViewDef::pointer tile_view_def = resources->tile_view_defs.get("grass");
-                Image *ground = tile_view_def->animation.images[0].image;
-                graphics->blit(ground, cx - ground->width / 2, cy - ground->height / 2, SDL_BLENDMODE_BLEND, 255);
+                graphics->blit(background, cx - background->width / 2, cy - background->height / 2, SDL_BLENDMODE_BLEND, 255);
 
                 unit_renderer->draw_unit(cx, cy, unit_views[i]);
             }
@@ -129,10 +142,10 @@ private:
     UiLoop *loop;
     Graphics *graphics;
     Resources *resources;
-    Game *game;
     UnitPainter *unit_painter;
     UnitRenderer *unit_renderer;
     UnitViewDef::pointer view_def;
+    Image *background;
     UnitView unit_views[5];
     unsigned int last_update;
 };
@@ -158,10 +171,10 @@ void run() {
 
     if (resources.unit_view_defs.size() == 0)
         throw Error() << "No unit views to show";
-    UnitViewDef::pointer view_def = resources.unit_view_defs.begin()->second;
+    UnitViewDef::pointer initial_view_def = resources.unit_view_defs.begin()->second;
 
     UiLoop loop(&graphics, 25);
-    TestWindow *test_window = new TestWindow(&loop, &graphics, &resources, &game, &unit_painter, &unit_renderer, view_def);
+    TestWindow *test_window = new TestWindow(&loop, &graphics, &resources, &unit_painter, &unit_renderer, initial_view_def);
     loop.set_root_window(test_window);
     loop.run();
 
