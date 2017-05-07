@@ -56,6 +56,16 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, TileType& d) {
     return deserialiser;
 }
 
+inline Serialiser& operator<<(Serialiser& serialiser, const FeatureType& d) {
+    serialiser << d.name << d.properties;
+    return serialiser;
+}
+
+inline Deserialiser& operator>>(Deserialiser& deserialiser, FeatureType& d) {
+    deserialiser >> d.name >> d.properties;
+    return deserialiser;
+}
+
 inline Serialiser& operator<<(Serialiser& serialiser, const UnitType& d) {
     serialiser << d.name << d.properties;
     return serialiser;

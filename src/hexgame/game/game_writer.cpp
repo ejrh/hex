@@ -11,6 +11,7 @@
 void GameWriter::write(Game *game) {
     write_unit_types(game);
     write_tile_types(game);
+    write_feature_types(game);
     write_structure_types(game);
     write_factions(game);
     write_levels(game);
@@ -31,6 +32,12 @@ void GameWriter::write_tile_types(Game *game) {
     }
 }
 
+void GameWriter::write_feature_types(Game *game) {
+    for (auto iter = game->feature_types.begin(); iter != game->feature_types.end(); iter++) {
+        emit(create_message(CreateFeatureType, *iter->second));
+    }
+}
+
 void GameWriter::write_structure_types(Game *game) {
     for (auto iter = game->structure_types.begin(); iter != game->structure_types.end(); iter++) {
         emit(create_message(CreateStructureType, *iter->second));
@@ -48,11 +55,13 @@ void GameWriter::write_levels(Game *game) {
     emit(create_message(SetLevel, game->level.width, game->level.height));
     for (int i = 0; i < game->level.height; i++) {
         Point origin(0, i);
-        CompressableStringVector data;
+        CompressableStringVector type_data;
+        CompressableStringVector feature_data;
         for (int j = 0; j < game->level.width; j++) {
-            data.push_back(game->level.tiles[i][j].type->name);
+            type_data.push_back(game->level.tiles[i][j].type->name);
+            feature_data.push_back(game->level.tiles[i][j].feature_type->name);
         }
-        emit(create_message(SetLevelData, origin, data));
+        emit(create_message(SetLevelData, origin, type_data, feature_data));
     }
 }
 

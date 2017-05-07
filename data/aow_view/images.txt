@@ -1,10 +1,6 @@
-ImageFile("release/release.hss")
 
 ImageFile("int/genericf.ilb")
 
-ImageFile("images/hextrans.ilb")
-ImageFile("images/waterhex.ilb")
-ImageFile("images/mountain/mountain.ilb")
 ImageFile("images/combat.ilb")
 ImageFile("images/cursors.ilb")
 ImageFile("images/general.ilb")

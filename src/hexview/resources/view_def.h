@@ -8,26 +8,6 @@
 #include "hexview/resources/paint.h"
 
 
-class AnimationDef {
-public:
-    AnimationDef(): bpm(60) { }
-
-    // Duration of the complete animation loop, in ms
-    int duration() const {
-        if (images.size() == 0) {
-            return 0;
-        }
-        if (bpm == 0) {
-            return 100;
-        }
-        return 60000 * images.size() / bpm;
-    }
-
-public:
-    int bpm;   // How many frames of the animation are played in one minute
-    ImageSeries images;
-};
-
 class SoundDef {
 public:
     SoundDef() { }
@@ -50,23 +30,6 @@ public:
     ImageSeries shield_images;
 };
 
-class TransitionDef {
-public:
-    TransitionDef() { }
-
-    std::set<int> dirs;
-    std::set<std::string> type_names;
-    ImageSeries images;
-};
-
-class FeatureDef {
-public:
-    FeatureDef() { }
-
-    int centre_x, centre_y;
-    ImageSeries images;
-};
-
 class TileViewDef: public boost::enable_shared_from_this<TileViewDef> {
 public:
     typedef boost::shared_ptr<TileViewDef> pointer;
@@ -76,12 +39,21 @@ public:
     ~TileViewDef() { }
 
     std::string name;
-    std::string base_name;
     int r, g, b;
-    AnimationDef animation;
-    std::vector<TransitionDef> transitions;
-    ImageSeries roads;
-    std::vector<FeatureDef> features;
+    Script::pointer script;
+    Script::pointer transition_script;
+};
+
+class FeatureViewDef: public boost::enable_shared_from_this<FeatureViewDef> {
+public:
+    typedef boost::shared_ptr<FeatureViewDef> pointer;
+
+    FeatureViewDef() { }
+    FeatureViewDef(std::string name): name(name) { }
+    ~FeatureViewDef() { }
+
+    std::string name;
+    Script::pointer script;
 };
 
 #define NUM_POSTURES 6
@@ -105,12 +77,10 @@ public:
     typedef boost::shared_ptr<StructureViewDef> pointer;
 
     StructureViewDef() { }
-    StructureViewDef(const std::string& name): name(name), script(nullptr), centre_x(0), centre_y(0) { }
+    StructureViewDef(const std::string& name): name(name), script(nullptr) { }
 
     std::string name;
     Script::pointer script;
-    int centre_x, centre_y;
-    AnimationDef animation;
 };
 
 #endif

@@ -8,7 +8,14 @@
 #include "hexgame/game/movement/movement.h"
 
 
-void Game::set_level_data(const Point& offset, const std::vector<std::string>& tile_data) {
+Game::Game():
+        tile_types("tile types"), feature_types("feature types"),
+        unit_types("unit types"), structure_types("structure types"),
+        game_id(0), message_id(0), level(0, 0),
+        factions("factions"), stacks("stacks") {
+}
+
+void Game::set_level_data(const Point& offset, const std::vector<std::string>& tile_data, const std::vector<std::string>& feature_data) {
     for (unsigned int i = 0; i < tile_data.size(); i++) {
         Point tile_pos(offset.x + i, offset.y);
         if (!level.contains(tile_pos)) {
@@ -16,14 +23,23 @@ void Game::set_level_data(const Point& offset, const std::vector<std::string>& t
             continue;
         }
 
+        Tile& tile = level.tiles[tile_pos];
+
         const std::string& tile_type_name = tile_data[i];
         TileType::pointer tile_type = tile_types.get(tile_type_name);
         if (!tile_type) {
             BOOST_LOG_TRIVIAL(error) << "Unknown tile type: " << tile_type_name;
-            continue;
+        } else {
+            tile.type = tile_type;
         }
-        Tile& tile = level.tiles[tile_pos];
-        tile.type = tile_type;
+
+        const std::string& feature_type_name = feature_data[i];
+        FeatureType::pointer feature_type = feature_types.get(feature_type_name);
+        if (!feature_type) {
+            BOOST_LOG_TRIVIAL(error) << "Unknown feature type: " << feature_type_name;
+        } else {
+            tile.feature_type = feature_type;
+        }
     }
 }
 
@@ -31,6 +47,12 @@ TileType::pointer Game::create_tile_type(const TileType& tile_type) {
     TileType::pointer new_tile_type = boost::make_shared<TileType>(tile_type);
     tile_types.put(tile_type.name, new_tile_type);
     return new_tile_type;
+}
+
+FeatureType::pointer Game::create_feature_type(const FeatureType& feature_type) {
+    FeatureType::pointer new_feature_type = boost::make_shared<FeatureType>(feature_type);
+    feature_types.put(feature_type.name, new_feature_type);
+    return new_feature_type;
 }
 
 UnitType::pointer Game::create_unit_type(const UnitType& unit_type) {

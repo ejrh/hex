@@ -35,8 +35,10 @@ public:
     bool resolve_sound_ref(SoundRef& sound_ref);
 
     TileViewDef::pointer create_tile_view(const TileViewDef& def);
+    FeatureViewDef::pointer create_feature_view(const FeatureViewDef& def);
     StructureViewDef::pointer create_structure_view(const StructureViewDef& data);
     TileViewDef::pointer get_tile_view_def(const std::string& name);
+    FeatureViewDef::pointer get_feature_view_def(const std::string& name);
     UnitViewDef::pointer get_unit_view_def(const std::string& name);
     StructureViewDef::pointer get_structure_view_def(const std::string& name);
     FactionViewDef::pointer get_faction_view_def(const std::string& name);
@@ -44,15 +46,13 @@ public:
     ImageLibraryResource *get_image_library(Atom name);
     Image *get_library_image(Atom library_name, int image_num);
 
-private:
-    TileViewDef::pointer find_base(const TileViewDef& def) const;
-
 public:
     ImageMap images;
     std::map<Atom, std::unique_ptr<ImageLibraryResource> > image_libraries;
     SoundMap sounds;
     std::map<std::string, ImageSeries> image_series;
     StrMap<TileViewDef> tile_view_defs;
+    StrMap<FeatureViewDef> feature_view_defs;
     StrMap<UnitViewDef> unit_view_defs;
     StrMap<StructureViewDef> structure_view_defs;
     StrMap<FactionViewDef> faction_view_defs;

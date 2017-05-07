@@ -144,7 +144,28 @@ public:
     typedef boost::shared_ptr<TileType> pointer;
 
     TileType() { }
+    TileType(const std::string& name): name(name) { }
     ~TileType() { }
+
+    bool has_property(Atom property) const {
+        return properties.contains(property);
+    }
+    template<typename T>
+    T get_property(Atom property) const {
+        return properties.get(property);
+    }
+
+public:
+    std::string name;
+    Properties properties;
+};
+
+class FeatureType: public boost::enable_shared_from_this<FeatureType> {
+public:
+    typedef boost::shared_ptr<FeatureType> pointer;
+
+    FeatureType() { }
+    ~FeatureType() { }
 
     bool has_property(Atom property) const {
         return properties.contains(property);
@@ -162,22 +183,31 @@ public:
 class Tile {
 public:
     Tile(): type(), stack(), structure() { }
-    Tile(TileType::pointer type): type(type), stack(), structure() { }
+    Tile(TileType::pointer type, FeatureType::pointer feature_type):
+            type(type), feature_type(feature_type), stack(), structure() { }
 
     bool has_property(Atom property) const {
-        return type && type->has_property(property);
+        if (type && type->has_property(property))
+            return true;
+        if (feature_type && feature_type->has_property(property))
+            return true;
+        return false;
     }
     template<typename T>
     T get_property(Atom property) const {
-        if (!type) {
+        if (type && type->has_property(property)) {
+            return type->get_property<T>(property);
+        } else if (feature_type && feature_type->has_property(property)) {
+            return feature_type->get_property<T>(property);
+        } else {
             static T default_value;
             return default_value;
         }
-        return type->get_property<T>(property);
     }
 
 public:
     TileType::pointer type;
+    FeatureType::pointer feature_type;
     UnitStack::pointer stack;
     Structure::pointer structure;
 };
@@ -199,13 +229,12 @@ std::ostream& operator<<(std::ostream &strm, const Level& level);
 
 class Game {
 public:
-    Game(): tile_types("tile types"), unit_types("unit types"), structure_types("structure types"),
-            game_id(0), message_id(0), level(0, 0),
-            factions("factions"), stacks("stacks") { }
+    Game();
     ~Game() { }
 
-    void set_level_data(const Point& offset, const std::vector<std::string>& tile_data);
+    void set_level_data(const Point& offset, const std::vector<std::string>& tile_data, const std::vector<std::string>& feature_data);
     TileType::pointer create_tile_type(const TileType& tile_type);
+    FeatureType::pointer create_feature_type(const FeatureType& feature_type);
     UnitType::pointer create_unit_type(const UnitType& unit_type);
     StructureType::pointer create_structure_type(StructureType& structure_type);
 
@@ -226,6 +255,7 @@ public:
 
 public:
     StrMap<TileType> tile_types;
+    StrMap<FeatureType> feature_types;
     StrMap<UnitType> unit_types;
     StrMap<StructureType> structure_types;
 

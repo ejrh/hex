@@ -87,16 +87,18 @@ BOOST_AUTO_TEST_CASE(message_with_string) {
 }
 
 BOOST_AUTO_TEST_CASE(message_with_vector) {
-    CompressableStringVector v;
-    v.push_back("hello");
-    boost::shared_ptr<Message> expected = create_message(SetLevelData, Point(1,2), v);
+    CompressableStringVector v1;
+    v1.push_back("hello");
+    CompressableStringVector v2;
+    v2.push_back("there");
+    boost::shared_ptr<Message> expected = create_message(SetLevelData, Point(1,2), v1, v2);
 
-    static const char *input = "SetLevelData((1,2), [hello])";
+    static const char *input = "SetLevelData((1,2), [hello], [there])";
     std::vector<boost::shared_ptr<Message> > messages = parse_messages(input);
     BOOST_REQUIRE_EQUAL(messages.size(), 1);
     BOOST_CHECK(equal(messages[0], expected));
 
-    input = "SetLevelData((1,2), [hello, ])";
+    input = "SetLevelData((1,2), [hello, ], [there ,])";
     messages = parse_messages(input);
     BOOST_REQUIRE_EQUAL(messages.size(), 1);
     BOOST_CHECK(equal(messages[0], expected));

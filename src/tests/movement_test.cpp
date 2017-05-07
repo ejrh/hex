@@ -26,26 +26,38 @@
 #define EMPTY_POS Point(1,3)
 
 void create_game(MessageReceiver& updater) {
-    TileType grass_type;
-    grass_type.name = "grass";
-    grass_type.properties[Walkable] = 1;
-    updater.receive(create_message(CreateTileType, grass_type));
-
     TileType wall_type;
     wall_type.name = "wall";
     updater.receive(create_message(CreateTileType, wall_type));
+
+    TileType grass_type;
+    grass_type.name = "grass";
+    updater.receive(create_message(CreateTileType, grass_type));
+
+    FeatureType wall_feature_type;
+    wall_feature_type.name = "wall";
+    updater.receive(create_message(CreateFeatureType, wall_feature_type));
+
+    FeatureType open_feature_type;
+    open_feature_type.name = "open";
+    open_feature_type.properties[Walkable] = 1;
+    updater.receive(create_message(CreateFeatureType, open_feature_type));
 
     updater.receive(create_message(SetLevel, LEVEL_WIDTH, LEVEL_HEIGHT));
     for (int i = 0; i < LEVEL_HEIGHT; i++) {
         Point offset(0, i);
         CompressableStringVector data;
+        CompressableStringVector feature_data;
         for (int j = 0; j < LEVEL_WIDTH; j++) {
-            if (j == 3 && i >= 3)
+            if (j == 3 && i >= 3) {
                 data.push_back("wall");
-            else
+                feature_data.push_back("wall");
+            } else {
                 data.push_back("grass");
+                feature_data.push_back("open");
+            }
         }
-        updater.receive(create_message(SetLevelData, offset, data));
+        updater.receive(create_message(SetLevelData, offset, data, feature_data));
     }
 
     UnitType cat_type;

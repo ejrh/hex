@@ -104,6 +104,37 @@ public:
 };
 
 
+class AndInterpreter: public Interpreter {
+public:
+    AndInterpreter(): Interpreter("And") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
+
+        for (int i = 0; i < list_term->subterms.size(); i++) {
+            int condition = execution->get_argument(instruction, i).get_as_int();
+            if (!condition) {
+                return 0;
+            }
+        }
+
+        return 1;
+    }
+};
+
+
+class NotInterpreter: public Interpreter {
+public:
+    NotInterpreter(): Interpreter("Not") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        int condition = execution->get_argument(instruction, 0).get_as_int();
+
+        return !condition;
+    }
+};
+
+
 class ReturnInterpreter: public Interpreter {
 public:
     ReturnInterpreter(): Interpreter("Return") { }
@@ -134,6 +165,20 @@ public:
 };
 
 
+class MixInterpreter: public Interpreter {
+public:
+    MixInterpreter(): Interpreter("Mix") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        const int seed1 = execution->get_argument(instruction, 0).get_as_int();
+        const int seed2 = execution->get_argument(instruction, 1).get_as_int();
+
+        std::hash<std::pair<int, int> > hash;
+        return hash(std::pair<int, int>(seed1, seed2));
+    }
+};
+
+
 void register_builtin_interpreters() {
     InterpreterRegistry::register_interpreter(new ListInterpreter());
     InterpreterRegistry::register_interpreter(new IncludeScriptInterpreter());
@@ -141,6 +186,9 @@ void register_builtin_interpreters() {
     InterpreterRegistry::register_interpreter(new IfInterpreter());
     InterpreterRegistry::register_interpreter(new MatchInterpreter());
     InterpreterRegistry::register_interpreter(new EqInterpreter());
+    InterpreterRegistry::register_interpreter(new AndInterpreter());
+    InterpreterRegistry::register_interpreter(new NotInterpreter());
     InterpreterRegistry::register_interpreter(new ReturnInterpreter());
     InterpreterRegistry::register_interpreter(new ChooseInterpreter());
+    InterpreterRegistry::register_interpreter(new MixInterpreter());
 }

@@ -38,7 +38,7 @@ public:
     bool can_enter(const UnitStack& party, const Point& tile_pos) const;
     int cost_to(const UnitStack& party, const Point& tile_pos) const;
     int cost_to(const Unit& unit, const Point& tile_pos) const;
-    int admits(const UnitType& unit_type, const TileType& tile_type) const;
+    int admits(const UnitType& unit_type, const Tile& tile) const;
     void move(UnitStack& party, const IntSet& selected_units, const Point& tile_pos) const;
     int check_path(const UnitStack& stack, const Path& path) const;
     bool check_step(const UnitStack& stack, StackMovePoints *points, const Path& path, int step_num) const;

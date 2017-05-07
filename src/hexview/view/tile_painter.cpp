@@ -5,13 +5,16 @@
 #include "hexgame/game/game.h"
 
 #include "hexview/resources/resources.h"
+#include "hexview/view/structure_painter.h"
 #include "hexview/view/tile_painter.h"
 #include "hexview/view/view.h"
 
 
 TilePainter::TilePainter(Game *game, GameView *view, Resources *resources):
         game(game), view(view), resources(resources),
-        tile_paint_counter("paint.tile") {
+        tile_paint_counter("paint.tile"), tile_script_error_counter("paint.tile.error"),
+        feature_paint_counter("paint.feature"), feature_script_error_counter("paint.feature.error"),
+        transition_paint_counter("paint.transition"), transition_script_error_counter("paint.transition.error") {
 }
 
 void TilePainter::repaint(Point offset, int len) {
@@ -34,8 +37,13 @@ void TilePainter::repaint(Point offset, int len) {
         TileView& tile_view = view->level_view.tile_views[tile_pos];
         TileViewDef::pointer view_def = resources->get_tile_view_def(tile_type.name);
         tile_view.view_def = view_def;
-        tile_view.variation = rand();
+
+        FeatureType& feature_type = *game->level.tiles[tile_pos].feature_type;
+        FeatureViewDef::pointer feature_view_def = resources->get_feature_view_def(feature_type.name);
+        tile_view.feature_view_def = feature_view_def;
     }
+
+    StructurePainter structure_painter(game, view, resources);
 
     for (int i = offset.y - 1; i <= offset.y + 1; i++) {
         if (i < 0 || i >= game->level.height)
@@ -46,89 +54,169 @@ void TilePainter::repaint(Point offset, int len) {
                 continue;
 
             Point tile_pos(j, i);
-            paint_transitions(tile_pos);
-            paint_roads(tile_pos);
-            paint_features(tile_pos);
-
-            ++tile_paint_counter;
+            TileView& tile_view = view->level_view.tile_views[tile_pos];
+            Tile& tile = game->level.tiles[tile_pos];
+            repaint_tile(tile_view, tile, tile_pos);
+            repaint_transition(tile_view, tile, tile_pos);
+            repaint_feature(tile_view, tile, tile_pos);
+            if (tile.structure) {
+                structure_painter.repaint(*tile_view.structure_view);
+            }
         }
     }
 }
 
-void TilePainter::paint_transitions(const Point& tile_pos) {
-    TileView& tile_view = view->level_view.tile_views[tile_pos];
-
-    tile_view.transitions.clear();
-
-    TileViewDef::pointer view_def = tile_view.view_def;
-    if (!view_def)
+void TilePainter::repaint_tile(TileView& tile_view, const Tile& tile, const Point tile_pos) {
+    tile_view.tile_paint.clear();
+    if (!tile_view.view_def)
         return;
 
-    for (auto iter = view_def->transitions.begin(); iter != view_def->transitions.end(); iter++) {
-        TransitionDef& def = *iter;
-        bool match = true;
-        for (auto dir_iter = def.dirs.begin(); dir_iter != def.dirs.end(); dir_iter++) {
-            Point neighbour_pos;
-            get_neighbour(tile_pos, *dir_iter, &neighbour_pos);
-            if (!game->level.contains(neighbour_pos)) {
-                match = false;
-                break;
-            }
-            TileViewDef::pointer neighbour_def = view->level_view.tile_views[neighbour_pos].view_def;
-            if (!neighbour_def) {
-                match = false;
-                break;
-            }
-            if (def.type_names.count(neighbour_def->base_name) == 0) {
-                match = false;
-                break;
-            }
-        }
-
-        if (match && def.images.size() > 0) {
-            int r = rand() % def.images.size();
-            tile_view.transitions.push_back(def.images[r].image);
-        }
-    }
-}
-
-
-void TilePainter::paint_roads(const Point& tile_pos) {
-    TileView& tile_view = view->level_view.tile_views[tile_pos];
-
-    tile_view.roads.clear();
-    TileViewDef::pointer view_def = tile_view.view_def;
-    if (!view_def)
-        return;
-    Tile& tile = game->level.tiles[tile_pos];
-    if (!tile.has_property(Road))
+    Script *script = tile_view.view_def->script.get();
+    if (!script)
         return;
 
-    for (unsigned int dir = 0; dir < 6; dir++) {
-        Point neighbour;
-        get_neighbour(tile_pos, dir, &neighbour);
-        if (!game->level.contains(neighbour))
+    // The properties order for a tile paint script is:
+    //   - Variables
+    //   - Tile view
+    //   - Tile view def
+    //   - Tile
+    //   - Tile type
+    PaintExecution execution(&resources->scripts, resources, &tile_view.tile_paint);
+    //execution.add_properties(&tile_view.properties);
+    //execution.add_properties(&tile_view.view_def->properties);
+    //execution.add_properties(&tile.properties);
+    if (tile.type)
+        execution.add_properties(&tile.type->properties);
+
+    // Initial variables set:
+    //   - tile_type
+    //   - neighbourX_type where neighbour in direction X exists
+    //   - tile_variation
+
+    execution.variables.set<Atom>(Atom("tile_type"), tile.type->name);
+
+    for (int dir = 0; dir < 6; dir++) {
+        Point neighbour_pos;
+        get_neighbour(tile_pos, dir, &neighbour_pos);
+        if (!game->level.contains(neighbour_pos))
             continue;
 
-        Tile& neighbour_tile = game->level.tiles[neighbour];
-        if (!neighbour_tile.has_property(Road))
+        Tile& neighbour = game->level.tiles[neighbour_pos];
+        if (!neighbour.type)
             continue;
 
-        if (view_def->roads.size() > dir)
-            tile_view.roads.push_back(view_def->roads[dir].image);
+        std::ostringstream ss;
+        ss << boost::format("neighbour%d_type") % dir;
+        execution.variables.set<Atom>(Atom(ss.str()), neighbour.type->name);
     }
+
+    execution.variables.set<int>(Atom("tile_variation"), tile_view.variation);
+
+    try {
+        execution.run(script);
+    } catch (ScriptError& err) {
+        BOOST_LOG_TRIVIAL(error) << boost::format("Error in script %s: %s") % script->name % err.what();
+        ++tile_script_error_counter;
+    }
+
+    ++tile_paint_counter;
 }
 
-void TilePainter::paint_features(const Point& tile_pos) {
-    TileView& tile_view = view->level_view.tile_views[tile_pos];
-    tile_view.feature = NULL;
-    TileViewDef::pointer view_def = tile_view.view_def;
-    if (!view_def)
+
+void TilePainter::repaint_transition(TileView& tile_view, const Tile& tile, const Point tile_pos) {
+    tile_view.transition_paint.clear();
+    if (!tile_view.view_def)
         return;
 
-    for (auto iter = view_def->features.begin(); iter != view_def->features.end(); iter++) {
-        tile_view.feature = choose_image(iter->images, tile_view.variation);
-        tile_view.feature_x = iter->centre_x;
-        tile_view.feature_y = iter->centre_y;
+    Script *script = tile_view.view_def->transition_script.get();
+    if (!script)
+        return;
+
+    // The properties order for a transition paint script is:
+    //   - Variables
+    //   - Tile view
+    //   - Tile view def
+    //   - Tile
+    //   - Tile type
+    TransitionPaintExecution execution(&resources->scripts, resources, &tile_view.transition_paint, game, view, tile_pos);
+    //execution.add_properties(&tile_view.properties);
+    //execution.add_properties(&tile_view.view_def->properties);
+    //execution.add_properties(&tile.properties);
+    if (tile.type)
+        execution.add_properties(&tile.type->properties);
+
+    // Initial variables set:
+    //   - tile_type
+    //   - tile_variation
+
+    execution.variables.set<Atom>(Atom("tile_type"), tile.type->name);
+
+    execution.variables.set<int>(Atom("tile_variation"), tile_view.variation);
+
+    try {
+        execution.run(script);
+    } catch (ScriptError& err) {
+        BOOST_LOG_TRIVIAL(error) << boost::format("Error in script %s: %s") % script->name % err.what();
+        ++transition_script_error_counter;
     }
+
+    ++transition_paint_counter;
+}
+
+
+void TilePainter::repaint_feature(TileView& tile_view, const Tile& tile, const Point tile_pos) {
+    tile_view.feature_paint.clear();
+    if (!tile_view.feature_view_def)
+        return;
+
+    Script *script = tile_view.feature_view_def->script.get();
+    if (!script)
+        return;
+
+    // The properties order for a feature paint script is:
+    //   - Variables
+    //   - Tile view
+    //   - Tile view def
+    //   - Tile
+    //   - Tile type
+    PaintExecution execution(&resources->scripts, resources, &tile_view.feature_paint);
+    //execution.add_properties(&tile_view.properties);
+    //execution.add_properties(&tile_view.view_def->properties);
+    //execution.add_properties(&tile.properties);
+    if (tile.type)
+        execution.add_properties(&tile.type->properties);
+
+    // Initial variables set:
+    //   - tile_type
+    //   - feature_type
+    //   - tile_variation
+    //   - neighbourX_road where neighbour in direction X exists
+
+    execution.variables.set<Atom>(Atom("tile_type"), tile.type->name);
+    execution.variables.set<Atom>(Atom("feature_type"), tile.feature_type->name);
+    execution.variables.set<int>(Atom("tile_variation"), tile_view.variation);
+
+    for (int dir = 0; dir < 6; dir++) {
+        Point neighbour_pos;
+        get_neighbour(tile_pos, dir, &neighbour_pos);
+        if (!game->level.contains(neighbour_pos))
+            continue;
+
+        Tile& neighbour = game->level.tiles[neighbour_pos];
+        if (!neighbour.type)
+            continue;
+
+        std::ostringstream ss;
+        ss << boost::format("neighbour%d_road") % dir;
+        execution.variables.set<bool>(Atom(ss.str()), neighbour.has_property(Road));
+    }
+
+    try {
+        execution.run(script);
+    } catch (ScriptError& err) {
+        BOOST_LOG_TRIVIAL(error) << boost::format("Error in script %s: %s") % script->name % err.what();
+        ++feature_script_error_counter;
+    }
+
+    ++feature_paint_counter;
 }

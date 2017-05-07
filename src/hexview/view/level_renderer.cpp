@@ -30,44 +30,20 @@ void LevelRenderer::clear(int x, int y, int width, int height) {
 
 void LevelRenderer::render_tile(int x, int y, Point tile_pos) {
     TileView& tile_view = view->level_view.tile_views[tile_pos];
-    TileViewDef::pointer def = tile_view.view_def;
-    if (!def)
-        return;
-
-    Image *ground = choose_image(def->animation.images, tile_view.variation);
-    if (ground != NULL) {
-        graphics->blit(ground, x - ground->width / 2, y - ground->height / 2, SDL_BLENDMODE_BLEND);
-    }
+    Paint& paint = tile_view.tile_paint;
+    paint.render(x, y, view->phase + tile_view.variation, graphics);
 }
 
 void LevelRenderer::render_tile_transitions(int x, int y, Point tile_pos) {
     TileView& tile_view = view->level_view.tile_views[tile_pos];
-
-    for (auto iter = tile_view.transitions.begin(); iter != tile_view.transitions.end(); iter++) {
-        Image *trans = *iter;
-        if (trans != NULL) {
-            int trans_x = x - trans->width / 2;
-            int trans_y = y - trans->height / 2 - 6;
-            graphics->blit(trans, trans_x, trans_y, SDL_BLENDMODE_BLEND);
-        }
-    }
+    Paint& paint = tile_view.transition_paint;
+    paint.render(x, y, view->phase + tile_view.variation, graphics);
 }
 
 void LevelRenderer::render_features(int x, int y, Point tile_pos) {
     TileView& tile_view = view->level_view.tile_views[tile_pos];
-
-    if (tile_view.feature != NULL) {
-        int feature_x = x - tile_view.feature_x;
-        int feature_y = y - tile_view.feature_y;
-        graphics->blit(tile_view.feature, feature_x, feature_y, SDL_BLENDMODE_BLEND);
-    }
-
-    for (auto iter = tile_view.roads.begin(); iter != tile_view.roads.end(); iter++) {
-        Image *road = *iter;
-        if (road != NULL) {
-            graphics->blit(road, x - road->width / 2, y - road->height / 2, SDL_BLENDMODE_BLEND);
-        }
-    }
+    Paint& paint = tile_view.feature_paint;
+    paint.render(x, y, view->phase + tile_view.variation, graphics);
 }
 
 #define TILE_WIDTH 48

@@ -13,6 +13,7 @@
 
 #include "hexview/resources/resource_loader.h"
 #include "hexview/resources/resource_messages.h"
+#include "hexview/view/tile_painter.h"
 #include "hexview/view/unit_painter.h"
 #include "hexview/view/unit_renderer.h"
 #include "hexview/view/view.h"
@@ -33,11 +34,14 @@ static std::string posture_names[] = {
     "Dying"
 };
 
+
 class TestWindow: public UiWindow {
 public:
-    TestWindow(UiLoop *loop, Graphics *graphics, Resources *resources, UnitPainter *unit_painter, UnitRenderer *unit_renderer, UnitViewDef::pointer initial_view_def):
+    TestWindow(UiLoop *loop, Graphics *graphics, Resources *resources, Game *game,
+            TilePainter *tile_painter, UnitPainter *unit_painter, UnitRenderer *unit_renderer, UnitViewDef::pointer initial_view_def):
             UiWindow(0, 0, 0, 0, WindowIsVisible|WindowIsActive|WindowWantsKeyboardEvents),
-            loop(loop), graphics(graphics), resources(resources),
+            loop(loop), graphics(graphics), resources(resources), game(game),
+            tile_painter(tile_painter),
             unit_painter(unit_painter), unit_renderer(unit_renderer),
             last_update(0) {
         set_view_def(initial_view_def);
@@ -86,8 +90,10 @@ public:
             background_name = "grass";
         }
 
-        TileViewDef::pointer tile_view_def = resources->tile_view_defs.get(background_name);
-        background = tile_view_def->animation.images[0].image;
+        tile_view.view_def = resources->get_tile_view_def(background_name);
+        tile.type = game->tile_types.get(background_name);
+
+        tile_painter->repaint_tile(tile_view, tile, Point(0, 0));
     }
 
     void draw(const UiContext& context) {
@@ -116,7 +122,7 @@ public:
                 Unit unit;
                 unit_painter->repaint(unit_views[i], unit);
 
-                graphics->blit(background, cx - background->width / 2, cy - background->height / 2, SDL_BLENDMODE_BLEND, 255);
+                tile_view.tile_paint.render(cx, cy, 0, graphics);
 
                 unit_renderer->draw_unit(cx, cy, unit_views[i]);
             }
@@ -142,10 +148,13 @@ private:
     UiLoop *loop;
     Graphics *graphics;
     Resources *resources;
+    Game *game;
+    TilePainter *tile_painter;
     UnitPainter *unit_painter;
     UnitRenderer *unit_renderer;
     UnitViewDef::pointer view_def;
-    Image *background;
+    Tile tile;
+    TileView tile_view;
     UnitView unit_views[5];
     unsigned int last_update;
 };
@@ -161,9 +170,13 @@ void run() {
     graphics.start("Unit rendering test", 800, 600, false);
 
     Game game;
+    game.create_tile_type(TileType("grass"));
+    game.create_tile_type(TileType("water"));
 
     Resources resources;
     load_resources(&resources, &graphics);
+
+    TilePainter tile_painter(&game, NULL, &resources);
 
     UnitPainter unit_painter(&game, NULL, &resources);
     UnitRenderer unit_renderer(&graphics, &resources);
@@ -174,7 +187,7 @@ void run() {
     UnitViewDef::pointer initial_view_def = resources.unit_view_defs.begin()->second;
 
     UiLoop loop(&graphics, 25);
-    TestWindow *test_window = new TestWindow(&loop, &graphics, &resources, &unit_painter, &unit_renderer, initial_view_def);
+    TestWindow *test_window = new TestWindow(&loop, &graphics, &resources, &game, &tile_painter, &unit_painter, &unit_renderer, initial_view_def);
     loop.set_root_window(test_window);
     loop.run();
 

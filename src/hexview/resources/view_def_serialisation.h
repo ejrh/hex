@@ -17,32 +17,22 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, FactionViewDef& d) {
 }
 
 inline Serialiser& operator<<(Serialiser& serialiser, const TileViewDef& d) {
-    serialiser << d.name << d.base_name << d.r << d.g << d.b;
+    serialiser << d.name << d.r << d.g << d.b;
     return serialiser;
 }
 
 inline Deserialiser& operator>>(Deserialiser& deserialiser, TileViewDef& d) {
-    deserialiser >> d.name >> d.base_name >> d.r >> d.g >> d.b;
+    deserialiser >> d.name >> d.r >> d.g >> d.b;
     return deserialiser;
 }
 
-inline Serialiser& operator<<(Serialiser& serialiser, const TransitionDef& d) {
-    serialiser << d.dirs << d.type_names << d.images;
+inline Serialiser& operator<<(Serialiser& serialiser, const FeatureViewDef& d) {
+    serialiser << d.name;
     return serialiser;
 }
 
-inline Deserialiser& operator>>(Deserialiser& deserialiser, TransitionDef& d) {
-    deserialiser >> d.dirs >> d.type_names >> d.images;
-    return deserialiser;
-}
-
-inline Serialiser& operator<<(Serialiser& serialiser, const FeatureDef& d) {
-    serialiser << d.centre_x << d.centre_y << d.images;
-    return serialiser;
-}
-
-inline Deserialiser& operator>>(Deserialiser& deserialiser, FeatureDef& d) {
-    deserialiser >> d.centre_x >> d.centre_y >> d.images;
+inline Deserialiser& operator>>(Deserialiser& deserialiser, FeatureViewDef& d) {
+    deserialiser >> d.name;
     return deserialiser;
 }
 

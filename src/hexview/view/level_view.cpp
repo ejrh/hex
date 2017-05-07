@@ -24,6 +24,11 @@ LevelView::~LevelView() {
 
 void LevelView::resize(int width, int height) {
     tile_views.resize(width, height);
+    for (int i = 0; i < tile_views.height; i++) {
+        for (int j = 0; j < tile_views.width; j++) {
+            tile_views[i][j].variation = rand();
+        }
+    }
 
     visibility.resize(width, height);
     discovered.resize(width, height);

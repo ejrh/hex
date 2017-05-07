@@ -365,6 +365,15 @@ Image *ILBReader::create_image(char *pixel_data, ImageData &image) {
         fix_transparency(pixel_data, image, new_surface);
     }
 
+    /*
+    std::ostringstream oss;
+    oss << boost::format("%d_%d_%s.png") % image.id % image.sub_id % image.name;
+    if (IMG_SavePNG(new_surface, oss.str().c_str()) != 0) {
+        throw Error() << "SDL Image error:" << SDL_GetError();
+    }
+    BOOST_LOG_TRIVIAL(debug) << "Saved " << oss;
+    */
+
     SDL_Texture *texture = SDL_CreateTextureFromSurface(graphics->renderer, new_surface);
     SDL_FreeSurface(new_surface);
 

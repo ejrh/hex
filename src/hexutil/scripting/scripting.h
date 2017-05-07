@@ -51,6 +51,7 @@ public:
     const Datum& get(const Atom& name) const;
     const Datum get_argument(const Term *term, int position);
     const Term *get_subterm(const Term *term, int position);
+    std::vector<int> get_as_intvector(const Term *term, int position);
 
     template<typename T>
     const T& get_as(const Atom& name) const {

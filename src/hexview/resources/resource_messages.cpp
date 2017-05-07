@@ -5,6 +5,7 @@
 #include "hexview/resources/resource_messages.h"
 
 
+#include "hexview/resources/message_types.h"
 #define MESSAGE_TEMPLATE_NAME Resource
 #define MESSAGE_TEMPLATE_INCLUDE_FILE "hexview/resources/message_types.h"
 #define MESSAGE_TEMPLATE_START_ID 2000

@@ -41,12 +41,18 @@ void GameUpdater::apply_update(Message *update) {
             auto upd = dynamic_cast<SetLevelDataMessage *>(update);
             Point offset = upd->data1;
             CompressableStringVector& tile_data = upd->data2;
-            game->set_level_data(offset, tile_data.data);
+            CompressableStringVector& feature_data = upd->data3;
+            game->set_level_data(offset, tile_data.data, feature_data.data);
         } break;
 
         case CreateTileType: {
             auto upd = dynamic_cast<CreateTileTypeMessage *>(update);
             game->create_tile_type(upd->data);
+        } break;
+
+        case CreateFeatureType: {
+            auto upd = dynamic_cast<CreateFeatureTypeMessage *>(update);
+            game->create_feature_type(upd->data);
         } break;
 
         case CreateUnitType: {

@@ -36,21 +36,21 @@ public:
 
 class TileView {
 public:
-    TileView(): view_def(), highlighted(false), path_dir(-1), variation(0), feature(NULL), structure_view() { }
+    TileView(): view_def(), feature_view_def(), highlighted(false), path_dir(-1), variation(0), structure_view() { }
     ~TileView() { }
 
     static const int PATH_END = 8;
 
 public:
     TileViewDef::pointer view_def;
+    FeatureViewDef::pointer feature_view_def;
     bool highlighted;
     int path_dir;
     unsigned int variation;
-    std::vector<Image *> transitions;
-    std::vector<Image *> roads;
-    Image *feature;
-    int feature_x, feature_y;
     StructureView::pointer structure_view;
+    Paint tile_paint;
+    Paint transition_paint;
+    Paint feature_paint;
 };
 
 enum UnitPosture {

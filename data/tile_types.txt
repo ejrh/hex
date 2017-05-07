@@ -1,88 +1,42 @@
 # CreateTileType(name, properties)
+# CreateFeatureType(name, properties)
+
 CreateTileType("outside", {})
 
-CreateTileType("water", {"Swimmable", "Sailable", "Flyable"})
+CreateTileType("water", {})
+CreateTileType("grass", {"SpawnGroup": 4, "SpawnChance": 10})
+CreateTileType("desert", {"SpawnGroup": 3, "SpawnChance": 10})
+CreateTileType("snow", {})
+CreateTileType("steppe", {})
+CreateTileType("wasteland", {})
 
-CreateTileType("grass", {"Walkable", "Flyable", "Roadable", "SpawnGroup": 4, "SpawnChance": 10})
-CreateTileType("grass_road", {"Walkable", "Flyable", "Road"})
-CreateTileType("grass_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest", "SpawnGroup": 1, "SpawnChance": 10})
-CreateTileType("grass_dead_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest"})
-CreateTileType("grass_structure", {"Walkable", "Flyable", "Road"})
+CreateFeatureType("outside", {})
+CreateFeatureType("water", {"Swimmable", "Sailable", "Flyable"})
+CreateFeatureType("plains", {"Walkable", "Flyable", "Roadable"})
+CreateFeatureType("road", {"Walkable", "Flyable", "Road"})
+CreateFeatureType("structure", {"Walkable", "Flyable", "Road"})
+CreateFeatureType("water_structure", {"Walkable", "Flyable"})
 
-CreateTileType("grass_hill0", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("grass_hill1", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("grass_hill2", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("grass_hill3", {"Walkable", "SlowWalking", "Flyable"})
+CreateFeatureType("forest", {"Walkable", "Flyable", "SlowWalking", "Roadable", "Forest", "SpawnGroup": 1, "SpawnChance": 10})
+CreateFeatureType("dead_forest", {"Walkable", "Flyable", "SlowWalking", "Roadable", "Forest"})
 
-CreateTileType("grass_mountain0", {"Climbable", "Flyable", "SlowFlying"})
-CreateTileType("grass_mountain1", {"Climbable", "Flyable"})
-CreateTileType("grass_mountain2", {"Climbable", "Flyable", "SlowFlying"})
-CreateTileType("grass_mountain3", {})
+CreateFeatureType("bridge0", {"Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
+CreateFeatureType("bridge1", {"Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
+CreateFeatureType("bridge2", {"Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
 
-CreateTileType("desert", {"Walkable", "Flyable", "Roadable", "SpawnGroup": 3, "SpawnChance": 10})
-CreateTileType("desert_road", {"Walkable", "Flyable", "Road"})
-CreateTileType("desert_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest", "SpawnGroup": 5, "SpawnChance": 10})
-CreateTileType("desert_dead_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest"})
-CreateTileType("desert_structure", {"Walkable", "Flyable", "Road"})
-
-CreateTileType("desert_hill0", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("desert_hill1", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("desert_hill2", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("desert_hill3", {"Walkable", "SlowWalking", "Flyable"})
-
-CreateTileType("desert_mountain0", {"Climbable", "Flyable", "SlowFlying"})
-CreateTileType("desert_mountain1", {"Climbable", "Flyable"})
-CreateTileType("desert_mountain2", {"Climbable", "Flyable", "SlowFlying"})
-CreateTileType("desert_mountain3", {})
-
-CreateTileType("snow", {"Walkable", "Flyable", "Roadable"})
-CreateTileType("snow_road", {"Walkable", "Flyable", "Road"})
-CreateTileType("snow_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest"})
-CreateTileType("snow_dead_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest"})
-CreateTileType("snow_structure", {"Walkable", "Flyable", "Road"})
-
-CreateTileType("snow_hill0", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("snow_hill1", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("snow_hill2", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("snow_hill3", {"Walkable", "SlowWalking", "Flyable"})
-
-CreateTileType("snow_mountain0", {"Climbable", "Flyable", "SlowFlying"})
-CreateTileType("snow_mountain1", {"Climbable", "Flyable"})
-CreateTileType("snow_mountain2", {"Climbable", "Flyable", "SlowFlying"})
-CreateTileType("snow_mountain3", {})
-
-CreateTileType("steppe", {"Walkable", "Flyable", "Roadable"})
-CreateTileType("steppe_road", {"Walkable", "Flyable", "Road"})
-CreateTileType("steppe_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest"})
-CreateTileType("steppe_dead_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest"})
-CreateTileType("steppe_structure", {"Walkable", "Flyable", "Road"})
-
-CreateTileType("steppe_hill0", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("steppe_hill1", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("steppe_hill2", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("steppe_hill3", {"Walkable", "SlowWalking", "Flyable"})
-
-CreateTileType("steppe_mountain0", {"Climbable", "Flyable", "SlowFlying"})
-CreateTileType("steppe_mountain1", {"Climbable", "Flyable"})
-CreateTileType("steppe_mountain2", {"Climbable", "Flyable", "SlowFlying"})
-CreateTileType("steppe_mountain3", {})
-
-CreateTileType("wasteland", {"Walkable", "Flyable", "Roadable"})
-CreateTileType("wasteland_road", {"Walkable", "Flyable", "Road"})
-CreateTileType("wasteland_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest", "SpawnGroup": 2, "SpawnChance": 10})
-CreateTileType("wasteland_dead_forest", {"Walkable", "SlowWalking", "Flyable", "Roadable", "Forest"})
-CreateTileType("wasteland_structure", {"Walkable", "Flyable", "Road"})
-
-CreateTileType("wasteland_hill0", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("wasteland_hill1", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("wasteland_hill2", {"Walkable", "SlowWalking", "Flyable"})
-CreateTileType("wasteland_hill3", {"Walkable", "SlowWalking", "Flyable"})
-
-CreateTileType("wasteland_mountain0", {"Climbable", "Flyable", "SlowFlying"})
-CreateTileType("wasteland_mountain1", {"Climbable", "Flyable"})
-CreateTileType("wasteland_mountain2", {"Climbable", "Flyable", "SlowFlying"})
-CreateTileType("wasteland_mountain3", {})
-
-CreateTileType("water_bridge0", {"Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
-CreateTileType("water_bridge1", {"Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
-CreateTileType("water_bridge2", {"Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
+# TODO - These features take up more than one tile; represent their shape somehow
+# hill0 is the invisible hill used for the other parts of a multi-tile hill
+# hill1 is a single-tile hill
+# hill2 and hill3 are diagonal two-tile hills
+CreateFeatureType("hill0", {"Walkable", "SlowWalking"})
+CreateFeatureType("hill1", {"Walkable", "SlowWalking"})
+CreateFeatureType("hill2", {"Walkable", "SlowWalking"})
+CreateFeatureType("hill3", {"Walkable", "SlowWalking"})
+# mountain0 is the invisible mountain used for the other parts of a multi-tile mountain
+# mountain1 is a single-tile mountain
+# mountain2 is a 2x2 mountain
+# mountain3 is a 3x3 mountain
+CreateFeatureType("mountain0", {"Climbable"})
+CreateFeatureType("mountain1", {"Climbable", "SlowFlying"})
+CreateFeatureType("mountain2", {"Climbable", "SlowFlying"})
+CreateFeatureType("mountain3", {})

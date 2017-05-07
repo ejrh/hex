@@ -16,10 +16,11 @@
 MSG_TYPE(ClearGame, Message)
 MSG_TYPE(CreateUnitType, WM(UnitType))
 MSG_TYPE(CreateTileType, WM(TileType))
+MSG_TYPE(CreateFeatureType, WM(FeatureType))
 MSG_TYPE(CreateStructureType, WM(StructureType))
 
 MSG_TYPE(SetLevel, WM2(int, int))
-MSG_TYPE(SetLevelData, WM2(Point, CompressableStringVector))
+MSG_TYPE(SetLevelData, WM3(Point, CompressableStringVector, CompressableStringVector))
 MSG_TYPE(CreateFaction, WM3(int, std::string, std::string))
 
 MSG_TYPE(CreateStack, WM3(int, Point, int))

@@ -29,6 +29,18 @@ void ResourceLoader::handle_message(Message *msg) {
             load_image(upd->data);
         } break;
 
+        case ImageLibraries: {
+            if (image_loader == NULL) {
+                if (!warned_image_loader) {
+                    BOOST_LOG_TRIVIAL(error) << "Image loader is not defined";
+                    warned_image_loader = true;
+                }
+                return;
+            }
+            auto upd = dynamic_cast<ImageLibrariesMessage *>(msg);
+            load_image_libraries(upd->data);
+        } break;
+
         case ImageLibrary: {
             if (image_loader == NULL) {
                 if (!warned_image_loader) {
@@ -68,25 +80,24 @@ void ResourceLoader::handle_message(Message *msg) {
             last_tile_view_def = resources->create_tile_view(upd->data);
         } break;
 
-        case TileAnimation: {
-            auto upd = dynamic_cast<TileAnimationMessage *>(msg);
-            last_tile_view_def->animation.bpm = upd->data1;
-            last_tile_view_def->animation.images = upd->data2;
+        case TilePaint: {
+            auto upd = dynamic_cast<TilePaintMessage *>(msg);
+            last_tile_view_def->script = define_script("tile/" + last_tile_view_def->name, upd->data);
         } break;
 
-        case TileTransition: {
-            auto upd = dynamic_cast<TileTransitionMessage *>(msg);
-            last_tile_view_def->transitions.push_back(upd->data);
+        case TransitionPaint: {
+            auto upd = dynamic_cast<TransitionPaintMessage *>(msg);
+            last_tile_view_def->transition_script = define_script("transition/" + last_tile_view_def->name, upd->data);
         } break;
 
-        case TileRoads: {
-            auto upd = dynamic_cast<TileRoadsMessage *>(msg);
-            last_tile_view_def->roads = upd->data;
+        case CreateFeatureView: {
+            auto upd = dynamic_cast<CreateFeatureViewMessage *>(msg);
+            last_feature_view_def = resources->create_feature_view(upd->data);
         } break;
 
-        case TileFeature: {
-            auto upd = dynamic_cast<TileFeatureMessage *>(msg);
-            last_tile_view_def->features.push_back(upd->data);
+        case FeaturePaint: {
+            auto upd = dynamic_cast<FeaturePaintMessage *>(msg);
+            last_feature_view_def->script = define_script("feature/" + last_feature_view_def->name, upd->data);
         } break;
 
         case CreateUnitView: {
@@ -104,7 +115,7 @@ void ResourceLoader::handle_message(Message *msg) {
 
         case UnitPaint: {
             auto upd = dynamic_cast<UnitPaintMessage *>(msg);
-            last_unit_view_def->script = define_script("<" + last_unit_view_def->name + ">", upd->data);
+            last_unit_view_def->script = define_script("unit/" + last_unit_view_def->name, upd->data);
         } break;
 
         case CreateStructureView: {
@@ -112,17 +123,9 @@ void ResourceLoader::handle_message(Message *msg) {
             last_structure_view_def = resources->create_structure_view(upd->data);
         } break;
 
-        case StructureAnimation: {
-            auto upd = dynamic_cast<StructureAnimationMessage *>(msg);
-            last_structure_view_def->centre_x = upd->data1;
-            last_structure_view_def->centre_y = upd->data2;
-            last_structure_view_def->animation.bpm = upd->data3;
-            last_structure_view_def->animation.images = upd->data4;
-        } break;
-
         case StructurePaint: {
             auto upd = dynamic_cast<StructurePaintMessage *>(msg);
-            last_structure_view_def->script = define_script("<" + last_structure_view_def->name + ">", upd->data);
+            last_structure_view_def->script = define_script("structure/" + last_structure_view_def->name, upd->data);
         } break;
 
         case LoadSong: {
@@ -163,6 +166,17 @@ void ResourceLoader::load_image(const std::string& filename) {
     image_loader->load(relative_filename);
 }
 
+void ResourceLoader::load_image_libraries(const std::string& filename) {
+    boost::filesystem::path path = boost::filesystem::path(get_current_file()).parent_path();
+    path /= boost::filesystem::path(filename);
+    if (!boost::filesystem::exists(path)) {
+        BOOST_LOG_TRIVIAL(warning) << "Image libraries base does not exist: " << filename;
+    }
+    std::string relative_filename = path.string();
+
+    image_loader->load_libraries(relative_filename);
+}
+
 void ResourceLoader::load_image_library(Atom name, const std::string& filename) {
     boost::filesystem::path path = boost::filesystem::path(get_current_file()).parent_path();
     path /= boost::filesystem::path(filename);
@@ -194,7 +208,7 @@ void ResourceLoader::load_sound(const std::string& filename) {
 
 Script::pointer ResourceLoader::define_script(const std::string& name, Term *instruction) {
     Script::pointer script = boost::make_shared<Script>(name, std::unique_ptr<Term>(instruction));
-    BOOST_LOG_TRIVIAL(info) << "Compiled script: " << name;
+    BOOST_LOG_TRIVIAL(info) << "Added script: " << name;
     resources->scripts.put_and_warn(name, script);
     return script;
 }

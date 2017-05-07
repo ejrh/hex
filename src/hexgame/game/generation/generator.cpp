@@ -22,11 +22,11 @@ int get_random_faction(IntMap<Faction>& factions) {
 }
 
 void create_structure(MessageReceiver& updater, Tile& tile, Point tile_pos, std::string structure_type, int faction) {
-    if (structure_type != "water_node") {
-        CompressableStringVector data;
-        data.push_back(type(tile) + "_structure");
-        updater.receive(create_message(SetLevelData, tile_pos, data));
-    }
+    CompressableStringVector type_data;
+    type_data.push_back(tile.type->name);
+    CompressableStringVector feature_data;
+    feature_data.push_back(tile.type->name == "water" ? "water_structure" : "structure");
+    updater.receive(create_message(SetLevelData, tile_pos, type_data, feature_data));
 
     updater.receive(create_message(CreateStructure, tile_pos, structure_type, faction));
 }
@@ -74,13 +74,14 @@ void Generator::create_level(MessageReceiver& updater) {
     updater.receive(create_message(SetLevel, game->level.width, game->level.height));
     for (int i = 0; i < game->level.height; i++) {
         Point origin(0, i);
-        CompressableStringVector data;
+        CompressableStringVector type_data;
+        CompressableStringVector feature_data;
         for (int j = 0; j < game->level.width; j++) {
             Tile& tile = game->level.tiles[i][j];
-            TileType::pointer tile_type = tile.type;
-            data.push_back(tile.type->name);
+            type_data.push_back(tile.type->name);
+            feature_data.push_back(tile.feature_type->name);
         }
-        updater.receive(create_message(SetLevelData, origin, data));
+        updater.receive(create_message(SetLevelData, origin, type_data, feature_data));
     }
 }
 
@@ -116,7 +117,7 @@ void Generator::create_unit_stacks(MessageReceiver& updater) {
                 if (attempts++ > 100) {
                     goto max_attempts;
                 }
-            } while (!movement_model.admits(*item->second, *tile.type));
+            } while (!movement_model.admits(*item->second, tile));
 
             if (item->second->has_property(Transport)) {
                 if (has_transport) {
@@ -146,7 +147,7 @@ void Generator::create_towers(MessageReceiver& updater) {
         for (int j = 0; j < game->level.width; j++) {
             Point tile_pos(j, i);
             Tile& tile = game->level.tiles[tile_pos];
-            if (!tile.type->has_property(Roadable))
+            if (!tile.has_property(Roadable))
                 continue;
             Point neighbour_pos[6];
             get_neighbours(tile_pos, neighbour_pos);
@@ -175,7 +176,7 @@ void Generator::create_mines(MessageReceiver& updater) {
         for (int j = 0; j < game->level.width; j++) {
             Point tile_pos(j, i);
             Tile& tile = game->level.tiles[tile_pos];
-            if (subtype(tile) == "" && tile.has_property(Roadable) && rand() % 40 == 0 && !tile.structure) {
+            if (tile.feature_type->name == "plains" && tile.has_property(Roadable) && rand() % 40 == 0 && !tile.structure) {
                 int faction = get_random_faction(game->factions);
 
                 create_structure(updater, tile, tile_pos, "mine", faction);
@@ -190,7 +191,7 @@ void Generator::create_farms(MessageReceiver& updater) {
         for (int j = 0; j < game->level.width; j++) {
             Point tile_pos(j, i);
             Tile& tile = game->level.tiles[tile_pos];
-            if (subtype(tile) == "" && tile.has_property(Roadable) && rand() % 40 == 0 && !tile.structure) {
+            if (tile.feature_type->name == "plains" && tile.has_property(Roadable) && rand() % 40 == 0 && !tile.structure) {
                 int faction = get_random_faction(game->factions);
 
                 create_structure(updater, tile, tile_pos, "farm", faction);
@@ -206,7 +207,7 @@ void Generator::create_nodes(MessageReceiver& updater) {
             Point tile_pos(j, i);
             Tile& tile = game->level.tiles[tile_pos];
             int type_num = rand() % 7;
-            if (subtype(tile) == "" && tile.has_property((type_num == 4) ? Swimmable : Roadable) && rand() % 20 == 0 && !tile.structure) {
+            if ((tile.feature_type->name == "plains" || tile.feature_type->name == "water") && tile.has_property((type_num == 4) ? Swimmable : Roadable) && rand() % 20 == 0 && !tile.structure) {
                 int faction = get_random_faction(game->factions);
 
                 std::string type;

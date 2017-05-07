@@ -1,10 +1,13 @@
 #ifndef PAINT_H
 #define PAINT_H
 
+#include "hexutil/basics/point.h"
 #include "hexutil/scripting/scripting.h"
 
 #include "hexav/graphics/graphics.h"
 
+class Game;
+class GameView;
 class Resources;
 
 #define FRAME_RATE_BASE 1048576
@@ -60,6 +63,7 @@ public:
         paint_frame_offset_atom = AtomRegistry::atom("paint_frame_offset");
     }
 
+    void paint_frame(int frame_num);
     void paint_frame(Atom image_libary, int frame_num, int offset_x, int offset_y, int blend_alpha, int blend_addition);
     void paint_animation(Atom image_libary, int frame_rate, const std::vector<int>& frame_nums, int offset_x, int offset_y, int blend_alpha, int blend_addition);
 
@@ -77,6 +81,25 @@ public:
     Atom paint_frame_offset_atom;
 };
 
+class TransitionPaintExecution: public PaintExecution {
+public:
+    TransitionPaintExecution(StrMap<Script> *scripts, Resources *resources, Paint *paint,
+            Game *game, GameView *view, Point tile_pos):
+        PaintExecution(scripts, resources, paint),
+        game(game), view(view),
+        tile_pos(tile_pos) {
+    }
+
+    bool apply_transition(const std::vector<int>& dir_nums, const std::vector<int>& frame_nums);
+
+private:
+    Game *game;
+    GameView *view;
+    Point tile_pos;
+    boost::regex pattern_re;
+
+    friend class TransitionMatchInterpreter;
+};
 
 void register_paint_interpreters();
 

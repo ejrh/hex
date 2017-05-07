@@ -95,5 +95,15 @@ const Term *Execution::get_subterm(const Term *term, int position) {
     return script_term->subterms[position].get();
 }
 
+std::vector<int> Execution::get_as_intvector(const Term *term, int position) {
+    const CompoundTerm *argterm = dynamic_cast<const CompoundTerm *>(get_subterm(term, position));
+    std::vector<int> result;
+    for (int i = 0; i < argterm->subterms.size(); i++) {
+        int value = get_argument(argterm, i);
+        result.push_back(value);
+    }
+    return result;
+}
+
 
 std::map<Atom, std::unique_ptr<Interpreter> > InterpreterRegistry::interpreters;

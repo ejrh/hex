@@ -80,14 +80,14 @@ int MovementModel::cost_to(const Unit& unit, const Point& tile_pos) const {
     return INT_MAX;
 }
 
-int MovementModel::admits(const UnitType& unit_type, const TileType& tile_type) const {
-    if (unit_type.has_property(Walking) && tile_type.has_property(Walkable))
+int MovementModel::admits(const UnitType& unit_type, const Tile& tile) const {
+    if (unit_type.has_property(Walking) && tile.has_property(Walkable))
         return true;
-    else if (unit_type.has_property(Swimming) && tile_type.has_property(Swimmable))
+    else if (unit_type.has_property(Swimming) && tile.has_property(Swimmable))
         return true;
-    else if (unit_type.has_property(Sailing) && tile_type.has_property(Sailable))
+    else if (unit_type.has_property(Sailing) && tile.has_property(Sailable))
         return true;
-    if (unit_type.has_property(Flying) && tile_type.has_property(Flyable))
+    if (unit_type.has_property(Flying) && tile.has_property(Flyable))
         return true;
     return false;
 }

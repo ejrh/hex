@@ -16,19 +16,8 @@
 #include "hexgame/game/movement/movement.h"
 #include "hexgame/game/movement/pathfinding.h"
 
-std::string type(Tile& tile) {
-    std::vector<std::string> parts;
-    boost::split(parts, tile.type->name, boost::is_any_of("_"));
-    return parts[0];
-}
-
-std::string subtype(Tile& tile) {
-    std::vector<std::string> parts;
-    boost::split(parts, tile.type->name, boost::is_any_of("_"));
-    if (parts.size() > 1)
-        return parts[1];
-    else
-        return "";
+std::string feature(Tile& tile) {
+    return tile.feature_type->name;
 }
 
 void LevelGenerator::generate_level(int width, int height) {
@@ -57,6 +46,7 @@ void LevelGenerator::generate_terrain() {
             Tile& tile = level.tiles[i][j];
             if (i == 0 || i == level.height - 1 || j == 0 || j == level.width - 1) {
                 tile.type = types["outside"];
+                tile.feature_type = feature_types["outside"];
                 continue;
             }
 
@@ -71,9 +61,10 @@ void LevelGenerator::generate_terrain() {
 
             int hill_rand = rand();
 
-            if (height < generator->sea_level)
+            if (height < generator->sea_level) {
                 tile.type = types["water"];
-            else {
+                tile.feature_type = feature_types["water"];
+            } else {
                 float angle = atan2(type_noise1.value(px, py), type_noise2.value(px, py));
                 int sector = (int) ((angle + M_PI) * 5 / (2 * M_PI));
                 std::string type_name;
@@ -85,15 +76,22 @@ void LevelGenerator::generate_terrain() {
                     default: type_name = "snow"; break;
                 }
 
-                if (height > generator->mountain_level) {
-                    type_name += "_mountain1";
-                } else if (height > generator->hill_level && hill_rand % 2) {
-                    type_name += "_hill1";
-                }
-
                 tile.type = types[type_name];
                 if (!tile.type) {
                     throw Error() << boost::format("Unknown tile type: %s") % type_name;
+                }
+
+                std::string feature_type_name = "plains";
+
+                if (height > generator->mountain_level) {
+                    feature_type_name = "mountain1";
+                } else if (height > generator->hill_level && hill_rand % 2) {
+                    feature_type_name = "hill1";
+                }
+
+                tile.feature_type = feature_types[feature_type_name];
+                if (!tile.feature_type) {
+                    throw Error() << boost::format("Unknown feature type: %s") % feature_type_name;
                 }
             }
         }
@@ -106,8 +104,8 @@ void LevelGenerator::coalesce_mountains() {
         for (int j = 0; j < level.width; j++) {
             Point tile_pos(j, i);
             Tile& tile = level.tiles[tile_pos];
-            std::string tile_type = type(tile);
-            std::string tile_subtype = subtype(tile);
+
+            std::string tile_feature = feature(tile);
 
             int mountain_rand = rand();
             int hill_rand = rand();
@@ -116,7 +114,7 @@ void LevelGenerator::coalesce_mountains() {
             //       H   and   H
             //     h             h
             int left_rand = rand();
-            if (tile_subtype == "hill1") {
+            if (tile_feature == "hill1") {
                 bool left = left_rand % 2 == 0;
                 int dir = left ? 4 : 2;
                 Point neighbour_pos;
@@ -124,10 +122,10 @@ void LevelGenerator::coalesce_mountains() {
                 if (!level.contains(neighbour_pos))
                     continue;
                 Tile& neighbour = level.tiles[neighbour_pos];
-                if (subtype(neighbour) == "hill1") {
-                    tile.type = types[tile_type + (left ? "_hill2" : "_hill3")];
-                    neighbour.type = types[tile_type + "_hill0"];
-                    tile_subtype = subtype(tile);
+                if (feature(neighbour) == "hill1") {
+                    tile.feature_type = feature_types[left ? "hill2" : "hill3"];
+                    neighbour.feature_type = feature_types["hill0"];
+                    tile_feature = feature(tile);
                 }
             }
 
@@ -135,7 +133,7 @@ void LevelGenerator::coalesce_mountains() {
             //       M
             //     m   m
             //       m
-            if (tile_subtype == "mountain1") {
+            if (tile_feature == "mountain1") {
                 Point neighbour_pos[6];
                 get_neighbours(tile_pos, neighbour_pos);
                 if (!level.contains(neighbour_pos[2]) || !level.contains(neighbour_pos[3]) || !level.contains(neighbour_pos[4]))
@@ -143,14 +141,14 @@ void LevelGenerator::coalesce_mountains() {
                 Tile& neighbour2 = level.tiles[neighbour_pos[2]];
                 Tile& neighbour3 = level.tiles[neighbour_pos[3]];
                 Tile& neighbour4 = level.tiles[neighbour_pos[4]];
-                if (subtype(neighbour2) != "mountain1" || subtype(neighbour3) != "mountain1" || subtype(neighbour4) != "mountain1")
+                if (feature(neighbour2) != "mountain1" || feature(neighbour3) != "mountain1" || feature(neighbour4) != "mountain1")
                     continue;
 
-                tile.type = types[tile_type + "_mountain2"];
-                neighbour2.type = types[tile_type + "_mountain0"];
-                neighbour3.type = types[tile_type + "_mountain0"];
-                neighbour4.type = types[tile_type + "_mountain0"];
-                tile_subtype = subtype(tile);
+                tile.feature_type = feature_types["mountain2"];
+                neighbour2.feature_type = feature_types["mountain0"];
+                neighbour3.feature_type = feature_types["mountain0"];
+                neighbour4.feature_type = feature_types["mountain0"];
+                tile_feature = feature(tile);
             }
 
             // Mountains can further be coalesced:
@@ -159,7 +157,7 @@ void LevelGenerator::coalesce_mountains() {
             //      m   m   m
             //        m   m
             //          m
-            if (tile_subtype == "mountain2") {
+            if (tile_feature == "mountain2") {
                 Point neighbour_pos[6];
                 get_neighbours(tile_pos, neighbour_pos);
                 Point neighbour_pos_l[6];
@@ -175,24 +173,24 @@ void LevelGenerator::coalesce_mountains() {
                 Tile& neighbourb3 = level.tiles[neighbour_pos_b[3]];
                 Tile& neighbourb2 = level.tiles[neighbour_pos_b[2]];
                 Tile& neighbourr2 = level.tiles[neighbour_pos_r[2]];
-                if (subtype(neighbourl4) != "mountain1" || subtype(neighbourb4) != "mountain1" || subtype(neighbourb3) != "mountain1"
-                        || subtype(neighbourb2) != "mountain1" || subtype(neighbourr2) != "mountain1")
+                if (feature(neighbourl4) != "mountain1" || feature(neighbourb4) != "mountain1" || feature(neighbourb3) != "mountain1"
+                        || feature(neighbourb2) != "mountain1" || feature(neighbourr2) != "mountain1")
                     continue;
 
-                tile.type = types[tile_type + "_mountain3"];
-                neighbourl4.type = types[tile_type + "_mountain0"];
-                neighbourb4.type = types[tile_type + "_mountain0"];
-                neighbourb3.type = types[tile_type + "_mountain0"];
-                neighbourb2.type = types[tile_type + "_mountain0"];
-                neighbourr2.type = types[tile_type + "_mountain0"];
+                tile.feature_type = feature_types["mountain3"];
+                neighbourl4.feature_type = feature_types["mountain0"];
+                neighbourb4.feature_type = feature_types["mountain0"];
+                neighbourb3.feature_type = feature_types["mountain0"];
+                neighbourb2.feature_type = feature_types["mountain0"];
+                neighbourr2.feature_type = feature_types["mountain0"];
             }
 
-            if (tile_subtype == "mountain1" && mountain_rand % generator->mountain_culling) {
-                tile.type = types[tile_type];
+            if (tile_feature == "mountain1" && mountain_rand % generator->mountain_culling) {
+                tile.feature_type = feature_types["plains"];
             }
 
-            if (tile_subtype == "hill1" && hill_rand % generator->hill_culling) {
-                tile.type = types[tile_type];
+            if (tile_feature == "hill1" && hill_rand % generator->hill_culling) {
+                tile.feature_type = feature_types["plains"];
             }
         }
     }
@@ -220,6 +218,7 @@ void LevelGenerator::add_rivers() {
                 continue;
             Tile& tile = level.tiles[next_pos];
             tile.type = water_type;
+            tile.feature_type = feature_types["water"];
             start_pos = next_pos;
         }
     }
@@ -240,13 +239,11 @@ void LevelGenerator::add_forests() {
 
             Point tile_pos(j, i);
             Tile& tile = level.tiles[tile_pos];
-            std::string tile_type = type(tile);
 
             int forest_rand = rand();
-            if (forest_value > 0.0 && tile.type->name == tile_type && forest_rand % 4 != 0) {
-                std::string forest_type = tile_type + ((forest_rand % 3 == 0) ? "_dead_forest" : "_forest");
-                if (types.find(forest_type) != types.end())
-                    tile.type = types[forest_type];
+            if (forest_value > 0.0 && feature(tile) == "plains" && forest_rand % 4 != 0) {
+                std::string forest_type = (forest_rand % 3 == 0) ? "dead_forest" : "forest";
+                tile.feature_type = feature_types[forest_type];
             }
         }
     }
@@ -255,7 +252,7 @@ void LevelGenerator::add_forests() {
 void LevelGenerator::add_bridges() {
     BOOST_LOG_TRIVIAL(info) << "Adding bridges";
     TileType::pointer water_type = types["water"];
-    TileType::pointer bridge_types[] = { types["water_bridge0"], types["water_bridge1"], types["water_bridge2"] };
+    FeatureType::pointer bridge_types[] = { feature_types["bridge0"], feature_types["bridge1"], feature_types["bridge2"] };
 
     for (int i = 0; i < level.width * level.height; i++) {
         Point tile_pos(rand() % level.width, rand() % level.height);
@@ -280,7 +277,7 @@ void LevelGenerator::add_bridges() {
                 best_dir = dir;
         }
         if (water_neighbours >= 3 && best_dir >= 0) {
-            tile.type = bridge_types[best_dir];
+            tile.feature_type = bridge_types[best_dir];
         }
     }
 }
@@ -306,7 +303,7 @@ void LevelGenerator::add_roads() {
         path.resize(30);
         for (auto iter = path.begin(); iter != path.end(); iter++) {
             Tile& tile = level.tiles[*iter];
-            if (tile.type->has_property(Roadable) && rand() % 6 != 0) {
+            if (tile.has_property(Roadable) && rand() % 6 != 0) {
                 Point neighbours[6];
                 get_neighbours(*iter, neighbours);
                 bool too_many_roads = false;
@@ -315,9 +312,7 @@ void LevelGenerator::add_roads() {
                         too_many_roads = true;
                 }
                 if (!too_many_roads) {
-                    std::string tile_type = type(tile);
-                    std::string road_type = tile_type + "_road";
-                    tile.type = types[road_type];
+                    tile.feature_type = feature_types["road"];
                 }
             }
         }

@@ -1,6 +1,6 @@
 #ifndef MSG_TYPE
-#warning "MSG_TYPE macro not defined before inclusion of message_types.h"
 #define MSG_TYPE(s, c)
+#define DUMMY_MSG_TYPE
 #endif
 
 
@@ -14,21 +14,22 @@
 #define WM4(t1,t2,t3,t4) WrapperMessage4<t1,t2,t3,t4>
 
 MSG_TYPE(ImageFile, WM(std::string))
+MSG_TYPE(ImageLibraries, WM(std::string))
 MSG_TYPE(ImageLibrary, WM2(Atom, std::string))
 MSG_TYPE(ImageSet, WM2(std::string, ImageSeries))
 
 MSG_TYPE(CreateTileView, WM(TileViewDef))
-MSG_TYPE(TileAnimation, WM2(int, ImageSeries))
-MSG_TYPE(TileTransition, WM(TransitionDef))
-MSG_TYPE(TileRoads, WM(ImageSeries))
-MSG_TYPE(TileFeature, WM(FeatureDef))
+MSG_TYPE(TilePaint, WM(Term *))
+MSG_TYPE(TransitionPaint, WM(Term *))
+
+MSG_TYPE(CreateFeatureView, WM(FeatureViewDef))
+MSG_TYPE(FeaturePaint, WM(Term *))
 
 MSG_TYPE(CreateUnitView, WM(UnitViewDef))
 MSG_TYPE(UnitPaint, WM(Term *))
 MSG_TYPE(UnitSounds, WM2(int, SoundSeries))
 
 MSG_TYPE(CreateStructureView, WM(StructureViewDef))
-MSG_TYPE(StructureAnimation, WM4(int, int, int, ImageSeries))
 MSG_TYPE(StructurePaint, WM(Term *))
 
 MSG_TYPE(CreateFactionView, WM(FactionViewDef))
@@ -38,3 +39,8 @@ MSG_TYPE(LoadSong, WM(std::string))
 MSG_TYPE(SoundFile, WM(std::string))
 
 #undef P
+
+#ifdef DUMMY_MSG_TYPE
+#undef MSG_TYPE
+#undef DUMMY_MSG_TYPE
+#endif

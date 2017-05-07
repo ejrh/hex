@@ -8,7 +8,8 @@
 
 
 Resources::Resources():
-        tile_view_defs("tile_view_defs"), unit_view_defs("unit_view_defs"), structure_view_defs("structure_view_defs"),
+        tile_view_defs("tile_view_defs"), feature_view_defs("feature_view_defs"),
+        unit_view_defs("unit_view_defs"), structure_view_defs("structure_view_defs"),
         faction_view_defs("faction_view_defs"), scripts("scripts") {
 }
 
@@ -33,23 +34,6 @@ void Resources::resolve_references() {
         for (auto sound_iter = def.sounds.begin(); sound_iter != def.sounds.end(); sound_iter++) {
             resolve_sound_series(sound_iter->sounds);
         }
-    }
-
-    for (auto def_iter = tile_view_defs.begin(); def_iter != tile_view_defs.end(); def_iter++) {
-        TileViewDef& def = *def_iter->second;
-        resolve_image_series(def.animation.images);
-        for (auto trans_iter = def.transitions.begin(); trans_iter != def.transitions.end(); trans_iter++) {
-            resolve_image_series(trans_iter->images);
-        }
-        resolve_image_series(def.roads);
-        for (auto feat_iter = def.features.begin(); feat_iter != def.features.end(); feat_iter++) {
-            resolve_image_series(feat_iter->images);
-        }
-    }
-
-    for (auto def_iter = structure_view_defs.begin(); def_iter != structure_view_defs.end(); def_iter++) {
-        StructureViewDef& def = *def_iter->second;
-        resolve_image_series(def.animation.images);
     }
 }
 
@@ -88,12 +72,12 @@ bool Resources::resolve_sound_ref(SoundRef& sound_ref) {
 TileViewDef::pointer Resources::create_tile_view(const TileViewDef& data) {
     TileViewDef::pointer def = boost::make_shared<TileViewDef>(data);
     tile_view_defs.put_and_warn(def->name, def);
+    return def;
+}
 
-    TileViewDef::pointer base = find_base(*def);
-    if (base) {
-        def->animation = base->animation;
-        def->transitions = base->transitions;
-    }
+FeatureViewDef::pointer Resources::create_feature_view(const FeatureViewDef& data) {
+    FeatureViewDef::pointer def = boost::make_shared<FeatureViewDef>(data);
+    feature_view_defs.put_and_warn(def->name, def);
     return def;
 }
 
@@ -105,6 +89,10 @@ StructureViewDef::pointer Resources::create_structure_view(const StructureViewDe
 
 TileViewDef::pointer Resources::get_tile_view_def(const std::string& name) {
     return tile_view_defs.get_and_warn(name);
+}
+
+FeatureViewDef::pointer Resources::get_feature_view_def(const std::string& name) {
+    return feature_view_defs.get_and_warn(name);
 }
 
 UnitViewDef::pointer Resources::get_unit_view_def(const std::string& name) {
@@ -147,12 +135,4 @@ Image *Resources::get_library_image(Atom library_name, int image_num) {
         return nullptr;
     }
     return found->second.get();
-}
-
-TileViewDef::pointer Resources::find_base(const TileViewDef& def) const {
-    TileViewDef::pointer base;
-    if (def.base_name != def.name) {
-        base = tile_view_defs.get(def.base_name);
-    }
-    return base;
 }

@@ -17,13 +17,8 @@ public:
         PaintExecution* pe = dynamic_cast<PaintExecution *>(execution);
         if (!pe)
             throw ScriptError() << "PaintFrame can only be executed in a PaintExecution";
-        Atom paint_library = execution->get(pe->paint_library_atom).get_as_atom();
-        int offset_x = execution->get_as<int>(pe->paint_offset_x_atom);
-        int offset_y = execution->get_as<int>(pe->paint_offset_y_atom);
-        int blend_alpha = execution->get_as<int>(pe->paint_blend_alpha_atom);
-        int blend_addition = execution->get_as<int>(pe->paint_blend_addition_atom);
-        int frame_offset = execution->get_as<int>(pe->paint_frame_offset_atom);
-        pe->paint_frame(paint_library, frame_offset + frame_num, offset_x, offset_y, blend_alpha, blend_addition);
+
+        pe->paint_frame(frame_num);
 
         return 0;
     }
@@ -35,12 +30,7 @@ public:
 
     Datum execute(const Term *instruction, Execution *execution) const {
         int frame_time = execution->get_argument(instruction, 0);
-        std::vector<int> frame_nums;
-        const CompoundTerm *frame_nums_subterm = dynamic_cast<const CompoundTerm *>(execution->get_subterm(instruction, 1));
-        for (int i = 0; i < frame_nums_subterm->subterms.size(); i++) {
-            int frame_num = execution->get_argument(frame_nums_subterm, i);
-            frame_nums.push_back(frame_num);
-        }
+        std::vector<int> frame_nums = execution->get_as_intvector(instruction, 1);
 
         PaintExecution* pe = dynamic_cast<PaintExecution *>(execution);
         if (!pe)
@@ -62,7 +52,44 @@ public:
     }
 };
 
+class TransitionMatchInterpreter: public Interpreter {
+public:
+    TransitionMatchInterpreter(): Interpreter("TransitionMatch") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        TransitionPaintExecution* tpe = dynamic_cast<TransitionPaintExecution *>(execution);
+        if (!tpe)
+            throw ScriptError() << "TransitionMatch can only be executed in a TransitionPaintExecution";
+
+        const std::string& pattern = execution->get_argument(instruction, 0).get_as_str();
+
+        tpe->pattern_re = boost::regex(pattern);
+
+        return 0;
+    }
+};
+
+class TransitionInterpreter: public Interpreter {
+public:
+    TransitionInterpreter(): Interpreter("Transition") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        TransitionPaintExecution* tpe = dynamic_cast<TransitionPaintExecution *>(execution);
+        if (!tpe)
+            throw ScriptError() << "TransitionMatch can only be executed in a TransitionPaintExecution";
+
+        std::vector<int> dir_nums = execution->get_as_intvector(instruction, 0);
+        std::vector<int> frame_nums = execution->get_as_intvector(instruction, 1);
+
+        return tpe->apply_transition(dir_nums, frame_nums);
+    }
+};
+
+
 void register_paint_interpreters() {
     InterpreterRegistry::register_interpreter(new PaintFrameInterpreter());
     InterpreterRegistry::register_interpreter(new PaintAnimationInterpreter());
+
+    InterpreterRegistry::register_interpreter(new TransitionMatchInterpreter());
+    InterpreterRegistry::register_interpreter(new TransitionInterpreter());
 }

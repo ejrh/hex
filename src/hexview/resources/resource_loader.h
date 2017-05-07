@@ -12,6 +12,7 @@ class ImageLoader {
 public:
     ImageLoader(Resources *resources, Graphics *graphics): resources(resources), graphics(graphics) { }
     void load(const std::string& filename);
+    void load_libraries(const std::string& filename);
     void load_library(Atom name, const std::string& filename);
 
 private:
@@ -41,6 +42,7 @@ public:
     void handle_message(Message *msg);
 
     void load_image(const std::string& filename);
+    void load_image_libraries(const std::string& filename);
     void load_image_library(Atom name, const std::string& filename);
     void load_song(const std::string& filename);
     void load_sound(const std::string& filename);
@@ -52,6 +54,7 @@ private:
     SoundLoader *sound_loader;
     FactionViewDef::pointer last_faction_view_def;
     TileViewDef::pointer last_tile_view_def;
+    FeatureViewDef::pointer last_feature_view_def;
     UnitViewDef::pointer last_unit_view_def;
     StructureViewDef::pointer last_structure_view_def;
     bool warned_image_loader;

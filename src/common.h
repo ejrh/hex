@@ -40,3 +40,14 @@
 #define vsnprintf(dest, sz, fmt, args) vsnprintf_s(dest, sz, sz, fmt, args)
 #define snprintf(dest, sz, fmt, ...) sprintf_s(dest, sz, fmt, __VA_ARGS__)
 #endif
+
+
+// Hash function object for generic std::pair.
+template<typename T, typename U>
+struct std::hash<std::pair<T, U> > {
+    std::size_t operator()(const std::pair<T, U>& pair) const {
+        std::hash<T> hash1;
+        std::hash<U> hash2;
+        return hash1(pair.first) + hash2(pair.second);
+    }
+};
