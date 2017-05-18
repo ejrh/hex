@@ -10,10 +10,14 @@ class MovementModel;
 class UnitStack;
 
 struct PathfinderNode {
+    enum State {
+        None, Open, Closed
+    };
+
     Point predecessor;
     int cost;
     int heuristic;
-    int state;
+    State state;
 };
 
 
@@ -36,33 +40,44 @@ struct PathfinderNodeComparator {
 };
 
 
-class Pathfinder {
+class PathfinderBase {
 public:
-    Pathfinder(Level *level, MovementModel *movement);
-    virtual ~Pathfinder();
+    PathfinderBase(int width, int height);
+    virtual ~PathfinderBase();
     virtual void clear();
-    virtual void start(const UnitStack& party, const Point start_point, const Point target_point);
+    void start(const Point start_point);
     virtual void step();
     virtual void complete();
     virtual void build_path(Path& path);
 
 public:
     PathfinderState state;
-    UnitStack::const_pointer party;
     PathfinderQueueEntry source;
-    PathfinderQueueEntry target;
     PathfinderQueueEntry path_head;
 
-private:
+protected:
     void get_neighbours(const PathfinderQueueEntry& entry, PathfinderQueueEntry neighbours[]);
-    int cost_between(const PathfinderQueueEntry& entry1, const PathfinderQueueEntry& entry2);
-    int heuristic(const PathfinderQueueEntry& entry1, const PathfinderQueueEntry& entry2);
+    virtual int cost_between(const PathfinderQueueEntry& entry1, const PathfinderQueueEntry& entry2);
+    virtual int heuristic(const PathfinderQueueEntry& entry);
 
 public:
-    Level *level;
-    MovementModel *movement;
     Vector2<PathfinderNode> nodes;
     boost::heap::priority_queue<PathfinderQueueEntry, boost::heap::compare<PathfinderNodeComparator> > queue;
+};
+
+class Pathfinder: public PathfinderBase {
+public:
+    Pathfinder(Level *level, MovementModel *movement);
+    void start(const UnitStack& party, const Point start_point, const Point target_point);
+
+    int cost_between(const PathfinderQueueEntry& entry1, const PathfinderQueueEntry& entry2);
+    int heuristic(const PathfinderQueueEntry& entry);
+
+public:
+    UnitStack::const_pointer party;
+    PathfinderQueueEntry target;
+    Level *level;
+    MovementModel *movement;
 };
 
 #endif
