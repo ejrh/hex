@@ -12,9 +12,9 @@
 
 TilePainter::TilePainter(Game *game, GameView *view, Resources *resources):
         game(game), view(view), resources(resources),
-        tile_paint_counter("paint.tile"), tile_script_error_counter("paint.tile.error"),
-        feature_paint_counter("paint.feature"), feature_script_error_counter("paint.feature.error"),
-        transition_paint_counter("paint.transition"), transition_script_error_counter("paint.transition.error") {
+        tile_paint_counter("paint.tile"), tile_paint_time("paint.tile.time"), tile_script_error_counter("paint.tile.error"),
+        feature_paint_counter("paint.feature"), feature_paint_time("paint.feature.time"), feature_script_error_counter("paint.feature.error"),
+        transition_paint_counter("paint.transition"), transition_paint_time("paint.transition.time"), transition_script_error_counter("paint.transition.error") {
 }
 
 void TilePainter::repaint(Point offset, int len) {
@@ -67,6 +67,8 @@ void TilePainter::repaint(Point offset, int len) {
 }
 
 void TilePainter::repaint_tile(TileView& tile_view, const Tile& tile, const Point tile_pos) {
+    Timer paint_time(tile_paint_time);
+
     tile_view.tile_paint.clear();
     if (!tile_view.view_def)
         return;
@@ -124,6 +126,8 @@ void TilePainter::repaint_tile(TileView& tile_view, const Tile& tile, const Poin
 
 
 void TilePainter::repaint_transition(TileView& tile_view, const Tile& tile, const Point tile_pos) {
+    Timer paint_time(transition_paint_time);
+
     tile_view.transition_paint.clear();
     if (!tile_view.view_def)
         return;
@@ -165,6 +169,8 @@ void TilePainter::repaint_transition(TileView& tile_view, const Tile& tile, cons
 
 
 void TilePainter::repaint_feature(TileView& tile_view, const Tile& tile, const Point tile_pos) {
+    Timer paint_time(feature_paint_time);
+
     tile_view.feature_paint.clear();
     if (!tile_view.feature_view_def)
         return;

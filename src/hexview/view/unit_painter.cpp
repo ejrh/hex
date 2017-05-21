@@ -9,6 +9,8 @@
 
 
 void UnitPainter::repaint(UnitView& unit_view, Unit& unit) {
+    Timer paint_time(unit_paint_time);
+
     unit_view.paint.clear();
     if (!unit_view.view_def)
         return;

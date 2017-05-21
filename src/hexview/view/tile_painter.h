@@ -24,10 +24,13 @@ private:
     Resources *resources;
 
     Counter tile_paint_counter;
+    Counter tile_paint_time;
     Counter tile_script_error_counter;
     Counter feature_paint_counter;
+    Counter feature_paint_time;
     Counter feature_script_error_counter;
     Counter transition_paint_counter;
+    Counter transition_paint_time;
     Counter transition_script_error_counter;
 };
 

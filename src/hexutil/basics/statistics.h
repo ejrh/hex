@@ -44,4 +44,21 @@ private:
     counter_type value;
 };
 
+
+class Timer {
+public:
+    Timer(Counter& counter): counter(counter) {
+        start_time = std::clock() * 1000 / CLOCKS_PER_SEC;
+    }
+    ~Timer() {
+        counter += time();
+    }
+
+    long time() { return std::clock() * 1000 / CLOCKS_PER_SEC - start_time; }
+
+private:
+    Counter& counter;
+    long start_time;
+};
+
 #endif

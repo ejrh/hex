@@ -13,7 +13,7 @@ class StructurePainter {
 public:
     StructurePainter(Game *game, GameView *view, Resources *resources):
             game(game), view(view), resources(resources),
-            structure_paint_counter("paint.structure") { }
+            structure_paint_counter("paint.structure"), structure_paint_time("paint.structure.time"), structure_paint_error("paint.structure.error") { }
 
     void repaint(StructureView& structure_view);
 
@@ -23,6 +23,8 @@ private:
     Resources *resources;
 
     Counter structure_paint_counter;
+    Counter structure_paint_time;
+    Counter structure_paint_error;
 };
 
 #endif

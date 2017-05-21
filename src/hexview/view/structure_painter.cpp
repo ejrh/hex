@@ -9,6 +9,8 @@
 
 
 void StructurePainter::repaint(StructureView& structure_view) {
+    Timer paint_time(structure_paint_time);
+
     Structure& structure = *structure_view.structure;
     Tile& tile = game->level.tiles[structure.position];
 
@@ -48,7 +50,11 @@ void StructurePainter::repaint(StructureView& structure_view) {
     Atom selected_atom = AtomRegistry::atom("selected");
     execution.variables.set<bool>(selected_atom, structure_view.selected);
 
-    execution.run(script);
-
+    try {
+        execution.run(script);
+    } catch (ScriptError& err) {
+        BOOST_LOG_TRIVIAL(error) << boost::format("Error in script %s: %s") % script->name % err.what();
+        ++structure_paint_error;
+    }
     ++structure_paint_counter;
 }
