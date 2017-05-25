@@ -122,6 +122,11 @@ void GameArbiter::process_command(Message *command) {
             emit(create_message(Chat, chat_msg->data));
         } break;
 
+        case SetLevelData:
+        case DestroyStructure: {
+            emit(command->shared_from_this());
+        } break;
+
         default:
             break;
     }

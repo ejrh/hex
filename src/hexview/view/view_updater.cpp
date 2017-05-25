@@ -119,6 +119,11 @@ void ViewUpdater::apply_update(Message *update) {
             }
         } break;
 
+        case DestroyStructure: {
+            auto upd = dynamic_cast<DestroyStructureMessage *>(update);
+            game_view->level_view.tile_views[upd->data].structure_view = nullptr;
+        } break;
+
         case GrantFactionView: {
             auto upd = dynamic_cast<GrantFactionViewMessage *>(update);
             if (upd->data1 == game_view->player->id) {

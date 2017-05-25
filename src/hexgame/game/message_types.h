@@ -29,6 +29,7 @@ MSG_TYPE(TransferUnits, WM4(int, IntSet, Path, int))
 MSG_TYPE(DestroyStack, WM(int))
 
 MSG_TYPE(CreateStructure, WM3(Point, std::string, int))
+MSG_TYPE(DestroyStructure, WM(Point))
 
 MSG_TYPE(GrantFactionView, WM3(int, int, bool))
 MSG_TYPE(GrantFactionControl, WM3(int, int, bool))

@@ -29,6 +29,8 @@
 #include "hexgame/game/generation/generator.h"
 
 #include "hexview/chat/chat.h"
+#include "hexview/editor/palette.h"
+#include "hexview/editor/editor.h"
 #include "hexview/resources/resource_loader.h"
 #include "hexview/resources/resource_messages.h"
 #include "hexview/view/audio_renderer.h"
@@ -210,10 +212,10 @@ class BackgroundWindow: public UiWindow {
 public:
     BackgroundWindow(UiLoop *loop, Options *options, Generator *generator, Game *game, GameView *game_view,
             NodeInterface *node_interface,
-            LevelRenderer *level_renderer):
+            LevelRenderer *level_renderer, PaletteWindow *palette_window):
         UiWindow(0, 0, 0, 0, WindowIsVisible|WindowIsActive|WindowWantsKeyboardEvents),
         loop(loop), options(options), generator(generator), game(game), game_view(game_view),
-        node_interface(node_interface), level_renderer(level_renderer) { }
+        node_interface(node_interface), level_renderer(level_renderer), palette_window(palette_window) { }
 
     bool receive_keyboard_event(SDL_Event *evt) {
         if (evt->type == SDL_QUIT
@@ -224,6 +226,9 @@ public:
 
         if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_F2) {
             save_game("save.txt", game);
+            return true;
+        } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_F4) {
+            palette_window->toggle();
             return true;
         } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_F5) {
             game_view->debug_mode = !game_view->debug_mode;
@@ -264,6 +269,7 @@ private:
     GameView *game_view;
     NodeInterface *node_interface;
     LevelRenderer *level_renderer;
+    PaletteWindow *palette_window;
 };
 
 class TopWindow: public UiWindow {
@@ -361,10 +367,15 @@ void run(Options& options) {
     BattleViewer battle_viewer(&resources, &graphics, &audio, &game_view, &unit_renderer);
     pre_updater.battle_viewer = &battle_viewer;
 
+    EditorWindow *editor_window = new EditorWindow(&game_view, level_window);
+    PaletteWindow *palette_window = new PaletteWindow(&game, &game_view, level_window, editor_window);
+
     UiLoop loop(&graphics, 25);
-    BackgroundWindow *bw = new BackgroundWindow(&loop, &options, &generator, &game, &game_view, node_interface, &level_renderer);
+    BackgroundWindow *bw = new BackgroundWindow(&loop, &options, &generator, &game, &game_view, node_interface, &level_renderer, palette_window);
     loop.set_root_window(bw);
+    bw->add_child(editor_window);
     bw->add_child(level_window);
+    bw->add_child(palette_window);
     bw->add_child(map_window);
     bw->add_child(stack_window);
     bw->add_child(message_window);

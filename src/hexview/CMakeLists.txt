@@ -2,6 +2,12 @@ set(srcs
         chat/chat.h
         chat/chat_updater.cpp
         chat/chat_window.cpp
+        editor/brush.cpp
+        editor/brush.h
+        editor/editor.cpp
+        editor/editor.h
+        editor/palette.cpp
+        editor/palette.h
         resources/image_loader.cpp
         resources/image_ref.h
         resources/message_types.h

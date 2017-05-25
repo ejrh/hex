@@ -1,42 +1,42 @@
 # CreateTileType(name, properties)
 # CreateFeatureType(name, properties)
 
-CreateTileType("outside", {})
+CreateTileType("outside", {Immutable, DefaultFeatureType: "outside"})
 
-CreateTileType("water", {})
-CreateTileType("grass", {"SpawnGroup": 4, "SpawnChance": 10})
-CreateTileType("desert", {"SpawnGroup": 3, "SpawnChance": 10})
-CreateTileType("snow", {})
-CreateTileType("steppe", {})
-CreateTileType("wasteland", {})
+CreateTileType("water", {DefaultFeatureType: "water"})
+CreateTileType("grass", {DefaultFeatureType: "plains", "SpawnGroup": 4, "SpawnChance": 10})
+CreateTileType("desert", {DefaultFeatureType: "plains", "SpawnGroup": 3, "SpawnChance": 10})
+CreateTileType("snow", {DefaultFeatureType: "plains"})
+CreateTileType("steppe", {DefaultFeatureType: "plains"})
+CreateTileType("wasteland", {DefaultFeatureType: "plains"})
 
-CreateFeatureType("outside", {})
-CreateFeatureType("water", {"Swimmable", "Sailable", "Flyable"})
-CreateFeatureType("plains", {"Walkable", "Flyable", "Roadable"})
-CreateFeatureType("road", {"Walkable", "Flyable", "Road"})
-CreateFeatureType("structure", {"Walkable", "Flyable", "Road"})
-CreateFeatureType("water_structure", {"Walkable", "Flyable"})
+CreateFeatureType("outside", {RequiredTileType: "outside"})
+CreateFeatureType("water", {RequiredTileType: "water", "Swimmable", "Sailable", "Flyable"})
+CreateFeatureType("plains", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Walkable", "Flyable", "Roadable"})
+CreateFeatureType("road", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Walkable", "Flyable", "Road"})
+CreateFeatureType("structure", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Walkable", "Flyable", "Road"})
+CreateFeatureType("water_structure", {RequiredTileType: "water", "Walkable", "Flyable", "Road"})
 
-CreateFeatureType("forest", {"Walkable", "Flyable", "SlowWalking", "Roadable", "Forest", "SpawnGroup": 1, "SpawnChance": 10})
-CreateFeatureType("dead_forest", {"Walkable", "Flyable", "SlowWalking", "Roadable", "Forest"})
+CreateFeatureType("forest", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Walkable", "Flyable", "SlowWalking", "Roadable", "Forest", "SpawnGroup": 1, "SpawnChance": 10})
+CreateFeatureType("dead_forest", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Walkable", "Flyable", "SlowWalking", "Roadable", "Forest"})
 
-CreateFeatureType("bridge0", {"Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
-CreateFeatureType("bridge1", {"Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
-CreateFeatureType("bridge2", {"Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
+CreateFeatureType("bridge0", {RequiredTileType: "water", "Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
+CreateFeatureType("bridge1", {RequiredTileType: "water", "Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
+CreateFeatureType("bridge2", {RequiredTileType: "water", "Road", "Walkable", "Swimmable", "Sailable", "Flyable"})
 
 # TODO - These features take up more than one tile; represent their shape somehow
 # hill0 is the invisible hill used for the other parts of a multi-tile hill
 # hill1 is a single-tile hill
 # hill2 and hill3 are diagonal two-tile hills
-CreateFeatureType("hill0", {"Walkable", "SlowWalking"})
-CreateFeatureType("hill1", {"Walkable", "SlowWalking"})
-CreateFeatureType("hill2", {"Walkable", "SlowWalking"})
-CreateFeatureType("hill3", {"Walkable", "SlowWalking"})
+CreateFeatureType("hill0", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Walkable", "SlowWalking"})
+CreateFeatureType("hill1", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Walkable", "SlowWalking"})
+CreateFeatureType("hill2", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Walkable", "SlowWalking"})
+CreateFeatureType("hill3", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Walkable", "SlowWalking"})
 # mountain0 is the invisible mountain used for the other parts of a multi-tile mountain
 # mountain1 is a single-tile mountain
 # mountain2 is a 2x2 mountain
 # mountain3 is a 3x3 mountain
-CreateFeatureType("mountain0", {"Climbable"})
-CreateFeatureType("mountain1", {"Climbable", "SlowFlying"})
-CreateFeatureType("mountain2", {"Climbable", "SlowFlying"})
-CreateFeatureType("mountain3", {})
+CreateFeatureType("mountain0", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Climbable"})
+CreateFeatureType("mountain1", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Climbable", "SlowFlying"})
+CreateFeatureType("mountain2", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Climbable", "SlowFlying"})
+CreateFeatureType("mountain3", {RequiredTileType: "grass|desert|snow|steppe|wasteland", })

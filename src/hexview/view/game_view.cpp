@@ -10,6 +10,7 @@
 #include "hexgame/game/movement/pathfinding.h"
 
 #include "hexview/resources/view_def.h"
+#include "hexview/editor/editor.h"
 #include "hexview/view/player.h"
 #include "hexview/view/unit_painter.h"
 #include "hexview/view/view.h"

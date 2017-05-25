@@ -115,6 +115,15 @@ Structure::pointer Game::create_structure(const Point& position, const std::stri
     return new_structure;
 }
 
+void Game::destroy_structure(const Point& position) {
+    Tile& tile = level.tiles[position];
+    if (!tile.structure) {
+        throw DataError() << "No structure at: " << position;
+    }
+
+    tile.structure = nullptr;
+}
+
 void Game::destroy_unit_stack(int stack_id) {
     UnitStack::pointer stack = stacks.get(stack_id);
     level.tiles[stack->position].stack = UnitStack::pointer();

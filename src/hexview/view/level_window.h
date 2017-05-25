@@ -29,6 +29,7 @@ public:
     bool receive_keyboard_event(SDL_Event *evt);
 
     void draw(const UiContext& context);
+    void draw_info(const UiContext& context);
     void draw_level(LevelRenderer::RenderMethod render);
     void draw_ghost(Ghost *ghost);
 

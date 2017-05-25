@@ -3,6 +3,8 @@
 #include "hexutil/basics/point.h"
 #include "hexutil/basics/hexgrid.h"
 
+#include "hexav/graphics/font.h"
+
 #include "hexgame/game/game.h"
 
 #include "hexview/view/audio_renderer.h"
@@ -36,14 +38,14 @@ void LevelWindow::set_mouse_position(int x, int y) {
 }
 
 void LevelWindow::mouse_to_tile(int x, int y, Point *tile) {
-    x += shift_x;
-    y += shift_y;
+    x += shift_x - this->x;
+    y += shift_y - this->y;
     pixel_to_point(x, y, X_SPACING, Y_SPACING, SLOPE_WIDTH, SLOPE_HEIGHT, tile);
 }
 
 void LevelWindow::tile_to_pixel(const Point tile, int *px, int *py) {
-    *px = tile.x * x_spacing - shift_x;
-    *py = tile.y * y_spacing - shift_y;
+    *px = tile.x * x_spacing - shift_x + x;
+    *py = tile.y * y_spacing - shift_y + y;
     if (tile.x % 2 == 1)
         *py += y_spacing / 2;
 }
@@ -164,12 +166,42 @@ void LevelWindow::draw(const UiContext& context) {
         if (!view->debug_mode)
             draw_level(&LevelRenderer::render_fog);
     }
+
+    if (view->debug_mode) {
+        draw_info(context);
+    }
+}
+
+void LevelWindow::draw_info(const UiContext& context) {
+    context.graphics->fill_rectangle(0, 0, 0, x, y, 160, 40);
+    if (!view->game->level.contains(view->level_view.highlight_tile))
+        return;
+
+    TextFormat tf;
+    std::ostringstream ss1;
+    ss1 << "Position: " << view->level_view.highlight_tile;
+    tf.write_text(context.graphics, ss1.str(), x+4, y+4);
+    Tile& tile = view->level_view.level->tiles[view->level_view.highlight_tile];
+
+    std::ostringstream ss2;
+    ss2 << "Type: " << tile.type->name;
+    tf.write_text(context.graphics, ss2.str(), x+4, y+12);
+
+    std::ostringstream ss3;
+    ss3 << "Feature type: " << tile.feature_type->name;
+    tf.write_text(context.graphics, ss3.str(), x+4, y+20);
+
+    if (tile.structure) {
+        std::ostringstream ss4;
+        ss4 << "Structure type: " << tile.structure->type->name;
+        tf.write_text(context.graphics, ss4.str(), x+4, y+28);
+    }
 }
 
 void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
     Point min_pos, max_pos;
-    mouse_to_tile(0, 0, &min_pos);
-    mouse_to_tile(width, height, &max_pos);
+    mouse_to_tile(x, y, &min_pos);
+    mouse_to_tile(x + width, y + height, &max_pos);
 
     min_pos.x -= 2;
     if (min_pos.x % 2 == 1)
@@ -188,16 +220,16 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
 
     for (int i = min_pos.y; i < max_pos.y; i++) {
         for (int j = min_pos.x; j < max_pos.x; j += 2) {
-            int xpos = j*x_spacing - shift_x + TILE_WIDTH / 2;
-            int ypos = i*y_spacing - shift_y + Y_SPACING / 2;
+            int xpos = j*x_spacing - shift_x + TILE_WIDTH / 2 + x;
+            int ypos = i*y_spacing - shift_y + Y_SPACING / 2 + y;
             Point tile_pos(j, i);
             (*level_renderer.*render)(xpos, ypos, tile_pos);
         }
 
         for (int j = min_pos.x + 1; j < max_pos.x; j += 2) {
             int y_offset = y_spacing / 2;
-            int xpos = j*x_spacing - shift_x + TILE_WIDTH / 2;
-            int ypos = i*y_spacing + y_offset - shift_y + Y_SPACING / 2;
+            int xpos = j*x_spacing - shift_x + TILE_WIDTH / 2 + x;
+            int ypos = i*y_spacing + y_offset - shift_y + Y_SPACING / 2 + y;
             Point tile_pos(j, i);
             (*level_renderer.*render)(xpos, ypos, tile_pos);
         }

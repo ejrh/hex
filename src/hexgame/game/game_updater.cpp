@@ -95,6 +95,11 @@ void GameUpdater::apply_update(Message *update) {
             game->create_structure(upd->data1, upd->data2, upd->data3);
         } break;
 
+        case DestroyStructure: {
+            auto upd = dynamic_cast<DestroyStructureMessage *>(update);
+            game->destroy_structure(upd->data);
+        } break;
+
         case FactionReady: {
             auto upd = dynamic_cast<FactionReadyMessage *>(update);
             Faction::pointer faction = game->factions.get(upd->data1);

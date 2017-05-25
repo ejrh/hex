@@ -242,6 +242,7 @@ public:
     UnitStack::pointer create_unit_stack(int id, const Point position, int owner_id);
     Unit::pointer create_unit(int stack_id, const std::string& type_name);
     Structure::pointer create_structure(const Point& position, const std::string& type_name, int owner_id);
+    void destroy_structure(const Point& position);
     void destroy_unit_stack(int stack_id);
     void transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id);
 

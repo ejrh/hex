@@ -17,6 +17,10 @@ PROPERTY_NAME(Climbable)
 PROPERTY_NAME(Roadable)
 PROPERTY_NAME(Forest)
 PROPERTY_NAME(Road)
+PROPERTY_NAME(Immutable)
+PROPERTY_NAME(DefaultFeatureType)
+PROPERTY_NAME(RequiredTileType)
+PROPERTY_NAME(RequiredFeatureType)
 
 // Unit abilities
 PROPERTY_NAME(Walking)
