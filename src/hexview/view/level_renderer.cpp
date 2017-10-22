@@ -11,6 +11,7 @@
 #include "hexview/view/level_renderer.h"
 #include "hexview/view/unit_renderer.h"
 #include "hexview/view/view.h"
+#include "player.h"
 
 
 LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *level, GameView *view, UnitRenderer *unit_renderer):
@@ -153,7 +154,7 @@ void LevelRenderer::render_path_arrow(int x, int y, Point tile_pos) {
 }
 
 void LevelRenderer::render_fog(int x, int y, Point tile_pos) {
-    if (!view->level_view.discovered.check(tile_pos)) {
+    if (!view->level_view.check_discovered(tile_pos)) {
         Image *fog = NULL;
         if (fog_images.size() > 0)
         fog = fog_images[0].image;

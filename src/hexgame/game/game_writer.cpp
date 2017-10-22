@@ -63,6 +63,15 @@ void GameWriter::write_levels(Game *game) {
         }
         emit(create_message(SetLevelData, origin, type_data, feature_data));
     }
+
+    for (auto iter = game->factions.begin(); iter != game->factions.end(); iter++) {
+        Faction& faction = *iter->second;
+        for (int i = 0; i < game->level.height; i++) {
+            CompressableStringVector discovered_data;
+            faction.discovered.save(i, discovered_data.data);
+            emit(create_message(SetFactionDiscovered, faction.id, i, discovered_data));
+        }
+    }
 }
 
 void GameWriter::write_unit_stacks(Game *game) {

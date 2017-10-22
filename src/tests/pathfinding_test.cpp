@@ -39,7 +39,6 @@ class PathfindingView: public GameView {
 public:
     PathfindingView(Game *game):
             GameView(game, NULL, &::resources, NULL), movement_model(&game->level), pathfinder(&game->level, &movement_model), brush_radius(2) {
-        level_view.discovered.fill();
     }
 
     void reset() {

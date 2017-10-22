@@ -34,12 +34,14 @@ void ViewUpdater::apply_update(Message *update) {
             game_view->faction_views.clear();
             game_view->unit_stack_views.clear();
             game_view->ghosts.clear();
+            game_view->update_player();
         } break;
 
         case SetLevel: {
             auto upd = dynamic_cast<SetLevelMessage *>(update);
             game_view->level_view.level = &game->level;
             game_view->level_view.resize(upd->data1, upd->data2);
+            game_view->update_player();
         } break;
 
         case SetLevelData: {
@@ -55,6 +57,7 @@ void ViewUpdater::apply_update(Message *update) {
             Faction::pointer faction = game->factions.get(upd->data1);
             FactionViewDef::pointer view_def = resources->get_faction_view_def(upd->data2);
             game_view->faction_views.put(upd->data1, boost::make_shared<FactionView>(faction, view_def));
+            game_view->update_player();
         } break;
 
         case CreateStack: {
@@ -134,6 +137,7 @@ void ViewUpdater::apply_update(Message *update) {
                     game_view->update_visibility();
                 }
             }
+            game_view->update_player();
         } break;
 
         case GrantFactionControl: {

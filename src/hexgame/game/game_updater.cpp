@@ -35,6 +35,10 @@ void GameUpdater::apply_update(Message *update) {
         case SetLevel: {
             auto upd = dynamic_cast<SetLevelMessage *>(update);
             game->level.resize(upd->data1, upd->data2);
+            for (auto iter = game->factions.begin(); iter != game->factions.end(); iter++) {
+                Faction::pointer faction = iter->second;
+                faction->discovered.resize(upd->data1, upd->data2);
+            }
         } break;
 
         case SetLevelData: {
@@ -63,6 +67,14 @@ void GameUpdater::apply_update(Message *update) {
         case CreateFaction: {
             auto upd = dynamic_cast<CreateFactionMessage *>(update);
             game->create_faction(upd->data1, upd->data2, upd->data3);
+        } break;
+
+        case SetFactionDiscovered: {
+            auto upd = dynamic_cast<SetFactionDiscoveredMessage *>(update);
+            Faction::pointer faction = game->factions.get(upd->data1);
+            if (faction) {
+                faction->discovered.load(upd->data2, upd->data3.data);
+            }
         } break;
 
         case CreateStack: {

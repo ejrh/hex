@@ -15,7 +15,7 @@
 
 
 LevelView::LevelView(Level *level):
-        level(level), visibility(level), discovered(level), ghost_visibility(level) {
+        level(level), visibility(*level), ghost_visibility(*level) {
     resize(level->width, level->height);
 }
 
@@ -31,7 +31,6 @@ void LevelView::resize(int width, int height) {
     }
 
     visibility.resize(width, height);
-    discovered.resize(width, height);
     ghost_visibility.resize(width, height);
 }
 
@@ -45,6 +44,10 @@ void LevelView::set_highlight_tile(const Point& tile_pos) {
     if (tile_views.contains(highlight_tile)) {
         tile_views[highlight_tile].highlighted = true;
     }
+}
+
+bool LevelView::check_discovered(const Point& tile_pos) {
+    return discovered.check(tile_pos);
 }
 
 bool LevelView::check_visibility(const Point& tile_pos) {

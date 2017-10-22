@@ -22,6 +22,7 @@ GameView::GameView(Game *game, Player *player, Resources *resources, MessageRece
         faction_views("faction_views"), unit_stack_views("unit_stack_views"),
         selected_stack_id(0), selected_structure(), debug_mode(false),
         ghost_counter("view.ghost") {
+    update_player();
 }
 
 void GameView::update() {
@@ -60,6 +61,16 @@ void GameView::update() {
             iter = ghosts.erase(iter);
         else
             iter++;
+    }
+}
+
+void GameView::update_player() {
+    level_view.discovered.clear();
+
+    for (auto iter = game->factions.begin(); iter != game->factions.end(); iter++) {
+        if (player->has_view(iter->second)) {
+            level_view.discovered.add(&iter->second->discovered);
+        }
     }
 }
 
@@ -179,7 +190,6 @@ void GameView::update_visibility() {
     for (auto iter = unit_stack_views.begin(); iter != unit_stack_views.end(); iter++) {
         UnitStack::pointer stack = iter->second->stack;
         if (player->has_view(stack->owner) && !iter->second->moving) {
-            level_view.discovered.draw(stack->position, stack->sight(), true);
             level_view.visibility.draw(stack->position, stack->sight(), true);
         }
     }
@@ -192,7 +202,6 @@ void GameView::update_visibility() {
                 continue;
             Structure::pointer structure = tile_view.structure_view->structure;
             if (player->has_view(structure->owner)) {
-                level_view.discovered.draw(tile_pos, structure->sight(), true);
                 level_view.visibility.draw(tile_pos, structure->sight(), true);
             }
         }

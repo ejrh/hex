@@ -6,9 +6,12 @@
 #include "hexgame/game/visibility_map.h"
 
 
-VisibilityMap::VisibilityMap(Level *level) {
-    this->level = level;
-    resize(level->tiles.width, level->tiles.height);
+VisibilityMap::VisibilityMap(const Level& level) {
+    resize(level.width, level.height);
+}
+
+VisibilityMap::VisibilityMap(int width, int height) {
+    resize(width, height);
 }
 
 void VisibilityMap::resize(int width, int height) {
@@ -16,61 +19,30 @@ void VisibilityMap::resize(int width, int height) {
 }
 
 void VisibilityMap::clear() {
-    visibility.resize(level->tiles.width, level->tiles.height);
     visibility.fill(false);
 }
 
 void VisibilityMap::fill() {
-    visibility.resize(level->tiles.width, level->tiles.height);
     visibility.fill(true);
 }
 
-void VisibilityMap::rebuild() {
-    visibility.resize(level->tiles.width, level->tiles.height);
+void VisibilityMap::rebuild(const Level& level) {
+    visibility.resize(level.tiles.width, level.tiles.height);
 
     visibility.fill(false);
 
-    for (int i = 0; i < level->tiles.height; i++)
-        for (int j = 0; j < level->tiles.width; j++) {
-            UnitStack::pointer stack = level->tiles[i][j].stack;
-            if (!stack || masked_stacks.find(stack->id) != masked_stacks.end())
+    for (int i = 0; i < level.tiles.height; i++)
+        for (int j = 0; j < level.tiles.width; j++) {
+            UnitStack::pointer stack = level.tiles[i][j].stack;
+            if (!stack)
                 continue;
             apply(*stack, true);
         }
-
-    //for (auto iter = unit_stacks.begin(); iter != unit_stacks.end(); iter++) {
-    //}
 }
 
-void VisibilityMap::update() {
-    visibility.resize(level->tiles.width, level->tiles.height);
-
-    for (int i = 0; i < level->tiles.height; i++)
-        for (int j = 0; j < level->tiles.width; j++) {
-            UnitStack::pointer stack = level->tiles[i][j].stack;
-            if (!stack || masked_stacks.find(stack->id) != masked_stacks.end())
-                continue;
-            apply(*stack, true);
-        }
-
-    //for (auto iter = unit_stacks.begin(); iter != unit_stacks.end(); iter++) {
-    //}
-}
-
-void VisibilityMap::apply(UnitStack& stack, bool visible)
+void VisibilityMap::apply(const UnitStack& stack, bool visible)
 {
     draw(stack.position, stack.sight(), visible);
-}
-
-void VisibilityMap::mask(UnitStack& stack) {
-    masked_stacks.insert(stack.id);
-}
-
-void VisibilityMap::unmask(UnitStack& stack) {
-    masked_stacks.erase(stack.id);
-}
-
-void VisibilityMap::overlay(UnitStack& stack) {
 }
 
 void VisibilityMap::draw(const Point& point, int sight, bool visible)
@@ -95,7 +67,53 @@ void VisibilityMap::draw(const Point& point, int sight, bool visible)
 }
 
 bool VisibilityMap::check(const Point &tile_pos) const {
-    if (!visibility.contains(tile_pos))
-        std::cout << "!";
     return visibility[tile_pos];
+}
+
+void VisibilityMap::load(int row, const std::vector<std::string>& data) {
+    std::vector<bool>& visibility_row = visibility[row];
+
+    for (int j = 0; j < visibility_row.size(); j++) {
+        const std::string& bit_str = data[j / 8];
+        int ch = bit_str[(j % 8) + 1];
+        visibility_row[j] = (ch == '1');
+    }
+}
+
+void VisibilityMap::save(int row, std::vector<std::string>& data) const {
+    const std::vector<bool>& visibility_row = visibility[row];
+
+    for (int j = 0; j < visibility_row.size(); j += 8) {
+        std::ostringstream bit_str;
+        bit_str << 'b';
+        for (int k = 0; k < 8; k++) {
+            if (j + k >= visibility_row.size())
+                break;
+            bit_str << (visibility_row[j + k] ? '1' : '0');
+        }
+        data.push_back(bit_str.str());
+    }
+}
+
+void VisibilityMapUnion::clear() {
+    maps.clear();
+}
+
+void VisibilityMapUnion::add(const VisibilityMap *map) {
+    maps.push_back(map);
+}
+
+void VisibilityMapUnion::remove(const VisibilityMap *map) {
+    auto found = std::find(maps.begin(), maps.end(), map);
+    if (found != maps.end())
+        maps.erase(found);
+}
+
+bool VisibilityMapUnion::check(const Point& tile_pos) const {
+    for (auto iter = maps.begin(); iter != maps.end(); iter++) {
+        if ((*iter)->check(tile_pos))
+            return true;
+    }
+
+    return false;
 }

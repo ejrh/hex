@@ -22,6 +22,7 @@ MSG_TYPE(CreateStructureType, WM(StructureType))
 MSG_TYPE(SetLevel, WM2(int, int))
 MSG_TYPE(SetLevelData, WM3(Point, CompressableStringVector, CompressableStringVector))
 MSG_TYPE(CreateFaction, WM3(int, std::string, std::string))
+MSG_TYPE(SetFactionDiscovered, WM3(int, int, CompressableStringVector))
 
 MSG_TYPE(CreateStack, WM3(int, Point, int))
 MSG_TYPE(CreateUnit, WM2(int, std::string))

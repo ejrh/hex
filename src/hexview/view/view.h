@@ -137,14 +137,15 @@ public:
 
     void resize(int width, int height);
     void set_highlight_tile(const Point& tile_pos);
+    bool check_discovered(const Point& tile_pos);
     bool check_visibility(const Point& tile_pos);
 
 public:
     Level *level;
     Vector2<TileView> tile_views;
     Point highlight_tile;
+    VisibilityMapUnion discovered;
     VisibilityMap visibility;
-    VisibilityMap discovered;
     VisibilityMap ghost_visibility;
 };
 
@@ -161,6 +162,7 @@ public:
     GameView(Game *game, Player *player, Resources *resources, MessageReceiver *dispatcher);
 
     void update();
+    void update_player();
     void left_click_tile(const Point& tile_pos);
     void right_click_tile(const Point& tile_pos);
     void set_drawn_path(const Point& start, const Path& path);

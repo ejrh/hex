@@ -55,7 +55,8 @@ void Ghost::update(unsigned int update_ms) {
             unit_painter->repaint(*target_view, *target_view->stack);
         }
         if (view->player->has_view(target->owner)) {
-            view->level_view.visibility.unmask(*target);
+            //TODO!
+            //view->level_view.visibility.unmask(*target);
             view->update_visibility();
         }
         if (stack_view->selected) {
@@ -68,7 +69,6 @@ void Ghost::update(unsigned int update_ms) {
     Point next_pos = stack_view->path[step];
     stack_view->update(update_ms);
     if (view->player->has_view(target->owner)) {
-        view->level_view.discovered.draw(next_pos, target->sight(), true);
         view->level_view.ghost_visibility.draw(next_pos, target->sight(), true);
     }
 }

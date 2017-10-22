@@ -16,7 +16,9 @@ class Faction: public boost::enable_shared_from_this<Faction> {
 public:
     typedef boost::shared_ptr<Faction> pointer;
 
-    Faction(int id, const std::string& type_name, const std::string& name): id(id), type_name(type_name), name(name), ready(false) { }
+    Faction(int id, const std::string& type_name, const std::string& name, int level_width, int level_height):
+            id(id), type_name(type_name), name(name), ready(false),
+            discovered(level_width, level_height) { }
     ~Faction() { }
 
 public:
@@ -24,6 +26,7 @@ public:
     std::string type_name;
     std::string name;
     bool ready;
+    VisibilityMap discovered;
 };
 
 class UnitType: public boost::enable_shared_from_this<UnitType> {
@@ -94,7 +97,7 @@ public:
         int max2 = unit->get_property<int>(Sight);
         return std::max(max1, max2);
     }
-    int sight() { return std::accumulate(units.begin(), units.end(), 0, sight_func); }
+    int sight() const { return std::accumulate(units.begin(), units.end(), 0, sight_func); }
 
     bool has_units(const IntSet unit_selection) const;
 

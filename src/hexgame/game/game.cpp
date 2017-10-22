@@ -68,7 +68,7 @@ StructureType::pointer Game::create_structure_type(StructureType& structure_type
 }
 
 Faction::pointer Game::create_faction(int id, const std::string& type_name, const std::string& name) {
-    Faction::pointer faction = boost::make_shared<Faction>(id, type_name, name);
+    Faction::pointer faction = boost::make_shared<Faction>(id, type_name, name, level.width, level.height);
     factions.put(id, faction);
     return faction;
 }
@@ -97,6 +97,9 @@ Unit::pointer Game::create_unit(int stack_id, const std::string& type_name) {
     new_unit->properties[Moves] = type->properties[Moves];
 
     stack->units.push_back(new_unit);
+
+    stack->owner->discovered.apply(*stack, true);
+
     return new_unit;
 }
 
@@ -138,6 +141,7 @@ void Game::transfer_units(int stack_id, const IntSet selected_units, Path path, 
     for (auto iter = path.begin(); iter != path.end(); iter++) {
         Point pos = *iter;
         movement.move(*stack, selected_units, pos);
+        stack->owner->discovered.draw(pos, stack->sight(), true);
     }
 
     Point& new_pos = path.back();

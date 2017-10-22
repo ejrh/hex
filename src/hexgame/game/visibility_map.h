@@ -10,24 +10,34 @@ class Level;
 
 class VisibilityMap {
 public:
-    VisibilityMap(Level *level);
+    VisibilityMap(const Level& level);
+    VisibilityMap(int width, int height);
 
     void resize(int width, int height);
     void clear();
     void fill();
-    void rebuild();
-    void update();
-    void apply(UnitStack& stack, bool visible);
-    void mask(UnitStack& stack);
-    void unmask(UnitStack& stack);
-    void overlay(UnitStack& stack);
+    void rebuild(const Level& level);
+    void apply(const UnitStack& stack, bool visible);
     void draw(const Point& point, int sight, bool visible);
+
+    bool check(const Point& tile_pos) const;
+
+    void load(int row, const std::vector<std::string>& data);
+    void save(int row, std::vector<std::string>& data) const;
+
+private:
+    Vector2<bool> visibility;
+};
+
+class VisibilityMapUnion {
+public:
+    void clear();
+    void add(const VisibilityMap *map);
+    void remove(const VisibilityMap *map);
     bool check(const Point& tile_pos) const;
 
 private:
-    Level *level;
-    Vector2<bool> visibility;
-    std::set<int> masked_stacks;
+    std::vector<const VisibilityMap *> maps;
 };
 
 #endif
