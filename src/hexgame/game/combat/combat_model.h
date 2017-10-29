@@ -26,7 +26,7 @@ private:
     void populate_move_types();
 
 public:
-    std::map<Atom, MoveType *> move_types;
+    std::unordered_map<Atom, MoveType *> move_types;
 
 private:
     static CombatModel default_combat_model;

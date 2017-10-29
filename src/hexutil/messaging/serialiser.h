@@ -90,6 +90,16 @@ public:
         return *this;
     }
 
+    template<typename K, typename V>
+    inline Serialiser& operator<<(const std::unordered_map<K, V>& map) {
+        begin_map(map.size());
+        for (auto iter = map.begin(); iter != map.end(); iter++) {
+            *this << *iter;
+        }
+        end_map();
+        return *this;
+    }
+
     Serialiser& operator<<(const Atom& t) {
         *this << AtomRegistry::name(t);
         return *this;
@@ -210,6 +220,26 @@ public:
 
     template<typename K, typename V>
     inline Deserialiser& operator>>(std::map<K, V>& map) {
+        int size;
+        begin_map(size);
+        for (int i = 0; i < size; i++) {
+            K x;
+            V y = default_value<V>();
+            if (peek() == '}')
+                break;
+            *this >> x;
+            if (peek() == ':') {
+                skip_separator(':');
+                *this >> y;
+            }
+            map[x] = y;
+        }
+        end_map();
+        return *this;
+    }
+
+    template<typename K, typename V>
+    inline Deserialiser& operator>>(std::unordered_map<K, V>& map) {
         int size;
         begin_map(size);
         for (int i = 0; i < size; i++) {

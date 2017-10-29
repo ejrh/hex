@@ -201,7 +201,7 @@ void GameView::update_visibility() {
             if (!tile_view.structure_view)
                 continue;
             Structure::pointer structure = tile_view.structure_view->structure;
-            if (player->has_view(structure->owner)) {
+            if (structure->owner && player->has_view(structure->owner)) {
                 level_view.visibility.draw(tile_pos, structure->sight(), true);
             }
         }

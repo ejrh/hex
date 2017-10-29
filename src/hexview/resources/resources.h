@@ -48,9 +48,9 @@ public:
 
 public:
     ImageMap images;
-    std::map<Atom, std::unique_ptr<ImageLibraryResource> > image_libraries;
+    std::unordered_map<Atom, std::unique_ptr<ImageLibraryResource> > image_libraries;
     SoundMap sounds;
-    std::map<std::string, ImageSeries> image_series;
+    std::unordered_map<std::string, ImageSeries> image_series;
     StrMap<TileViewDef> tile_view_defs;
     StrMap<FeatureViewDef> feature_view_defs;
     StrMap<UnitViewDef> unit_view_defs;

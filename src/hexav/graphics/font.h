@@ -61,7 +61,7 @@ private:
     Graphics *graphics;
     TextFormat format;
     int size;
-    std::map<std::string, Image *> cache;
+    std::unordered_map<std::string, Image *> cache;
 };
 
 #endif

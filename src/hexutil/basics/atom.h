@@ -59,8 +59,8 @@ public:
     static Atom register_atom(const std::string& name, int id);
 
 private:
-    static std::map<int, std::string> id_to_str;
-    static std::map<std::string, int> str_to_id;
+    static std::unordered_map<int, std::string> id_to_str;
+    static std::unordered_map<std::string, int> str_to_id;
     static int next_free_id;
     static const std::string empty_string;
 };

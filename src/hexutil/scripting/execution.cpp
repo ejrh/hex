@@ -106,4 +106,4 @@ std::vector<int> Execution::get_as_intvector(const Term *term, int position) {
 }
 
 
-std::map<Atom, std::unique_ptr<Interpreter> > InterpreterRegistry::interpreters;
+std::unordered_map<Atom, std::unique_ptr<Interpreter> > InterpreterRegistry::interpreters;

@@ -41,7 +41,7 @@ public:
     }
 
 private:
-    std::set<Entry *> data;
+    std::unordered_set<Entry *> data;
 };
 
 extern StringPool string_pool;

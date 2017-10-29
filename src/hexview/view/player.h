@@ -17,8 +17,8 @@ public:
     std::string name;
 
 private:
-    std::set<Faction::pointer> faction_view;
-    std::set<Faction::pointer> faction_control;
+    std::unordered_set<int> faction_view;
+    std::unordered_set<int> faction_control;
 };
 
 

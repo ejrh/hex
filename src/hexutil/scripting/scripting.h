@@ -88,7 +88,7 @@ public:
     }
 
 private:
-    static std::map<Atom, std::unique_ptr<Interpreter> > interpreters;
+    static std::unordered_map<Atom, std::unique_ptr<Interpreter> > interpreters;
 };
 
 void register_builtin_interpreters();

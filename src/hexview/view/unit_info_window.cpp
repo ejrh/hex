@@ -9,8 +9,8 @@
 #include "hexview/view/view.h"
 
 
-static std::map<Atom, Datum> get_all_properties(const Unit& unit) {
-    std::map<Atom, Datum> properties;
+static std::unordered_map<Atom, Datum> get_all_properties(const Unit& unit) {
+    std::unordered_map<Atom, Datum> properties;
     for (auto iter = unit.properties.data.begin(); iter != unit.properties.data.end(); iter++) {
         properties[iter->first] = iter->second;
     }
@@ -55,7 +55,7 @@ void UnitInfoWindow::open(Unit::pointer current_unit) {
 
     // Populate abilities list
     abilities_list->clear();
-    std::map<Atom, Datum> properties = get_all_properties(*current_unit);
+    std::unordered_map<Atom, Datum> properties = get_all_properties(*current_unit);
     for (auto iter = properties.begin(); iter != properties.end(); iter++) {
         std::ostringstream ss;
         ss << iter->first;

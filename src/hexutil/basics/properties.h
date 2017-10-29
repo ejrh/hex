@@ -11,7 +11,7 @@ public:
         return data.count(name);
     }
 
-    std::map<Atom, Datum>::const_iterator find(const Atom& name) const {
+    std::unordered_map<Atom, Datum>::const_iterator find(const Atom& name) const {
         return data.find(name);
     }
 
@@ -53,7 +53,7 @@ public:
     Datum& operator[](const Atom& name) { return data[name]; }
 
 public:
-    std::map<Atom, Datum> data;
+    std::unordered_map<Atom, Datum> data;
 };
 
 std::ostream& operator<<(std::ostream& os, const Properties& p);

@@ -2,8 +2,8 @@
 
 #include "hexutil/basics/atom.h"
 
-std::map<int, std::string> AtomRegistry::id_to_str;
-std::map<std::string, int> AtomRegistry::str_to_id;
+std::unordered_map<int, std::string> AtomRegistry::id_to_str;
+std::unordered_map<std::string, int> AtomRegistry::str_to_id;
 int AtomRegistry::next_free_id(1);
 const std::string AtomRegistry::empty_string;
 

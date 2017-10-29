@@ -30,7 +30,7 @@ void ImageLoader::load_libraries(const std::string& filename) {
         ImageMap hss_images;
         load_hss(filename, graphics, hss_images);
 
-        std::map<Atom, std::unique_ptr<ImageLibraryResource> > loaded_libraries;
+        std::unordered_map<Atom, std::unique_ptr<ImageLibraryResource> > loaded_libraries;
 
         for (auto iter = hss_images.begin(); iter != hss_images.end(); iter++) {
             std::vector<std::string> parts;

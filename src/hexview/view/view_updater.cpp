@@ -117,7 +117,7 @@ void ViewUpdater::apply_update(Message *update) {
             StructurePainter painter(game, game_view, resources);
             painter.repaint(*structure_view);
 
-            if (game_view->player->has_view(structure->owner)) {
+            if (structure->owner && game_view->player->has_view(structure->owner)) {
                 game_view->update_visibility();
             }
         } break;
