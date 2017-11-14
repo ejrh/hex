@@ -5,12 +5,13 @@
 #include "hexav/graphics/graphics.h"
 
 Image::Image(int id, SDL_Texture *texture):
-    id(id), clip_x_offset(0), clip_y_offset(0), texture(texture) {
-        Uint32 format;
-        int access;
-        SDL_QueryTexture(texture, &format, &access, &clip_width, &clip_height);
-        width = clip_width;
-        height = clip_height;
+        id(id), clip_x_offset(0), clip_y_offset(0), texture(texture) {
+    Uint32 format;
+    int access;
+    if (SDL_QueryTexture(texture, &format, &access, &clip_width, &clip_height) != 0)
+        throw Error() << "SDL error: " << SDL_GetError();
+    width = clip_width;
+    height = clip_height;
 }
 
 Image::~Image() {

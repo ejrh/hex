@@ -377,6 +377,11 @@ Image *ILBReader::create_image(char *pixel_data, ImageData &image) {
     SDL_Texture *texture = SDL_CreateTextureFromSurface(graphics->renderer, new_surface);
     SDL_FreeSurface(new_surface);
 
+    if (!texture) {
+        BOOST_LOG_TRIVIAL(warning) << "SDL Error while creating texture: " << SDL_GetError();
+        return NULL;
+    }
+
     if (image.blend_mode == ILB_BLEND_INTENSITY) {
         SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_ADD);
         int bv = image.blend_value * 255 / 100;

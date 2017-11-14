@@ -155,7 +155,7 @@ void HSSReader::read(ImageMap& image_set) {
         read_data(buffer, ilb_len);
         buffer[ilb_len] = 0;
         std::string buf_str(buffer, ilb_len);
-        delete buffer;
+        delete[] buffer;
         std::istringstream s(buf_str);
         ILBReader ilb_reader(s, graphics);
         ImageMap ilb_images;
