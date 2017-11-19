@@ -90,6 +90,35 @@ protected:
 
 
 template<typename T1, typename T2, typename T3>
+class WrapperMessage2_3: public Message {
+public:
+    WrapperMessage2_3() { }
+    WrapperMessage2_3(int type, const T1& data1, const T2& data2, const T3& data3): Message(type), data1(data1), data2(data2), data3(data3) { }
+    virtual ~WrapperMessage2_3() { }
+
+    T1 data1;
+    T2 data2;
+    T3 data3;
+
+protected:
+    virtual void read(Deserialiser& deserialiser) {
+        deserialiser >> data1;
+        deserialiser >> data2;
+        if (deserialiser.peek() != ')')
+            deserialiser >> data3;
+        else
+            data3 = default_value<T3>();
+    }
+
+    virtual void write(Serialiser& serialiser) const {
+        serialiser << data1;
+        serialiser << data2;
+        serialiser << data3;
+    };
+};
+
+
+template<typename T1, typename T2, typename T3>
 class WrapperMessage3: public Message {
 public:
     WrapperMessage3() { }

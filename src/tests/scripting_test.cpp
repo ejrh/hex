@@ -19,14 +19,14 @@ public:
         switch (msg->type) {
             case DefineScript: {
                 auto upd = dynamic_cast<DefineScriptMessage *>(msg);
-                define_script(upd->data1, upd->data2);
+                define_script(upd->data1, upd->data2, upd->data3);
             } break;
         }
     }
 
-    void define_script(const std::string& name, Term *instruction) {
-        Script::pointer script = boost::make_shared<Script>(name, std::unique_ptr<Term>(instruction));
-        BOOST_LOG_TRIVIAL(info) << "Compiled script: " << name;
+    void define_script(const std::string& name, Term *parameters, Term *instruction) {
+        Script::pointer script = compile_script(name, parameters, instruction);
+        BOOST_LOG_TRIVIAL(info) << "Compiled script: " << script->signature();
         scripts->put_and_warn(name, script);
     }
 
@@ -66,9 +66,9 @@ BOOST_AUTO_TEST_CASE(set_var) {
     BOOST_CHECK_EQUAL(var_value2, "xyz");
 }
 
-BOOST_AUTO_TEST_CASE(include_script) {
+BOOST_AUTO_TEST_CASE(call_script) {
     play_message("DefineScript(u, [SetVariable(VarX, \"xyz\")])");
-    play_message("DefineScript(t, [SetVariable(VarX, \"abc\"), IncludeScript(u)])");
+    play_message("DefineScript(t, [SetVariable(VarX, \"abc\"), Call(u)])");
 
     Execution execution(&scripts);
     execution.run("t");
@@ -110,12 +110,52 @@ BOOST_AUTO_TEST_CASE(choose) {
 BOOST_AUTO_TEST_CASE(return_value) {
     play_message("DefineScript(u, [Return(\"xyz\")])");
     play_message("DefineScript(t, ["
-        "SetVariable(VarX, [IncludeScript(u)])])");
+        "SetVariable(VarX, [Call(u)])])");
 
     Execution execution(&scripts);
     execution.run("t");
     const std::string& var_value = execution.variables.get(VarX);
     BOOST_CHECK_EQUAL(var_value, "xyz");
+}
+
+BOOST_AUTO_TEST_CASE(increment) {
+    play_message("DefineScript(t, ["
+        "SetVariable(VarX, 5),"
+        "Increment(VarX, 3),"
+        "SetVariable(VarY, 5),"
+        "Increment(VarY)])");
+
+    Execution execution(&scripts);
+    execution.run("t");
+    int var_value = execution.variables.get(VarX);
+    BOOST_CHECK_EQUAL(var_value, 8);
+    var_value = execution.variables.get(VarY);
+    BOOST_CHECK_EQUAL(var_value, 6);
+}
+
+BOOST_AUTO_TEST_CASE(parameter) {
+    play_message("DefineScript(u, [VarZ], [Return($VarZ)])");
+    play_message("DefineScript(t, ["
+        "SetVariable(VarX, 99),"
+        "SetVariable(VarY, [Call(u, [42])])])");
+
+    Execution execution(&scripts);
+    execution.run("t");
+    int var_value = execution.variables.get(VarX);
+    BOOST_CHECK_EQUAL(var_value, 99);
+    var_value = execution.variables.get(VarY);
+    BOOST_CHECK_EQUAL(var_value, 42);
+}
+
+BOOST_AUTO_TEST_CASE(while_lt) {
+    play_message("DefineScript(t, ["
+        "SetVariable(VarX, 2),"
+        "While(Lt($VarX, 10), [Increment(VarX, 3)])])");
+
+    Execution execution(&scripts);
+    execution.run("t");
+    int var_value = execution.variables.get(VarX);
+    BOOST_CHECK_EQUAL(var_value, 11);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

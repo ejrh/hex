@@ -18,7 +18,7 @@ DefineScript(ground_transition_ps, [
     SetVariable(paint_offset_y, -26),
     SetVariable(paint_library, hextrans),
 
-    IncludeScript(ground_transition_def),
+    Call(ground_transition_def),
 ])
 
 
@@ -56,7 +56,7 @@ TilePaint([
     SetVariable(paint_library, h_gr),
     PaintFrame(Choose($tile_variation, [0,1,2,3,4,5,6,7,8,9,10,11])),
 ])
-TransitionPaint([SetVariable(paint_frame_offset, 22), TransitionMatch("desert|snow|steppe|wasteland"), IncludeScript(ground_transition_ps)])
+TransitionPaint([SetVariable(paint_frame_offset, 22), TransitionMatch("desert|snow|steppe|wasteland"), Call(ground_transition_ps)])
 
 CreateTileView("desert", 128,128,64)
 TilePaint([
@@ -65,7 +65,7 @@ TilePaint([
     SetVariable(paint_library, h_de),
     PaintFrame(Choose($tile_variation, [0,1,2,3,4,5,6,7])),
 ])
-TransitionPaint([SetVariable(paint_frame_offset, 38), TransitionMatch("grass|snow|steppe|wasteland"), IncludeScript(ground_transition_ps)])
+TransitionPaint([SetVariable(paint_frame_offset, 38), TransitionMatch("grass|snow|steppe|wasteland"), Call(ground_transition_ps)])
 
 CreateTileView("snow", 128,128,128)
 TilePaint([
@@ -74,7 +74,7 @@ TilePaint([
     SetVariable(paint_library, h_sn),
     PaintFrame(Choose($tile_variation, [0,1,2,3,4,5,6,7])),
 ])
-TransitionPaint([SetVariable(paint_frame_offset, 54), TransitionMatch("grass|desert|steppe|wasteland"), IncludeScript(ground_transition_ps)])
+TransitionPaint([SetVariable(paint_frame_offset, 54), TransitionMatch("grass|desert|steppe|wasteland"), Call(ground_transition_ps)])
 
 CreateTileView("steppe", 128,96,64)
 TilePaint([
@@ -83,7 +83,7 @@ TilePaint([
     SetVariable(paint_library, h_st),
     PaintFrame(Choose($tile_variation, [0,1,2,3,4,5,6,7,8,9])),
 ])
-TransitionPaint([SetVariable(paint_frame_offset, 70), TransitionMatch("grass|desert|snow|wasteland"), IncludeScript(ground_transition_ps)])
+TransitionPaint([SetVariable(paint_frame_offset, 70), TransitionMatch("grass|desert|snow|wasteland"), Call(ground_transition_ps)])
 
 CreateTileView("wasteland", 64,64,64)
 TilePaint([
@@ -92,7 +92,7 @@ TilePaint([
     SetVariable(paint_library, h_wl),
     PaintFrame(Choose($tile_variation, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14])),
 ])
-TransitionPaint([SetVariable(paint_frame_offset, 86), TransitionMatch("grass|desert|snow|steppe"), IncludeScript(ground_transition_ps)])
+TransitionPaint([SetVariable(paint_frame_offset, 86), TransitionMatch("grass|desert|snow|steppe"), Call(ground_transition_ps)])
 
 
 ##### Water tiles #####
@@ -112,15 +112,15 @@ TransitionPaint([
 
     SetVariable(paint_frame_offset, 0),
     TransitionMatch("grass|desert|steppe"),
-    IncludeScript(water_transition_def),
+    Call(water_transition_def),
 
     SetVariable(paint_frame_offset, 40),
     TransitionMatch("snow"),
-    IncludeScript(water_transition_def),
+    Call(water_transition_def),
 
     SetVariable(paint_frame_offset, 80),
     TransitionMatch("wasteland"),
-    IncludeScript(water_transition_def),
+    Call(water_transition_def),
 ])
 
 

@@ -53,6 +53,7 @@ set(srcs
         networking/server.cpp
         scripting/builtin_instructions.cpp
         scripting/execution.cpp
+        scripting/scripting.cpp
         scripting/scripting.h
 )
 

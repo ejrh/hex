@@ -10,7 +10,7 @@ CreateUnitView("battering_ram")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [65, 66])),
     SetVariable(unit_lib, btram),
-    IncludeScript(machine_ps)
+    Call(machine_ps)
 ])
 UnitSounds(1, ["hvywh1.wav", "hvywh2.wav", "hvywh3.wav"])
 
@@ -18,7 +18,7 @@ CreateUnitView("catapult")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [67, 68])),
     SetVariable(unit_lib, ctplt),
-    IncludeScript(machine_ps)
+    Call(machine_ps)
 ])
 UnitSounds(1, ["hvywh1.wav", "hvywh2.wav", "hvywh3.wav"])
 
@@ -26,7 +26,7 @@ CreateUnitView("ballista")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [73, 74])),
     SetVariable(unit_lib, blsta),
-    IncludeScript(machine_ps)
+    Call(machine_ps)
 ])
 UnitSounds(1, ["hvywh1.wav", "hvywh2.wav", "hvywh3.wav"])
 
@@ -34,7 +34,7 @@ CreateUnitView("turtle_catapult")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [83, 84])),
     SetVariable(unit_lib, tpult),
-    IncludeScript(turtle_machine_ps)
+    Call(turtle_machine_ps)
 ])
 UnitSounds(1, ["sfstep1.wav", "sfstep2.wav", "sfstep3.wav", "sfstep4.wav"])
 
@@ -42,6 +42,6 @@ CreateUnitView("turtle_crossbow")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [83, 84])),
     SetVariable(unit_lib, tcrbw),
-    IncludeScript(turtle_machine_ps)
+    Call(turtle_machine_ps)
 ])
 UnitSounds(1, ["sfstep1.wav", "sfstep2.wav", "sfstep3.wav", "sfstep4.wav"])

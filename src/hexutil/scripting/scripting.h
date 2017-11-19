@@ -29,9 +29,14 @@ public:
 
     Script(const std::string& name, std::unique_ptr<Term> instructions):
             name(name), instructions(std::move(instructions)) { }
+    Script(const std::string& name, const std::vector<Atom>& parameters, std::unique_ptr<Term> instructions):
+            name(name), parameters(parameters), instructions(std::move(instructions)) { }
+
+    std::string signature() const;
 
 public:
     std::string name;
+    std::vector<Atom> parameters;
     std::unique_ptr<Term> instructions;
 };
 
@@ -64,9 +69,26 @@ public:
 
 public:
     StrMap<Script> *scripts;
+    Properties locals;
     Properties variables;
     std::vector<Properties *> properties_list;
     bool return_active;
+};
+
+
+class PushLocals {
+public:
+    PushLocals(Execution& execution, Properties& locals):
+            execution(execution), locals(locals) {
+        std::swap(execution.locals, locals);
+    }
+    ~PushLocals() {
+        std::swap(execution.locals, locals);
+    }
+
+private:
+    Execution& execution;
+    Properties& locals;
 };
 
 
@@ -92,6 +114,8 @@ private:
 };
 
 void register_builtin_interpreters();
+
+Script::pointer compile_script(const std::string& name, Term *parameters, Term *instruction);
 
 
 #endif

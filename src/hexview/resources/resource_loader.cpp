@@ -147,7 +147,11 @@ void ResourceLoader::handle_message(Message *msg) {
 
         case DefineScript: {
             auto upd = dynamic_cast<DefineScriptMessage *>(msg);
-            define_script(upd->data1, upd->data2);
+            if (!upd->data3) {
+                define_script(upd->data1, upd->data2);
+            } else {
+                define_script(upd->data1, upd->data2, upd->data3);
+            }
         } break;
 
         default: {
@@ -206,9 +210,10 @@ void ResourceLoader::load_sound(const std::string& filename) {
     sound_loader->load(relative_filename);
 }
 
-Script::pointer ResourceLoader::define_script(const std::string& name, Term *instruction) {
-    Script::pointer script = boost::make_shared<Script>(name, std::unique_ptr<Term>(instruction));
-    BOOST_LOG_TRIVIAL(info) << "Added script: " << name;
+Script::pointer ResourceLoader::define_script(const std::string& name, Term *parameters, Term *instruction) {
+    Script::pointer script = compile_script(name, parameters, instruction);
+
+    BOOST_LOG_TRIVIAL(info) << "Added script: " << script->signature();
     resources->scripts.put_and_warn(name, script);
     return script;
 }

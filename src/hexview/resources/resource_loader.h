@@ -46,7 +46,7 @@ public:
     void load_image_library(Atom name, const std::string& filename);
     void load_song(const std::string& filename);
     void load_sound(const std::string& filename);
-    Script::pointer define_script(const std::string& name, Term *script_term);
+    Script::pointer define_script(const std::string& name, Term *parameters, Term *instruction = nullptr);
 
 private:
     Resources *resources;

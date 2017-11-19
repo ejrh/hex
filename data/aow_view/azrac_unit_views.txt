@@ -13,7 +13,7 @@ CreateUnitView("azrac_archer")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [272, 273])),
     SetVariable(unit_lib, azrar),
-    IncludeScript(archer_ps)
+    Call(archer_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -21,7 +21,7 @@ CreateUnitView("azrac_swordsman")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [270, 271])),
     SetVariable(unit_lib, azrwr),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -29,7 +29,7 @@ CreateUnitView("azrac_elephant")
 UnitPaint([
     SetVariable(death_frame, 283),
     SetVariable(unit_lib, eleph),
-    IncludeScript(mounted_ps)
+    Call(mounted_ps)
 ])
 UnitSounds(1, ["sfstep1.wav", "sfstep2.wav", "sfstep3.wav", "sfstep4.wav"])
 
@@ -37,7 +37,7 @@ CreateUnitView("azrac_scorpion")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [274, 275])),
     SetVariable(unit_lib, scorp),
-    IncludeScript(monster_ps)
+    Call(monster_ps)
 ])
 UnitSounds(1, ["insect1.wav", "insect2.wav"])
 
@@ -45,7 +45,7 @@ CreateUnitView("azrac_priest")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [278, 279])),
     SetVariable(unit_lib, azrcl),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -53,7 +53,7 @@ CreateUnitView("azrac_rider")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [276, 277])),
     SetVariable(unit_lib, azrhr),
-    IncludeScript(mounted_ps)
+    Call(mounted_ps)
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
@@ -61,7 +61,7 @@ CreateUnitView("azrac_yaka_avatar")
 UnitPaint([
     SetVariable(death_frame, 284),
     SetVariable(unit_lib, azrav),
-    IncludeScript(monster_ps)
+    Call(monster_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -69,7 +69,7 @@ CreateUnitView("azrac_beholder")
 UnitPaint([
     SetVariable(death_frame, 280),
     SetVariable(unit_lib, bhldr),
-    IncludeScript(hovering_ps)
+    Call(hovering_ps)
 ])
 UnitSounds(1, ["air1.wav", "air1.wav"])
 
@@ -77,7 +77,7 @@ CreateUnitView("azrac_djinn")
 UnitPaint([
     SetVariable(death_frame, 281),
     SetVariable(unit_lib, djinn),
-    IncludeScript(hovering_ps)
+    Call(hovering_ps)
 ])
 UnitSounds(1, ["air1.wav", "air1.wav"])
 
@@ -85,6 +85,6 @@ CreateUnitView("azrac_sandworm")
 UnitPaint([
     SetVariable(death_frame, 282),
     SetVariable(unit_lib, wormy),
-    IncludeScript(monster_ps)
+    Call(monster_ps)
 ])
 UnitSounds(1, ["crawl1.wav", "crawl2.wav"])

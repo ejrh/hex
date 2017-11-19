@@ -10,34 +10,34 @@ CreateUnitView("air_galley")
 UnitPaint([
     SetVariable(death_frame, 14),
     SetVariable(unit_lib, hmnas),
-    IncludeScript(airship_ps)
+    Call(airship_ps)
 ])
 UnitSounds(1, ["air1.wav", "air2.wav"])
 
 CreateUnitView("transport_ship")
 UnitPaint([
     SetVariable(unit_lib, sloop),
-    IncludeScript(ship_ps)
+    Call(ship_ps)
 ])
 UnitSounds(1, ["waterlg.wav"])
 
 CreateUnitView("dragon_ship")
 UnitPaint([
     SetVariable(unit_lib, dship),
-    IncludeScript(ship_ps)
+    Call(ship_ps)
 ])
 UnitSounds(1, ["waterlg.wav"])
 
 CreateUnitView("galley")
 UnitPaint([
     SetVariable(unit_lib, gally),
-    IncludeScript(ship_ps)
+    Call(ship_ps)
 ])
 UnitSounds(1, ["waterlg.wav"])
 
 CreateUnitView("galleon")
 UnitPaint([
     SetVariable(unit_lib, galln),
-    IncludeScript(ship_ps)
+    Call(ship_ps)
 ])
 UnitSounds(1, ["waterlg.wav"])

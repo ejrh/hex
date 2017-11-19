@@ -11,7 +11,7 @@ CreateUnitView("lizard_archer")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [212, 213])),
     SetVariable(unit_lib, lizar),
-    IncludeScript(archer_ps)
+    Call(archer_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -19,7 +19,7 @@ CreateUnitView("lizard_swordsman")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [210, 211])),
     SetVariable(unit_lib, lizwr),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -27,7 +27,7 @@ CreateUnitView("lizard_shaman")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [218, 219])),
     SetVariable(unit_lib, lizcl),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -36,7 +36,7 @@ CreateUnitView("lizard_frog_rider")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [216, 217])),
     SetVariable(unit_lib, lizfr),
-    IncludeScript(mounted_ps)
+    Call(mounted_ps)
 ])
 UnitSounds(1, ["slimes1.wav", "slimes2.wav", "slimes3.wav", "slimes4.wav"])
 
@@ -45,7 +45,7 @@ CreateUnitView("lizard_salamander")
 UnitPaint([
     SetVariable(death_frame, 221),
     SetVariable(unit_lib, lizsm),
-    IncludeScript(monster_ps)
+    Call(monster_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -53,7 +53,7 @@ CreateUnitView("lizard_basilisk")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [225, 226])),
     SetVariable(unit_lib, baslk),
-    IncludeScript(monster_ps)
+    Call(monster_ps)
 ])
 UnitSounds(1, ["slimes1.wav", "slimes2.wav", "slimes3.wav", "slimes4.wav"])
 

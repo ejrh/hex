@@ -10,6 +10,7 @@
 
 #define WM(t) WrapperMessage<t>
 #define WM2(t1,t2) WrapperMessage2<t1,t2>
+#define WM2_3(t1,t2,t3) WrapperMessage2_3<t1,t2,t3>
 #define WM3(t1,t2,t3) WrapperMessage3<t1,t2,t3>
 #define WM4(t1,t2,t3,t4) WrapperMessage4<t1,t2,t3,t4>
 
@@ -21,7 +22,7 @@ MSG_TYPE(StreamClose, Message)
 MSG_TYPE(StreamReplay, WM2(int, int))
 MSG_TYPE(StreamState, WM2(int, int))
 
-MSG_TYPE(DefineScript, WM2(Atom, Term *))
+MSG_TYPE(DefineScript, WM2_3(Atom, Term *, Term *))
 
 
 #undef P

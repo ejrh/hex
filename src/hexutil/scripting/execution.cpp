@@ -38,8 +38,9 @@ Datum Execution::execute_instruction(const Term *script_term) {
     throw ScriptError() << "Can't find interpreter for term: " << script_term << "\n";
 }
 
-
 const Datum& Execution::get(const Atom& name) const {
+    if (locals.contains(name))
+        return locals.get(name);
     if (variables.contains(name))
         return variables.get(name);
     for (auto iter = properties_list.begin(); iter != properties_list.end(); iter++) {

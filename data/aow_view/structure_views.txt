@@ -40,8 +40,8 @@ DefineScript(small_flag_ps, [
 
 CreateStructureView("farm")
 StructurePaint([
-    IncludeScript(pad1_ps),
-    IncludeScript(small_flag_ps),
+    Call(pad1_ps),
+    Call(small_flag_ps),
     SetVariable(paint_library, str_farm),
     SetVariable(paint_offset_x, -28),
     SetVariable(paint_offset_y, -46),
@@ -53,7 +53,7 @@ StructurePaint([
 
 CreateStructureView("mine")
 StructurePaint([
-    IncludeScript(small_flag_ps),
+    Call(small_flag_ps),
     SetVariable(paint_library, str_mine),
     SetVariable(paint_offset_x, -30),
     SetVariable(paint_offset_y, -38),
@@ -69,7 +69,7 @@ StructurePaint([
 
 CreateStructureView("power_node")
 StructurePaint([
-    IncludeScript(small_flag_ps),
+    Call(small_flag_ps),
     SetVariable(paint_library, str_node),
     SetVariable(paint_offset_x, -30),
     SetVariable(paint_offset_y, -57),
@@ -85,7 +85,7 @@ StructurePaint([
 
 CreateStructureView("life_node")
 StructurePaint([
-    IncludeScript(small_flag_ps),
+    Call(small_flag_ps),
     SetVariable(paint_library, pro_grov),
     SetVariable(paint_offset_x, -30),
     SetVariable(paint_offset_y, -40),
@@ -101,7 +101,7 @@ StructurePaint([
 
 CreateStructureView("death_node")
 StructurePaint([
-    IncludeScript(small_flag_ps),
+    Call(small_flag_ps),
     SetVariable(paint_library, str_node),
     SetVariable(paint_offset_x, -35),
     SetVariable(paint_offset_y, -128),
@@ -117,7 +117,7 @@ StructurePaint([
 
 CreateStructureView("fire_node")
 StructurePaint([
-    IncludeScript(small_flag_ps),
+    Call(small_flag_ps),
     SetVariable(paint_library, str_node),
     SetVariable(paint_offset_x, -35),
     SetVariable(paint_offset_y, -128),
@@ -136,7 +136,7 @@ StructurePaint([
 
 CreateStructureView("water_node")
 StructurePaint([
-    IncludeScript(small_flag_ps),
+    Call(small_flag_ps),
     SetVariable(paint_library, str_nrck),
     SetVariable(paint_offset_x, -30),
     SetVariable(paint_offset_y, -36),
@@ -152,7 +152,7 @@ StructurePaint([
 
 CreateStructureView("earth_node")
 StructurePaint([
-    IncludeScript(small_flag_ps),
+    Call(small_flag_ps),
     SetVariable(paint_library, str_node),
     SetVariable(paint_offset_x, -35),
     SetVariable(paint_offset_y, -128),
@@ -171,7 +171,7 @@ StructurePaint([
 
 CreateStructureView("air_node")
 StructurePaint([
-    IncludeScript(small_flag_ps),
+    Call(small_flag_ps),
     SetVariable(paint_library, str_node),
     SetVariable(paint_offset_x, -37),
     SetVariable(paint_offset_y, -132),
@@ -187,8 +187,8 @@ StructurePaint([
 
 CreateStructureView("tower")
 StructurePaint([
-    IncludeScript(pad1_ps),
-    IncludeScript(small_flag_ps),
+    Call(pad1_ps),
+    Call(small_flag_ps),
     SetVariable(paint_library, str_towr),
     SetVariable(paint_offset_x, -25),
     SetVariable(paint_offset_y, -64),
@@ -200,7 +200,7 @@ StructurePaint([
 
 CreateStructureView("wizard_tower")
 StructurePaint([
-    IncludeScript(pad1_ps),
+    Call(pad1_ps),
     SetVariable(paint_library, str_wtwr),
     SetVariable(paint_offset_x, -26),
     SetVariable(paint_offset_y, -106),

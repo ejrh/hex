@@ -11,7 +11,7 @@ CreateUnitView("human_archer")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [2, 3])),
     SetVariable(unit_lib, hmnar),
-    IncludeScript(archer_ps)
+    Call(archer_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -19,7 +19,7 @@ CreateUnitView("human_swordsman")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [0, 1])),
     SetVariable(unit_lib, hmnwr),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -27,7 +27,7 @@ CreateUnitView("human_charlatan")
 UnitPaint([
     SetVariable(death_frame, 10),
     SetVariable(unit_lib, hmnch),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -35,7 +35,7 @@ CreateUnitView("human_priest")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [8, 9])),
     SetVariable(unit_lib, hmncl),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -43,7 +43,7 @@ CreateUnitView("human_musketeer")
 UnitPaint([
     SetVariable(death_frame, 13),
     SetVariable(unit_lib, hmnms),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -51,7 +51,7 @@ CreateUnitView("human_cavalier")
 UnitPaint([
     SetVariable(death_frame, 11),
     SetVariable(unit_lib, hmnpl),
-    IncludeScript(mounted_ps)
+    Call(mounted_ps)
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
@@ -59,7 +59,7 @@ CreateUnitView("human_cavalry")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [6, 7])),
     SetVariable(unit_lib, hmnhr),
-    IncludeScript(mounted_ps)
+    Call(mounted_ps)
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
@@ -67,6 +67,6 @@ CreateUnitView("human_pikeman")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [4, 5])),
     SetVariable(unit_lib, hmnsp),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])

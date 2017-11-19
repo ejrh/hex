@@ -24,9 +24,9 @@ public:
 };
 
 
-class IncludeScriptInterpreter: public Interpreter {
+class CallInterpreter: public Interpreter {
 public:
-    IncludeScriptInterpreter(): Interpreter("IncludeScript") { }
+    CallInterpreter(): Interpreter("Call") { }
 
     Datum execute(const Term *instruction, Execution *execution) const {
         const Atom script_name = execution->get_argument(instruction, 0).get_as_atom();
@@ -34,6 +34,23 @@ public:
         Script::pointer script = scripts.find(script_name);
         if (!script)
             throw ScriptError() << "Script not found: " << script_name;
+
+        /* Check number of arguments vs parameters. */
+        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
+        const Term *arguments = (list_term->subterms.size() > 1) ? execution->get_subterm(list_term, 1) : nullptr;
+        const CompoundTerm *arguments_term = dynamic_cast<const CompoundTerm *>(arguments);
+        int num_arguments = arguments_term ? arguments_term->subterms.size() : 0;
+        int num_parameters = script->parameters.size();
+        if (num_arguments != num_parameters)
+            throw ScriptError() << boost::format("Script '%s' expects %d parameters; %d provided") % script_name % num_parameters % num_arguments;
+
+        /* Copy arguments into locals. */
+        Properties locals;
+        for (int i = 0; i < num_arguments; i++) {
+            locals[script->parameters[i]] = execution->get_argument(arguments, i);
+        }
+
+        PushLocals push_locals(*execution, locals);
         return execution->execute_script(script.get());
     }
 };
@@ -69,6 +86,23 @@ public:
 };
 
 
+class WhileInterpreter: public Interpreter {
+public:
+    WhileInterpreter(): Interpreter("While") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        const Term *body = execution->get_subterm(instruction, 1);
+
+        Datum result = 0;
+        while (execution->get_argument(instruction, 0).get_as_int()) {
+            result = execution->execute_instruction(body);
+        }
+
+        return result;
+    }
+};
+
+
 class MatchInterpreter: public Interpreter {
 public:
     MatchInterpreter(): Interpreter("Match") { }
@@ -96,6 +130,23 @@ public:
         const Datum& value2 = execution->get_argument(instruction, 1);
 
         if (value == value2) {
+            return 1;
+        }
+
+        return 0;
+    }
+};
+
+
+class LtInterpreter: public Interpreter {
+public:
+    LtInterpreter(): Interpreter("Lt") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        int value = execution->get_argument(instruction, 0).get_as_int();
+        int value2 = execution->get_argument(instruction, 1).get_as_int();
+
+        if (value < value2) {
             return 1;
         }
 
@@ -179,16 +230,63 @@ public:
 };
 
 
+class LogInterpreter: public Interpreter {
+public:
+    LogInterpreter(): Interpreter("Log") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
+        std::ostringstream message;
+        bool first = true;
+        for (int i = 0; i < list_term->subterms.size(); i++) {
+            if (!first)
+                message << ' ';
+            message << execution->get_argument(list_term, i).get_as_str();
+            first = false;
+        }
+
+        BOOST_LOG_TRIVIAL(info) << boost::format("Script line %d: ") % instruction->line_no <<  message.str();
+        return 1;
+    }
+};
+
+
+class IncrementInterpreter: public Interpreter {
+public:
+    IncrementInterpreter(): Interpreter("Increment") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
+        const Atom& property = execution->get_argument(instruction, 0);
+        int value = execution->variables[property].get_as_int();
+
+        if (list_term->subterms.size() == 1) {
+            value += 1;
+        } else {
+            for (int i = 1; i < list_term->subterms.size(); i++)
+                value += execution->get_argument(instruction, i).get_as_int();
+        }
+
+        execution->variables[property] = value;
+        return value;
+    }
+};
+
+
 void register_builtin_interpreters() {
     InterpreterRegistry::register_interpreter(new ListInterpreter());
-    InterpreterRegistry::register_interpreter(new IncludeScriptInterpreter());
+    InterpreterRegistry::register_interpreter(new CallInterpreter());
     InterpreterRegistry::register_interpreter(new SetVariableInterpreter());
     InterpreterRegistry::register_interpreter(new IfInterpreter());
+    InterpreterRegistry::register_interpreter(new WhileInterpreter());
     InterpreterRegistry::register_interpreter(new MatchInterpreter());
     InterpreterRegistry::register_interpreter(new EqInterpreter());
+    InterpreterRegistry::register_interpreter(new LtInterpreter());
     InterpreterRegistry::register_interpreter(new AndInterpreter());
     InterpreterRegistry::register_interpreter(new NotInterpreter());
     InterpreterRegistry::register_interpreter(new ReturnInterpreter());
     InterpreterRegistry::register_interpreter(new ChooseInterpreter());
     InterpreterRegistry::register_interpreter(new MixInterpreter());
+    InterpreterRegistry::register_interpreter(new LogInterpreter());
+    InterpreterRegistry::register_interpreter(new IncrementInterpreter());
 }

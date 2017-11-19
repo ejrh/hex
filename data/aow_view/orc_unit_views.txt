@@ -10,7 +10,7 @@ CreateUnitView("orc_archer")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [172, 173])),
     SetVariable(unit_lib, orcar),
-    IncludeScript(archer_ps)
+    Call(archer_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -18,7 +18,7 @@ CreateUnitView("orc_swordsman")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [170, 171])),
     SetVariable(unit_lib, orcwr),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -26,7 +26,7 @@ CreateUnitView("orc_shaman")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [178, 179])),
     SetVariable(unit_lib, orccl),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -34,7 +34,7 @@ CreateUnitView("orc_cavalry")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [176, 177])),
     SetVariable(unit_lib, orchr),
-    IncludeScript(mounted_ps)
+    Call(mounted_ps)
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
@@ -42,7 +42,7 @@ CreateUnitView("orc_warlord")
 UnitPaint([
     SetVariable(death_frame, 181),
     SetVariable(unit_lib, orcwl),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -50,7 +50,7 @@ CreateUnitView("orc_assassin")
 UnitPaint([
     SetVariable(death_frame, 180),
     SetVariable(unit_lib, orcas),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["sftstep1.wav", "sftstep2.wav", "sftstep3.wav", "sftstep4.wav"])
 
@@ -58,7 +58,7 @@ CreateUnitView("orc_red_dragon")
 UnitPaint([
     SetVariable(death_frame, 182),
     SetVariable(unit_lib, orcdr),
-    IncludeScript(dragon_ps)
+    Call(dragon_ps)
 ])
 UnitSounds(1, ["wing1.wav", "wing2.wav"])
 

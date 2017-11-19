@@ -11,7 +11,7 @@ CreateUnitView("elf_archer")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [112, 113])),
     SetVariable(unit_lib, elvar),
-    IncludeScript(archer_ps)
+    Call(archer_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -19,7 +19,7 @@ CreateUnitView("elf_swordsman")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [110, 111])),
     SetVariable(unit_lib, elvwr),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -27,7 +27,7 @@ CreateUnitView("elf_priest")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [118, 119])),
     SetVariable(unit_lib, elvcl),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -35,7 +35,7 @@ CreateUnitView("elf_rider")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [116, 117])),
     SetVariable(unit_lib, elvhr),
-    IncludeScript(mounted_ps)
+    Call(mounted_ps)
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
@@ -43,7 +43,7 @@ CreateUnitView("elf_ranger")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [124, 125])),
     SetVariable(unit_lib, elvrn),
-    IncludeScript(mounted_ps)
+    Call(mounted_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
@@ -51,7 +51,7 @@ CreateUnitView("elf_unicorn")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [112, 113])),
     SetVariable(unit_lib, unicn),
-    IncludeScript(mounted_ps)
+    Call(mounted_ps)
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
@@ -59,7 +59,7 @@ CreateUnitView("elf_fairy")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [120, 121])),
     SetVariable(unit_lib, fairy),
-    IncludeScript(fairy_ps)
+    Call(fairy_ps)
 ])
 UnitSounds(1, ["flutter.wav"])
 
@@ -67,6 +67,6 @@ CreateUnitView("elf_nymph")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [114, 115])),
     SetVariable(unit_lib, nymph),
-    IncludeScript(infantry_ps)
+    Call(infantry_ps)
 ])
 UnitSounds(1, ["sfstep1.wav", "sfstep2.wav", "sfstep3.wav", "sfstep4.wav"])
