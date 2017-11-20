@@ -1,0 +1,36 @@
+add_executable(battle_test battle_test.cpp)
+target_link_libraries(battle_test hexgame hexutil)
+target_link_libraries(battle_test ${gen_libs})
+target_compile_options(battle_test PUBLIC ${gen_opts})
+
+add_executable(hexgrid_test hexgrid_test.cpp)
+target_link_libraries(hexgrid_test hexutil)
+target_link_libraries(hexgrid_test ${gen_libs})
+target_compile_options(hexgrid_test PUBLIC ${gen_opts})
+
+add_executable(messaging_test messaging_test.cpp)
+target_link_libraries(messaging_test hexgame hexutil)
+target_link_libraries(messaging_test ${gen_libs})
+target_compile_options(messaging_test PUBLIC ${gen_opts})
+
+add_executable(movement_test movement_test.cpp)
+target_link_libraries(movement_test hexgame hexutil)
+target_link_libraries(movement_test ${gen_libs})
+target_compile_options(movement_test PUBLIC ${gen_opts})
+
+add_executable(scripting_test scripting_test.cpp)
+target_link_libraries(scripting_test hexutil)
+target_link_libraries(scripting_test ${gen_libs})
+target_compile_options(scripting_test PUBLIC ${gen_opts})
+
+add_executable(string_utils_test string_utils_test.cpp)
+target_link_libraries(string_utils_test hexutil)
+target_link_libraries(string_utils_test ${gen_libs})
+target_compile_options(string_utils_test PUBLIC ${gen_opts})
+
+add_test(battle_test battle_test)
+add_test(hexgrid_test hexgrid_test)
+add_test(messaging_test messaging_test)
+add_test(movement_test movement_test)
+add_test(scripting_test scripting_test)
+add_test(string_utils_test string_utils_test)

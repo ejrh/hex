@@ -33,6 +33,8 @@ endif(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
 
 set(CMAKE_CXX_STANDARD 11)
 
+enable_testing()
+
 include_directories("src")
 
 add_subdirectory(src)
