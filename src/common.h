@@ -19,6 +19,7 @@
 #include <memory>
 #include <utility>
 #include <ctime>
+#include <cstdarg>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -44,11 +45,14 @@
 
 
 // Hash function object for generic std::pair.
-template<typename T, typename U>
-struct std::hash<std::pair<T, U> > {
-    std::size_t operator()(const std::pair<T, U>& pair) const {
-        std::hash<T> hash1;
-        std::hash<U> hash2;
-        return hash1(pair.first) + hash2(pair.second);
-    }
-};
+namespace std {
+    template<typename T, typename U>
+    struct hash<pair<T, U> > {
+        size_t operator()(const pair<T, U>& pair) const {
+            hash<T> hash1;
+            hash<U> hash2;
+            return hash1(pair.first) + hash2(pair.second);
+        }
+    };
+}
+

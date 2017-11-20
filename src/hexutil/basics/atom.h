@@ -31,13 +31,14 @@ private:
     friend class AtomRegistry;
 };
 
-template<>
-struct std::hash<Atom> {
-    std::size_t operator()(const Atom& atom) const {
-        return atom;
-    }
-};
-
+namespace std {
+    template<>
+    struct hash<Atom> {
+        size_t operator()(const Atom& atom) const {
+            return atom;
+        }
+    };
+}
 
 class AtomRegistry {
 public:
