@@ -1,6 +1,8 @@
 Hex
 ===
 
+[![Build Status](https://travis-ci.org/ejrh/hex.svg?branch=master)](https://travis-ci.org/ejrh/hex)
+
 Hex is a turn-based strategy game engine, inspired by [Age of Wonders](https://en.wikipedia.org/?title=Age_of_Wonders).
 The name 'Hex' is derived from the fact that the map tiles are hexagonal (remember, naming
 things is one of the two hard problems of computer science).
