@@ -135,16 +135,22 @@ private:
 
 // Technique for return value specialisation, from http://stackoverflow.com/a/15912228/63991
 template<typename V>
-struct default_value_return { typedef V type; };
+struct implicit_value_return { typedef V type; };
 
 template<typename V>
-inline typename default_value_return<V>::type default_value() { return V(); }
+inline typename implicit_value_return<V>::type implicit_value() { return V(); }
 
 template<>
-struct default_value_return<int>{ typedef int type; };
+struct implicit_value_return<int>{ typedef int type; };
 
 template<>
-inline default_value_return<int>::type default_value<int>() { return 1; }
+inline implicit_value_return<int>::type implicit_value<int>() { return 1; }
+
+template<>
+struct implicit_value_return<Datum>{ typedef Datum type; };
+
+template<>
+inline implicit_value_return<Datum>::type implicit_value<Datum>() { return Datum(1); }
 
 
 class Deserialiser {
@@ -224,7 +230,7 @@ public:
         begin_map(size);
         for (int i = 0; i < size; i++) {
             K x;
-            V y = default_value<V>();
+            V y = implicit_value<V>();
             if (peek() == '}')
                 break;
             *this >> x;
@@ -244,7 +250,7 @@ public:
         begin_map(size);
         for (int i = 0; i < size; i++) {
             K x;
-            V y = default_value<V>();
+            V y = implicit_value<V>();
             if (peek() == '}')
                 break;
             *this >> x;

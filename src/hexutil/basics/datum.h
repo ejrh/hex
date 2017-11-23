@@ -6,7 +6,7 @@
 
 // The variant must be wrapped like this, otherwise the compiler will get confused about which overload to use
 struct Datum {
-    Datum(): value(1) { }
+    Datum(): value(0) { }
     Datum(int x): value(x) { }
 
     boost::variant<Atom, int, float, std::string> value;

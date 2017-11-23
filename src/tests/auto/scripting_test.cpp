@@ -66,6 +66,15 @@ BOOST_AUTO_TEST_CASE(set_var) {
     BOOST_CHECK_EQUAL(var_value2, "xyz");
 }
 
+BOOST_AUTO_TEST_CASE(unknown_var) {
+    play_message("DefineScript(t, [SetVariable(VarX, $Unknown)])");
+
+    Execution execution(&scripts);
+    execution.run("t");
+    int var_value = execution.variables.get(VarX);
+    BOOST_CHECK_EQUAL(var_value, 0);
+}
+
 BOOST_AUTO_TEST_CASE(call_script) {
     play_message("DefineScript(u, [SetVariable(VarX, \"xyz\")])");
     play_message("DefineScript(t, [SetVariable(VarX, \"abc\"), Call(u)])");

@@ -46,6 +46,16 @@ static inline bool equal(const boost::shared_ptr<Message>& m1, const boost::shar
 
 typedef std::vector<boost::shared_ptr<Message> > MessageSequence;
 
+
+// Technique for return value specialisation, from http://stackoverflow.com/a/15912228/63991
+template<typename V>
+struct default_value_return { typedef V type; };
+
+template<typename V>
+inline typename default_value_return<V>::type default_value() { return V(); }
+
+
+
 template<typename T>
 class WrapperMessage: public Message {
 public:
