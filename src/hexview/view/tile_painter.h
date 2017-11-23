@@ -5,12 +5,12 @@
 
 class Game;
 class GameView;
-class Resources;
+class ViewResources;
 class TileView;
 
 class TilePainter {
 public:
-    TilePainter(Game *game, GameView *view, Resources *resources);
+    TilePainter(Game *game, GameView *view, ViewResources *resources);
 
     void repaint(Point offset, int len);
 
@@ -21,7 +21,7 @@ public:
 private:
     Game *game;
     GameView *view;
-    Resources *resources;
+    ViewResources *resources;
 
     Counter tile_paint_counter;
     Counter tile_paint_time;

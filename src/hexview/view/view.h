@@ -3,10 +3,11 @@
 
 #include "hexgame/game/game.h"
 
-#include "hexview/resources/paint.h"
-#include "hexview/resources/resources.h"
-#include "hexview/resources/view_def.h"
+#include "hexav/resources/paint.h"
+
 #include "hexview/view/unit_painter.h"
+#include "hexview/view/view_def.h"
+#include "hexview/view/view_resources.h"
 
 
 class FactionView: public boost::enable_shared_from_this<FactionView> {
@@ -92,7 +93,7 @@ public:
         moving(false), locked(false) { }
     ~UnitStackView() { }
 
-    void set_representative(Resources *resources);
+    void set_representative(ViewResources *resources);
 
 public:
     UnitStack::pointer stack;
@@ -159,7 +160,7 @@ public:
 
 class GameView {
 public:
-    GameView(Game *game, Player *player, Resources *resources, MessageReceiver *dispatcher);
+    GameView(Game *game, Player *player, ViewResources *resources, MessageReceiver *dispatcher);
 
     void update();
     void update_player();
@@ -181,7 +182,7 @@ public:
     Player *player;
     std::vector<InfoMessage> messages;
     LevelView level_view;
-    Resources *resources;
+    ViewResources *resources;
     UnitPainter unit_painter;
     MessageReceiver *dispatcher;
     unsigned int last_update;

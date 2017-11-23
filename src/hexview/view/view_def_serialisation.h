@@ -3,7 +3,7 @@
 
 #include "hexutil/messaging/serialiser.h"
 
-#include "hexview/resources/view_def.h"
+#include "hexview/view/view_def.h"
 
 
 inline Serialiser& operator<<(Serialiser& serialiser, const FactionViewDef& d) {

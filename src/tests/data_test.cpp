@@ -4,23 +4,26 @@
 #include "hexutil/messaging/loader.h"
 #include "hexutil/messaging/builtin_messages.h"
 
+#include "hexav/resources/resource_messages.h"
+
 #include "hexgame/game/game.h"
 #include "hexgame/game/game_updater.h"
 #include "hexgame/game/game_messages.h"
 
-#include "hexview/resources/resources.h"
-#include "hexview/resources/resource_loader.h"
-#include "hexview/resources/resource_messages.h"
+#include "hexview/view/view_resources.h"
+#include "hexview/view/view_resource_loader.h"
+#include "hexview/view/view_resource_messages.h"
 
 
 void run() {
     register_builtin_messages();
     register_game_messages();
     register_resource_messages();
+    register_view_resource_messages();
     register_property_names();
 
-    Resources resources;
-    ResourceLoader loader(&resources, NULL, NULL);
+    ViewResources resources;
+    ViewResourceLoader loader(&resources, NULL, NULL);
     loader.load("data/resources.txt");
 
     Game game;

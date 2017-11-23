@@ -8,22 +8,6 @@ set(srcs
         editor/editor.h
         editor/palette.cpp
         editor/palette.h
-        resources/image_loader.cpp
-        resources/image_ref.h
-        resources/message_types.h
-        resources/paint.h
-        resources/paint.cpp
-        resources/paint_instructions.cpp
-        resources/resource_loader.cpp
-        resources/resource_loader.h
-        resources/resources.cpp
-        resources/resources.h
-        resources/resource_messages.cpp
-        resources/resource_messages.h
-        resources/sound_loader.cpp
-        resources/sound_ref.h
-        resources/view_def.h
-        resources/view_def_serialisation.h
         view/combat/battle_viewer.cpp
         view/combat/battle_viewer.h
         view/combat/battle_window.cpp
@@ -41,6 +25,7 @@ set(srcs
         view/level_window.h
         view/map_window.cpp
         view/map_window.h
+        view/message_types.h
         view/message_window.cpp
         view/message_window.h
         view/player.cpp
@@ -55,6 +40,8 @@ set(srcs
         view/structure_painter.h
         view/tile_painter.cpp
         view/tile_painter.h
+        view/transition_paint.cpp
+        view/transition_paint.h
         view/unit_info_window.cpp
         view/unit_info_window.h
         view/unit_painter.cpp
@@ -63,6 +50,12 @@ set(srcs
         view/unit_renderer.h
         view/unit_stack_view.cpp
         view/view.h
+        view/view_resource_loader.cpp
+        view/view_resource_loader.h
+        view/view_resources.cpp
+        view/view_resources.h
+        view/view_resource_messages.cpp
+        view/view_resource_messages.h
         view/view_updater.cpp
         view/view_updater.h
 )

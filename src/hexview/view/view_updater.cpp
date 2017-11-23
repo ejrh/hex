@@ -13,7 +13,8 @@
 #include "hexview/view/view_updater.h"
 
 
-ViewUpdater::ViewUpdater(Game *game, GameView *game_view, Resources *resources): game(game), game_view(game_view), resources(resources) {
+ViewUpdater::ViewUpdater(Game *game, GameView *game_view, ViewResources *resources):
+        game(game), game_view(game_view), resources(resources) {
 }
 
 ViewUpdater::~ViewUpdater() {

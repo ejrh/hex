@@ -6,18 +6,19 @@
 
 #include "hexav/graphics/font.h"
 #include "hexav/graphics/graphics.h"
+#include "hexav/resources/resource_messages.h"
 #include "hexav/ui/ui.h"
 
 #include "hexgame/game/game.h"
 
-#include "hexview/resources/resources.h"
-#include "hexview/resources/resource_loader.h"
-#include "hexview/resources/resource_messages.h"
+#include "hexview/view/view_resources.h"
+#include "hexview/view/view_resource_loader.h"
+#include "hexview/view/view_resource_messages.h"
 
 
-void load_resources(Resources *resources, Graphics *graphics) {
+void load_resources(ViewResources *resources, Graphics *graphics) {
     ImageLoader image_loader(resources, graphics);
-    ResourceLoader loader(resources, &image_loader, NULL);
+    ViewResourceLoader loader(resources, &image_loader, NULL);
     loader.load(std::string("data/resources.txt"));
     resources->resolve_references();
 }
@@ -97,12 +98,13 @@ private:
 void run() {
     register_builtin_messages();
     register_resource_messages();
+    register_view_resource_messages();
     register_property_names();
 
     Graphics graphics;
     graphics.start("Image test", 800, 600, false);
 
-    Resources resources;
+    ViewResources resources;
     load_resources(&resources, &graphics);
 
     UiLoop loop(&graphics, 25);

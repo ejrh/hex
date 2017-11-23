@@ -28,7 +28,7 @@
 static Point source(3,5);
 static Point target(17,12);
 
-static Resources resources;
+static ViewResources resources;
 
 static TileType::pointer open_tile(boost::make_shared<TileType>());
 static TileType::pointer closed_tile(boost::make_shared<TileType>());

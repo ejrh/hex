@@ -2,8 +2,8 @@
 
 #include "hexav/graphics/ilb.h"
 
-#include "hexview/resources/resources.h"
-#include "hexview/resources/resource_loader.h"
+#include "hexav/resources/resources.h"
+#include "hexav/resources/resource_loader.h"
 
 
 extern void load_hss(const std::string& filename, Graphics *graphics, ImageMap& image_set);

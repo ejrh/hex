@@ -7,11 +7,12 @@
 
 #include "hexview/view/stack_window.h"
 #include "hexview/view/unit_renderer.h"
-#include "hexview/view/view.h"
 #include "hexview/view/unit_info_window.h"
+#include "hexview/view/view.h"
+#include "hexview/view/view_resources.h"
 
 
-StackWindow::StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view, UnitRenderer *renderer, UnitInfoWindow *unit_info_window):
+StackWindow::StackWindow(int x, int y, int width, int height, ViewResources *resources, Graphics *graphics, GameView *view, UnitRenderer *renderer, UnitInfoWindow *unit_info_window):
         UiWindow(x, y, width, height, WindowIsVisible|WindowIsActive|WindowWantsMouseEvents),
         resources(resources), graphics(graphics), view(view), renderer(renderer), unit_info_window(unit_info_window) {
     int px = x + StackWindow::border;

@@ -3,9 +3,9 @@
 
 #include "hexav/audio/audio.h"
 
-#include "hexview/resources/image_ref.h"
-#include "hexview/resources/sound_ref.h"
-#include "hexview/resources/paint.h"
+#include "hexav/resources/image_ref.h"
+#include "hexav/resources/sound_ref.h"
+#include "hexav/resources/paint.h"
 
 
 class SoundDef {

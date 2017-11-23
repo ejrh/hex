@@ -4,13 +4,15 @@
 
 #include "hexgame/game/game.h"
 
-#include "hexview/resources/resources.h"
 #include "hexview/view/structure_painter.h"
 #include "hexview/view/tile_painter.h"
+#include "hexview/view/transition_paint.h"
 #include "hexview/view/view.h"
+#include "hexview/view/view_def.h"
+#include "hexview/view/view_resources.h"
 
 
-TilePainter::TilePainter(Game *game, GameView *view, Resources *resources):
+TilePainter::TilePainter(Game *game, GameView *view, ViewResources *resources):
         game(game), view(view), resources(resources),
         tile_paint_counter("paint.tile"), tile_paint_time("paint.tile.time"), tile_script_error_counter("paint.tile.error"),
         feature_paint_counter("paint.feature"), feature_paint_time("paint.feature.time"), feature_script_error_counter("paint.feature.error"),

@@ -12,7 +12,7 @@
 #include "hexview/view/combat/battle_window.h"
 
 
-BattleWindow::BattleWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, BattleView *view, UnitRenderer *renderer):
+BattleWindow::BattleWindow(int x, int y, int width, int height, ViewResources *resources, Graphics *graphics, BattleView *view, UnitRenderer *renderer):
         UiWindow(x, y, width, height, WindowIsVisible),
         resources(resources), graphics(graphics), view(view), renderer(renderer) {
     target_images = resources->image_series["TARGETS"];

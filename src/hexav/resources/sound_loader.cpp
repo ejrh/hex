@@ -1,7 +1,7 @@
 #include "common.h"
 
-#include "hexview/resources/resources.h"
-#include "hexview/resources/resource_loader.h"
+#include "hexav/resources/resources.h"
+#include "hexav/resources/resource_loader.h"
 
 
 void SoundLoader::load(const std::string& filename) {

@@ -2,7 +2,7 @@
 
 #include "hexview/view/view.h"
 
-void UnitStackView::set_representative(Resources *resources) {
+void UnitStackView::set_representative(ViewResources *resources) {
     representative = 0;
     for (int i = 1; i < stack->units.size(); i++) {
         if (stack->units[i]->has_property(Transport)) {

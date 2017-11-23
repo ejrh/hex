@@ -8,7 +8,7 @@
 #include "hexav/audio/audio.h"
 
 //TODO remove dependency on resources!
-#include "hexview/resources/resources.h"
+#include "hexav/resources/resources.h"
 
 Sound::Sound():
         chunk(NULL) {

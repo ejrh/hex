@@ -9,6 +9,20 @@ set(srcs
         graphics/ilb.cpp
         graphics/ilb.h
         graphics/load_image.cpp
+        resources/image_loader.cpp
+        resources/image_ref.h
+        resources/message_types.h
+        resources/paint.h
+        resources/paint.cpp
+        resources/paint_instructions.cpp
+        resources/resource_loader.cpp
+        resources/resource_loader.h
+        resources/resources.cpp
+        resources/resources.h
+        resources/resource_messages.cpp
+        resources/resource_messages.h
+        resources/sound_loader.cpp
+        resources/sound_ref.h
         ui/controls.cpp
         ui/controls.h
         ui/loop.cpp

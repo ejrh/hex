@@ -11,7 +11,7 @@ class Resources;
 
 class ViewUpdater: public MessageReceiver {
 public:
-    ViewUpdater(Game *game, GameView *game_view, Resources *resources);
+    ViewUpdater(Game *game, GameView *game_view, ViewResources *resources);
     virtual ~ViewUpdater();
 
     virtual void receive(Message *update);
@@ -22,7 +22,7 @@ private:
 private:
     Game *game;
     GameView *game_view;
-    Resources *resources;
+    ViewResources *resources;
 };
 
 

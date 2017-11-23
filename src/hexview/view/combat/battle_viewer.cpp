@@ -53,7 +53,7 @@ private:
 
 }
 
-BattleViewer::BattleViewer(Resources *resources, Graphics *graphics, Audio *audio, GameView *game_view, UnitRenderer *renderer):
+BattleViewer::BattleViewer(ViewResources *resources, Graphics *graphics, Audio *audio, GameView *game_view, UnitRenderer *renderer):
         resources(resources), graphics(graphics), audio(audio), game_view(game_view), renderer(renderer) { }
 
 void BattleViewer::show_battle(Battle *battle) {

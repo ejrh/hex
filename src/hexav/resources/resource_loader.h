@@ -5,7 +5,7 @@
 #include "hexutil/messaging/message.h"
 #include "hexutil/messaging/receiver.h"
 
-#include "hexview/resources/resources.h"
+#include "hexav/resources/resources.h"
 
 
 class ImageLoader {
@@ -36,10 +36,10 @@ class ResourceLoader: public MessageLoader {
 public:
     ResourceLoader(Resources *resources, ImageLoader *image_loader, SoundLoader *sound_loader):
             resources(resources), image_loader(image_loader), sound_loader(sound_loader),
-            last_faction_view_def(), last_tile_view_def(), last_unit_view_def(), last_structure_view_def(),
-            warned_image_loader(false), warned_sound_loader(false) { }
+            warned_image_loader(false), warned_sound_loader(false),
+            message_counter("resource.message") { }
 
-    void handle_message(Message *msg);
+    virtual void handle_message(Message *msg);
 
     void load_image(const std::string& filename);
     void load_image_libraries(const std::string& filename);
@@ -52,11 +52,6 @@ private:
     Resources *resources;
     ImageLoader *image_loader;
     SoundLoader *sound_loader;
-    FactionViewDef::pointer last_faction_view_def;
-    TileViewDef::pointer last_tile_view_def;
-    FeatureViewDef::pointer last_feature_view_def;
-    UnitViewDef::pointer last_unit_view_def;
-    StructureViewDef::pointer last_structure_view_def;
     bool warned_image_loader;
     bool warned_sound_loader;
 

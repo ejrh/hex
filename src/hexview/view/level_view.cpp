@@ -9,9 +9,9 @@
 #include "hexgame/game/movement/movement.h"
 #include "hexgame/game/movement/pathfinding.h"
 
-#include "hexview/resources/view_def.h"
 #include "hexview/view/player.h"
 #include "hexview/view/view.h"
+#include "hexview/view/view_def.h"
 
 
 LevelView::LevelView(Level *level):

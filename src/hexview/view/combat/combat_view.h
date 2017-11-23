@@ -2,6 +2,7 @@
 #define COMBAT_VIEW_H
 
 #include "hexview/view/view.h"
+#include "hexview/view/view_resources.h"
 
 class Participant;
 class UnitStack;
@@ -30,7 +31,7 @@ public:
 
 class BattleView {
 public:
-    BattleView(Battle *battle, int width, int height, Resources *resources);
+    BattleView(Battle *battle, int width, int height, ViewResources *resources);
 
     void update();
     void step();
@@ -44,7 +45,7 @@ public:
 public:
     Battle *battle;
     int width, height;
-    Resources *resources;
+    ViewResources *resources;
     UnitPainter unit_painter;
     BattleStackView battle_stack_views[7];
     std::vector<ParticipantView> participant_views;

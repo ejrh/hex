@@ -5,10 +5,10 @@
 #include "hexgame/game/game.h"
 #include "hexgame/game/movement/movement.h"
 
-#include "hexview/resources/view_def.h"
 #include "hexview/view/player.h"
 #include "hexview/view/unit_painter.h"
 #include "hexview/view/view.h"
+#include "hexview/view/view_def.h"
 
 
 Ghost::Ghost(GameView *view, UnitPainter *unit_painter, UnitStack::pointer& stack, const IntSet selected_units, Path path, UnitStack::pointer& target_stack):

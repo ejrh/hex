@@ -40,7 +40,7 @@ void BattleStackView::add_participant(ParticipantView& pv) {
     pv.y = y + (num / 4) * BattleView::participant_height + BattleView::participant_height / 2;
 }
 
-BattleView::BattleView(Battle *battle, int width, int height, Resources *resources):
+BattleView::BattleView(Battle *battle, int width, int height, ViewResources *resources):
         battle(battle), width(width), height(height), resources(resources), unit_painter(battle->game, NULL, resources),
         last_update(0),
         phase(0), current_move(0), current_step(0), phase_end(1000) {

@@ -18,23 +18,6 @@ MSG_TYPE(ImageLibraries, WM(std::string))
 MSG_TYPE(ImageLibrary, WM2(Atom, std::string))
 MSG_TYPE(ImageSet, WM2(std::string, ImageSeries))
 
-MSG_TYPE(CreateTileView, WM(TileViewDef))
-MSG_TYPE(TilePaint, WM(Term *))
-MSG_TYPE(TransitionPaint, WM(Term *))
-
-MSG_TYPE(CreateFeatureView, WM(FeatureViewDef))
-MSG_TYPE(FeaturePaint, WM(Term *))
-
-MSG_TYPE(CreateUnitView, WM(UnitViewDef))
-MSG_TYPE(UnitPaint, WM(Term *))
-MSG_TYPE(UnitSounds, WM2(int, SoundSeries))
-
-MSG_TYPE(CreateStructureView, WM(StructureViewDef))
-MSG_TYPE(StructurePaint, WM(Term *))
-
-MSG_TYPE(CreateFactionView, WM(FactionViewDef))
-MSG_TYPE(FactionImageSet, WM2(std::string, ImageSeries))
-
 MSG_TYPE(LoadSong, WM(std::string))
 MSG_TYPE(SoundFile, WM(std::string))
 

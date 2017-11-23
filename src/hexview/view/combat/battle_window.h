@@ -4,19 +4,19 @@
 #include "hexav/ui/ui.h"
 
 
-class Resources;
+class ViewResources;
 class Graphics;
 class BattleView;
 class UnitRenderer;
 
 class BattleWindow: public UiWindow {
 public:
-    BattleWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, BattleView *view, UnitRenderer *renderer);
+    BattleWindow(int x, int y, int width, int height, ViewResources *resources, Graphics *graphics, BattleView *view, UnitRenderer *renderer);
     void draw(const UiContext& context);
     void draw_stack(int stack_num);
 
 private:
-    Resources *resources;
+    ViewResources *resources;
     Graphics *graphics;
     BattleView *view;
     UnitRenderer *renderer;

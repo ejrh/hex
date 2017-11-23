@@ -19,6 +19,7 @@
 
 #include "hexav/audio/audio.h"
 #include "hexav/graphics/graphics.h"
+#include "hexav/resources/resource_messages.h"
 
 #include "hexgame/ai/ai.h"
 #include "hexgame/game/game.h"
@@ -31,8 +32,6 @@
 #include "hexview/chat/chat.h"
 #include "hexview/editor/palette.h"
 #include "hexview/editor/editor.h"
-#include "hexview/resources/resource_loader.h"
-#include "hexview/resources/resource_messages.h"
 #include "hexview/view/audio_renderer.h"
 #include "hexview/view/level_renderer.h"
 #include "hexview/view/level_window.h"
@@ -42,9 +41,12 @@
 #include "hexview/view/status_window.h"
 #include "hexview/view/player.h"
 #include "hexview/view/pre_updater.h"
+#include "hexview/view/transition_paint.h"
 #include "hexview/view/unit_info_window.h"
 #include "hexview/view/unit_renderer.h"
 #include "hexview/view/view.h"
+#include "hexview/view/view_resource_loader.h"
+#include "hexview/view/view_resource_messages.h"
 #include "hexview/view/view_updater.h"
 #include "hexview/view/combat/battle_viewer.h"
 
@@ -59,10 +61,10 @@ struct Options {
     bool fullscreen;
 };
 
-void load_resources(Resources *resources, Graphics *graphics, Audio *audio) {
+void load_resources(ViewResources *resources, Graphics *graphics, Audio *audio) {
     ImageLoader image_loader(resources, graphics);
     SoundLoader sound_loader(resources, audio);
-    ResourceLoader loader(resources, &image_loader, &sound_loader);
+    ViewResourceLoader loader(resources, &image_loader, &sound_loader);
     loader.load(std::string("data/resources.txt"));
     resources->resolve_references();
 }
@@ -292,15 +294,17 @@ void run(Options& options) {
     register_builtin_messages();
     register_game_messages();
     register_resource_messages();
+    register_view_resource_messages();
     register_property_names();
 
     register_builtin_interpreters();
     register_paint_interpreters();
+    register_transition_paint_interpreters();
 
     Graphics graphics;
     graphics.start("Hex", options.width, options.height, options.fullscreen);
 
-    Resources resources;
+    ViewResources resources;
     Audio audio(&resources);  // TODO audio should not depend on resources
     audio.start();
 

@@ -3,7 +3,7 @@
 
 #include "hexutil/basics/point.h"
 
-#include "hexview/resources/image_ref.h"
+#include "hexav/resources/image_ref.h"
 
 
 class Graphics;

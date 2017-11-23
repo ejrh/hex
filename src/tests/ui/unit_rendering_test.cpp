@@ -7,21 +7,22 @@
 
 #include "hexav/graphics/font.h"
 #include "hexav/graphics/graphics.h"
+#include "hexav/resources/resource_messages.h"
 #include "hexav/ui/ui.h"
 
 #include "hexgame/game/game.h"
 
-#include "hexview/resources/resource_loader.h"
-#include "hexview/resources/resource_messages.h"
 #include "hexview/view/tile_painter.h"
 #include "hexview/view/unit_painter.h"
 #include "hexview/view/unit_renderer.h"
 #include "hexview/view/view.h"
+#include "hexview/view/view_resource_loader.h"
+#include "hexview/view/view_resource_messages.h"
 
 
-void load_resources(Resources *resources, Graphics *graphics) {
+void load_resources(ViewResources *resources, Graphics *graphics) {
     ImageLoader image_loader(resources, graphics);
-    ResourceLoader loader(resources, &image_loader, NULL);
+    ViewResourceLoader loader(resources, &image_loader, NULL);
     loader.load(std::string("data/resources.txt"));
     resources->resolve_references();
 }
@@ -37,7 +38,7 @@ static std::string posture_names[] = {
 
 class TestWindow: public UiWindow {
 public:
-    TestWindow(UiLoop *loop, Graphics *graphics, Resources *resources, Game *game,
+    TestWindow(UiLoop *loop, Graphics *graphics, ViewResources *resources, Game *game,
             TilePainter *tile_painter, UnitPainter *unit_painter, UnitRenderer *unit_renderer, UnitViewDef::pointer initial_view_def):
             UiWindow(0, 0, 0, 0, WindowIsVisible|WindowIsActive|WindowWantsKeyboardEvents),
             loop(loop), graphics(graphics), resources(resources), game(game),
@@ -147,7 +148,7 @@ public:
 private:
     UiLoop *loop;
     Graphics *graphics;
-    Resources *resources;
+    ViewResources *resources;
     Game *game;
     TilePainter *tile_painter;
     UnitPainter *unit_painter;
@@ -162,6 +163,7 @@ private:
 void run() {
     register_builtin_messages();
     register_resource_messages();
+    register_view_resource_messages();
     register_property_names();
     register_builtin_interpreters();
     register_paint_interpreters();
@@ -173,7 +175,7 @@ void run() {
     game.create_tile_type(TileType("grass"));
     game.create_tile_type(TileType("water"));
 
-    Resources resources;
+    ViewResources resources;
     load_resources(&resources, &graphics);
 
     TilePainter tile_painter(&game, NULL, &resources);

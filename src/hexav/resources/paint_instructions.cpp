@@ -2,10 +2,8 @@
 
 #include "hexutil/scripting/scripting.h"
 
-#include "hexgame/game/game_messages.h"
-
-#include "hexview/resources/resource_messages.h"
-#include "hexview/resources/paint.h"
+#include "hexav/resources/resource_messages.h"
+#include "hexav/resources/paint.h"
 
 class PaintFrameInterpreter: public Interpreter {
 public:
@@ -52,44 +50,8 @@ public:
     }
 };
 
-class TransitionMatchInterpreter: public Interpreter {
-public:
-    TransitionMatchInterpreter(): Interpreter("TransitionMatch") { }
-
-    Datum execute(const Term *instruction, Execution *execution) const {
-        TransitionPaintExecution* tpe = dynamic_cast<TransitionPaintExecution *>(execution);
-        if (!tpe)
-            throw ScriptError() << "TransitionMatch can only be executed in a TransitionPaintExecution";
-
-        const std::string& pattern = execution->get_argument(instruction, 0).get_as_str();
-
-        tpe->pattern_re = boost::regex(pattern);
-
-        return 0;
-    }
-};
-
-class TransitionInterpreter: public Interpreter {
-public:
-    TransitionInterpreter(): Interpreter("Transition") { }
-
-    Datum execute(const Term *instruction, Execution *execution) const {
-        TransitionPaintExecution* tpe = dynamic_cast<TransitionPaintExecution *>(execution);
-        if (!tpe)
-            throw ScriptError() << "TransitionMatch can only be executed in a TransitionPaintExecution";
-
-        std::vector<int> dir_nums = execution->get_as_intvector(instruction, 0);
-        std::vector<int> frame_nums = execution->get_as_intvector(instruction, 1);
-
-        return tpe->apply_transition(dir_nums, frame_nums);
-    }
-};
-
 
 void register_paint_interpreters() {
     InterpreterRegistry::register_interpreter(new PaintFrameInterpreter());
     InterpreterRegistry::register_interpreter(new PaintAnimationInterpreter());
-
-    InterpreterRegistry::register_interpreter(new TransitionMatchInterpreter());
-    InterpreterRegistry::register_interpreter(new TransitionInterpreter());
 }

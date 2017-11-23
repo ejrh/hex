@@ -4,7 +4,7 @@
 #include "hexav/ui/ui.h"
 
 
-class Resources;
+class ViewResources;
 class Graphics;
 class GameView;
 class LevelView;
@@ -13,7 +13,7 @@ class UnitInfoWindow;
 
 class StackWindow: public UiWindow {
 public:
-    StackWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view, UnitRenderer *renderer, UnitInfoWindow *unit_info_window);
+    StackWindow(int x, int y, int width, int height, ViewResources *resources, Graphics *graphics, GameView *view, UnitRenderer *renderer, UnitInfoWindow *unit_info_window);
     bool receive_mouse_event(SDL_Event *evt, int x, int y);
     void draw(const UiContext& context);
 
@@ -27,7 +27,7 @@ public:
     static const int window_height = units_down * unit_height + (units_down - 1) * padding + 2 * border;
 
 private:
-    Resources *resources;
+    ViewResources *resources;
     Graphics *graphics;
     GameView *view;
     UnitRenderer *renderer;

@@ -9,14 +9,14 @@
 #include "hexgame/game/movement/movement.h"
 #include "hexgame/game/movement/pathfinding.h"
 
-#include "hexview/resources/view_def.h"
 #include "hexview/editor/editor.h"
 #include "hexview/view/player.h"
 #include "hexview/view/unit_painter.h"
 #include "hexview/view/view.h"
+#include "hexview/view/view_def.h"
 
 
-GameView::GameView(Game *game, Player *player, Resources *resources, MessageReceiver *dispatcher):
+GameView::GameView(Game *game, Player *player, ViewResources *resources, MessageReceiver *dispatcher):
         game(game), player(player), level_view(&game->level), resources(resources), unit_painter(game, this, resources), dispatcher(dispatcher),
         last_update(0), phase(0),
         faction_views("faction_views"), unit_stack_views("unit_stack_views"),
