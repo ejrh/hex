@@ -23,17 +23,38 @@ void Paint::render(int x, int y, int phase, Graphics *graphics) {
         if (!frame)
             continue;
 
-        if (item.blend_addition > 0) {
-            graphics->blit(frame, x + item.offset_x, y + item.offset_y, SDL_BLENDMODE_ADD, item.blend_addition);
-        } else if (item.blend_addition < 0) {
-            graphics->blit(frame, x + item.offset_x, y + item.offset_y, SDL_BLENDMODE_MOD);
-        } else {
-            if (item.blend_alpha != 0) {
-                graphics->blit(frame, x + item.offset_x, y + item.offset_y, SDL_BLENDMODE_BLEND, item.blend_alpha);
-            } else {
-                graphics->blit(frame, x + item.offset_x, y + item.offset_y, SDL_BLENDMODE_BLEND);
+        int tile_count_x = (item.tile_width > 0) ? ((item.tile_width + frame->width) / frame->width) : 1;
+        int tile_count_y = (item.tile_height > 0) ? ((item.tile_height + frame->height) / frame->height) : 1;
+        if (item.tile_width > 0 || item.tile_height > 0) {
+            int w = item.tile_width;
+            int h = item.tile_height;
+            if (w == 0)
+                w = frame->width;
+            if (h == 0)
+                h = frame->height;
+            graphics->set_clip_rect(x + item.offset_x, y + item.offset_y, w, h);
+        }
+
+        for (int i = 0; i < tile_count_y; i++) {
+            for (int j = 0; j < tile_count_x; j++) {
+                int xp = x + item.offset_x + (j * frame->width);
+                int yp = y + item.offset_y + (i * frame->height);
+
+                if (item.blend_addition > 0) {
+                    graphics->blit(frame, xp, yp, SDL_BLENDMODE_ADD, item.blend_addition);
+                } else if (item.blend_addition < 0) {
+                    graphics->blit(frame, xp, yp, SDL_BLENDMODE_MOD);
+                } else {
+                    if (item.blend_alpha != 0) {
+                        graphics->blit(frame, xp, yp, SDL_BLENDMODE_BLEND, item.blend_alpha);
+                    } else {
+                        graphics->blit(frame, xp, yp, SDL_BLENDMODE_BLEND);
+                    }
+                }
             }
         }
+
+        graphics->clear_clip_rect();
     }
 }
 
@@ -57,16 +78,20 @@ void PaintExecution::paint_frame(int frame_num) {
     Atom paint_library = get(paint_library_atom).get_as_atom();
     int offset_x = get_as<int>(paint_offset_x_atom);
     int offset_y = get_as<int>(paint_offset_y_atom);
+    int tile_width = get_as<int>(paint_tile_width_atom);
+    int tile_height = get_as<int>(paint_tile_height_atom);
     int blend_alpha = get_as<int>(paint_blend_alpha_atom);
     int blend_addition = get_as<int>(paint_blend_addition_atom);
     int frame_offset = get_as<int>(paint_frame_offset_atom);
-    paint_frame(paint_library, frame_offset + frame_num, offset_x, offset_y, blend_alpha, blend_addition);
+    paint_frame(paint_library, frame_offset + frame_num, offset_x, offset_y, tile_width, tile_height, blend_alpha, blend_addition);
 }
 
-void PaintExecution::paint_frame(Atom image_library, int frame_num, int offset_x, int offset_y, int blend_alpha, int blend_addition) {
+void PaintExecution::paint_frame(Atom image_library, int frame_num, int offset_x, int offset_y, int tile_width, int tile_height, int blend_alpha, int blend_addition) {
     PaintItem pi;
     pi.offset_x = offset_x;
     pi.offset_y = offset_y;
+    pi.tile_width = tile_width;
+    pi.tile_height = tile_height;
     pi.frame_rate = -1;
     pi.blend_alpha = blend_alpha;
     pi.blend_addition = blend_addition;
@@ -79,6 +104,8 @@ void PaintExecution::paint_animation(Atom image_library, int frame_time, const s
     PaintItem pi;
     pi.offset_x = offset_x;
     pi.offset_y = offset_y;
+    pi.tile_width = 0;
+    pi.tile_height = 0;
     pi.frame_rate = frame_time;
     pi.blend_alpha = blend_alpha;
     pi.blend_addition = blend_addition;
@@ -92,6 +119,8 @@ void PaintExecution::paint_animation(Atom image_library, int frame_time, const s
 void PaintExecution::run(Script *script) {
     variables.set<int>(paint_offset_x_atom, 0);
     variables.set<int>(paint_offset_y_atom, 0);
+    variables.set<int>(paint_tile_width_atom, 0);
+    variables.set<int>(paint_tile_height_atom, 0);
     variables.set<int>(paint_blend_addition_atom, 0);
     variables.set<int>(paint_blend_alpha_atom, 0);
     variables.set<int>(paint_frame_offset_atom, 0);

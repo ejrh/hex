@@ -134,3 +134,12 @@ void Graphics::save_screenshot(const std::string& filename) {
     SDL_SaveBMP(sshot, filename.c_str());
     SDL_FreeSurface(sshot);
 }
+
+void Graphics::set_clip_rect(int x, int y, int w, int h) {
+    SDL_Rect r = { x, y, w, h };
+    SDL_RenderSetClipRect(renderer, &r);
+}
+
+void Graphics::clear_clip_rect() {
+    SDL_RenderSetClipRect(renderer, NULL);
+}

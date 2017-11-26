@@ -43,6 +43,8 @@ public:
     void unset_target_image();
     void save_image(Image *image, const std::string& filename);
     void save_screenshot(const std::string& filename);
+    void set_clip_rect(int x, int y, int w, int h);
+    void clear_clip_rect();
 
 public:
     SDL_Window *window;
