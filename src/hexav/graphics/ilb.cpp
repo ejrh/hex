@@ -315,7 +315,9 @@ static void fix_transparency(char *pixel_data, ImageData &image, SDL_Surface *su
     for (int i = 0; i < image.clip_height * image.clip_width; i++) {
         if (((Uint16 *) pixel_data)[i] == image.transparency_colour) {
             Uint32 old_key;
-            SDL_GetColorKey(surface, &old_key);
+            if (SDL_GetColorKey(surface, &old_key) != 0) {
+                break;
+            }
             Uint32 key = ((Uint32 *) surface->pixels)[i];
             key &= ~0xFF000000;
             if (old_key != key) {
@@ -325,7 +327,7 @@ static void fix_transparency(char *pixel_data, ImageData &image, SDL_Surface *su
             return;
         }
     }
-    //BOOST_LOG_TRIVIAL(debug) << "Couldn't find any transparent pixels";
+    //BOOST_LOG_TRIVIAL(debug) << "Couldn't find any transparent pixels in image " << image.id;
 }
 
 Image *ILBReader::create_image(char *pixel_data, ImageData &image) {
