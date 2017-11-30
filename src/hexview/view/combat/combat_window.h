@@ -1,24 +1,24 @@
-#ifndef BATTLE_WINDOW_H
-#define BATTLE_WINDOW_H
+#ifndef COMBAT_WINDOW_H
+#define COMBAT_WINDOW_H
 
 #include "hexav/ui/ui.h"
 
 
 class ViewResources;
 class Graphics;
-class BattleView;
+class CombatView;
 class UnitRenderer;
 
-class BattleWindow: public UiWindow {
+class CombatWindow: public UiWindow {
 public:
-    BattleWindow(int x, int y, int width, int height, ViewResources *resources, Graphics *graphics, BattleView *view, UnitRenderer *renderer);
+    CombatWindow(int x, int y, int width, int height, ViewResources *resources, Graphics *graphics, CombatView *view, UnitRenderer *renderer);
     void draw(const UiContext& context);
     void draw_stack(int stack_num);
 
 private:
     ViewResources *resources;
     Graphics *graphics;
-    BattleView *view;
+    CombatView *view;
     UnitRenderer *renderer;
 
     ImageSeries target_images;

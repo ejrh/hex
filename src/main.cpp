@@ -49,7 +49,7 @@
 #include "hexview/view/view_resource_loader.h"
 #include "hexview/view/view_resource_messages.h"
 #include "hexview/view/view_updater.h"
-#include "hexview/view/combat/battle_viewer.h"
+#include "hexview/view/combat/combat_screen.h"
 
 
 struct Options {
@@ -372,8 +372,8 @@ void run(Options& options) {
     MessageWindow *message_window = new MessageWindow(sidebar_position, map_window_height + stack_window_height, sidebar_width, message_window_height, &resources, &graphics, &game_view);
     StatusWindow *status_window = new StatusWindow(0, level_window->height, graphics.width, status_window_height, &resources, &graphics, &game_view);
 
-    BattleViewer battle_viewer(&resources, &graphics, &audio, &game_view, &unit_renderer);
-    pre_updater.battle_viewer = &battle_viewer;
+    CombatScreen combat_screen(&resources, &graphics, &audio, &game_view, &unit_renderer);
+    pre_updater.combat_screen = &combat_screen;
 
     EditorWindow *editor_window = new EditorWindow(&game_view, level_window);
     PaletteWindow *palette_window = new PaletteWindow(&game, &game_view, level_window, editor_window);

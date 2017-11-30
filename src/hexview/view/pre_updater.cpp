@@ -8,10 +8,11 @@
 
 #include "hexview/view/pre_updater.h"
 #include "hexview/view/view.h"
-#include "hexview/view/combat/battle_viewer.h"
+#include "hexview/view/combat/combat_screen.h"
 
 
-PreUpdater::PreUpdater(Game *game, GameView *game_view): game(game), game_view(game_view), battle_viewer(NULL) {
+PreUpdater::PreUpdater(Game *game, GameView *game_view):
+        game(game), game_view(game_view), combat_screen(NULL) {
 }
 
 PreUpdater::~PreUpdater() {
@@ -39,8 +40,8 @@ void PreUpdater::apply_update(Message *update) {
             Point attacked_point = upd->data2;
             std::vector<Move>& moves = upd->data3;
             Battle battle(game, attacked_point, attacking_point, moves);
-            if (battle_viewer)
-                battle_viewer->show_battle(&battle);
+            if (combat_screen)
+                combat_screen->show_battle(&battle);
         } break;
 
         default:

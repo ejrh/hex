@@ -7,7 +7,7 @@
 
 class Game;
 class GameView;
-class BattleViewer;
+class CombatScreen;
 
 class PreUpdater: public MessageReceiver {
 public:
@@ -24,7 +24,7 @@ private:
     GameView *game_view;
 
 public:
-    BattleViewer *battle_viewer;
+    CombatScreen *combat_screen;
 };
 
 #endif

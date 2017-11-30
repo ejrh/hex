@@ -8,12 +8,12 @@
 #include "hexgame/game/game.h"
 
 #include "hexview/view/level_renderer.h"
+#include "hexview/view/combat/combat_screen.h"
 #include "hexview/view/combat/combat_view.h"
-#include "hexview/view/combat/battle_viewer.h"
-#include "hexview/view/combat/battle_window.h"
+#include "hexview/view/combat/combat_window.h"
 #include "hexview/view/view.h"
 
-namespace battle_viewer {
+namespace combat_screen {
 
 class BackgroundWindow: public UiWindow {
 public:
@@ -53,18 +53,18 @@ private:
 
 }
 
-BattleViewer::BattleViewer(ViewResources *resources, Graphics *graphics, Audio *audio, GameView *game_view, UnitRenderer *renderer):
+CombatScreen::CombatScreen(ViewResources *resources, Graphics *graphics, Audio *audio, GameView *game_view, UnitRenderer *renderer):
         resources(resources), graphics(graphics), audio(audio), game_view(game_view), renderer(renderer) { }
 
-void BattleViewer::show_battle(Battle *battle) {
-    BattleView battle_view(battle, graphics->width, graphics->height, resources);
+void CombatScreen::show_battle(Battle *battle) {
+    CombatView combat_view(battle, graphics->width, graphics->height, resources);
 
     UiLoop loop(graphics, 25);
-    battle_viewer::BackgroundWindow *bg_window = new battle_viewer::BackgroundWindow(&loop);
+    combat_screen::BackgroundWindow *bg_window = new combat_screen::BackgroundWindow(&loop);
     loop.set_root_window(bg_window);
-    BattleWindow *battle_window = new BattleWindow(100, 100, graphics->width - 200, graphics->height - 200, resources, graphics, &battle_view, renderer);
-    bg_window->add_child(battle_window);
-    battle_viewer::TopWindow *top_window = new battle_viewer::TopWindow(graphics, audio);
+    CombatWindow *combat_window = new CombatWindow(100, 100, graphics->width - 200, graphics->height - 200, resources, graphics, &combat_view, renderer);
+    bg_window->add_child(combat_window);
+    combat_screen::TopWindow *top_window = new combat_screen::TopWindow(graphics, audio);
     bg_window->add_child(top_window);
     loop.run();
 }

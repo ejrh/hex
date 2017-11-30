@@ -1,5 +1,5 @@
-#ifndef BATTLE_VIEWER_H
-#define BATTLE_VIEWER_H
+#ifndef COMBAT_SCREEN_H
+#define COMBAT_SCREEN_H
 
 
 class Battle;
@@ -9,9 +9,9 @@ class Audio;
 class GameView;
 class UnitRenderer;
 
-class BattleViewer {
+class CombatScreen {
 public:
-    BattleViewer(ViewResources *resources, Graphics *graphics, Audio *audio, GameView *view, UnitRenderer *renderer);
+    CombatScreen(ViewResources *resources, Graphics *graphics, Audio *audio, GameView *view, UnitRenderer *renderer);
     void show_battle(Battle *battle);
 
 private:

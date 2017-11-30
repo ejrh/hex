@@ -15,13 +15,13 @@ ParticipantView::ParticipantView(Participant *participant):
         participant(participant) {
 }
 
-BattleStackView::BattleStackView() {
+CombatStackView::CombatStackView() {
     for (int i = 0; i < 12; i++) {
         participants[i] = -1;
     }
 }
 
-void BattleStackView::add_participant(ParticipantView& pv) {
+void CombatStackView::add_participant(ParticipantView& pv) {
     int num = -1;
     for (int i = 0; i < 12; i++) {
         if (participants[i] == -1) {
@@ -36,11 +36,11 @@ void BattleStackView::add_participant(ParticipantView& pv) {
     }
 
     participants[num] = pv.participant->id;
-    pv.x = x + (num % 4) * BattleView::participant_width + BattleView::participant_width / 2;
-    pv.y = y + (num / 4) * BattleView::participant_height + BattleView::participant_height / 2;
+    pv.x = x + (num % 4) * CombatView::participant_width + CombatView::participant_width / 2;
+    pv.y = y + (num / 4) * CombatView::participant_height + CombatView::participant_height / 2;
 }
 
-BattleView::BattleView(Battle *battle, int width, int height, ViewResources *resources):
+CombatView::CombatView(Battle *battle, int width, int height, ViewResources *resources):
         battle(battle), width(width), height(height), resources(resources), unit_painter(battle->game, NULL, resources),
         last_update(0),
         phase(0), current_move(0), current_step(0), phase_end(1000) {
@@ -48,7 +48,7 @@ BattleView::BattleView(Battle *battle, int width, int height, ViewResources *res
     int centre_x = width/2;
     int centre_y = height/2;
     for (int dir = 0; dir <= 6; dir++) {
-        BattleStackView& bsv = battle_stack_views[dir];
+        CombatStackView& bsv = combat_stack_views[dir];
         Point relative_point;
         get_neighbour(centre, dir, &relative_point);
         bsv.x = centre_x + relative_point.x * (battle_stack_width + battle_stack_padding) - battle_stack_width/2;
@@ -66,14 +66,14 @@ BattleView::BattleView(Battle *battle, int width, int height, ViewResources *res
         pv.posture = Holding;
         unit_painter.repaint(pv, *p.unit);
 
-        BattleStackView& bsv = battle_stack_views[p.stack_num];
+        CombatStackView& bsv = combat_stack_views[p.stack_num];
         bsv.add_participant(pv);
 
         participant_views.push_back(pv);
     }
 }
 
-void BattleView::update() {
+void CombatView::update() {
     unsigned int ticks = SDL_GetTicks();
     if (ticks < last_update + 25)
         return;
@@ -91,7 +91,7 @@ void BattleView::update() {
     }
 }
 
-void BattleView::step() {
+void CombatView::step() {
     current_step++;
     if (current_step > 4) {
         current_step = 0;

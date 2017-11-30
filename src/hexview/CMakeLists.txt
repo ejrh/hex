@@ -8,12 +8,12 @@ set(srcs
         editor/editor.h
         editor/palette.cpp
         editor/palette.h
-        view/combat/battle_viewer.cpp
-        view/combat/battle_viewer.h
-        view/combat/battle_window.cpp
-        view/combat/battle_window.h
+        view/combat/combat_screen.cpp
+        view/combat/combat_screen.h
         view/combat/combat_view.cpp
         view/combat/combat_view.h
+        view/combat/combat_window.cpp
+        view/combat/combat_window.h
         view/audio_renderer.cpp
         view/audio_renderer.h
         view/game_view.cpp

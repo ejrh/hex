@@ -17,9 +17,9 @@ public:
     int x, y;
 };
 
-class BattleStackView {
+class CombatStackView {
 public:
-    BattleStackView();
+    CombatStackView();
 
     void add_participant(ParticipantView& pv);
 
@@ -29,9 +29,9 @@ public:
     int participants[12];
 };
 
-class BattleView {
+class CombatView {
 public:
-    BattleView(Battle *battle, int width, int height, ViewResources *resources);
+    CombatView(Battle *battle, int width, int height, ViewResources *resources);
 
     void update();
     void step();
@@ -47,7 +47,7 @@ public:
     int width, height;
     ViewResources *resources;
     UnitPainter unit_painter;
-    BattleStackView battle_stack_views[7];
+    CombatStackView combat_stack_views[7];
     std::vector<ParticipantView> participant_views;
     unsigned int last_update;
     unsigned int phase;
