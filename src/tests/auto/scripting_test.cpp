@@ -116,6 +116,17 @@ BOOST_AUTO_TEST_CASE(choose) {
     BOOST_CHECK_EQUAL(var_value, Atom("def"));
 }
 
+BOOST_AUTO_TEST_CASE(concat) {
+    play_message("DefineScript(t, ["
+        "SetVariable(VarX, 2),"
+        "SetVariable(VarY, Concat(hello, $VarX))])");
+
+    Execution execution(&scripts);
+    execution.run("t");
+    std::string var_value = execution.variables.get(VarY);
+    BOOST_CHECK_EQUAL(var_value, "hello2");
+}
+
 BOOST_AUTO_TEST_CASE(return_value) {
     play_message("DefineScript(u, [Return(\"xyz\")])");
     play_message("DefineScript(t, ["

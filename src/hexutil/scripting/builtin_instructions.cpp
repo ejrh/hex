@@ -77,8 +77,13 @@ public:
         int condition = execution->get_argument(instruction, 0).get_as_int();
         const Term *body = execution->get_subterm(instruction, 1);
 
+        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
+        const Term *else_body = (list_term->subterms.size() >= 3) ? execution->get_subterm(list_term, 2) : nullptr;
+
         if (condition) {
             return execution->execute_instruction(body);
+        } else if (else_body) {
+            return execution->execute_instruction(else_body);
         }
 
         return 0;
@@ -138,6 +143,23 @@ public:
 };
 
 
+class GtInterpreter: public Interpreter {
+public:
+    GtInterpreter(): Interpreter("Gt") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        int value = execution->get_argument(instruction, 0).get_as_int();
+        int value2 = execution->get_argument(instruction, 1).get_as_int();
+
+        if (value > value2) {
+            return 1;
+        }
+
+        return 0;
+    }
+};
+
+
 class LtInterpreter: public Interpreter {
 public:
     LtInterpreter(): Interpreter("Lt") { }
@@ -174,6 +196,25 @@ public:
 };
 
 
+class OrInterpreter: public Interpreter {
+public:
+    OrInterpreter(): Interpreter("Or") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
+
+        for (int i = 0; i < list_term->subterms.size(); i++) {
+            int condition = execution->get_argument(instruction, i).get_as_int();
+            if (condition) {
+                return 1;
+            }
+        }
+
+        return 0;
+    }
+};
+
+
 class NotInterpreter: public Interpreter {
 public:
     NotInterpreter(): Interpreter("Not") { }
@@ -182,6 +223,61 @@ public:
         int condition = execution->get_argument(instruction, 0).get_as_int();
 
         return !condition;
+    }
+};
+
+
+class AddInterpreter: public Interpreter {
+public:
+    AddInterpreter(): Interpreter("Add") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        int value = execution->get_argument(instruction, 0).get_as_int();
+        int value2 = execution->get_argument(instruction, 1).get_as_int();
+
+        return value + value2;
+    }
+};
+
+
+class SubInterpreter: public Interpreter {
+public:
+    SubInterpreter(): Interpreter("Sub") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        int value = execution->get_argument(instruction, 0).get_as_int();
+        int value2 = execution->get_argument(instruction, 1).get_as_int();
+
+        return value - value2;
+    }
+};
+
+
+class DivInterpreter: public Interpreter {
+public:
+    DivInterpreter(): Interpreter("Div") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        int value = execution->get_argument(instruction, 0).get_as_int();
+        int value2 = execution->get_argument(instruction, 1).get_as_int();
+
+        return value / value2;
+    }
+};
+
+
+class ConcatInterpreter: public Interpreter {
+public:
+    ConcatInterpreter(): Interpreter("Concat") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
+        std::ostringstream result;
+        for (int i = 0; i < list_term->subterms.size(); i++) {
+            result << execution->get_argument(list_term, i).get_as_str();
+        }
+
+        return result.str();
     }
 };
 
@@ -281,9 +377,15 @@ void register_builtin_interpreters() {
     InterpreterRegistry::register_interpreter(new WhileInterpreter());
     InterpreterRegistry::register_interpreter(new MatchInterpreter());
     InterpreterRegistry::register_interpreter(new EqInterpreter());
+    InterpreterRegistry::register_interpreter(new GtInterpreter());
     InterpreterRegistry::register_interpreter(new LtInterpreter());
     InterpreterRegistry::register_interpreter(new AndInterpreter());
+    InterpreterRegistry::register_interpreter(new OrInterpreter());
     InterpreterRegistry::register_interpreter(new NotInterpreter());
+    InterpreterRegistry::register_interpreter(new AddInterpreter());
+    InterpreterRegistry::register_interpreter(new SubInterpreter());
+    InterpreterRegistry::register_interpreter(new DivInterpreter());
+    InterpreterRegistry::register_interpreter(new ConcatInterpreter());
     InterpreterRegistry::register_interpreter(new ReturnInterpreter());
     InterpreterRegistry::register_interpreter(new ChooseInterpreter());
     InterpreterRegistry::register_interpreter(new MixInterpreter());
