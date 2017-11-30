@@ -5,6 +5,36 @@
 #include "hexav/resources/resource_messages.h"
 #include "hexav/resources/paint.h"
 
+class FrameWidthInterpreter: public Interpreter {
+public:
+    FrameWidthInterpreter(): Interpreter("FrameWidth") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        int frame_num = execution->get_argument(instruction, 0);
+
+        PaintExecution* pe = dynamic_cast<PaintExecution *>(execution);
+        if (!pe)
+            throw ScriptError() << "FrameWidth can only be executed in a PaintExecution";
+
+        return pe->frame_width(frame_num);
+    }
+};
+
+class FrameHeightInterpreter: public Interpreter {
+public:
+    FrameHeightInterpreter(): Interpreter("FrameHeight") { }
+
+    Datum execute(const Term *instruction, Execution *execution) const {
+        int frame_num = execution->get_argument(instruction, 0);
+
+        PaintExecution* pe = dynamic_cast<PaintExecution *>(execution);
+        if (!pe)
+            throw ScriptError() << "FrameHeight can only be executed in a PaintExecution";
+
+        return pe->frame_height(frame_num);
+    }
+};
+
 class PaintFrameInterpreter: public Interpreter {
 public:
     PaintFrameInterpreter(): Interpreter("PaintFrame") { }
@@ -52,6 +82,8 @@ public:
 
 
 void register_paint_interpreters() {
+    InterpreterRegistry::register_interpreter(new FrameWidthInterpreter());
+    InterpreterRegistry::register_interpreter(new FrameHeightInterpreter());
     InterpreterRegistry::register_interpreter(new PaintFrameInterpreter());
     InterpreterRegistry::register_interpreter(new PaintAnimationInterpreter());
 }

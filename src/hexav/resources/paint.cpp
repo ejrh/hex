@@ -74,6 +74,24 @@ void Paint::add(const PaintItem& item) {
 }
 
 
+int PaintExecution::frame_width(int frame_num) {
+    Atom paint_library = get(paint_library_atom).get_as_atom();
+    int frame_offset = get_as<int>(paint_frame_offset_atom);
+    Image *image = resources->get_library_image(paint_library, frame_offset + frame_num);
+    if (!image)
+        return 0;
+    return image->width;
+}
+
+int PaintExecution::frame_height(int frame_num) {
+    Atom paint_library = get(paint_library_atom).get_as_atom();
+    int frame_offset = get_as<int>(paint_frame_offset_atom);
+    Image *image = resources->get_library_image(paint_library, frame_offset + frame_num);
+    if (!image)
+        return 0;
+    return image->height;
+}
+
 void PaintExecution::paint_frame(int frame_num) {
     Atom paint_library = get(paint_library_atom).get_as_atom();
     int offset_x = get_as<int>(paint_offset_x_atom);

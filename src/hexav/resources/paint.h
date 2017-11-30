@@ -64,6 +64,8 @@ public:
         paint_frame_offset_atom = AtomRegistry::atom("paint_frame_offset");
     }
 
+    int frame_width(int frame_num);
+    int frame_height(int frame_num);
     void paint_frame(int frame_num);
     void paint_frame(Atom image_libary, int frame_num, int offset_x, int offset_y, int tile_width, int tile_height, int blend_alpha, int blend_addition);
     void paint_animation(Atom image_libary, int frame_rate, const std::vector<int>& frame_nums, int offset_x, int offset_y, int blend_alpha, int blend_addition);
