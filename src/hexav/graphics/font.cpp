@@ -53,6 +53,10 @@ TTF_Font *FontCache::lookup_font(FontId font_id) {
 
 
 void TextFormat::write_text(Graphics *graphics, const std::string& text, int x, int y) {
+    if (text.empty()) {
+        return;
+    }
+
     SDL_Color colour = {R, G, B};
     SDL_Surface *text_surface = TTF_RenderText_Solid(font, text.c_str(), colour);
     if (text_surface == NULL) {
@@ -71,6 +75,10 @@ void TextFormat::write_text(Graphics *graphics, const std::string& text, int x, 
 }
 
 Image *TextFormat::write_to_image(Graphics *graphics, const std::string& text) {
+    if (text.empty()) {
+        return nullptr;
+    }
+
     SDL_Color colour = {R, G, B};
     SDL_Surface *text_surface = TTF_RenderText_Solid(font, text.c_str(), colour);
     if (text_surface == NULL) {
