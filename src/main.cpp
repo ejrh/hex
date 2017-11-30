@@ -301,8 +301,7 @@ void run(Options& options) {
     register_paint_interpreters();
     register_transition_paint_interpreters();
 
-    Graphics graphics;
-    graphics.start("Hex", options.width, options.height, options.fullscreen);
+    Graphics graphics("Hex", options.width, options.height, options.fullscreen);
 
     ViewResources resources;
     Audio audio(&resources);  // TODO audio should not depend on resources
@@ -395,8 +394,8 @@ void run(Options& options) {
     node_interface->stop();
     delete node_interface;
 
+    resources.clear();
     audio.stop();
-    graphics.stop();
 }
 
 bool parse_options(int argc, char *argv[], Options& options) {

@@ -20,13 +20,11 @@ Image::~Image() {
 }
 
 
-Graphics::Graphics():
-    blit_counter("graphics.blit"), blit_pixel_counter("graphics.blit.pixels"), draw_counter("graphics.draw"),
-    frame_counter("graphics.frame"),
-    font_render_counter("graphics.font.render"),
-    ilb_image_load_counter("graphics.image.ilb") { }
-
-void Graphics::start(const std::string& title, int width, int height, bool fullscreen) {
+Graphics::Graphics(const std::string& title, int width, int height, bool fullscreen):
+        blit_counter("graphics.blit"), blit_pixel_counter("graphics.blit.pixels"), draw_counter("graphics.draw"),
+        frame_counter("graphics.frame"),
+        font_render_counter("graphics.font.render"),
+        ilb_image_load_counter("graphics.image.ilb") {
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
         throw Error() << "SDL error while initialising SDL: " << SDL_GetError();
 
@@ -49,7 +47,7 @@ void Graphics::start(const std::string& title, int width, int height, bool fulls
     BOOST_LOG_TRIVIAL(info) << boost::format("Window size: %d by %d") % this->width % this->height;
 }
 
-void Graphics::stop() {
+Graphics::~Graphics() {
     IMG_Quit();
 
     SDL_DestroyRenderer(renderer);

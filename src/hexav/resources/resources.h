@@ -29,6 +29,7 @@ class Resources {
 public:
     Resources();
     virtual ~Resources();
+    void clear();
     void resolve_image_series(std::vector<ImageRef>& image_series);
     bool resolve_image_ref(ImageRef& image_ref);
     void resolve_sound_series(std::vector<SoundRef>& sound_series);

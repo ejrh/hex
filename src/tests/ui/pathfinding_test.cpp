@@ -288,8 +288,7 @@ void run() {
     unit->type = type;
     party->units.push_back(unit);
 
-    Graphics graphics;
-    graphics.start("Pathfinding test", 800, 600, false);
+    Graphics graphics("Pathfinding test", 800, 600, false);
 
     Game game;
     game.level.resize(200, 200);
@@ -308,8 +307,6 @@ void run() {
     TopWindow *tw = new TopWindow(&graphics);
     bg_window->add_child(tw);
     loop.run();
-
-    graphics.stop();
 }
 
 int main(int argc, char *argv[]) {

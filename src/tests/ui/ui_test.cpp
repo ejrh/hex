@@ -101,8 +101,7 @@ private:
 };
 
 void run() {
-    Graphics graphics;
-    graphics.start("UI test", 800, 600, false);
+    Graphics graphics("UI test", 800, 600, false);
 
     UiLoop loop(&graphics, 25);
     TestWindow *test_window = new TestWindow(&loop, &graphics);
@@ -112,8 +111,6 @@ void run() {
     test_window->add_child(top_window);
     loop.set_root_window(test_window);
     loop.run();
-
-    graphics.stop();
 }
 
 int main(int argc, char *argv[]) {

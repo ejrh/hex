@@ -101,8 +101,7 @@ void run() {
     register_view_resource_messages();
     register_property_names();
 
-    Graphics graphics;
-    graphics.start("Image test", 800, 600, false);
+    Graphics graphics("Image test", 800, 600, false);
 
     ViewResources resources;
     load_resources(&resources, &graphics);
@@ -111,8 +110,6 @@ void run() {
     TestWindow *test_window = new TestWindow(&loop, &graphics, &resources);
     loop.set_root_window(test_window);
     loop.run();
-
-    graphics.stop();
 }
 
 int main(int argc, char *argv[]) {

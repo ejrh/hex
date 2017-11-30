@@ -62,8 +62,7 @@ void draw_noise(Graphics &graphics, PerlinNoise &noise) {
 
 void run() {
     PerlinNoise noise(8, 8);
-    Graphics graphics;
-    graphics.start("Noise test", 800, 600, false);
+    Graphics graphics("Noise test", 800, 600, false);
 
     show_gradients = false;
 
@@ -80,8 +79,6 @@ void run() {
         draw_noise(graphics, noise);
         SDL_Delay(25);
     }
-
-    graphics.stop();
 }
 
 int main(int argc, char *argv[]) {

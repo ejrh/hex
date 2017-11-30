@@ -11,9 +11,16 @@ Resources::Resources():
         scripts("scripts") {
 }
 
-
 Resources::~Resources() { }
 
+void Resources::clear() {
+    images.clear();
+    image_libraries.clear();
+    sounds.clear();
+    image_series.clear();
+    scripts.clear();
+    songs.clear();
+}
 
 void Resources::resolve_image_series(std::vector<ImageRef>& image_series) {
     for (auto ref_iter = image_series.begin(); ref_iter != image_series.end(); ref_iter++) {

@@ -168,8 +168,7 @@ void run() {
     register_builtin_interpreters();
     register_paint_interpreters();
 
-    Graphics graphics;
-    graphics.start("Unit rendering test", 800, 600, false);
+    Graphics graphics("Unit rendering test", 800, 600, false);
 
     Game game;
     game.create_tile_type(TileType("grass"));
@@ -192,8 +191,6 @@ void run() {
     TestWindow *test_window = new TestWindow(&loop, &graphics, &resources, &game, &tile_painter, &unit_painter, &unit_renderer, initial_view_def);
     loop.set_root_window(test_window);
     loop.run();
-
-    graphics.stop();
 }
 
 int main(int argc, char *argv[]) {
