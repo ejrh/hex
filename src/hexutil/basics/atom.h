@@ -12,16 +12,22 @@ public:
     bool operator==(const int& val) const {
         return id == val;
     }
+
+    bool operator==(const Atom& other) const {
+        return id == other.id;
+    }
+
     bool operator<(const Atom& other) const {
         return id < other.id;
     }
 
-    operator int() const {
+    /*operator int() const {
         return id;
-    }
+    }*/
 
-    // Defined below as it references AtomRegistry
+    // Defined below as they reference AtomRegistry
     operator const std::string&() const;
+    Atom(int id, const char *name);
     Atom(const char *name);
     Atom(const std::string& name);
 
@@ -30,15 +36,6 @@ private:
 
     friend class AtomRegistry;
 };
-
-namespace std {
-    template<>
-    struct hash<Atom> {
-        size_t operator()(const Atom& atom) const {
-            return atom;
-        }
-    };
-}
 
 class AtomRegistry {
 public:
@@ -57,7 +54,22 @@ public:
         return empty_string;
     }
 
+    static inline int id(const char *name) {
+        return atom(name).id;
+    }
+
+    static inline int id(const std::string& name) {
+        return atom(name).id;
+    }
+
+    static inline int id(const Atom& atom) {
+        return atom.id;
+    }
+
     static Atom register_atom(const std::string& name, int id);
+
+public:
+    static Atom empty;
 
 private:
     static std::unordered_map<int, std::string> id_to_str;
@@ -70,12 +82,25 @@ inline Atom::operator const std::string&() const {
     return AtomRegistry::name(*this);
 }
 
-inline Atom::Atom(const char *name): id(AtomRegistry::atom(name)) { }
+inline Atom::Atom(int id, const char *name): id(id) {
+    AtomRegistry::register_atom(name, id);
+}
 
-inline Atom::Atom(const std::string& name): id(AtomRegistry::atom(name)) { }
+inline Atom::Atom(const char *name): id(AtomRegistry::id(name)) { }
+
+inline Atom::Atom(const std::string& name): id(AtomRegistry::id(name)) { }
 
 inline std::ostream& operator<<(std::ostream& os, const Atom& atom) {
     return os << AtomRegistry::name(atom);
+}
+
+namespace std {
+    template<>
+    struct hash<Atom> {
+        size_t operator()(const Atom& atom) const {
+            return AtomRegistry::id(atom);
+        }
+    };
 }
 
 #endif
