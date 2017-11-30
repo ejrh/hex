@@ -59,8 +59,9 @@ void UiDialog::draw(const UiContext& context) {
 
 
 UiButton::UiButton(int x, int y, int width, int height, const std::string& label_text):
-        UiWindow(x, y, width, height, WindowIsVisible|WindowIsActive|WindowWantsMouseEvents) {
+        UiWindow(x, y, width, height, WindowIsVisible|WindowIsActive|WindowWantsMouseEvents|WindowWantsUiEvents) {
     label = new UiLabel(2, 2, width - 4, height - 4);
+    label->name = "label";
     label->set_format(TextFormat(SmallFont14, true, 255,255,255));
     label->set_text(label_text);
     add_child(label);
@@ -70,12 +71,28 @@ UiButton::~UiButton() {
 }
 
 bool UiButton::receive_mouse_event(SDL_Event *evt, int x, int y) {
+    if (evt->type == SDL_MOUSEBUTTONDOWN) {
+        push_ui_event(click_event_type, this);
+        return true;
+    }
+    return false;
+}
+
+bool UiButton::receive_ui_event(SDL_Event* evt, UiWindow *control) {
+    if ((evt->type == focus_event_type || evt->type == unfocus_event_type) && control == this) {
+        needs_repaint = true;
+        return true;
+    }
     return false;
 }
 
 void UiButton::draw(const UiContext& context) {
     context.fill_rectangle(200,150,150, 0, 0, width, height);
-    context.fill_rectangle(0,0,0, 2, 2, width-4, height-4);
+    if (flags & WindowHasFocus) {
+        context.fill_rectangle(50,50,50, 2, 2, width-4, height-4);
+    } else {
+        context.fill_rectangle(0,0,0, 2, 2, width-4, height-4);
+    }
 }
 
 
@@ -105,4 +122,44 @@ void UiTextList::add_line(const std::string& text) {
 
 void UiTextList::clear() {
     children.clear();
+}
+
+
+UiTabBar::UiTabBar(int x, int y, int width, int height):
+        UiWindow(x, y, width, height, WindowIsVisible|WindowIsActive|WindowWantsUiEvents),
+        current_tab(nullptr) {
+}
+
+UiTabBar::~UiTabBar() {
+}
+
+bool UiTabBar::receive_ui_event(SDL_Event* evt, UiWindow *control) {
+    if (evt->type == click_event_type) {
+        for (auto iter = children.begin(); iter != children.end(); iter++) {
+            if (control == iter->get()) {
+                select_tab(control);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void UiTabBar::draw(const UiContext& context) {
+    context.draw_rectangle(200,150,150, 0, 0, width, height);
+}
+
+void UiTabBar::select_tab(UiWindow *tab) {
+    if (current_tab != tab) {
+        if (current_tab) {
+            current_tab->clear_flag(WindowIsSelected);
+            current_tab->needs_repaint = true;
+        }
+        current_tab = tab;
+        if (current_tab) {
+            current_tab->set_flag(WindowIsSelected);
+            current_tab->needs_repaint = true;
+        }
+    }
+    push_ui_event(tab_event_type, this);
 }

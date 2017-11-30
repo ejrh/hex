@@ -28,6 +28,8 @@ set(srcs
         ui/loop.cpp
         ui/ui.h
         ui/ui_window.cpp
+        ui/window_painter.cpp
+        ui/window_painter.h
 )
 
 source_group(Sources REGULAR_EXPRESSION cpp|h)

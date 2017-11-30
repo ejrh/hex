@@ -1,8 +1,16 @@
 #include "common.h"
 
 #include "hexav/ui/ui.h"
+#include "hexav/ui/window_painter.h"
+
+
+Uint32 user_event_type_base = 0;
 
 Uint32 drag_event_type = 0;
+Uint32 focus_event_type = 0;
+Uint32 unfocus_event_type = 0;
+Uint32 click_event_type = 0;
+Uint32 tab_event_type = 0;
 
 
 static bool is_mouse_event(SDL_Event *event) {
@@ -13,10 +21,46 @@ static bool is_keyboard_event(SDL_Event *event) {
     return event->type >= SDL_KEYDOWN && event->type <= SDL_TEXTINPUT;
 }
 
+static bool is_ui_event(SDL_Event *event) {
+    return event->type >= drag_event_type && event->type <= tab_event_type;
+}
 
-UiLoop::UiLoop(Graphics *graphics, unsigned int frame_time): graphics(graphics), frame_time(frame_time), running(false) {
-    if (drag_event_type == 0)
-        drag_event_type = SDL_RegisterEvents(1);
+static void register_user_events() {
+    if (user_event_type_base == 0) {
+        user_event_type_base = SDL_RegisterEvents(4);
+
+        drag_event_type = user_event_type_base;
+        focus_event_type = user_event_type_base+1;
+        unfocus_event_type = user_event_type_base+2;
+        click_event_type = user_event_type_base+3;
+        tab_event_type = user_event_type_base+4;
+    }
+}
+
+void push_ui_event(Uint32 type, UiWindow *control) {
+    if (user_event_type_base == 0) {
+        BOOST_LOG_TRIVIAL(error) << "Event pushed before user events registered!";
+    }
+
+    SDL_Event event;
+    event.type = type;
+    event.user.data1 = control;
+    if (!SDL_PushEvent(&event)) {
+        BOOST_LOG_TRIVIAL(error) << boost::format("Error pushing SDL event: %s") % SDL_GetError();
+    }
+}
+
+
+UiLoop::UiLoop(Graphics *graphics, unsigned int frame_time):
+        graphics(graphics), frame_time(frame_time), window_painter(nullptr),
+        running(false) {
+    register_user_events();
+}
+
+UiLoop::UiLoop(Graphics *graphics, unsigned int frame_time, WindowPainter *window_painter):
+        graphics(graphics), frame_time(frame_time), window_painter(window_painter),
+        running(false) {
+    register_user_events();
 }
 
 bool UiLoop::deliver_event(UiWindow& window, SDL_Event *event, int offset_x, int offset_y) {
@@ -34,13 +78,22 @@ bool UiLoop::deliver_event(UiWindow& window, SDL_Event *event, int offset_x, int
         int x = event->motion.x - offset_x;
         int y = event->motion.y - offset_y;
         if (x >= 0 && y >= 0 && x < window.width && y < window.height) {
+            if (!(window.flags & WindowHasFocus)) {
+                window.set_flag(WindowHasFocus);
+                push_ui_event(focus_event_type, &window);
+            }
             consumed = window.receive_mouse_event(event, x, y);
             if (event->type == SDL_MOUSEBUTTONDOWN && consumed) {
                 dragging_window = &window;
             }
+        } else if (window.flags & WindowHasFocus) {
+            window.clear_flag(WindowHasFocus);
+            push_ui_event(unfocus_event_type, &window);
         }
     } else if (is_keyboard_event(event) && window.flags & WindowWantsKeyboardEvents) {
         consumed = window.receive_keyboard_event(event);
+    } else if (is_ui_event(event) && window.flags & WindowWantsUiEvents) {
+        consumed = window.receive_ui_event(event, static_cast<UiWindow *>(event->user.data1));
     } else if (window.flags & WindowWantsGlobalEvents) {
         window.receive_global_event(event);
     }
@@ -48,7 +101,7 @@ bool UiLoop::deliver_event(UiWindow& window, SDL_Event *event, int offset_x, int
 }
 
 bool UiLoop::deliver_event_to_children(UiWindow& window, SDL_Event *event, int offset_x, int offset_y) {
-    for (auto iter = window.children.begin(); iter != window.children.end(); iter++) {
+    for (auto iter = window.children.rbegin(); iter != window.children.rend(); iter++) {
         bool consumed = deliver_event(**iter, event, offset_x, offset_y);
         if (consumed)
             return true;
@@ -58,7 +111,16 @@ bool UiLoop::deliver_event_to_children(UiWindow& window, SDL_Event *event, int o
 
 void UiLoop::draw_window(UiWindow& window, const UiContext& context) {
     if (window.flags & WindowIsVisible) {
-        window.draw(context);
+        if (window_painter && window.flags & WindowHasPaint) {
+            if (window.needs_repaint) {
+                window_painter->repaint_window(&window);
+                window.needs_repaint = false;
+            }
+
+            window.paint.render(context.translate_x, context.translate_y, 0, context.graphics);
+        } else {
+            window.draw(context);
+        }
         draw_children(window, context);
     }
 }

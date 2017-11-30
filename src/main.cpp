@@ -376,8 +376,8 @@ void run(Options& options) {
     UiLoop loop(&graphics, 25);
     BackgroundWindow *bw = new BackgroundWindow(&loop, &options, &generator, &game, &game_view, node_interface, &level_renderer, palette_window);
     loop.set_root_window(bw);
-    bw->add_child(editor_window);
     bw->add_child(level_window);
+    bw->add_child(editor_window);
     bw->add_child(palette_window);
     bw->add_child(map_window);
     bw->add_child(stack_window);

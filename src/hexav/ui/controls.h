@@ -41,6 +41,7 @@ public:
     virtual ~UiButton();
 
     virtual bool receive_mouse_event(SDL_Event *evt, int x, int y);
+    virtual bool receive_ui_event(SDL_Event *evt, UiWindow *control);
     virtual void draw(const UiContext& context);
 
 public:
@@ -56,6 +57,20 @@ public:
 
     void add_line(const std::string& text);
     void clear();
+};
+
+class UiTabBar: public UiWindow {
+public:
+    UiTabBar(int x, int y, int width, int height);
+    virtual ~UiTabBar();
+
+    virtual bool receive_ui_event(SDL_Event *evt, UiWindow *control);
+    virtual void draw(const UiContext& context);
+
+    void select_tab(UiWindow *tab);
+
+public:
+    UiWindow *current_tab;
 };
 
 #endif
