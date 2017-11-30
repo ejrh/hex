@@ -22,6 +22,11 @@ target_link_libraries(ui_test hexav hexutil)
 target_link_libraries(ui_test ${gen_libs} ${av_libs})
 target_compile_options(ui_test PUBLIC ${gen_opts})
 
+add_executable(unit_info_test unit_info_test.cpp)
+target_link_libraries(unit_info_test hexview hexgame hexav hexutil)
+target_link_libraries(unit_info_test ${gen_libs} ${av_libs})
+target_compile_options(unit_info_test PUBLIC ${gen_opts})
+
 add_executable(unit_rendering_test unit_rendering_test.cpp)
 target_link_libraries(unit_rendering_test hexview hexgame hexav hexutil)
 target_link_libraries(unit_rendering_test ${gen_libs} ${av_libs})

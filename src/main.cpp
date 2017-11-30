@@ -20,6 +20,7 @@
 #include "hexav/audio/audio.h"
 #include "hexav/graphics/graphics.h"
 #include "hexav/resources/resource_messages.h"
+#include "hexav/ui/window_painter.h"
 
 #include "hexgame/ai/ai.h"
 #include "hexgame/game/game.h"
@@ -300,6 +301,7 @@ void run(Options& options) {
     register_builtin_interpreters();
     register_paint_interpreters();
     register_transition_paint_interpreters();
+    register_window_interpreters();
 
     Graphics graphics("Hex", options.width, options.height, options.fullscreen);
 
@@ -361,6 +363,9 @@ void run(Options& options) {
     ChatUpdater chat_updater(chat_window);
     node_interface->subscribe(&chat_updater);
 
+    WindowPainter window_painter(&resources);
+    UiLoop loop(&graphics, 25, &window_painter);
+
     UnitInfoWindow *unit_info_window = new UnitInfoWindow(unit_info_window_x, unit_info_window_y, UnitInfoWindow::unit_info_window_width, UnitInfoWindow::unit_info_window_height, &resources, &graphics, &game_view);
     MapWindow *map_window = new MapWindow(sidebar_position, 0, sidebar_width, map_window_height, &game_view, level_window, &graphics, &resources);
     StackWindow *stack_window = new StackWindow(sidebar_position, 200, sidebar_width, StackWindow::window_height, &resources, &graphics, &game_view, &unit_renderer, unit_info_window);
@@ -373,7 +378,6 @@ void run(Options& options) {
     EditorWindow *editor_window = new EditorWindow(&game_view, level_window);
     PaletteWindow *palette_window = new PaletteWindow(&game, &game_view, level_window, editor_window);
 
-    UiLoop loop(&graphics, 25);
     BackgroundWindow *bw = new BackgroundWindow(&loop, &options, &generator, &game, &game_view, node_interface, &level_renderer, palette_window);
     loop.set_root_window(bw);
     bw->add_child(level_window);
@@ -395,6 +399,7 @@ void run(Options& options) {
     delete node_interface;
 
     resources.clear();
+
     audio.stop();
 }
 

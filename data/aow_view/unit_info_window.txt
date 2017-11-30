@@ -1,0 +1,243 @@
+DefineScript("draw_frame", [inner_width, inner_height], [
+    SetVariable(saved_paint_offset_x, $paint_offset_x),
+    SetVariable(saved_paint_offset_y, $paint_offset_y),
+#Top
+    PaintFrame(0),
+    Increment(paint_offset_x, FrameWidth(0)),
+    SetVariable(paint_tile_width, $inner_width),
+    PaintFrame(1),
+    SetVariable(paint_tile_width, 0),
+    Increment(paint_offset_x, $inner_width),
+    PaintFrame(2),
+#Sides
+    Increment(paint_offset_y, FrameHeight(0)),
+    SetVariable(paint_tile_height, $inner_height),
+    SetVariable(paint_offset_x, $saved_paint_offset_x),
+    PaintFrame(3),
+    Increment(paint_offset_x, FrameWidth(0), $inner_width),
+    PaintFrame(4),
+    SetVariable(paint_tile_height, 0),
+    Increment(paint_offset_y, $inner_height),
+#Bottom
+    SetVariable(paint_offset_x, $saved_paint_offset_x),
+    PaintFrame(5),
+    Increment(paint_offset_x, FrameWidth(0)),
+    SetVariable(paint_tile_width, $inner_width),
+    PaintFrame(6),
+    SetVariable(paint_tile_width, 0),
+    Increment(paint_offset_x, $inner_width),
+    PaintFrame(7),
+#Restore variables
+    SetVariable(paint_offset_x, $saved_paint_offset_x),
+    SetVariable(paint_offset_y, $saved_paint_offset_y),
+])
+
+
+DefineScript("draw_dialog_fr", [inner_width, inner_height], [
+    SetVariable(paint_library, genericf),
+    SetVariable(paint_frame_offset, 32),
+    Call("draw_frame", [$inner_width, $inner_height]),
+    SetVariable(paint_frame_offset, 0),
+])
+
+
+DefineScript("draw_gold_fr", [inner_width, inner_height], [
+    SetVariable(paint_library, genericf),
+    SetVariable(paint_frame_offset, 113),
+    SetVariable(frame_h1, 3),
+    SetVariable(frame_h2, 136),
+    SetVariable(frame_h3, 3),
+    SetVariable(frame_v1, 3),
+    SetVariable(frame_v2, 136),
+    SetVariable(frame_v3, 3),
+    Call("draw_frame", [$inner_width, $inner_height]),
+    SetVariable(paint_frame_offset, 0),
+])
+
+
+DefineScript("UNIT_INFO_WINDOW", [
+    Call("draw_dialog_fr", [376, 372]),
+
+    SetVariable(paint_offset_x, 21),
+    SetVariable(paint_offset_y, 22),
+    SetVariable(paint_library, unitwin),
+    PaintFrame(44),
+
+    SetVariable(paint_tile_width, 142),
+    SetVariable(paint_offset_x, 139),
+    SetVariable(paint_offset_y, 22),
+    SetVariable(paint_library, celtdeco),
+    PaintFrame(1),
+
+    SetVariable(paint_offset_x, 139),
+    SetVariable(paint_offset_y, 49),
+    SetVariable(paint_library, generict),
+    SetVariable(paint_tile_height, 89),
+    PaintFrame(2),
+    SetVariable(paint_tile_height, 0),
+
+    SetVariable(paint_offset_x, 139),
+    SetVariable(paint_offset_y, 138),
+    SetVariable(paint_library, celtdeco),
+    PaintFrame(1),
+    SetVariable(paint_tile_width, 0),
+
+    SetVariable(paint_offset_x, 281),
+    SetVariable(paint_offset_y, 22),
+    SetVariable(paint_library, unitwin),
+    PaintFrame(45),
+
+# Bottom bar
+    SetVariable(paint_library, celtdeco),
+    SetVariable(paint_offset_x, 21),
+    SetVariable(paint_offset_y, 380),
+    PaintFrame(0),
+    Increment(paint_offset_x, 6),
+    PaintFrame(3),
+    Increment(paint_offset_x, 27),
+    PaintFrame(3),
+    Increment(paint_offset_x, 27),
+    SetVariable(paint_tile_width, 256),
+    PaintFrame(1),
+    SetVariable(paint_tile_width, 0),
+    SetVariable(paint_offset_x, 337),
+    PaintFrame(3),
+    Increment(paint_offset_x, 27),
+    PaintFrame(3),
+    Increment(paint_offset_x, 27),
+    PaintFrame(2),
+
+# Draw icons
+    SetVariable(paint_library, icons),
+    SetVariable(paint_offset_x, 144),
+    SetVariable(paint_offset_y, 51),
+    PaintFrame(0),
+    SetVariable(paint_offset_y, 72),
+    PaintFrame(1),
+    SetVariable(paint_offset_x, 211),
+    SetVariable(paint_offset_y, 51),
+    PaintFrame(2),
+    SetVariable(paint_offset_y, 72),
+    PaintFrame(3),
+    SetVariable(paint_offset_y, 93),
+    PaintFrame(4),
+
+    If(Gt($ManaIncome, 0), [
+        SetVariable(paint_offset_y, 114),
+        PaintFrame(5),
+    ]),
+
+# Movement icons
+    SetVariable(paint_library, iconmove),
+    SetVariable(paint_offset_x, 140),
+    SetVariable(paint_offset_y, 93),
+    If($Walking, PaintFrame(0)),
+    If($Flying, PaintFrame(18)),
+    If(Or($Swimming, $Sailing), PaintFrame(6)),
+
+# Controls
+    PositionControl(close_button, 151, 380, 119, 27, UNIT_INFO_CLOSE_BUTTON),
+    PositionControl(tab_bar, 21, 163, 376, 22, UNIT_INFO_TAB_BAR),
+    PositionControl(tab_panel0, 21, 185, 376, 195, UNIT_INFO_TAB_PANEL0),
+    PositionControl(tab_panel1, 21, 185, 376, 195, UNIT_INFO_TAB_PANEL1),
+    PositionControl(tab_panel2, 21, 185, 376, 195, UNIT_INFO_TAB_PANEL2),
+])
+
+
+DefineScript("UNIT_INFO_CLOSE_BUTTON", [
+    SetVariable(paint_library, genericb),
+
+    SetVariable(paint_frame_offset, 19),
+    If($window_has_focus, SetVariable(paint_frame_offset, 25)),
+
+    SetVariable(paint_offset_x, 0),
+    SetVariable(paint_offset_y, 0),
+    PaintFrame(0),
+    Increment(paint_offset_x, 24),
+    SetVariable(paint_tile_width, 71),
+    PaintFrame(1),
+    SetVariable(paint_tile_width, 0),
+    Increment(paint_offset_x, 71),
+    PaintFrame(2),
+
+    HideControl(label),
+])
+
+
+DefineScript("UNIT_INFO_TAB_BAR", [
+    SetVariable(paint_offset_x, 0),
+    SetVariable(paint_offset_y, 1),
+    SetVariable(paint_library, generict),
+    SetVariable(paint_tile_width, $window_width),
+    SetVariable(paint_tile_height, 21),
+    PaintFrame(2),
+    SetVariable(paint_tile_width, 0),
+    SetVariable(paint_tile_height, 0),
+
+    SetVariable(xp, 0),
+    SetVariable(tab_width, Div($window_width, 3)),
+    PositionControl(tab_button0, $xp, 0, $tab_width, $window_height, UNIT_INFO_TAB_BUTTON),
+    Increment(xp, $tab_width),
+    PositionControl(tab_button1, $xp, 0, $tab_width, $window_height, UNIT_INFO_TAB_BUTTON),
+    Increment(xp, $tab_width),
+    PositionControl(tab_button2, $xp, 0, $tab_width, $window_height, UNIT_INFO_TAB_BUTTON),
+])
+
+
+DefineScript("UNIT_INFO_TAB_BUTTON", [
+    SetVariable(tab_middle, $window_width),
+    Increment(tab_middle, -13, -13),
+
+    SetVariable(paint_library, celtdeco),
+
+    SetVariable(paint_offset_x, 0),
+    SetVariable(paint_offset_y, 0),
+    SetVariable(paint_frame_offset, 70),
+    If($window_is_selected, SetVariable(paint_frame_offset, 67)),
+
+    PaintFrame(0),
+    Increment(paint_offset_x, 13),
+    SetVariable(paint_tile_width, $tab_middle),
+    PaintFrame(1),
+    SetVariable(paint_tile_width, 0),
+    Increment(paint_offset_x, $tab_middle),
+    PaintFrame(2),
+
+    HideControl(label),
+])
+
+
+DefineScript("UNIT_INFO_TAB_PANEL0", [
+    SetVariable(paint_library, generict),
+    SetVariable(paint_tile_width, $window_width),
+    SetVariable(paint_tile_height, $window_height),
+    PaintFrame(2),
+    SetVariable(paint_tile_width, 0),
+    SetVariable(paint_tile_height, 0),
+
+    SetVariable(paint_library, genericb),
+    SetVariable(paint_frame_offset, 85),
+    SetVariable(paint_offset_x, 10),
+    SetVariable(paint_offset_y, 10),
+    PaintFrame(0),
+    Increment(paint_offset_x, 3),
+    PaintFrame(1),
+    Increment(paint_offset_x, 97),
+    PaintFrame(2),
+
+    SetVariable(paint_offset_x, 10),
+    SetVariable(paint_offset_y, 24),
+    Call("draw_gold_fr", [100, 100]),
+])
+
+
+DefineScript("UNIT_INFO_TAB_PANEL1", [
+])
+
+
+DefineScript("UNIT_INFO_TAB_PANEL2", [
+    SetVariable(paint_library, unitwin),
+    SetVariable(paint_offset_x, 11),
+    SetVariable(paint_offset_y, -5),
+    PaintFrame(40),
+])

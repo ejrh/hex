@@ -305,7 +305,7 @@ FeaturePaint([
     If(Match($tile_type, "wasteland"), PaintFrame(23)),
 ])
 
-CreateFeatureView("mountain2")
+CreateFeatureView("mountain3")
 FeaturePaint([
     SetVariable(paint_offset_x, -94),
     SetVariable(paint_offset_y, -44),

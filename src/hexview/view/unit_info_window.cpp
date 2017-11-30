@@ -22,10 +22,42 @@ static std::unordered_map<Atom, Datum> get_all_properties(const Unit& unit) {
 }
 
 UnitInfoWindow::UnitInfoWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view):
-        UiDialog(x, y, width, height, WindowWantsKeyboardEvents),
+        UiWindow(x, y, width, height, WindowWantsKeyboardEvents|WindowWantsUiEvents, "unit_info"),
         resources(resources), graphics(graphics), view(view) {
-    abilities_list = new UiTextList(10, 40, width/2 - 15, height - 100);
-    add_child(abilities_list);
+    set_paint_script(resources->scripts, "UNIT_INFO_WINDOW");
+
+    close_button = new UiButton(151, 380, 119, 27, "Close");
+    close_button->name = "close_button";
+    add_child(close_button);
+
+    tab_bar = new UiTabBar(21, 163, 376, 22);
+    tab_bar->name = "tab_bar";
+    add_child(tab_bar);
+    int tab_width = tab_bar->width / 3;
+    for (int i = 0; i < 3; i++) {
+        std::ostringstream ss;
+        ss << "tab_button" << i;
+        tab_button[i] = new UiButton(tab_width * i, 0, tab_width, tab_bar->height, ss.str());
+        tab_button[i]->name = ss.str();
+        tab_bar->add_child(tab_button[i]);
+
+        std::ostringstream ss2;
+        ss2 << "tab_panel" << i;
+
+        tab_panel[i] = new UiWindow(tab_bar->x, tab_bar->y + tab_bar->height, tab_bar->width, 195, WindowWantsMouseEvents|WindowWantsUiEvents);
+        tab_panel[i]->name = ss2.str();
+        add_child(tab_panel[i]);
+    }
+    tab_bar->select_tab(tab_button[0]);
+    tab_panel[0]->set_flag(WindowIsActive|WindowIsVisible);
+
+    title = new UiLabel(10, 6, width - 20, 12);
+    title->set_format(TextFormat(SmallFont14, true, 255,255,255));
+    add_child(title);
+
+    /* Set up tab panel 0 */
+    abilities_list = new UiTextList(10, 10, tab_panel[0]->width - 20, tab_panel[0]->height - 20);
+    tab_panel[0]->add_child(abilities_list);
 }
 
 bool UnitInfoWindow::receive_keyboard_event(SDL_Event *evt) {
@@ -37,8 +69,25 @@ bool UnitInfoWindow::receive_keyboard_event(SDL_Event *evt) {
     return false;
 }
 
+bool UnitInfoWindow::receive_ui_event(SDL_Event *evt, UiWindow *control) {
+    if (evt->type == click_event_type && control == close_button) {
+        close();
+        return true;
+    } else if (evt->type == tab_event_type && control == tab_bar) {
+        for (int i = 0; i < 3; i++) {
+            if (tab_button[i]->flags & WindowIsSelected) {
+                tab_panel[i]->set_flag(WindowIsActive | WindowIsVisible);
+            } else {
+                tab_panel[i]->clear_flag(WindowIsActive | WindowIsVisible);
+            }
+        }
+    }
+
+    return false;
+}
+
 void UnitInfoWindow::draw(const UiContext& context) {
-    UiDialog::draw(context);
+    UiWindow::draw(context);
 
     if (!current_unit)
         return;
@@ -51,7 +100,7 @@ void UnitInfoWindow::open(Unit::pointer current_unit) {
 
     TextFormat tf2(SmallFont10, false, 192,192,192);
     int x_offset = x + 12;
-    int y_offset = y + title_height + 12;
+    int y_offset = y + /* title_height + */ 12;
 
     // Populate abilities list
     abilities_list->clear();
@@ -63,6 +112,8 @@ void UnitInfoWindow::open(Unit::pointer current_unit) {
         ss << iter->second.value;
         abilities_list->add_line(ss.str());
     }
+
+    needs_repaint = true;
 }
 
 void UnitInfoWindow::close() {

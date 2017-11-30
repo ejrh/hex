@@ -5,3 +5,5 @@ ImageSet("SHADOW", ["FogHex.BMP/1-1"])
 ImageSet("TARGETS", ["FC_Sel.BMP/2-0", "FC_Sel.BMP/3-1"])
 
 ImageSet("DIALOG_FRAME", ["DialogFr.BMP/32-0", "DialogFr.BMP/33-1", "DialogFr.BMP/34-2", "DialogFr.BMP/35-3", "DialogFr.BMP/36-4", "DialogFr.BMP/37-5", "DialogFr.BMP/38-6", "DialogFr.BMP/39-7"])
+
+IncludeResource("unit_info_window.txt")
