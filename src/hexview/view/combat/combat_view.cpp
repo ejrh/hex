@@ -36,28 +36,12 @@ void CombatStackView::add_participant(ParticipantView& pv) {
     }
 
     participants[num] = pv.participant->id;
-    pv.x = x + (num % 4) * CombatView::participant_width + CombatView::participant_width / 2;
-    pv.y = y + (num / 4) * CombatView::participant_height + CombatView::participant_height / 2;
 }
 
 CombatView::CombatView(Battle *battle, int width, int height, ViewResources *resources):
         battle(battle), width(width), height(height), resources(resources), unit_painter(battle->game, NULL, resources),
         last_update(0),
         phase(0), current_move(0), current_step(0), phase_end(1000) {
-    Point centre(0, 0);
-    int centre_x = width/2;
-    int centre_y = height/2;
-    for (int dir = 0; dir <= 6; dir++) {
-        CombatStackView& bsv = combat_stack_views[dir];
-        Point relative_point;
-        get_neighbour(centre, dir, &relative_point);
-        bsv.x = centre_x + relative_point.x * (battle_stack_width + battle_stack_padding) - battle_stack_width/2;
-        bsv.y = centre_y + relative_point.y * (battle_stack_height + battle_stack_padding) - battle_stack_height/2 + (relative_point.x ? (battle_stack_height + battle_stack_padding) / 2 : 0);
-
-        for (int i = 0; i < 12; i++)
-            bsv.participants[i] = -1;
-    }
-
     for (auto iter = battle->participants.begin(); iter != battle->participants.end(); iter++) {
         Participant& p = *iter;
         ParticipantView pv(&p);

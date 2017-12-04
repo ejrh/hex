@@ -14,7 +14,6 @@ public:
 
 public:
     Participant *participant;
-    int x, y;
 };
 
 class CombatStackView {
@@ -25,7 +24,6 @@ public:
 
 public:
     unsigned int phase;
-    int x, y;
     int participants[12];
 };
 
@@ -35,12 +33,6 @@ public:
 
     void update();
     void step();
-
-    static const int participant_width = 60;
-    static const int participant_height = 50;
-    static const int battle_stack_width = participant_width * 4;
-    static const int battle_stack_height = participant_height * 3;
-    static const int battle_stack_padding = 8;
 
 public:
     Battle *battle;
