@@ -25,14 +25,14 @@ void Paint::render(int x, int y, int phase, Graphics *graphics) {
 
         int tile_count_x = (item.tile_width > 0) ? ((item.tile_width + frame->width) / frame->width) : 1;
         int tile_count_y = (item.tile_height > 0) ? ((item.tile_height + frame->height) / frame->height) : 1;
-        if (item.tile_width > 0 || item.tile_height > 0) {
+        if (item.tile_width > 0 || item.tile_height > 0 || item.clip_x > 0 || item.clip_y > 0) {
             int w = item.tile_width;
             int h = item.tile_height;
             if (w == 0)
                 w = frame->width;
             if (h == 0)
                 h = frame->height;
-            graphics->set_clip_rect(x + item.offset_x, y + item.offset_y, w, h);
+            graphics->set_clip_rect(x + item.offset_x + item.clip_x, y + item.offset_y + item.clip_y, w - item.clip_x, h - item.clip_y);
         }
 
         for (int i = 0; i < tile_count_y; i++) {
@@ -98,18 +98,22 @@ void PaintExecution::paint_frame(int frame_num) {
     int offset_y = get_as<int>(paint_offset_y_atom);
     int tile_width = get_as<int>(paint_tile_width_atom);
     int tile_height = get_as<int>(paint_tile_height_atom);
+    int clip_x = get_as<int>(paint_clip_x_atom);
+    int clip_y = get_as<int>(paint_clip_y_atom);
     int blend_alpha = get_as<int>(paint_blend_alpha_atom);
     int blend_addition = get_as<int>(paint_blend_addition_atom);
     int frame_offset = get_as<int>(paint_frame_offset_atom);
-    paint_frame(paint_library, frame_offset + frame_num, offset_x, offset_y, tile_width, tile_height, blend_alpha, blend_addition);
+    paint_frame(paint_library, frame_offset + frame_num, offset_x, offset_y, tile_width, tile_height, clip_x, clip_y, blend_alpha, blend_addition);
 }
 
-void PaintExecution::paint_frame(Atom image_library, int frame_num, int offset_x, int offset_y, int tile_width, int tile_height, int blend_alpha, int blend_addition) {
+void PaintExecution::paint_frame(Atom image_library, int frame_num, int offset_x, int offset_y, int tile_width, int tile_height, int clip_x, int clip_y, int blend_alpha, int blend_addition) {
     PaintItem pi;
     pi.offset_x = offset_x;
     pi.offset_y = offset_y;
     pi.tile_width = tile_width;
     pi.tile_height = tile_height;
+    pi.clip_x = clip_x;
+    pi.clip_y = clip_y;
     pi.frame_rate = -1;
     pi.blend_alpha = blend_alpha;
     pi.blend_addition = blend_addition;
@@ -124,6 +128,8 @@ void PaintExecution::paint_animation(Atom image_library, int frame_time, const s
     pi.offset_y = offset_y;
     pi.tile_width = 0;
     pi.tile_height = 0;
+    pi.clip_x = 0;
+    pi.clip_y = 0;
     pi.frame_rate = frame_time;
     pi.blend_alpha = blend_alpha;
     pi.blend_addition = blend_addition;
@@ -139,6 +145,8 @@ void PaintExecution::run(Script *script) {
     variables.set<int>(paint_offset_y_atom, 0);
     variables.set<int>(paint_tile_width_atom, 0);
     variables.set<int>(paint_tile_height_atom, 0);
+    variables.set<int>(paint_clip_x_atom, 0);
+    variables.set<int>(paint_clip_y_atom, 0);
     variables.set<int>(paint_blend_addition_atom, 0);
     variables.set<int>(paint_blend_alpha_atom, 0);
     variables.set<int>(paint_frame_offset_atom, 0);

@@ -27,6 +27,7 @@ public:
 public:
     int offset_x, offset_y;
     int tile_width, tile_height;
+    int clip_x, clip_y;
     std::vector<Image *> frames;
     int frame_rate;
     int blend_alpha;
@@ -59,6 +60,8 @@ public:
         paint_offset_y_atom = AtomRegistry::atom("paint_offset_y");
         paint_tile_width_atom = AtomRegistry::atom("paint_tile_width");
         paint_tile_height_atom = AtomRegistry::atom("paint_tile_height");
+        paint_clip_x_atom = AtomRegistry::atom("paint_clip_x");
+        paint_clip_y_atom = AtomRegistry::atom("paint_clip_y");
         paint_blend_alpha_atom = AtomRegistry::atom("paint_blend_alpha");
         paint_blend_addition_atom = AtomRegistry::atom("paint_blend_addition");
         paint_frame_offset_atom = AtomRegistry::atom("paint_frame_offset");
@@ -67,7 +70,7 @@ public:
     int frame_width(int frame_num);
     int frame_height(int frame_num);
     void paint_frame(int frame_num);
-    void paint_frame(Atom image_libary, int frame_num, int offset_x, int offset_y, int tile_width, int tile_height, int blend_alpha, int blend_addition);
+    void paint_frame(Atom image_libary, int frame_num, int offset_x, int offset_y, int tile_width, int tile_height, int clip_x, int clip_y, int blend_alpha, int blend_addition);
     void paint_animation(Atom image_libary, int frame_rate, const std::vector<int>& frame_nums, int offset_x, int offset_y, int blend_alpha, int blend_addition);
 
     void run(Script *script);
@@ -81,6 +84,8 @@ public:
     Atom paint_offset_y_atom;
     Atom paint_tile_width_atom;
     Atom paint_tile_height_atom;
+    Atom paint_clip_x_atom;
+    Atom paint_clip_y_atom;
     Atom paint_blend_alpha_atom;
     Atom paint_blend_addition_atom;
     Atom paint_frame_offset_atom;
