@@ -26,6 +26,7 @@ MSG_TYPE(SetFactionDiscovered, WM3(int, int, CompressableStringVector))
 
 MSG_TYPE(CreateStack, WM3(int, Point, int))
 MSG_TYPE(CreateUnit, WM2(int, std::string))
+MSG_TYPE(MoveUnits, WM3(int, IntSet, Point))
 MSG_TYPE(TransferUnits, WM4(int, IntSet, Path, int))
 MSG_TYPE(DestroyStack, WM(int))
 

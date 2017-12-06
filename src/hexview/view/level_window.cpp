@@ -161,7 +161,7 @@ void LevelWindow::draw(const UiContext& context) {
         draw_level(&LevelRenderer::render_objects);
         draw_level(&LevelRenderer::render_path_arrow);
         for (auto iter = view->ghosts.begin(); iter != view->ghosts.end(); iter++) {
-            draw_ghost(&*iter);
+            draw_ghost(*iter->second);
         }
         if (!view->debug_mode)
             draw_level(&LevelRenderer::render_fog);
@@ -236,11 +236,11 @@ void LevelWindow::draw_level(LevelRenderer::RenderMethod render) {
     }
 }
 
-void LevelWindow::draw_ghost(Ghost *ghost) {
-    UnitStackView::pointer& stack_view = ghost->stack_view;
+void LevelWindow::draw_ghost(Ghost& ghost) {
+    UnitStackView::pointer& stack_view = ghost.stack_view;
 
-    Point prev_pos = stack_view->stack->position;
-    Point next_pos = stack_view->path[ghost->step];
+    Point prev_pos = ghost.position;
+    Point next_pos = ghost.target_position;
 
     if (!view->debug_mode && !view->level_view.check_visibility(prev_pos) && !view->level_view.check_visibility(next_pos))
         return;
@@ -252,8 +252,8 @@ void LevelWindow::draw_ghost(Ghost *ghost) {
     if (px1 < -X_SPACING || py1 < -Y_SPACING || px2 > width+X_SPACING || py2 > width+Y_SPACING)
         return;
 
-    int px = (px1 * (1000 - ghost->progress) + px2 * ghost->progress) / 1000;
-    int py = (py1 * (1000 - ghost->progress) + py2 * ghost->progress) / 1000;
+    int px = (px1 * (1000 - ghost.progress) + px2 * ghost.progress) / 1000;
+    int py = (py1 * (1000 - ghost.progress) + py2 * ghost.progress) / 1000;
     bool selected = stack_view->selected;
     stack_view->selected = false;
     level_renderer->draw_unit_stack(px + TILE_WIDTH / 2, py + Y_SPACING / 2, *stack_view);

@@ -15,16 +15,16 @@ The game arbiter verifies the validity of the move and modifies the path as appr
 target at the end of the path has changed, the last step is removed.  If any other step is
 blocked, the path is truncated at that point.
 
-A TransferUnit message is then issued to the updater, possibly preceded or succeeded by other
-messages.
+A sequence of `MoveUnits` is then issued, one for each step in the path.  This is followed by a
+`TransferUnits` message, possibly preceded or succeeded by other messages.
 
 For simple movement, there are four scenarios:
 
  1. Move: the whole stack moves to an empty tile.  The target is the same stack.
- 2. Split: the stack is split, with some units becoming a new stack.  A CreateStack message is
-    issued first.  The target is the new stack.
+ 2. Split: the stack is split, with some units becoming a new stack.  A `CreateStack` message is
+    issued before the trasfer.  The target is the new stack.
  3. Merge: the whole stack is absorbed by another stack.  The target is the other stack.  A
-    DeleteStack message is issued afterwards.
+    `DeleteStack` message is issued after the transfer.
  4. Transfer: some units are transferred to an existing stack.  The target is the other stack.
 
 If the full path is taken and the final position is occupied or owned by an enemy, an attack is
@@ -33,18 +33,24 @@ initiated (see below).
 ### View considerations
 
 Updates to the game state are instantaneous.  Movement should be animated in the view, however.
+The sequence of `MoveUnits` messages facilitates this.
 
-The TransferUnit message is first handled by the view's pre-updater.  When it is received here,
-the change has not yet been applied to the game.  The view will use the stack's existing state to
-create a ghost object.  The target stack is locked so that it cannot be selected or altered.
+The first `MoveUnits` message results in a ghost being created, associated with that stack id.
+The stack is marked as moving, which means it is not rendered (the ghost will represent it on the
+screen).  At the same time, the stack id is locked in the throttle; this means that incoming game
+messages are blocked for the time being.
 
-The ghost is animated over the map, updating the visible/discovered
-state of the view as it progresses.  When the ghost reaches its destination, the target stack
-is unlocked and its view updated.
+The ghost animates along the move step.  When it reaches the target position, the stack id is
+unlocked; his lets the next the `MoveUnits` message through to be processed, triggering the ghost
+to start moving to the next position.
 
-When the main view updater receives a TransferUnit message, the change has already been applied
-to the game state.  If there is an active ghost for the target then the target's view is not
-updated.
+When the `MoveUnits` messages are all processed, the stack id no longer locked and the
+`TransferUnits` message is received.  This causes the ghost to be retired and the unit stacks
+involved to return to normal.
+
+Game effects that occur on given step on the path are applied by the game updater as it processes
+the corresponding `MoveUnits` messags.  This includes updating the discovered map for the units'
+owner, and applying any terrain or unit properties.
 
 
 Attacking

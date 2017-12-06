@@ -73,11 +73,14 @@ void GameArbiter::process_command(Message *command) {
                 if (split)
                     target_id = game->get_free_stack_id();
 
+                // Send the moves
+                for (auto iter = path.begin(); iter != path.end(); iter++) {
+                    emit(create_message(MoveUnits, stack_id, units, *iter));
+                }
                 // If the stack is splitting to a new empty position, create a stack there
                 if (split) {
                     emit(create_message(CreateStack, target_id, end_pos, faction->id));
                 }
-                // Send the update
                 emit(create_message(TransferUnits, stack_id, units, path, target_id));
                 // If the whole stack merged with an existing one, destroy it
                 if (merge) {

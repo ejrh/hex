@@ -87,6 +87,11 @@ void GameUpdater::apply_update(Message *update) {
             game->create_unit(upd->data1, upd->data2);
         } break;
 
+        case MoveUnits: {
+            auto upd = dynamic_cast<MoveUnitsMessage *>(update);
+            game->move_units(upd->data1, upd->data2, upd->data3);
+        } break;
+
         case TransferUnits: {
             auto upd = dynamic_cast<TransferUnitsMessage *>(update);
             game->transfer_units(upd->data1, upd->data2, upd->data3, upd->data4);

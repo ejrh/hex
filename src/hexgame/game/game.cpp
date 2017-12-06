@@ -133,18 +133,20 @@ void Game::destroy_unit_stack(int stack_id) {
     stacks.remove(stack_id);
 }
 
-void Game::transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id) {
+void Game::move_units(int stack_id, const IntSet selected_units, Point point) {
+    UnitStack::pointer stack = stacks.get(stack_id);
+
+    MovementModel movement(&level);
+    movement.move(*stack, selected_units, point);
+
+    stack->owner->discovered.draw(point, stack->sight(), true);
+}
+
+void Game::transfer_units(int stack_id, const IntSet selected_units, const Path& path, int target_id) {
     UnitStack::pointer stack = stacks.get(stack_id);
     UnitStack::pointer target_stack = stacks.get(target_id);
 
-    MovementModel movement(&level);
-    for (auto iter = path.begin(); iter != path.end(); iter++) {
-        Point pos = *iter;
-        movement.move(*stack, selected_units, pos);
-        stack->owner->discovered.draw(pos, stack->sight(), true);
-    }
-
-    Point& new_pos = path.back();
+    const Point& new_pos = path.back();
     if (stack == target_stack) {
         level.tiles[stack->position].stack = UnitStack::pointer();
         stack->position = new_pos;

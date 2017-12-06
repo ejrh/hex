@@ -86,13 +86,14 @@ void ViewUpdater::apply_update(Message *update) {
             }
         } break;
 
+        case MoveUnits: {
+            auto upd = dynamic_cast<MoveUnitsMessage *>(update);
+            game_view->move_units(upd->data1, upd->data2, upd->data3);
+        } break;
+
         case TransferUnits: {
-            auto upd = dynamic_cast<UnitMoveMessage *>(update);
-            int old_stack_id = upd->data1;
-            UnitStackView::pointer old_stack = game_view->unit_stack_views.find(old_stack_id);
-            if (old_stack) {
-                game_view->set_view_def(*old_stack);
-            }
+            auto upd = dynamic_cast<TransferUnitsMessage *>(update);
+            game_view->transfer_units(upd->data1, upd->data2, upd->data3, upd->data4);
         } break;
 
         case DestroyStack: {

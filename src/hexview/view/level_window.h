@@ -31,7 +31,7 @@ public:
     void draw(const UiContext& context);
     void draw_info(const UiContext& context);
     void draw_level(LevelRenderer::RenderMethod render);
-    void draw_ghost(Ghost *ghost);
+    void draw_ghost(Ghost& ghost);
 
 public:
     GameView *view;

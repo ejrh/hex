@@ -152,7 +152,7 @@ void MapWindow::draw(const UiContext& context) {
     }
 
     for (auto iter = view->ghosts.begin(); iter != view->ghosts.end(); iter++) {
-        Ghost& ghost = *iter;
+        const Ghost& ghost = *iter->second;
         UnitStack::pointer& stack = ghost.stack_view->stack;
         if (!view->level_view.check_visibility(stack->position))
             continue;

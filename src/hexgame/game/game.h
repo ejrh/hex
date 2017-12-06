@@ -247,7 +247,8 @@ public:
     Structure::pointer create_structure(const Point& position, const std::string& type_name, int owner_id);
     void destroy_structure(const Point& position);
     void destroy_unit_stack(int stack_id);
-    void transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id);
+    void move_units(int stack_id, const IntSet selected_units, Point point);
+    void transfer_units(int stack_id, const IntSet selected_units, const Path& path, int target_id);
 
     bool mark_faction_ready(int faction_id, bool ready);
     bool all_factions_ready();

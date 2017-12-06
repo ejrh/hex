@@ -28,11 +28,6 @@ void PreUpdater::receive(Message *update) {
 
 void PreUpdater::apply_update(Message *update) {
     switch (update->type) {
-        case TransferUnits: {
-            auto upd = dynamic_cast<UnitMoveMessage *>(update);
-            game_view->transfer_units(upd->data1, upd->data2, upd->data3, upd->data4);
-        } break;
-
         case DoBattle: {
             auto upd = dynamic_cast<DoBattleMessage *>(update);
             int attacker_id = upd->data1;

@@ -151,6 +151,8 @@ BOOST_AUTO_TEST_CASE(simple_movement) {
 
     BOOST_CHECK_NE(pre_checksum, post_checksum);
     BOOST_CHECK_EQUAL(game.stacks.get(1)->position, Point(1,3));
+    for (auto iter = path.begin(); iter != path.end(); iter++)
+        check_received(create_message(MoveUnits, stack_id, selected_units, *iter));
     check_received(create_message(TransferUnits, stack_id, selected_units, path, stack_id));
 }
 
@@ -194,6 +196,8 @@ BOOST_AUTO_TEST_CASE(insufficient_points_2) {
 
     BOOST_CHECK_NE(pre_checksum, post_checksum);
     BOOST_CHECK_EQUAL(stack->position, short_path[0]);
+    for (auto iter = short_path.begin(); iter != short_path.end(); iter++)
+        check_received(create_message(MoveUnits, stack_id, selected_units, *iter));
     check_received(create_message(TransferUnits, stack_id, selected_units, short_path, stack_id));
     BOOST_CHECK_EQUAL(unit0->properties[Moves], 1);
     BOOST_CHECK_EQUAL(unit1->properties[Moves], 1);
@@ -211,6 +215,9 @@ BOOST_AUTO_TEST_CASE(split_movement) {
     unsigned long post_checksum = game_checksum(game);
 
     BOOST_CHECK_NE(pre_checksum, post_checksum);
+    for (auto iter = path.begin(); iter != path.end(); iter++)
+        check_received(create_message(MoveUnits, stack_id, selected_units, *iter));
+    check_received(create_message(CreateStack, 3, EMPTY_POS, 1));
     check_received(create_message(TransferUnits, stack_id, selected_units, path, 3));
     BOOST_CHECK_EQUAL(game.stacks.get(1)->position, Point(2,2));
     BOOST_CHECK_EQUAL(game.stacks.get(1)->units.size(), 1);
@@ -233,6 +240,9 @@ BOOST_AUTO_TEST_CASE(split_movement_2) {
     unsigned long post_checksum = game_checksum(game);
 
     BOOST_CHECK_NE(pre_checksum, post_checksum);
+    for (auto iter = path.begin(); iter != path.end(); iter++)
+        check_received(create_message(MoveUnits, stack_id, selected_units, *iter));
+    check_received(create_message(CreateStack, 3, EMPTY_POS, 1));
     check_received(create_message(TransferUnits, stack_id, selected_units, path, 3));
     BOOST_CHECK_EQUAL(stack->position, Point(2,2));
     BOOST_CHECK_EQUAL(stack->units.size(), 1);
@@ -289,6 +299,7 @@ BOOST_AUTO_TEST_CASE(merge_movement) {
     unsigned long post_checksum = game_checksum(game);
 
     BOOST_CHECK_NE(pre_checksum, post_checksum);
+    check_received(create_message(DestroyStack, 1));
     BOOST_CHECK(!game.stacks.find(1));
     BOOST_CHECK_EQUAL(game.stacks.get(2)->position, Point(2,4));
     BOOST_CHECK_EQUAL(game.stacks.get(2)->units.size(), 3);

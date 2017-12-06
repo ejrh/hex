@@ -37,6 +37,8 @@ set(srcs
         game/movement/pathfinding.cpp
         game/movement/pathfinding.h
         game/property_names.h
+        game/throttle.cpp
+        game/throttle.h
         game/unit_stack.cpp
         game/visibility_map.cpp
         game/visibility_map.h

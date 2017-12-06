@@ -6,6 +6,7 @@
 
 #include "hexgame/game/game.h"
 #include "hexgame/game/game_messages.h"
+#include "hexgame/game/throttle.h"
 #include "hexgame/game/movement/movement.h"
 #include "hexgame/game/movement/pathfinding.h"
 
@@ -16,8 +17,9 @@
 #include "hexview/view/view_def.h"
 
 
-GameView::GameView(Game *game, Player *player, ViewResources *resources, MessageReceiver *dispatcher):
-        game(game), player(player), level_view(&game->level), resources(resources), unit_painter(game, this, resources), dispatcher(dispatcher),
+GameView::GameView(Game *game, Player *player, ViewResources *resources, Throttle *throttle, MessageReceiver *dispatcher):
+        game(game), player(player), level_view(&game->level), resources(resources), unit_painter(game, this, resources),
+        throttle(throttle), dispatcher(dispatcher),
         last_update(0), phase(0),
         faction_views("faction_views"), unit_stack_views("unit_stack_views"),
         selected_stack_id(0), selected_structure(), debug_mode(false),
@@ -54,9 +56,12 @@ void GameView::update() {
     level_view.ghost_visibility.clear();
     auto iter = ghosts.begin();
     while (iter != ghosts.end()) {
-        Ghost& ghost = *iter;
+        Ghost& ghost = *iter->second;
 
         ghost.update(update_ms);
+        if (ghost.arrived_at_target) {
+            throttle->unlock_stack(ghost.stack_view->stack->id);
+        }
         if (ghost.finished)
             iter = ghosts.erase(iter);
         else
@@ -220,14 +225,67 @@ TileView *GameView::get_tile_view(const Point tile_pos) {
     return NULL;
 }
 
+void GameView::move_units(int stack_id, const IntSet selected_units, Point point) {
+    /* If there is no ghost for this stack, create one. */
+    auto found = ghosts.find(stack_id);
+    if (found == ghosts.end()) {
+        UnitStack::pointer stack = game->stacks.get(stack_id);
+        Ghost *ghost = new Ghost(this, &unit_painter, stack, selected_units);
+        ghosts[stack_id] = std::unique_ptr<Ghost>(ghost);
+        ghost->set_target(point);
+
+        UnitStackView::pointer stack_view = get_stack_view(stack_id);
+        if (selected_units.size() == stack->units.size())
+            stack_view->moving = true;
+        else {
+            // TODO set the representative of the stack to something that excludes selected_units!
+            // TODO repaint it in a way that shows its reduced size
+            // TODO maybe we need another ghost that just stands where the remaining stack is
+        }
+        if (selected_stack_id == stack_id) {
+            clear_drawn_path();
+        }
+
+        ++ghost_counter;
+    } else {
+        Ghost& ghost = *found->second;
+        ghost.set_target(point);
+    }
+    throttle->lock_stack(stack_id);
+}
+
 void GameView::transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id) {
+    /* Any ghost for this stack will be retired and the stack id unlocked. */
+    int last_facing = 0;
+    auto found = ghosts.find(stack_id);
+    if (found != ghosts.end()) {
+        Ghost& ghost = *found->second;
+        last_facing = ghost.stack_view->facing;
+        ghost.retire();
+        throttle->unlock_stack(stack_id);
+    }
+
+    // Set the target stack's facing to the last ghost facing if necessary. */
     UnitStack::pointer stack = game->stacks.get(stack_id);
-    UnitStack::pointer target_stack = game->stacks.get(target_id);
-
-    if (path.empty())
-        return;
-
     UnitStackView::pointer stack_view = unit_stack_views.get(stack_id);
+    UnitStack::pointer target_stack = game->stacks.get(target_id);
+    UnitStackView::pointer target_stack_view = unit_stack_views.get(target_id);
+    if (selected_units.size() == target_stack->units.size()) {
+        target_stack_view->facing = last_facing;
+        unit_painter.repaint(*target_stack_view, *target_stack_view->stack);
+    }
+    stack_view->set_representative(resources);
+    target_stack_view->set_representative(resources);
+    target_stack_view->moving = false;
+    stack_view->moving = false;
+    if (player->has_view(stack->owner)) {
+        //TODO!
+        //view->level_view.visibility.unmask(*target);
+        update_visibility();
+    }
+    unit_painter.repaint(*stack_view, *stack_view->stack);
+    unit_painter.repaint(*target_stack_view, *target_stack_view->stack);
+
     if (selected_units.size() == stack->units.size()) {
         Point from_pos = *path.rbegin();
         Point tile_pos = stack_view->path.empty() ? stack->position : *stack_view->path.rbegin();
@@ -238,15 +296,9 @@ void GameView::transfer_units(int stack_id, const IntSet selected_units, Path pa
         Point tile_pos = stack_view->path.empty() ? stack->position : *stack_view->path.rbegin();
         target_stack_view->path = find_path(*stack, from_pos, tile_pos);
     }
-
-    if (selected_stack_id == stack_id) {
-        clear_drawn_path();
+    if (selected_stack_id == target_id) {
+        set_drawn_path(target_stack->position, target_stack_view->path);
     }
-
-    Ghost ghost(this, &unit_painter, stack, selected_units, path, target_stack);
-    ghosts.push_back(ghost);
-
-    ++ghost_counter;
 }
 
 void GameView::mark_ready() {

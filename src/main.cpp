@@ -201,7 +201,7 @@ void run(Options& options) {
     Player player(0, std::string("player"));
 
     Game game;
-    GameView game_view(&game, &player, &resources, node_interface);
+    GameView game_view(&game, &player, &resources, &node_interface->get_throttle(), node_interface);
     PreUpdater pre_updater(&game, &game_view);
     node_interface->subscribe(&pre_updater);
 

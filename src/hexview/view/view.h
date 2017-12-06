@@ -107,18 +107,22 @@ class UnitPainter;
 
 class Ghost {
 public:
-    Ghost(GameView *view, UnitPainter *unit_painter, UnitStack::pointer& stack, const IntSet selected_units, Path path, UnitStack::pointer& target_stack);
+    Ghost(GameView *view, UnitPainter *unit_painter, UnitStack::pointer& stack, const IntSet selected_units);
+
+    void set_target(Point target);
+    void retire();
     void update(unsigned int update_ms);
 
 public:
+    bool arrived_at_target;
     bool finished;
     GameView *view;
 
 private:
     UnitPainter *unit_painter;
-    UnitStackView::pointer target_view;
     UnitStackView::pointer stack_view;
-    unsigned int step;
+    Point position;
+    Point target_position;
     unsigned int progress;
 
     friend class GameView;
@@ -128,6 +132,7 @@ private:
     friend class ViewUpdater;
 };
 
+class Throttle;
 class MessageReceiver;
 class Player;
 
@@ -160,7 +165,7 @@ public:
 
 class GameView {
 public:
-    GameView(Game *game, Player *player, ViewResources *resources, MessageReceiver *dispatcher);
+    GameView(Game *game, Player *player, ViewResources *resources, Throttle *throttle, MessageReceiver *dispatcher);
 
     void update();
     void update_player();
@@ -172,6 +177,7 @@ public:
     void update_visibility();
     UnitStackView::pointer get_stack_view(int stack_id);
     TileView *get_tile_view(const Point tile_pos);
+    void move_units(int stack_id, const IntSet selected_units, Point point);
     void transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id);
     void mark_ready();
     void set_view_def(UnitStackView& stack_view) const;
@@ -184,12 +190,13 @@ public:
     LevelView level_view;
     ViewResources *resources;
     UnitPainter unit_painter;
+    Throttle *throttle;
     MessageReceiver *dispatcher;
     unsigned int last_update;
     unsigned int phase;
     IntMap<FactionView> faction_views;
     IntMap<UnitStackView> unit_stack_views;
-    std::vector<Ghost> ghosts;
+    std::unordered_map<int, std::unique_ptr<Ghost> > ghosts;
     int selected_stack_id;
     IntSet selected_units;
     Structure::pointer selected_structure;

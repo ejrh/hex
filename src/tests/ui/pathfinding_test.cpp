@@ -38,7 +38,7 @@ UnitStack::pointer party = boost::make_shared<UnitStack>(0, source, Faction::poi
 class PathfindingView: public GameView {
 public:
     PathfindingView(Game *game):
-            GameView(game, NULL, &::resources, NULL), movement_model(&game->level), pathfinder(&game->level, &movement_model), brush_radius(2) {
+            GameView(game, NULL, &::resources, NULL, NULL), movement_model(&game->level), pathfinder(&game->level, &movement_model), brush_radius(2) {
     }
 
     void reset() {

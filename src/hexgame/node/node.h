@@ -7,6 +7,7 @@
 #include "hexgame/game/game.h"
 #include "hexgame/game/game_arbiter.h"
 #include "hexgame/game/game_updater.h"
+#include "hexgame/game/throttle.h"
 
 
 class NodeInterface: public MessageReceiver {
@@ -16,12 +17,13 @@ public:
     virtual void start() = 0;
     virtual void stop() = 0;
     virtual void subscribe(MessageReceiver *receiver) = 0;
+    virtual Throttle& get_throttle() = 0;
 };
 
 class LocalNode: public NodeInterface {
 public:
     LocalNode():
-            game(), game_updater(&game), publisher(1000), arbiter(&game, &publisher), dispatch_queue(1000), update_logger("Update: ") {
+            game(), game_updater(&game), publisher(1000), throttle(&publisher), arbiter(&game, &throttle), dispatch_queue(1000), update_logger("Update: ") {
         publisher.subscribe(&update_logger);
         publisher.subscribe(&game_updater);
     }
@@ -63,10 +65,15 @@ public:
         return publisher;
     }
 
+    Throttle& get_throttle() {
+        return throttle;
+    }
+
 protected:
     Game game;
     GameUpdater game_updater;
     Publisher publisher;
+    Throttle throttle;
     GameArbiter arbiter;
     MessageQueue dispatch_queue;
     MessageLogger update_logger;
@@ -95,7 +102,7 @@ private:
 class ClientNode: public NodeInterface {
 public:
     ClientNode(const std::string& host_addr):
-            host_addr(host_addr), update_queue(1000), client(&update_queue) {
+            host_addr(host_addr), update_queue(1000), client(&update_queue), throttle(&publisher) {
     }
 
     virtual void receive(Message *command) {
@@ -103,7 +110,7 @@ public:
     }
 
     virtual void update() {
-        update_queue.flush(&publisher);
+        update_queue.flush(&throttle);
     }
 
     virtual void start() {
@@ -118,10 +125,15 @@ public:
         publisher.subscribe(receiver);
     }
 
+    Throttle& get_throttle() {
+        return throttle;
+    }
+
 private:
     std::string host_addr;
     MessageQueue update_queue;
     Client client;
+    Throttle throttle;
     Publisher publisher;
 };
 
