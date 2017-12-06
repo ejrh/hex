@@ -40,6 +40,7 @@ set(srcs
         game/unit_stack.cpp
         game/visibility_map.cpp
         game/visibility_map.h
+        node/node.h
 )
 
 source_group(Sources REGULAR_EXPRESSION cpp|h)
