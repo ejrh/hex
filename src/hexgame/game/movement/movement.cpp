@@ -1,6 +1,7 @@
 #include "common.h"
 
 #include "hexutil/basics/error.h"
+#include "hexutil/basics/hexgrid.h"
 
 #include "hexgame/game/game.h"
 #include "hexgame/game/movement/movement.h"
@@ -21,7 +22,13 @@ bool MovementModel::can_enter(const UnitStack& party, const Point& tile_pos) con
         // Can't move through enemy stacks
         if (tile_pos != target_pos && target_stack->owner != party.owner)
             return false;
+
+        if (target_stack->units.size() + party.units.size() > MAX_UNITS)
+            return false;
+
+        //TODO make sure there will not be two transports in the new stack
     }
+
 
     return true;
 }
@@ -105,9 +112,14 @@ void MovementModel::move(UnitStack& party, const IntSet& selected_units, const P
 int MovementModel::check_path(const UnitStack& stack, const Path& path) const {
     StackMovePoints points(stack);
     unsigned int step_num = 0;
+    Point current_position = stack.position;
     while (step_num < path.size()) {
+        Point next_position = path[step_num];
+        if (distance_between(current_position, next_position) != 1)
+            break;
         if (!check_step(stack, &points, path, step_num))
             break;
+        current_position = next_position;
         step_num++;
     }
     return step_num;

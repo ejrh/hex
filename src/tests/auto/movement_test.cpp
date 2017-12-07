@@ -12,6 +12,7 @@
 #include "hexgame/game/game_messages.h"
 #include "hexgame/game/game_updater.h"
 #include "hexgame/game/game_writer.h"
+#include "hexgame/game/movement/movement.h"
 
 #define BOOST_TEST_MODULE MovementTest
 #include <boost/test/included/unit_test.hpp>
@@ -24,6 +25,7 @@
 #define STEP_POS Point(2,3)
 #define STACK2_POS Point(2,4)
 #define EMPTY_POS Point(1,3)
+#define STACK3_POS Point(3,4)
 
 void create_game(MessageReceiver& updater) {
     TileType wall_type;
@@ -83,6 +85,11 @@ void create_game(MessageReceiver& updater) {
     updater.receive(create_message(CreateStack, 2, STACK2_POS, 1));
     updater.receive(create_message(CreateUnit, 2, "mouse"));
 
+    updater.receive(create_message(CreateStack, 3, STACK3_POS, 1));
+    for (int i = 0; i < MAX_UNITS - 1; i++) {
+        updater.receive(create_message(CreateUnit, 3, "mouse"));
+    }
+
     updater.receive(create_message(TurnBegin, 1));
 }
 
@@ -109,6 +116,9 @@ struct Fixture {
 
         path_to_stack2.push_back(STEP_POS);
         path_to_stack2.push_back(STACK2_POS);
+
+        path_to_stack3.push_back(STEP_POS);
+        path_to_stack3.push_back(STACK3_POS);
     }
 
     void check_received(boost::shared_ptr<Message> msg) {
@@ -133,6 +143,7 @@ struct Fixture {
 
     Path path_to_empty;
     Path path_to_stack2;
+    Path path_to_stack3;
 };
 
 BOOST_FIXTURE_TEST_SUITE(s, Fixture)
@@ -217,12 +228,12 @@ BOOST_AUTO_TEST_CASE(split_movement) {
     BOOST_CHECK_NE(pre_checksum, post_checksum);
     for (auto iter = path.begin(); iter != path.end(); iter++)
         check_received(create_message(MoveUnits, stack_id, selected_units, *iter));
-    check_received(create_message(CreateStack, 3, EMPTY_POS, 1));
-    check_received(create_message(TransferUnits, stack_id, selected_units, path, 3));
+    check_received(create_message(CreateStack, 4, EMPTY_POS, 1));
+    check_received(create_message(TransferUnits, stack_id, selected_units, path, 4));
     BOOST_CHECK_EQUAL(game.stacks.get(1)->position, Point(2,2));
     BOOST_CHECK_EQUAL(game.stacks.get(1)->units.size(), 1);
-    BOOST_CHECK_EQUAL(game.stacks.get(3)->position, Point(1,3));
-    BOOST_CHECK_EQUAL(game.stacks.get(3)->units.size(), 1);
+    BOOST_CHECK_EQUAL(game.stacks.get(4)->position, Point(1,3));
+    BOOST_CHECK_EQUAL(game.stacks.get(4)->units.size(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(split_movement_2) {
@@ -242,12 +253,12 @@ BOOST_AUTO_TEST_CASE(split_movement_2) {
     BOOST_CHECK_NE(pre_checksum, post_checksum);
     for (auto iter = path.begin(); iter != path.end(); iter++)
         check_received(create_message(MoveUnits, stack_id, selected_units, *iter));
-    check_received(create_message(CreateStack, 3, EMPTY_POS, 1));
-    check_received(create_message(TransferUnits, stack_id, selected_units, path, 3));
+    check_received(create_message(CreateStack, 4, EMPTY_POS, 1));
+    check_received(create_message(TransferUnits, stack_id, selected_units, path, 4));
     BOOST_CHECK_EQUAL(stack->position, Point(2,2));
     BOOST_CHECK_EQUAL(stack->units.size(), 1);
-    BOOST_CHECK_EQUAL(game.stacks.get(3)->position, Point(1,3));
-    BOOST_CHECK_EQUAL(game.stacks.get(3)->units.size(), 1);
+    BOOST_CHECK_EQUAL(game.stacks.get(4)->position, Point(1,3));
+    BOOST_CHECK_EQUAL(game.stacks.get(4)->units.size(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(split_and_merge_movement_0) {
@@ -332,6 +343,32 @@ BOOST_AUTO_TEST_CASE(invalid_unit_selection) {
     unsigned long post_checksum = game_checksum(game);
 
     BOOST_CHECK_EQUAL(pre_checksum, post_checksum);
+}
+
+BOOST_AUTO_TEST_CASE(movement_model_can_enter) {
+    MovementModel model(&game.level);
+    bool result = model.can_enter(*game.stacks.get(1), STACK2_POS);
+    BOOST_CHECK_EQUAL(result, true);
+    result = model.can_enter(*game.stacks.get(1), STACK3_POS);
+    BOOST_CHECK_EQUAL(result, false);
+}
+
+BOOST_AUTO_TEST_CASE(movement_model_cost_to) {
+    MovementModel model(&game.level);
+    int result = model.cost_to(*game.stacks.get(1), STACK2_POS);
+    BOOST_CHECK_EQUAL(result, 8);
+    result = model.cost_to(*game.stacks.get(1), STACK3_POS);
+    BOOST_CHECK_EQUAL(result, INT_MAX);
+}
+
+BOOST_AUTO_TEST_CASE(movement_model_check_path) {
+    MovementModel model(&game.level);
+    int result = model.check_path(*game.stacks.get(1), path_to_empty);
+    BOOST_CHECK_EQUAL(result, 2);
+    result = model.check_path(*game.stacks.get(1), path_to_stack3);
+    BOOST_CHECK_EQUAL(result, 1);
+    result = model.check_path(*game.stacks.get(3), path_to_stack3);
+    BOOST_CHECK_EQUAL(result, 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

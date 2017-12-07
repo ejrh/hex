@@ -79,7 +79,7 @@ public:
     Properties properties;
 };
 
-#define MAX_UNITS 12
+#define MAX_UNITS 8
 
 class UnitStack: public boost::enable_shared_from_this<UnitStack> {
 public:

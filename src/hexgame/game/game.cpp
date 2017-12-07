@@ -91,6 +91,10 @@ Unit::pointer Game::create_unit(int stack_id, const std::string& type_name) {
     UnitType::pointer type = unit_types.get(type_name);
 
     UnitStack::pointer stack = stacks.get(stack_id);
+    if (stack->units.size() >= MAX_UNITS) {
+        throw DataError() << boost::format("Stack %d is full") % stack_id;
+    }
+
     Unit::pointer new_unit = boost::make_shared<Unit>();
     new_unit->type = type;
     new_unit->properties[Health] = type->properties[Health];
@@ -214,4 +218,3 @@ int Game::get_nearby_stacks(Point position, int radius, std::vector<UnitStack::p
     }
     return num_found;
 }
-
