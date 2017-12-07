@@ -1,0 +1,64 @@
+ImageLibrary(froar, "images/units/fro/froar.ilb")
+ImageLibrary(frowr, "images/units/fro/frowr.ilb")
+ImageLibrary(frocl, "images/units/fro/frocl.ilb")
+ImageLibrary(frowf, "images/units/fro/frowf.ilb")
+ImageLibrary(frosq, "images/units/fro/frosq.ilb")
+ImageLibrary(frosw, "images/units/fro/frosw.ilb")
+ImageLibrary(frodr, "images/units/fro/frodr.ilb")
+
+CreateUnitView("frostling_archer")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [192, 193])),
+    SetVariable(unit_lib, froar),
+    Call(archer_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("frostling_swordsman")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [190, 191])),
+    SetVariable(unit_lib, frowr),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("frostling_cleric")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [196, 197])),
+    SetVariable(unit_lib, frocl),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("frostling_rider")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [276, 277])),
+    SetVariable(unit_lib, frowf),
+    Call(mounted_ps)
+])
+UnitSounds(1, ["horse1.wav", "horse2.wav"])
+
+CreateUnitView("frostling_yeti")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [202, 203])),
+    SetVariable(unit_lib, frosq),
+    Call(monster_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("frostling_queen")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [200, 201])),
+    SetVariable(unit_lib, frosw),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("frostling_drake")
+UnitPaint([
+    SetVariable(death_frame, 204),
+    SetVariable(unit_lib, frodr),
+    Call(dragon_ps)
+])
+UnitSounds(1, ["wing1.wav", "wing2.wav"])
+

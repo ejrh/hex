@@ -25,6 +25,14 @@ CreateUnitType("lizard_frog_rider", {"Walking", "Swimming", "Moves": 32, "Sight"
 CreateUnitType("lizard_salamander", {"Walking", "Moves": 22, "Sight": 3, "Attack": 7, "Defence": 4, "Damage": 4, "Health": 10, "Strike"})
 CreateUnitType("lizard_basilisk", {"Walking", "Swimming", "Moves": 36, "Sight": 3, "Attack": 7, "Defence": 6, "Damage": 5, "Health": 22, "Strike"})
 
+CreateUnitType("frostling_archer", {"Walking", "Moves": 24, "Sight": 3, "Attack": 3, "Defence": 2, "Damage": 1, "Health": 5, "Archery"})
+CreateUnitType("frostling_swordsman", {"Walking", "Moves": 24, "Sight": 3, "Attack": 4, "Defence": 2, "Damage": 3, "Health": 5, "Strike"})
+CreateUnitType("frostling_shaman", {"Walking", "Moves": 24, "Sight": 3, "Attack": 3, "Defence": 2, "Damage": 2, "Health": 5, "Strike", "Healing"})
+CreateUnitType("frostling_rider", {"Walking", "Forestry", "Moves": 32, "Sight": 3, "Attack": 5, "Defence": 3, "Damage": 3, "Health": 7, "Strike", "Charge"})
+CreateUnitType("frostling_yeti", {"Walking", "Climbing", "Moves": 28, "Sight": 3, "Attack": 6, "Defence": 4, "Damage": 6, "Health": 13, "Strike"})
+CreateUnitType("frostling_queen", {"Walking", "Swimming", "PathOfIce", "Moves": 26, "Sight": 3, "Attack": 4, "Defence": 3, "Damage": 3, "Health": 8, "Strike"})
+CreateUnitType("frostling_drake", {"Flying", "Moves": 36, "Sight": 5, "Attack": 7, "Defence": 5, "Damage": 4, "Health": 17, "Strike"})
+
 CreateUnitType("darkelf_archer", {"Walking", "Moves": 26, "Sight": 3, "Attack": 3, "Defence": 2, "Damage": 1, "Health": 5, "Archery"})
 CreateUnitType("darkelf_swordsman", {"Walking", "Moves": 26, "Sight": 3, "Attack": 5, "Defence": 2, "Damage": 2, "Health": 5, "Strike"})
 CreateUnitType("darkelf_priest", {"Walking", "Moves": 26, "Sight": 3, "Attack": 3, "Defence": 2, "Damage": 2, "Health": 5, "Strike", "Healing"})
