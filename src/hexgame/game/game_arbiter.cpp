@@ -49,7 +49,7 @@ void GameArbiter::process_command(Message *command) {
                 target_id = 0;
             }
 
-            MovementModel movement(&game->level);
+            MovementModel movement(game);
             UnitStack::pointer selected_stack = stack->copy_subset(units);
             unsigned int allowed_steps = movement.check_path(*selected_stack, path);
             bool truncated = allowed_steps < path.size();

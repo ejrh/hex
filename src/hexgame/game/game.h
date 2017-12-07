@@ -135,6 +135,9 @@ public:
 
     int sight() { return type->get_property<int>(Sight); }
 
+    bool has_property(Atom property) const {
+        return properties.contains(property, type->properties);
+    }
 public:
     Point position;
     StructureType::pointer type;

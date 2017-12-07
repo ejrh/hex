@@ -346,7 +346,7 @@ BOOST_AUTO_TEST_CASE(invalid_unit_selection) {
 }
 
 BOOST_AUTO_TEST_CASE(movement_model_can_enter) {
-    MovementModel model(&game.level);
+    MovementModel model(&game);
     bool result = model.can_enter(*game.stacks.get(1), STACK2_POS);
     BOOST_CHECK_EQUAL(result, true);
     result = model.can_enter(*game.stacks.get(1), STACK3_POS);
@@ -354,7 +354,7 @@ BOOST_AUTO_TEST_CASE(movement_model_can_enter) {
 }
 
 BOOST_AUTO_TEST_CASE(movement_model_cost_to) {
-    MovementModel model(&game.level);
+    MovementModel model(&game);
     int result = model.cost_to(*game.stacks.get(1), STACK2_POS);
     BOOST_CHECK_EQUAL(result, 8);
     result = model.cost_to(*game.stacks.get(1), STACK3_POS);
@@ -362,7 +362,7 @@ BOOST_AUTO_TEST_CASE(movement_model_cost_to) {
 }
 
 BOOST_AUTO_TEST_CASE(movement_model_check_path) {
-    MovementModel model(&game.level);
+    MovementModel model(&game);
     int result = model.check_path(*game.stacks.get(1), path_to_empty);
     BOOST_CHECK_EQUAL(result, 2);
     result = model.check_path(*game.stacks.get(1), path_to_stack3);

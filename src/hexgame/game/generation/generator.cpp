@@ -99,7 +99,7 @@ void Generator::create_unit_stacks(MessageReceiver& updater) {
         if (faction == 1)
             continue;
 
-        MovementModel movement_model(&game->level);
+        MovementModel movement_model(game);
         Point p(rand() % game->level.width, rand() % game->level.height);
         Tile& tile = game->level.tiles[p];
         if (tile.stack) {

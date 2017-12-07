@@ -7,21 +7,23 @@
 #include "hexgame/game/movement/movement.h"
 
 
-MovementModel::MovementModel(Level *level): level(level), target_pos(-1, -1) { }
+MovementModel::MovementModel(Game *game): game(game), target_pos(-1, -1) { }
 
-MovementModel::MovementModel(Level *level, const Point& target_pos): level(level), target_pos(target_pos) { }
+MovementModel::MovementModel(Game *game, const Point& target_pos): game(game), target_pos(target_pos) { }
 
 bool MovementModel::can_enter(const UnitStack& party, const Point& tile_pos) const {
     if (party.units.size() == 0)
         return false;
 
-    Tile &tile = level->tiles[tile_pos];
+    Tile &tile = game->level.tiles[tile_pos];
 
     UnitStack::pointer target_stack = tile.stack;
     if (target_stack) {
         // Can't move through enemy stacks
         if (tile_pos != target_pos && target_stack->owner != party.owner)
             return false;
+
+        //TODO can't move through a structure defended by a neighbouring enemy, either
 
         if (target_stack->units.size() + party.units.size() > MAX_UNITS)
             return false;
@@ -54,7 +56,7 @@ int MovementModel::cost_to(const UnitStack& party, const Point& tile_pos) const 
 }
 
 int MovementModel::cost_to(const Unit& unit, const Point& tile_pos) const {
-    Tile &tile = level->tiles[tile_pos];
+    Tile &tile = game->level.tiles[tile_pos];
 
     if (tile.has_property(Walkable) && unit.has_property(Walking)) {
         if (tile.has_property(Road))
@@ -105,7 +107,43 @@ void MovementModel::move(UnitStack& party, const IntSet& selected_units, const P
             Unit& unit = *party.units[i];
             int cost = cost_to(unit, tile_pos);
             unit.properties.increment<int>(Moves, -cost);
+
+            //TODO if unit is on transport, does it affect the terrain?
+            if (unit.has_property(PathOfLife)) {
+                alter_terrain(tile_pos, PathOfLife);
+            } else if (unit.has_property(PathOfDeath)) {
+                alter_terrain(tile_pos, PathOfDeath);
+            } else if (unit.has_property(PathOfIce)) {
+                alter_terrain(tile_pos, PathOfIce);
+            }
+
+            Tile& tile = game->level.tiles[tile_pos];
+            if (tile.structure) {
+                Structure& structure = *tile.structure;
+                if (structure.has_property(Capturable) && structure.owner != party.owner) {
+                    structure.owner = party.owner;
+                }
+            }
         }
+    }
+}
+
+void MovementModel::alter_terrain(Point pos, Atom type) const {
+    std::vector<Point> points;
+    get_circle_points(pos, 1, points, game->level.width, game->level.height);
+    TileType::pointer new_tile_type;
+    if (type == PathOfLife)
+        new_tile_type = game->tile_types.get("grass");
+    else if (type == PathOfDeath)
+        new_tile_type = game->tile_types.get("wasteland");
+    else
+        new_tile_type = game->tile_types.get("snow");
+    for (auto iter = points.begin(); iter != points.end(); iter++) {
+        if (!game->level.contains(*iter))
+            continue;
+        Tile& tile = game->level.tiles[*iter];
+        if (tile.type->name == "grass" || tile.type->name == "desert" || tile.type->name == "snow" || tile.type->name == "steppe")
+            tile.type = new_tile_type;
     }
 }
 

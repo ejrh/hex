@@ -80,7 +80,7 @@ void Ai::update_unit_stack(UnitStack& stack) {
         tile_pos.y += (rand() % 5) - (rand() % 5);
     }
 
-    MovementModel movement_model(&game.level);
+    MovementModel movement_model(&game);
     Pathfinder pathfinder(&game.level, &movement_model);
     pathfinder.start(stack, stack.position, tile_pos);
     pathfinder.complete();

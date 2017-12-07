@@ -12,6 +12,7 @@
 
 #include "hexview/editor/editor.h"
 #include "hexview/view/player.h"
+#include "hexview/view/tile_painter.h"
 #include "hexview/view/unit_painter.h"
 #include "hexview/view/view.h"
 #include "hexview/view/view_def.h"
@@ -153,7 +154,7 @@ void GameView::right_click_tile(const Point& tile_pos) {
 }
 
 Path GameView::find_path(UnitStack& party, const Point& from_pos, const Point& to_pos) {
-    MovementModel movement_model(level_view.level, to_pos);
+    MovementModel movement_model(game, to_pos);
     Pathfinder pathfinder(level_view.level, &movement_model);
     pathfinder.start(party, from_pos, to_pos);
     pathfinder.complete();
@@ -252,6 +253,14 @@ void GameView::move_units(int stack_id, const IntSet selected_units, Point point
         ghost.set_target(point);
     }
     throttle->lock_stack(stack_id);
+
+    // Repaint tiles that were passed over
+    TilePainter painter(game, this, resources);
+    std::vector<Point> points;
+    get_circle_points(point, 1, points, game->level.width, game->level.height);
+    for (auto iter = points.begin(); iter != points.end(); iter++) {
+        painter.repaint(*iter, 1);
+    }
 }
 
 void GameView::transfer_units(int stack_id, const IntSet selected_units, Path path, int target_id) {

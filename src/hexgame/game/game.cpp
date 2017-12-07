@@ -140,7 +140,7 @@ void Game::destroy_unit_stack(int stack_id) {
 void Game::move_units(int stack_id, const IntSet selected_units, Point point) {
     UnitStack::pointer stack = stacks.get(stack_id);
 
-    MovementModel movement(&level);
+    MovementModel movement(this);
     movement.move(*stack, selected_units, point);
 
     stack->owner->discovered.draw(point, stack->sight(), true);

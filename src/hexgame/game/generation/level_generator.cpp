@@ -289,7 +289,7 @@ void LevelGenerator::add_roads() {
         Point end_pos(start_pos.x + rand() % 10 - rand() % 10, start_pos.y + rand() % 10 - rand() % 10);
         if (!level.contains(end_pos))
             continue;
-        MovementModel movement(&level);
+        MovementModel movement(game);
         Pathfinder pathfinder(&level, &movement);
         UnitStack::pointer party = boost::make_shared<UnitStack>(start_pos, Faction::pointer());
         Unit::pointer unit = boost::make_shared<Unit>();

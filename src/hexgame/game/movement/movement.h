@@ -7,6 +7,7 @@ class UnitStack;
 class Tile;
 class UnitType;
 class TileType;
+class Game;
 
 class StackMovePoints {
 public:
@@ -32,19 +33,20 @@ private:
 
 class MovementModel {
 public:
-    MovementModel(Level *level);
-    MovementModel(Level *level, const Point& target_pos);
+    MovementModel(Game *level);
+    MovementModel(Game *level, const Point& target_pos);
 
     bool can_enter(const UnitStack& party, const Point& tile_pos) const;
     int cost_to(const UnitStack& party, const Point& tile_pos) const;
     int cost_to(const Unit& unit, const Point& tile_pos) const;
     int admits(const UnitType& unit_type, const Tile& tile) const;
     void move(UnitStack& party, const IntSet& selected_units, const Point& tile_pos) const;
+    void alter_terrain(Point pos, Atom type) const;
     int check_path(const UnitStack& stack, const Path& path) const;
     bool check_step(const UnitStack& stack, StackMovePoints *points, const Path& path, int step_num) const;
 
 private:
-    Level *level;
+    Game *game;
     Point target_pos;
 };
 
