@@ -48,7 +48,7 @@ public:
     }
 
     unsigned int last() const {
-        int v = val;
+        unsigned int v = val;
         unsigned int l = (unsigned int) -1;
         while (v != 0) {
             l++;
