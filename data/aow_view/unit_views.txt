@@ -1,0 +1,13 @@
+# CreateUnitView(name, move_speed)
+# UnitHoldAnimation(facing, bpm, images)
+# UnitMoveAnimation(facing, bpm, images)
+
+IncludeResource("human_unit_views.txt")
+IncludeResource("azrac_unit_views.txt")
+IncludeResource("lizard_unit_views.txt")
+IncludeResource("darkelf_unit_views.txt")
+IncludeResource("elf_unit_views.txt")
+IncludeResource("orc_unit_views.txt")
+IncludeResource("machine_unit_views.txt")
+IncludeResource("ship_unit_views.txt")
+

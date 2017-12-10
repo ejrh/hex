@@ -1,0 +1,12 @@
+# CreateFactionView(name, r, g, b)
+CreateFactionView("independent", 128, 128, 128)
+FactionImageSet("SMALL_FLAGS", ["GREYS01.BMP/22-0", "GREYS02.BMP/23-0", "GREYS03.BMP/24-0", "GREYS04.BMP/25-0", "GREYS05.BMP/26-0", "GREYS06.BMP/27-0", "GREYS07.BMP/28-0", "GREYS08.BMP/29-0", "GREYS09.BMP/30-0", "GREYS10.BMP/31-0", "GREYS11.BMP/32-0", "GREYS12.BMP/33-0"])
+FactionImageSet("SHIELDS", ["PartyShield.BMP/48-142", "PartyShield.BMP/40-134", "PartyShield.BMP/41-135", "PartyShield.BMP/42-136", "PartyShield.BMP/43-137", "PartyShield.BMP/44-138", "PartyShield.BMP/45-139", "PartyShield.BMP/46-140", "PartyShield.BMP/47-141"])
+
+CreateFactionView("orcs", 255, 64, 64)
+FactionImageSet("SMALL_FLAGS", ["REDS01.BMP/12-0", "REDS02.BMP/13-0", "REDS03.BMP/14-0", "REDS04.BMP/15-0", "REDS05.BMP/16-0", "REDS06.BMP/17-0", "REDS07.BMP/18-0", "REDS08.BMP/19-0", "REDS09.BMP/20-0", "REDS10.BMP/21-0", "REDS11.BMP/22-0", "REDS12.BMP/23-0"])
+FactionImageSet("SHIELDS", ["PartyShield.BMP/38-109", "PartyShield.BMP/30-101", "PartyShield.BMP/31-102", "PartyShield.BMP/32-103", "PartyShield.BMP/33-104", "PartyShield.BMP/34-105", "PartyShield.BMP/35-106", "PartyShield.BMP/36-107", "PartyShield.BMP/37-108"])
+
+CreateFactionView("drow", 192, 64, 192)
+FactionImageSet("SMALL_FLAGS", ["PURPLS01.BMP/12-0", "PURPLS02.BMP/13-0", "PURPLS03.BMP/14-0", "PURPLS04.BMP/15-0", "PURPLS05.BMP/16-0", "PURPLS06.BMP/17-0", "PURPLS07.BMP/18-0", "PURPLS08.BMP/19-0", "PURPLS09.BMP/20-0", "PURPLS10.BMP/21-0", "PURPLS11.BMP/22-0", "PURPLS12.BMP/23-0"])
+FactionImageSet("SHIELDS", ["PartyShield.BMP/38-98", "PartyShield.BMP/30-90", "PartyShield.BMP/31-91", "PartyShield.BMP/32-92", "PartyShield.BMP/33-93", "PartyShield.BMP/34-94", "PartyShield.BMP/35-95", "PartyShield.BMP/36-96", "PartyShield.BMP/37-97"])

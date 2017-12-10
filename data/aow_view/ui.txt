@@ -1,0 +1,7 @@
+ImageSet("CURSORS", ["3dHex.BMP/6-0", "3dHex.BMP/7-1"])
+ImageSet("ARROWS", ["Pointers.BMP/38-9", "Pointers.BMP/39-10", "Pointers.BMP/40-11", "Pointers.BMP/35-12", "Pointers.BMP/36-13", "Pointers.BMP/37-14", "Pointers.BMP/41-15", "Pointers.BMP/45-16", "Pointers.BMP/46-17", "Pointers.BMP/47-18", "Pointers.BMP/42-19", "Pointers.BMP/43-20", "Pointers.BMP/44-21", "Pointers.BMP/48-22"])
+ImageSet("FOG", ["FogHex.BMP/3-0"])
+ImageSet("SHADOW", ["FogHex.BMP/1-1"])
+ImageSet("TARGETS", ["FC_Sel.BMP/2-0", "FC_Sel.BMP/3-1"])
+
+ImageSet("DIALOG_FRAME", ["DialogFr.BMP/32-0", "DialogFr.BMP/33-1", "DialogFr.BMP/34-2", "DialogFr.BMP/35-3", "DialogFr.BMP/36-4", "DialogFr.BMP/37-5", "DialogFr.BMP/38-6", "DialogFr.BMP/39-7"])

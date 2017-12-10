@@ -1,0 +1,10 @@
+IncludeResource("ui.txt")
+IncludeResource("images.txt")
+
+IncludeResource("faction_views.txt")
+IncludeResource("structure_views.txt")
+IncludeResource("tile_views.txt")
+IncludeResource("unit_views.txt")
+
+IncludeResource("songs.txt")
+IncludeResource("sounds.txt")
