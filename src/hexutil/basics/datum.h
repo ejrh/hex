@@ -8,6 +8,7 @@
 struct Datum {
     Datum(): value(0) { }
     Datum(int x): value(x) { }
+    Datum(const std::string& x): value(x) { }
 
     boost::variant<Atom, int, float, std::string> value;
 
@@ -17,6 +18,9 @@ struct Datum {
     }
 
     bool operator==(const Datum& x) const { return value == x.value; }
+
+    Datum& operator=(const Atom& x) { value = x; return *this; }
+    bool operator==(const Atom& x) const { return boost::get<Atom>(value) == x; }
 
     Datum& operator=(const int& x) { value = x; return *this; }
     bool operator==(const int& x) const { return boost::get<int>(value) == x; }
