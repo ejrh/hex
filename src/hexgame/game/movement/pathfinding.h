@@ -9,6 +9,20 @@ class Level;
 class MovementModel;
 class UnitStack;
 
+
+class Pivot {
+public:
+    Pivot(Point position, Atom movement_type, int width, int height);
+
+public:
+    Point position;
+    Atom movement_type;
+    Vector2<int> costs;
+};
+
+Pivot *calculate_pivot(Point position, Atom movement_type, Level *level, MovementModel *movement);
+
+
 struct PathfinderNode {
     enum State {
         None, Open, Closed
@@ -44,6 +58,7 @@ class PathfinderBase {
 public:
     PathfinderBase(int width, int height);
     virtual ~PathfinderBase();
+    void add_pivot(Pivot *pivot);
     virtual void clear();
     void start(const Point start_point);
     virtual void step();
@@ -61,8 +76,15 @@ protected:
     virtual int heuristic(const PathfinderQueueEntry& entry);
 
 public:
+    std::vector<Pivot *> pivots;
     Vector2<PathfinderNode> nodes;
     boost::heap::priority_queue<PathfinderQueueEntry, boost::heap::compare<PathfinderNodeComparator> > queue;
+    int weight;
+
+    int nodes_pushed;
+    int nodes_popped;
+    long time_taken;
+    int path_length;
 };
 
 class Pathfinder: public PathfinderBase {

@@ -170,3 +170,12 @@ void pixel_to_point(int px, int py, int x_spacing, int y_spacing, int slope_widt
     }
     //std::cerr << "px " << px << " py " << py << " segment " << segment << " point " << *point << "\n";
 }
+
+void point_to_pixel(const Point point, int x_spacing, int y_spacing, int *px, int *py) {
+    *px = point.x * x_spacing;
+    if (point.x % 2 == 0) {
+        *py = point.y * y_spacing;
+    } else {
+        *py = point.y * y_spacing + y_spacing / 2;
+    }
+}

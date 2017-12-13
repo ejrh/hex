@@ -36,6 +36,7 @@ set(srcs
         game/movement/movement.h
         game/movement/pathfinding.cpp
         game/movement/pathfinding.h
+        game/movement/pivot.cpp
         game/property_names.h
         game/throttle.cpp
         game/throttle.h

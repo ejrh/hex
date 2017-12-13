@@ -1,6 +1,7 @@
 #include "common.h"
 
 #include "hexutil/basics/hexgrid.h"
+#include "hexutil/basics/statistics.h"
 
 #include "hexgame/game/game.h"
 #include "hexgame/game/movement/movement.h"
@@ -16,7 +17,15 @@ PathfinderBase::PathfinderBase(int width, int height) {
 PathfinderBase::~PathfinderBase() {
 }
 
+void PathfinderBase::add_pivot(Pivot *pivot) {
+    pivots.push_back(pivot);
+}
+
 void PathfinderBase::clear() {
+    state = CLEAR;
+
+    pivots.clear();
+
     for (int i = 0; i < nodes.height; i++)
         for (int j = 0; j < nodes.width; j++) {
             nodes[i][j].cost = INT_MAX;
@@ -25,7 +34,12 @@ void PathfinderBase::clear() {
         }
 
     queue.clear();
-    state = CLEAR;
+    weight = 1;
+
+    nodes_pushed = 0;
+    nodes_popped = 0;
+    time_taken = 0;
+    path_length = 0;
 }
 
 void PathfinderBase::start(const Point start_point) {
@@ -36,7 +50,7 @@ void PathfinderBase::start(const Point start_point) {
 
     source.node->state = PathfinderNode::State::Open;
     source.node->heuristic = heuristic(source);
-    source.score = source.node->cost + source.node->heuristic;
+    source.score = source.node->cost + source.node->heuristic * weight;
     queue.push(source);
     path_head = source;
     state = RUNNING;
@@ -64,13 +78,17 @@ int PathfinderBase::heuristic(const PathfinderQueueEntry& entry) {
 }
 
 void PathfinderBase::step() {
+    long t0 = std::clock() * 1000000 / CLOCKS_PER_SEC;
     if (queue.empty()) {
         state = FINISHED;
+        time_taken += std::clock() * 1000000 / CLOCKS_PER_SEC - t0;
         return;
     }
 
     PathfinderQueueEntry next_node = queue.top();
     queue.pop();
+
+    nodes_popped++;
 
     if (next_node.node->heuristic < path_head.node->heuristic) {
         path_head = next_node;
@@ -78,6 +96,7 @@ void PathfinderBase::step() {
 
     if (next_node.node->heuristic == 0) {
         state = FINISHED;
+        time_taken += std::clock() * 1000000 / CLOCKS_PER_SEC - t0;
         return;
     }
 
@@ -87,8 +106,18 @@ void PathfinderBase::step() {
 
     int offset = next_node.point.x ^ next_node.point.y; // randomise the order we examine neighbours in, for variety
 
+    int incoming_dir = get_direction(next_node.point, next_node.node->predecessor);
+
     for (int i = 0; i < 6; i++) {
-        PathfinderQueueEntry &neighbour = neighbours[(i + offset) % 6];
+        int dir = (i + offset) % 6;
+        if (next_node.node->cost != 0) {
+            int relative_dir = (incoming_dir - dir + 6) % 6;
+            if (relative_dir == 0 || relative_dir == 1 || relative_dir == 5) {
+                continue;
+            }
+        }
+
+        PathfinderQueueEntry &neighbour = neighbours[dir];
         if (neighbour.node == NULL)
             continue;
         if (neighbour.node->state == PathfinderNode::State::Closed)
@@ -102,10 +131,13 @@ void PathfinderBase::step() {
                 neighbour.node->heuristic = heuristic(neighbour);
             }
             neighbour.node->state = PathfinderNode::State::Open;
-            neighbour.score = neighbour.node->cost + neighbour.node->heuristic;
+            neighbour.score = neighbour.node->cost + neighbour.node->heuristic * weight;
             queue.push(neighbour);
+            nodes_pushed++;
         }
     }
+
+    time_taken += std::clock() * 1000000 / CLOCKS_PER_SEC - t0;
 }
 
 void PathfinderBase::complete() {
@@ -132,6 +164,7 @@ void PathfinderBase::build_path(Path& path) {
     }
 
     std::reverse(path.begin(), path.end());
+    path_length = path.size();
 }
 
 
@@ -160,5 +193,17 @@ int Pathfinder::cost_between(const PathfinderQueueEntry& entry1, const Pathfinde
 int Pathfinder::heuristic(const PathfinderQueueEntry& entry) {
     if (entry.point == target.point)
         return 0;
-    return distance_between(entry.point, target.point) * movement->cost_to(*party, entry.point) + 1;
+    int h = distance_between(entry.point, target.point) * movement->cost_to(*party, entry.point);
+
+    for (auto iter = pivots.begin(); iter != pivots.end(); iter++) {
+        int l1 = (*iter)->costs[entry.point];
+        int l2 = (*iter)->costs[target.point];
+        if (l1 == INT_MAX || l2 == INT_MAX)
+            continue;
+        int lh = abs(l1 - l2);
+        if (lh > h)
+            h = lh;
+    }
+    return h;
+
 }
