@@ -37,6 +37,7 @@ void WindowPainter::repaint_window(UiWindow *window) {
     window->paint.clear();
     WindowExecution execution(&resources->scripts, resources, &window->paint, window);
 
+    execution.variables["window_name"] = window->name;
     execution.variables["window_width"] = window->width;
     execution.variables["window_height"] = window->height;
     execution.variables["window_has_focus"] = (window->flags & WindowHasFocus) != 0;
@@ -58,7 +59,7 @@ public:
     PositionControlInterpreter(): Interpreter("PositionControl") { }
 
     Datum execute(const Term *instruction, Execution *execution) const {
-        Atom control_name = execution->get_argument(instruction, 0);
+        Atom control_name = execution->get_argument(instruction, 0).get_as_atom();
         int x = execution->get_argument(instruction, 1).get_as_int();
         int y = execution->get_argument(instruction, 2).get_as_int();
         int w = execution->get_argument(instruction, 3).get_as_int();

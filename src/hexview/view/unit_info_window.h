@@ -9,6 +9,10 @@ class Resources;
 class Graphics;
 class GameView;
 
+class ItemSlotWindow;
+
+#define NUM_ITEM_SLOTS 19
+
 class UnitInfoWindow: public UiWindow {
 public:
     UnitInfoWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view);
@@ -34,6 +38,8 @@ private:
     UiWindow *tab_panel[3];
     UiLabel *title;
     UiTextList *abilities_list;
+
+    ItemSlotWindow *item_slots[NUM_ITEM_SLOTS];
 };
 
 #endif

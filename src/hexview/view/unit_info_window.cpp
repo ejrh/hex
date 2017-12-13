@@ -9,6 +9,22 @@
 #include "hexview/view/view.h"
 
 
+class ItemSlotWindow: public UiWindow {
+public:
+    ItemSlotWindow(int x, int y, int width, int height, Atom name):
+            UiWindow(x, y, width, height, WindowIsActive|WindowIsVisible|WindowWantsMouseEvents|WindowWantsUiEvents, name) {
+    }
+
+    bool receive_ui_event(SDL_Event *evt, UiWindow *control) {
+        if ((evt->type == focus_event_type || evt->type == unfocus_event_type) && control == this) {
+            needs_repaint = true;
+            return true;
+        }
+        return false;
+    }
+};
+
+
 static std::unordered_map<Atom, Datum> get_all_properties(const Unit& unit) {
     std::unordered_map<Atom, Datum> properties;
     for (auto iter = unit.properties.data.begin(); iter != unit.properties.data.end(); iter++) {
@@ -58,6 +74,24 @@ UnitInfoWindow::UnitInfoWindow(int x, int y, int width, int height, Resources *r
     /* Set up tab panel 0 */
     abilities_list = new UiTextList(10, 10, tab_panel[0]->width - 20, tab_panel[0]->height - 20);
     tab_panel[0]->add_child(abilities_list);
+
+    /* Set up tab panel 2 */
+    for (int i = 0; i < 8; i++) {
+        item_slots[i] = new ItemSlotWindow(10, 10+i*30, 20, 20, str(boost::format("bag%d") % i));
+    }
+    for (int i = 0; i < 5; i++) {
+        item_slots[i + 8] = new ItemSlotWindow(50+i*30, 100, 20, 20, str(boost::format("ground%d") % i));
+    }
+    item_slots[13] = new ItemSlotWindow(150, 10, 20, 20, "helmet");
+    item_slots[14] = new ItemSlotWindow(150, 70, 20, 20, "armour");
+    item_slots[15] = new ItemSlotWindow(80, 20, 20, 20, "weapon");
+    item_slots[16] = new ItemSlotWindow(220, 20, 20, 20, "shield");
+    item_slots[17] = new ItemSlotWindow(110, 40, 20, 20, "ring0");
+    item_slots[18] = new ItemSlotWindow(190, 40, 20, 20, "ring1");
+
+    for (int i = 0; i < NUM_ITEM_SLOTS; i++) {
+        tab_panel[2]->add_child(item_slots[i]);
+    }
 }
 
 bool UnitInfoWindow::receive_keyboard_event(SDL_Event *evt) {

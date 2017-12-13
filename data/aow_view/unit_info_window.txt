@@ -3,8 +3,19 @@ DefineScript("UNIT_INFO_WINDOW", [
 
     SetVariable(paint_offset_x, 21),
     SetVariable(paint_offset_y, 22),
+    SetVariable(paint_library, generict),
+    SetVariable(paint_tile_width, 118),
+    SetVariable(paint_tile_height, 143),
+    PaintFrame(7),
+    SetVariable(paint_tile_width, 0),
+    SetVariable(paint_tile_height, 0),
+    SetVariable(paint_offset_x, 21),
+    SetVariable(paint_offset_y, 22),
     SetVariable(paint_library, unitwin),
     PaintFrame(44),
+    SetVariable(paint_blend_addition, -1),
+    PaintFrame(46),
+    SetVariable(paint_blend_addition, 0),
 
     SetVariable(paint_tile_width, 142),
     SetVariable(paint_offset_x, 139),
@@ -27,8 +38,19 @@ DefineScript("UNIT_INFO_WINDOW", [
 
     SetVariable(paint_offset_x, 281),
     SetVariable(paint_offset_y, 22),
+    SetVariable(paint_library, generict),
+    SetVariable(paint_tile_width, 118),
+    SetVariable(paint_tile_height, 143),
+    PaintFrame(7),
+    SetVariable(paint_tile_width, 0),
+    SetVariable(paint_tile_height, 0),
+    SetVariable(paint_offset_x, 281),
+    SetVariable(paint_offset_y, 22),
     SetVariable(paint_library, unitwin),
     PaintFrame(45),
+    SetVariable(paint_blend_addition, -1),
+    PaintFrame(46),
+    SetVariable(paint_blend_addition, 0),
 
 # Bottom bar
     SetVariable(paint_library, celtdeco),
@@ -40,10 +62,10 @@ DefineScript("UNIT_INFO_WINDOW", [
     Increment(paint_offset_x, 27),
     PaintFrame(3),
     Increment(paint_offset_x, 27),
-    SetVariable(paint_tile_width, 256),
+    SetVariable(paint_tile_width, 257),
     PaintFrame(1),
     SetVariable(paint_tile_width, 0),
-    SetVariable(paint_offset_x, 337),
+    SetVariable(paint_offset_x, 338),
     PaintFrame(3),
     Increment(paint_offset_x, 27),
     PaintFrame(3),
@@ -175,12 +197,75 @@ DefineScript("UNIT_INFO_TAB_PANEL0", [
 
 
 DefineScript("UNIT_INFO_TAB_PANEL1", [
+    SetVariable(paint_library, generict),
+    SetVariable(paint_tile_width, $window_width),
+    SetVariable(paint_tile_height, $window_height),
+    PaintFrame(2),
+    SetVariable(paint_tile_width, 0),
+    SetVariable(paint_tile_height, 0),
+
+    Call("draw_gold_frame_box", [10, 11, 359, 80]),
+    Call("draw_gold_frame_box", [10, 105, 109, 80]),
+    Call("draw_gold_frame_box", [131, 105, 118, 80]),
+    Call("draw_gold_frame_box", [261, 105, 108, 80]),
 ])
 
 
 DefineScript("UNIT_INFO_TAB_PANEL2", [
+    SetVariable(paint_library, generict),
+    SetVariable(paint_tile_width, $window_width),
+    SetVariable(paint_tile_height, $window_height),
+    PaintFrame(2),
+    SetVariable(paint_tile_width, 0),
+    SetVariable(paint_tile_height, 0),
+
     SetVariable(paint_library, unitwin),
-    SetVariable(paint_offset_x, 11),
+    SetVariable(paint_offset_x, 10),
     SetVariable(paint_offset_y, -5),
+    SetVariable(paint_clip_y, 5),
     PaintFrame(40),
+    SetVariable(paint_clip_y, 0),
+
+    # Bags
+    SetVariable(i, 0),
+    SetVariable(paint_offset_y, 21),
+    While(Lt($i, 4), [
+        PositionControl(Concat(bag, $i), 11, $paint_offset_y, 41, 42, UNIT_ITEM_SLOT),
+        Increment(paint_offset_y, 42),
+        Increment(i),
+    ]),
+    SetVariable(paint_offset_y, 22),
+    While(Lt($i, 8), [
+        PositionControl(Concat(bag, $i), 326, $paint_offset_y, 41, 42, UNIT_ITEM_SLOT),
+        Increment(paint_offset_y, 42),
+        Increment(i),
+    ]),
+
+    # Ground
+    SetVariable(i, 0),
+    SetVariable(paint_offset_x, 81),
+    While(Lt($i, 5), [
+        PositionControl(Concat(ground, $i), $paint_offset_x, 148, 41, 42, UNIT_ITEM_SLOT),
+        Increment(paint_offset_x, 44),
+        Increment(i),
+    ]),
+
+    # Helmet
+    PositionControl(helmet, 169, 18, 41, 42, UNIT_ITEM_SLOT),
+    PositionControl(armour, 169, 77, 41, 42, UNIT_ITEM_SLOT),
+    PositionControl(weapon, 79, 39, 41, 42, UNIT_ITEM_SLOT),
+    PositionControl(shield, 257, 39, 41, 42, UNIT_ITEM_SLOT),
+    PositionControl(ring0, 106, 88, 41, 42, UNIT_ITEM_SLOT),
+    PositionControl(ring1, 231, 88, 41, 42, UNIT_ITEM_SLOT),
+])
+
+
+DefineScript("UNIT_ITEM_SLOT", [
+    SetVariable(paint_library, unitwin),
+    SetVariable(paint_frame_offset, 34),
+    If(Match($window_name, "bag.+"), SetVariable(paint_frame_offset, 30)),
+    If(Match($window_name, "ground.+"), SetVariable(paint_frame_offset, 32)),
+    If(Match($window_name, "ring.+"), SetVariable(paint_frame_offset, 36)),
+    If($window_has_focus, Increment(paint_frame_offset)),
+    PaintFrame(0),
 ])
