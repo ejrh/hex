@@ -1,0 +1,115 @@
+DefineScript("draw_frame", [inner_width, inner_height], [
+    SetVariable(saved_paint_offset_x, $paint_offset_x),
+    SetVariable(saved_paint_offset_y, $paint_offset_y),
+#Top
+    PaintFrame(0),
+    Increment(paint_offset_x, FrameWidth(0)),
+    SetVariable(paint_tile_width, $inner_width),
+    PaintFrame(1),
+    SetVariable(paint_tile_width, 0),
+    Increment(paint_offset_x, $inner_width),
+    PaintFrame(2),
+#Sides
+    Increment(paint_offset_y, FrameHeight(0)),
+    SetVariable(paint_tile_height, $inner_height),
+    SetVariable(paint_offset_x, $saved_paint_offset_x),
+    PaintFrame(3),
+    Increment(paint_offset_x, FrameWidth(0), $inner_width),
+    PaintFrame(4),
+    SetVariable(paint_tile_height, 0),
+    Increment(paint_offset_y, $inner_height),
+#Bottom
+    SetVariable(paint_offset_x, $saved_paint_offset_x),
+    PaintFrame(5),
+    Increment(paint_offset_x, FrameWidth(0)),
+    SetVariable(paint_tile_width, $inner_width),
+    PaintFrame(6),
+    SetVariable(paint_tile_width, 0),
+    Increment(paint_offset_x, $inner_width),
+    PaintFrame(7),
+#Restore variables
+    SetVariable(paint_offset_x, $saved_paint_offset_x),
+    SetVariable(paint_offset_y, $saved_paint_offset_y),
+])
+
+
+DefineScript("draw_dialog_fr", [inner_width, inner_height], [
+    SetVariable(paint_library, genericf),
+    SetVariable(paint_frame_offset, 32),
+    Call("draw_frame", [$inner_width, $inner_height]),
+    SetVariable(paint_frame_offset, 0),
+])
+
+
+DefineScript("draw_floater_fr", [inner_width, inner_height], [
+    SetVariable(paint_library, genericf),
+    SetVariable(paint_frame_offset, 0),
+    Call("draw_frame", [$inner_width, $inner_height]),
+    SetVariable(paint_frame_offset, 0),
+])
+
+
+DefineScript("draw_thin_fr", [inner_width, inner_height], [
+    SetVariable(paint_library, genericf),
+    SetVariable(paint_frame_offset, 105),
+    Call("draw_frame", [$inner_width, $inner_height]),
+    SetVariable(paint_frame_offset, 0),
+])
+
+
+DefineScript("draw_gold_fr", [inner_width, inner_height], [
+    SetVariable(paint_library, genericf),
+    SetVariable(paint_frame_offset, 113),
+    Call("draw_frame", [$inner_width, $inner_height]),
+    SetVariable(paint_frame_offset, 0),
+])
+
+
+DefineScript("draw_gold_frame_box", [x, y, w, h], [
+    SetVariable(paint_offset_x, $x),
+    SetVariable(paint_offset_y, $y),
+    Increment(paint_offset_x, -4),
+    Increment(paint_offset_y, -3),
+    SetVariable(w2, $w),
+    Increment(w2, 3),
+    SetVariable(h2, $h),
+    Increment(h2, 3),
+    Call("draw_thin_fr", [$w2, $h2]),
+
+    Increment(paint_offset_x, 1),
+    Increment(paint_offset_y, 0),
+    Call("draw_gold_fr", [$w, $h]),
+
+    Increment(paint_offset_x, 3),
+    Increment(paint_offset_y, 3),
+    SetVariable(paint_library, generict),
+    SetVariable(paint_tile_width, $w),
+    SetVariable(paint_tile_height, $h),
+    PaintFrame(17),
+    SetVariable(paint_tile_width, 0),
+    SetVariable(paint_tile_height, 0),
+])
+
+
+DefineScript("draw_stack_unit_slot_empty", [inner_width, inner_height], [
+    SetVariable(paint_library, units),
+    SetVariable(paint_frame_offset, 0),
+    Call("draw_frame", [$inner_width, $inner_height]),
+    SetVariable(paint_frame_offset, 0),
+])
+
+
+DefineScript("draw_stack_unit_slot_normal", [inner_width, inner_height], [
+    SetVariable(paint_library, units),
+    SetVariable(paint_frame_offset, 12),
+    Call("draw_frame", [$inner_width, $inner_height]),
+    SetVariable(paint_frame_offset, 0),
+])
+
+
+DefineScript("draw_stack_unit_slot_excluded", [inner_width, inner_height], [
+    SetVariable(paint_library, units),
+    SetVariable(paint_frame_offset, 26),
+    Call("draw_frame", [$inner_width, $inner_height]),
+    SetVariable(paint_frame_offset, 0),
+])
