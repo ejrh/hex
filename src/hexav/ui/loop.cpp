@@ -37,7 +37,7 @@ static void register_user_events() {
     }
 }
 
-void push_ui_event(Uint32 type, UiWindow *control) {
+void push_ui_event(Uint32 type, UiWindow *control, int code) {
     if (user_event_type_base == 0) {
         BOOST_LOG_TRIVIAL(error) << "Event pushed before user events registered!";
     }
@@ -45,6 +45,7 @@ void push_ui_event(Uint32 type, UiWindow *control) {
     SDL_Event event;
     event.type = type;
     event.user.data1 = control;
+    event.user.code = code;
     if (!SDL_PushEvent(&event)) {
         BOOST_LOG_TRIVIAL(error) << boost::format("Error pushing SDL event: %s") % SDL_GetError();
     }

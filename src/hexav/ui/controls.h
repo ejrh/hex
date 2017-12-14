@@ -38,6 +38,7 @@ public:
 class UiButton: public UiWindow {
 public:
     UiButton(int x, int y, int width, int height, const std::string& label_text);
+    UiButton(int x, int y, int width, int height, const std::string& label_text, Atom name);
     virtual ~UiButton();
 
     virtual bool receive_mouse_event(SDL_Event *evt, int x, int y);

@@ -67,12 +67,21 @@ UiButton::UiButton(int x, int y, int width, int height, const std::string& label
     add_child(label);
 }
 
+UiButton::UiButton(int x, int y, int width, int height, const std::string& label_text, Atom name):
+        UiWindow(x, y, width, height, WindowIsVisible|WindowIsActive|WindowWantsMouseEvents|WindowWantsUiEvents, name) {
+    label = new UiLabel(2, 2, width - 4, height - 4);
+    label->name = "label";
+    label->set_format(TextFormat(SmallFont14, true, 255,255,255));
+    label->set_text(label_text);
+    add_child(label);
+}
+
 UiButton::~UiButton() {
 }
 
 bool UiButton::receive_mouse_event(SDL_Event *evt, int x, int y) {
     if (evt->type == SDL_MOUSEBUTTONDOWN) {
-        push_ui_event(click_event_type, this);
+        push_ui_event(click_event_type, this, evt->button.button);
         return true;
     }
     return false;

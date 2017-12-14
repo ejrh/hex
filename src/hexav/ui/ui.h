@@ -123,6 +123,6 @@ extern Uint32 unfocus_event_type;
 extern Uint32 click_event_type;
 extern Uint32 tab_event_type;
 
-void push_ui_event(Uint32 type, UiWindow *control);
+void push_ui_event(Uint32 type, UiWindow *control, int code = 0);
 
 #endif
