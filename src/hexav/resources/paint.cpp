@@ -7,6 +7,57 @@
 #include "hexav/resources/resources.h"
 
 
+static void add_bounds(SDL_Rect& bounds, const SDL_Rect& new_bounds) {
+    if (bounds.x == INT_MAX) {
+        bounds = new_bounds;
+        return;
+    }
+
+    if (new_bounds.x + new_bounds.w > bounds.x + bounds.w) {
+        bounds.w = new_bounds.x + new_bounds.w - bounds.x;
+    }
+    if (new_bounds.y + new_bounds.h > bounds.y + bounds.h) {
+        bounds.h = new_bounds.y + new_bounds.h - bounds.y;
+    }
+
+    if (new_bounds.x < bounds.x) {
+        bounds.w += bounds.x - new_bounds.x;
+        bounds.x = new_bounds.x;
+    }
+    if (new_bounds.y < bounds.y) {
+        bounds.h += bounds.y - new_bounds.y;
+        bounds.y = new_bounds.y;
+    }
+}
+
+
+int PaintItem::get_duration() const {
+    return frames.size() * frame_rate_to_ms(frame_rate);
+}
+
+SDL_Rect PaintItem::get_bounds() const {
+    SDL_Rect bounds = { INT_MAX, INT_MAX, 0, 0 };
+    for (auto iter = frames.begin(); iter != frames.end(); iter++) {
+        Image *image = *iter;
+        SDL_Rect new_bounds = { image->clip_x_offset, image->clip_y_offset, image->clip_width, image->clip_height };
+        add_bounds(bounds, new_bounds);
+        break;
+    }
+    bounds.x += this->offset_x;
+    bounds.y += this->offset_y;
+    return bounds;
+}
+
+
+Paint::Paint():
+        duration(0) {
+    bounds.x = INT_MAX;
+    bounds.y = INT_MAX;
+    bounds.w = 0;
+    bounds.h = 0;
+}
+
+
 void Paint::render(int x, int y, int phase, Graphics *graphics) {
     for (auto iter = items.begin(); iter != items.end(); iter++) {
         PaintItem& item = *iter;
@@ -62,11 +113,17 @@ void Paint::render(int x, int y, int phase, Graphics *graphics) {
         if (restore_clip)
             graphics->set_clip_rect(saved_clip_rect);
     }
+    //const SDL_Rect& bounds = get_bounds();
+    //graphics->draw_rectangle(255, 255, 255, x + bounds.x, y + bounds.y, bounds.w, bounds.h);
 }
 
 void Paint::clear() {
     items.clear();
     duration = 0;
+    bounds.x = INT_MAX;
+    bounds.y = INT_MAX;
+    bounds.w = 0;
+    bounds.h = 0;
 }
 
 void Paint::add(const PaintItem& item) {
@@ -77,8 +134,8 @@ void Paint::add(const PaintItem& item) {
             duration = item_duration;
         }
     }
+    add_bounds(bounds, item.get_bounds());
 }
-
 
 int PaintExecution::frame_width(int frame_num) {
     Atom paint_library = get(paint_library_atom).get_as_atom();

@@ -18,11 +18,11 @@ inline int frame_rate_to_ms(int rate) {
     return FRAME_RATE_BASE / rate;
 }
 
+
 class PaintItem {
 public:
-    int get_duration() const {
-        return frames.size() * frame_rate_to_ms(frame_rate);
-    }
+    int get_duration() const;
+    SDL_Rect get_bounds() const;
 
 public:
     int offset_x, offset_y;
@@ -34,9 +34,10 @@ public:
     int blend_addition;
 };
 
+
 class Paint {
 public:
-    Paint(): duration(0) { }
+    Paint();
 
     void render(int x, int y, int phase, Graphics *graphics);
 
@@ -46,10 +47,14 @@ public:
     int get_duration() const {
         return duration;
     }
+    const SDL_Rect& get_bounds() const {
+        return bounds;
+    }
 
 private:
     std::vector<PaintItem> items;
     int duration;
+    SDL_Rect bounds;
 };
 
 class PaintExecution: public Execution {

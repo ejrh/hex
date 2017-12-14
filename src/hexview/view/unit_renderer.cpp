@@ -24,8 +24,10 @@ void UnitRenderer::draw_unit(int x, int y, UnitView& unit_view) {
 }
 
 void UnitRenderer::draw_unit_centered(int x, int y, UnitView& unit_view) {
-    // TODO - determine centre of painted area (using clip data)
-    // and draw appropriately
+    SDL_Rect bounds = unit_view.paint.get_bounds();
+    int px = x - bounds.x - bounds.w / 2;
+    int py = y - bounds.y - bounds.h / 2;
+    unit_view.paint.render(px, py, unit_view.phase, graphics);
 }
 
 void UnitRenderer::draw_health_bar(int x, int y, int w, int h, int health, int max_health) {
