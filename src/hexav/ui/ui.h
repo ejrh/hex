@@ -65,6 +65,7 @@ public:
     virtual bool receive_ui_event(SDL_Event *evt, UiWindow *control);
     virtual void receive_global_event(SDL_Event *evt);
     virtual void draw(const UiContext& context);
+    virtual void initialise_paint(Execution *execution);
 
     bool contains(int px, int py);
     UiWindow *find_child(int px, int py);

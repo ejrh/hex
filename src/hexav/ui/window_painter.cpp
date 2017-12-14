@@ -43,6 +43,8 @@ void WindowPainter::repaint_window(UiWindow *window) {
     execution.variables["window_has_focus"] = (window->flags & WindowHasFocus) != 0;
     execution.variables["window_is_selected"] = (window->flags & WindowIsSelected) != 0;
 
+    window->initialise_paint(&execution);
+
     try {
         execution.run(window->paint_script.get());
     } catch (ScriptError& err) {

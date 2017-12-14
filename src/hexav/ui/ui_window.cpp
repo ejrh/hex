@@ -27,6 +27,8 @@ void UiWindow::draw(const UiContext& context) {
     tf.write_text(context.graphics, name, context.translate_x+4, context.translate_y+4);
 }
 
+void UiWindow::initialise_paint(Execution *execution) { }
+
 bool UiWindow::contains(int px, int py) {
     return px >= x && py >= y && px < (x + width) && py < (y + height);
 }
