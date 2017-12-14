@@ -141,3 +141,31 @@ void Graphics::set_clip_rect(int x, int y, int w, int h) {
 void Graphics::clear_clip_rect() {
     SDL_RenderSetClipRect(renderer, NULL);
 }
+
+SDL_Rect Graphics::set_clip_rect(const SDL_Rect& clip_rect) {
+    SDL_Rect old_clip_rect;
+    SDL_RenderGetClipRect(renderer, &old_clip_rect);
+    if (SDL_RectEmpty(&clip_rect)) {
+        SDL_RenderSetClipRect(renderer, NULL);
+    } else {
+        SDL_RenderSetClipRect(renderer, &clip_rect);
+    }
+    return old_clip_rect;
+}
+
+SDL_Rect Graphics::push_clip_rect(const SDL_Rect& clip_rect) {
+    SDL_Rect old_clip_rect;
+    SDL_RenderGetClipRect(renderer, &old_clip_rect);
+    if (SDL_RectEmpty(&clip_rect)) {
+        SDL_RenderSetClipRect(renderer, NULL);
+    } else {
+        SDL_Rect intersection;
+        if (SDL_RectEmpty(&old_clip_rect)) {
+            intersection = clip_rect;
+        } else {
+            SDL_IntersectRect(&old_clip_rect, &clip_rect, &intersection);
+        }
+        SDL_RenderSetClipRect(renderer, &intersection);
+    }
+    return old_clip_rect;
+}

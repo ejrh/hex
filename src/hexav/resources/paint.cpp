@@ -23,6 +23,9 @@ void Paint::render(int x, int y, int phase, Graphics *graphics) {
         if (!frame)
             continue;
 
+        bool restore_clip = false;
+        SDL_Rect saved_clip_rect;
+
         int tile_count_x = (item.tile_width > 0) ? ((item.tile_width + frame->width) / frame->width) : 1;
         int tile_count_y = (item.tile_height > 0) ? ((item.tile_height + frame->height) / frame->height) : 1;
         if (item.tile_width > 0 || item.tile_height > 0 || item.clip_x > 0 || item.clip_y > 0) {
@@ -32,7 +35,9 @@ void Paint::render(int x, int y, int phase, Graphics *graphics) {
                 w = frame->width;
             if (h == 0)
                 h = frame->height;
-            graphics->set_clip_rect(x + item.offset_x + item.clip_x, y + item.offset_y + item.clip_y, w - item.clip_x, h - item.clip_y);
+            SDL_Rect new_clip_rect = { x + item.offset_x + item.clip_x, y + item.offset_y + item.clip_y, w - item.clip_x, h - item.clip_y };
+            saved_clip_rect = graphics->push_clip_rect(new_clip_rect);
+            restore_clip = true;
         }
 
         for (int i = 0; i < tile_count_y; i++) {
@@ -54,7 +59,8 @@ void Paint::render(int x, int y, int phase, Graphics *graphics) {
             }
         }
 
-        graphics->clear_clip_rect();
+        if (restore_clip)
+            graphics->set_clip_rect(saved_clip_rect);
     }
 }
 
