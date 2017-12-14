@@ -253,7 +253,7 @@ void run(Options& options) {
 
     UnitInfoWindow *unit_info_window = new UnitInfoWindow(unit_info_window_x, unit_info_window_y, UnitInfoWindow::unit_info_window_width, UnitInfoWindow::unit_info_window_height, &resources, &graphics, &game_view);
     MapWindow *map_window = new MapWindow(sidebar_position, 0, sidebar_width, map_window_height, &game_view, level_window, &graphics, &resources);
-    StackWindow *stack_window = new StackWindow(sidebar_position, 200, sidebar_width, StackWindow::window_height, &resources, &graphics, &game_view, &unit_renderer, unit_info_window);
+    StackWindow *stack_window = new StackWindow(sidebar_position, 200, sidebar_width, StackWindow::window_height, &resources, &game_view, &unit_renderer, unit_info_window);
     MessageWindow *message_window = new MessageWindow(sidebar_position, map_window_height + stack_window_height, sidebar_width, message_window_height, &resources, &graphics, &game_view);
     StatusWindow *status_window = new StatusWindow(0, level_window->height, graphics.width, status_window_height, &resources, &graphics, &game_view);
 

@@ -1,0 +1,96 @@
+DefineScript("STACK_WINDOW", [
+    Increment(w, $window_width, -12),
+    Increment(h, $window_height, -26),
+    Call("draw_floater_fr", [$w, $h]),
+
+    SetVariable(paint_library, generict),
+    SetVariable(paint_tile_width, $w),
+    SetVariable(paint_tile_height, $h),
+    SetVariable(paint_offset_x, 6),
+    SetVariable(paint_offset_y, 20),
+    PaintFrame(2),
+    SetVariable(paint_tile_width, 0),
+    SetVariable(paint_tile_height, 0),
+
+    SetVariable(i, 0),
+    SetVariable(x, 5),
+    While(Lt($i, 4), [
+        PositionControl(Concat(slot, $i), $x, 24, 54, 56, UNIT_SLOT),
+        PositionControl(Concat(moves, $i), $x, 84, 54, 18, UNIT_MOVES),
+        Increment(x, 55),
+        Increment(i),
+    ]),
+    SetVariable(x, 5),
+    While(Lt($i, 8), [
+        PositionControl(Concat(slot, $i), $x, 109, 54, 56, UNIT_SLOT),
+        PositionControl(Concat(moves, $i), $x, 168, 54, 18, UNIT_MOVES),
+        Increment(x, 55),
+        Increment(i),
+    ]),
+])
+
+
+DefineScript("UNIT_SLOT", [
+    If($stack_unit_is_present, [
+        # Draw alignment background
+        SetVariable(paint_library, unitbgs),
+        SetVariable(paint_offset_x, Div(Sub($window_width, 100), 2)),
+        SetVariable(paint_offset_y, Div(Sub($window_height, 100), 2)),
+        SetVariable(paint_clip_x, Div(Sub(100, $window_width), 2)),
+        SetVariable(paint_clip_y, Div(Sub(100, $window_height), 2)),
+        SetVariable(paint_tile_width, Sub($window_width, $paint_offset_x)),
+        SetVariable(paint_tile_height, Sub($window_height, $paint_offset_y)),
+        PaintFrame($unit_alignment),
+        SetVariable(paint_offset_x, 0),
+        SetVariable(paint_offset_y, 0),
+        SetVariable(paint_clip_x, 0),
+        SetVariable(paint_clip_y, 0),
+        SetVariable(paint_tile_width, 0),
+        SetVariable(paint_tile_height, 0),
+
+        Increment(w, $window_width, -32),
+        Increment(h, $window_height, -32),
+        If($stack_unit_is_selected, [
+            Call("draw_stack_unit_slot_normal", [$w, $h]),
+        ], [
+            Call("draw_stack_unit_slot_excluded", [$w, $h]),
+        ]),
+
+        PositionControl(unit_image, 4, 3, Sub($window_width, 7), Sub($window_height, 10), ""),
+    ],
+    [
+        Increment(w, $window_width, -32),
+        Increment(h, $window_height, -32),
+        Call("draw_stack_unit_slot_empty", [$w, $h]),
+
+        SetVariable(paint_library, units),
+        SetVariable(paint_tile_width, $w),
+        SetVariable(paint_tile_height, $h),
+        SetVariable(paint_offset_x, 16),
+        SetVariable(paint_offset_y, 16),
+        PaintFrame(8),
+        SetVariable(paint_tile_width, 0),
+        SetVariable(paint_tile_height, 0),
+    ]),
+
+    HideControl(label),
+])
+
+
+DefineScript("UNIT_MOVES", [
+    SetVariable(paint_library, units),
+    If($stack_unit_is_present,
+        If($stack_unit_is_selected,
+            SetVariable(paint_frame_offset, 20),
+            SetVariable(paint_frame_offset, 23),
+        ),
+        SetVariable(paint_frame_offset, 9)
+    ),
+    PaintFrame(0),
+    Increment(paint_offset_x, 16),
+    PaintFrame(1),
+    Increment(paint_offset_x, $window_width, -32),
+    PaintFrame(2),
+
+    HideControl(label),
+])
