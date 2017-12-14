@@ -51,6 +51,9 @@ void UnitPainter::repaint(UnitView& unit_view, Unit& unit) {
     Atom selected_atom = AtomRegistry::atom("selected");
     execution.variables.set<bool>(selected_atom, unit_view.selected);
 
+    Atom shadow_atom = AtomRegistry::atom("shadow");
+    execution.variables.set<bool>(shadow_atom, unit_view.shadow);
+
     Atom unit_facing_atom = AtomRegistry::atom("unit_facing");
     execution.variables.set<int>(unit_facing_atom, unit_view.facing);
 

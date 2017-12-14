@@ -16,6 +16,7 @@ DefineScript(facing_ps, [
 ])
 
 DefineScript(small_shadow_ps, [
+    If(Not($shadow), Return()),
     If(Eq($unit_posture, dying), Return()),
     SetVariable(paint_library, ushadow),
     SetVariable(paint_frame_offset, 0),
@@ -30,6 +31,7 @@ DefineScript(small_shadow_ps, [
 ])
 
 DefineScript(mounted_shadow_ps, [
+    If(Not($shadow), Return()),
     If(Eq($unit_posture, dying), Return()),
     SetVariable(paint_library, ushadow),
     SetVariable(paint_frame_offset, 0),
@@ -44,6 +46,7 @@ DefineScript(mounted_shadow_ps, [
 ])
 
 DefineScript(monster_shadow_ps, [
+    If(Not($shadow), Return()),
     If(Eq($unit_posture, dying), Return()),
     SetVariable(paint_library, ushadow),
     SetVariable(paint_frame_offset, 0),
@@ -58,6 +61,7 @@ DefineScript(monster_shadow_ps, [
 ])
 
 DefineScript(machine_shadow_ps, [
+    If(Not($shadow), Return()),
     If(Eq($unit_posture, dying), Return()),
     SetVariable(paint_library, ushadow),
     SetVariable(paint_frame_offset, 0),
@@ -74,6 +78,7 @@ DefineScript(machine_shadow_ps, [
 # Flying unit frame time is 150, or 100 for moving.  Shadow has only 6/8 as many frames,
 # so shadow frame time is therefore 200, or 133 for moving.
 DefineScript(flying_shadow_ps, [
+    If(Not($shadow), Return()),
     If(Eq($unit_posture, dying), Return()),
     SetVariable(paint_library, ushadow),
     SetVariable(paint_frame_offset, 0),

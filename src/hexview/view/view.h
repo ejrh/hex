@@ -65,7 +65,8 @@ enum UnitPosture {
 class UnitView {
 public:
     UnitView():
-        facing(rand() % 6), posture(Holding), variation(rand()), phase(rand()), selected(false), targetted(false), play_sound(false) { }
+        facing(rand() % 6), posture(Holding), variation(rand()), phase(rand()),
+        shadow(true), selected(false), targetted(false), play_sound(false) { }
     ~UnitView() { }
 
     void update(unsigned int update_ms) {
@@ -78,6 +79,7 @@ public:
     UnitPosture posture;
     unsigned int variation;
     unsigned int phase;
+    bool shadow;
     bool selected;
     bool targetted;
     bool play_sound;
