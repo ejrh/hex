@@ -88,6 +88,7 @@ public:
     }
 
     virtual void start() {
+        LocalNode::start();
         server.start();
     }
 

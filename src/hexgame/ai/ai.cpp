@@ -27,6 +27,7 @@ Ai::~Ai() {
 void Ai::start() {
     started = true;
     ai_thread = boost::thread(&Ai::run_thread, this);
+    BOOST_LOG_TRIVIAL(debug) << "AI started for faction: " << faction_type;
 }
 
 void Ai::stop() {
