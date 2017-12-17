@@ -4,6 +4,7 @@
 CreateTileType("outside", {Immutable, DefaultFeatureType: "outside"})
 
 CreateTileType("water", {DefaultFeatureType: "water"})
+CreateTileType("ice", {DefaultFeatureType: "ice"})
 CreateTileType("grass", {DefaultFeatureType: "plains", "SpawnGroup": 4, "SpawnChance": 10})
 CreateTileType("desert", {DefaultFeatureType: "plains", "SpawnGroup": 3, "SpawnChance": 10})
 CreateTileType("snow", {DefaultFeatureType: "plains"})
@@ -12,10 +13,11 @@ CreateTileType("wasteland", {DefaultFeatureType: "plains"})
 
 CreateFeatureType("outside", {RequiredTileType: "outside"})
 CreateFeatureType("water", {RequiredTileType: "water", "Swimmable", "Sailable", "Flyable"})
+CreateFeatureType("ice", {RequiredTileType: "ice", "Walkable", "Flyable"})
 CreateFeatureType("plains", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Walkable", "Flyable", "Roadable"})
 CreateFeatureType("road", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Walkable", "Flyable", "Road"})
 CreateFeatureType("structure", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Walkable", "Flyable", "Road"})
-CreateFeatureType("water_structure", {RequiredTileType: "water", "Walkable", "Flyable", "Road"})
+CreateFeatureType("water_structure", {RequiredTileType: "water|ice", "Walkable", "Flyable", "Road"})
 
 CreateFeatureType("forest", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Walkable", "Flyable", "SlowWalking", "Roadable", "Forest", "SpawnGroup": 1, "SpawnChance": 10})
 CreateFeatureType("dead_forest", {RequiredTileType: "grass|desert|snow|steppe|wasteland", "Walkable", "Flyable", "SlowWalking", "Roadable", "Forest"})

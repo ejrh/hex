@@ -39,6 +39,8 @@ SDL_Rect PaintItem::get_bounds() const {
     SDL_Rect bounds = { INT_MAX, INT_MAX, 0, 0 };
     for (auto iter = frames.begin(); iter != frames.end(); iter++) {
         Image *image = *iter;
+        if (!image)
+            continue;
         SDL_Rect new_bounds = { image->clip_x_offset, image->clip_y_offset, image->clip_width, image->clip_height };
         add_bounds(bounds, new_bounds);
         break;

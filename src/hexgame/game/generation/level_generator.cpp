@@ -61,12 +61,12 @@ void LevelGenerator::generate_terrain() {
 
             int hill_rand = rand();
 
+            float angle = atan2(type_noise1.value(px, py), type_noise2.value(px, py));
+            int sector = (int) ((angle + M_PI) * 5 / (2 * M_PI));
             if (height < generator->sea_level) {
-                tile.type = types["water"];
-                tile.feature_type = feature_types["water"];
+                tile.type = (sector == 4) ? types["ice"] : types["water"];
+                tile.feature_type = (sector == 4) ? feature_types["ice"] : feature_types["water"];
             } else {
-                float angle = atan2(type_noise1.value(px, py), type_noise2.value(px, py));
-                int sector = (int) ((angle + M_PI) * 5 / (2 * M_PI));
                 std::string type_name;
                 switch (sector) {
                     case 0: type_name = "grass"; break;

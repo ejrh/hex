@@ -1,5 +1,6 @@
 ImageLibraries("release/release.hss")
 ImageLibrary(waterhex, "images/waterhex.ilb")
+ImageLibrary(icehex, "images/icehex.ilb")
 ImageLibrary(hextrans, "images/hextrans.ilb")
 ImageLibrary(mountain, "images/mountain/mountain.ilb")
 
@@ -121,6 +122,49 @@ TransitionPaint([
     SetVariable(paint_frame_offset, 80),
     TransitionMatch("wasteland"),
     Call(water_transition_def),
+
+    SetVariable(paint_offset_x, -30),
+    SetVariable(paint_offset_y, -26),
+    SetVariable(paint_frame_offset, 0),
+    TransitionMatch("ice"),
+    Transition([5], [35]),
+    Transition([0], [36]),
+    Transition([1], [37]),
+])
+
+
+CreateTileView("ice", 128,128,192)
+TilePaint([
+    SetVariable(paint_offset_x, -24),
+    SetVariable(paint_offset_y, -16),
+    SetVariable(paint_library, icehex),
+    SetVariable(paint_frame_offset, 140),
+    PaintFrame(Choose($tile_variation, [0,1,2,3,4,5,6,7,8,9,10,11])),
+])
+TransitionPaint([
+    SetVariable(paint_offset_x, -43),
+    SetVariable(paint_offset_y, -48),
+    SetVariable(paint_library, icehex),
+
+    SetVariable(paint_frame_offset, 0),
+    TransitionMatch("grass|desert|steppe"),
+    Call(water_transition_def),
+
+    SetVariable(paint_frame_offset, 40),
+    TransitionMatch("snow"),
+    Call(water_transition_def),
+
+    SetVariable(paint_frame_offset, 80),
+    TransitionMatch("wasteland"),
+    Call(water_transition_def),
+
+    SetVariable(paint_offset_x, -30),
+    SetVariable(paint_offset_y, -26),
+    SetVariable(paint_frame_offset, 0),
+    TransitionMatch("water"),
+    Transition([5], [35]),
+    Transition([0], [36]),
+    Transition([1], [37]),
 ])
 
 
