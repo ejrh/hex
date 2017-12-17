@@ -1,0 +1,83 @@
+ImageLibrary(gbnbg, "images/units/gbn/gbnbg.ilb")
+ImageLibrary(gbnwr, "images/units/gbn/gbnwr.ilb")
+ImageLibrary(gbnbm, "images/units/gbn/gbnbm.ilb")
+ImageLibrary(gbncl, "images/units/gbn/gbncl.ilb")
+ImageLibrary(gbnwf, "images/units/gbn/gbnwf.ilb")
+ImageLibrary(troll, "images/units/gbn/troll.ilb")
+ImageLibrary(gbnwy, "images/units/gbn/gbnwy.ilb")
+ImageLibrary(gbnbb, "images/units/gbn/gbnbb.ilb")
+ImageLibrary(monst, "images/units/gbn/monst.ilb")
+
+CreateUnitView("goblin_darter")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [92, 93])),
+    SetVariable(unit_lib, gbnbg),
+    Call(archer_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("goblin_spearman")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [90, 91])),
+    SetVariable(unit_lib, gbnwr),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+#TODO does not have infantry attack
+CreateUnitView("goblin_bomber")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [103, 104])),
+    SetVariable(unit_lib, gbnbm),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("goblin_shaman")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [96, 97])),
+    SetVariable(unit_lib, gbncl),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("goblin_rider")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [94, 95])),
+    SetVariable(unit_lib, gbnwf),
+    Call(mounted_ps)
+])
+UnitSounds(1, ["horse1.wav", "horse2.wav"])
+
+CreateUnitView("goblin_troll")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [100, 101])),
+    SetVariable(unit_lib, troll),
+    Call(monster_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("goblin_wyvernrider")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [98, 99])),
+    SetVariable(unit_lib, gbnwy),
+    Call(flying_ps)
+])
+UnitSounds(1, ["sftstep1.wav", "sftstep2.wav", "sftstep3.wav", "sftstep4.wav"])
+
+CreateUnitView("goblin_beetle")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [105, 106])),
+    SetVariable(unit_lib, gbnbb),
+    Call(monster_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("goblin_karagh")
+UnitPaint([
+    SetVariable(death_frame, 102),
+    SetVariable(unit_lib, monst),
+    Call(monster_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
