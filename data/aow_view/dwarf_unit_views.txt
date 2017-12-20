@@ -1,0 +1,72 @@
+ImageLibrary(dwrar, "images/units/dwr/dwrar.ilb")
+ImageLibrary(dwrwr, "images/units/dwr/dwrwr.ilb")
+ImageLibrary(dwrbz, "images/units/dwr/dwrbz.ilb")
+ImageLibrary(dwrcl, "images/units/dwr/dwrcl.ilb")
+ImageLibrary(dwrbr, "images/units/dwr/dwrbr.ilb")
+ImageLibrary(giant, "images/units/dwr/giant.ilb")
+ImageLibrary(dwrmo, "images/units/dwr/dwrmo.ilb")
+ImageLibrary(dwrfb, "images/units/dwr/dwrfb.ilb")
+
+CreateUnitView("dwarf_archer")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [42, 43])),
+    SetVariable(unit_lib, dwrar),
+    Call(archer_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("dwarf_axeman")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [40, 41])),
+    SetVariable(unit_lib, dwrwr),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("dwarf_berserker")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [48, 49])),
+    SetVariable(unit_lib, dwrbz),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("dwarf_cleric")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [46, 47])),
+    SetVariable(unit_lib, dwrcl),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("dwarf_boar_rider")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [44, 45])),
+    SetVariable(unit_lib, dwrbr),
+    Call(mounted_ps)
+])
+UnitSounds(1, ["horse1.wav", "horse2.wav"])
+
+CreateUnitView("dwarf_giant")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [52, 53])),
+    SetVariable(unit_lib, giant),
+    Call(mounted_ps)
+])
+UnitSounds(1, ["horse1.wav", "horse2.wav"])
+
+CreateUnitView("dwarf_mole")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [38, 39])),
+    SetVariable(unit_lib, dwrmo),
+    Call(monster_ps)
+])
+UnitSounds(1, ["flutter.wav"])
+
+CreateUnitView("dwarf_firstborn")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [50, 51])),
+    SetVariable(unit_lib, dwrfb),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["sfstep1.wav", "sfstep2.wav", "sfstep3.wav", "sfstep4.wav"])

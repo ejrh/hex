@@ -1,0 +1,81 @@
+ImageLibrary(undar, "images/units/und/undar.ilb")
+ImageLibrary(undwr, "images/units/und/undwr.ilb")
+ImageLibrary(undhh, "images/units/und/undhh.ilb")
+ImageLibrary(undcl, "images/units/und/undcl.ilb")
+ImageLibrary(undhr, "images/units/und/undhr.ilb")
+ImageLibrary(boneh, "images/units/und/boneh.ilb")
+ImageLibrary(demon, "images/units/und/demon.ilb")
+ImageLibrary(undgh, "images/units/und/undgh.ilb")
+ImageLibrary(undrp, "images/units/und/undrp.ilb")
+
+CreateUnitView("undead_archer")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [152, 153])),
+    SetVariable(unit_lib, undar),
+    Call(archer_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("undead_swordsman")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [150, 151])),
+    SetVariable(unit_lib, undwr),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("undead_hell_hound")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [154, 155])),
+    SetVariable(unit_lib, undhh),
+    Call(monster_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("undead_doom_priest")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [158, 159])),
+    SetVariable(unit_lib, undcl),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("undead_knight")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [156, 157])),
+    SetVariable(unit_lib, undhr),
+    Call(mounted_ps)
+])
+UnitSounds(1, ["horse1.wav", "horse2.wav"])
+
+CreateUnitView("undead_bone_horror")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [164, 165])),
+    SetVariable(unit_lib, boneh),
+    Call(monster_ps)
+])
+UnitSounds(1, ["sftstep1.wav", "sftstep2.wav", "sftstep3.wav", "sftstep4.wav"])
+
+CreateUnitView("undead_demon")
+UnitPaint([
+    SetVariable(death_frame, 16),
+    SetVariable(unit_lib, demon),
+    Call(flying_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("undead_wraith")
+UnitPaint([
+    SetVariable(death_frame, 161),
+    SetVariable(unit_lib, undgh),
+    Call(monster_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("undead_reaper")
+UnitPaint([
+    SetVariable(death_frame, 163),
+    SetVariable(unit_lib, undrp),
+    Call(monster_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])

@@ -29,7 +29,7 @@ CreateUnitView("goblin_bomber")
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [103, 104])),
     SetVariable(unit_lib, gbnbm),
-    Call(infantry_ps)
+    Call(bomber_ps)
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 

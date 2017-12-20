@@ -120,6 +120,24 @@ DefineScript(infantry_ps, [
     Call(archer_ps)
 ])
 
+DefineScript(bomber_ps, [
+    SetVariable(paint_offset_x, -32),
+    SetVariable(paint_offset_y, -40),
+    Call(small_shadow_ps),
+    Call(facing_ps),
+    SetVariable(paint_library, $unit_lib),
+    If(Eq($unit_posture, holding), PaintAnimation(100, [1,2,3,4,5,6])),
+    If(Eq($unit_posture, moving), PaintAnimation(100, [1,2,3,4,5,6])),
+    If(Eq($unit_posture, attacking), PaintAnimation(200, [1,2,3,4,5,6])),
+    If(Eq($unit_posture, recoiling), PaintAnimation(200, [1,2,3,4,5,6])),
+    If(Eq($unit_posture, dying), [
+        If(Eq($death_lib, 0), SetVariable(death_lib, "deadunit")),
+        SetVariable(paint_library, $death_lib),
+        SetVariable(paint_frame_offset, $death_frame),
+        PaintFrame(0)
+    ]),
+])
+
 # TODO - again, similar to archer_ps
 DefineScript(mounted_ps, [
     SetVariable(paint_offset_x, -32),
@@ -267,9 +285,11 @@ IncludeResource("human_unit_views.txt")
 IncludeResource("azrac_unit_views.txt")
 IncludeResource("lizard_unit_views.txt")
 IncludeResource("frostling_unit_views.txt")
-IncludeResource("darkelf_unit_views.txt")
 IncludeResource("elf_unit_views.txt")
+IncludeResource("dwarf_unit_views.txt")
+IncludeResource("darkelf_unit_views.txt")
 IncludeResource("orc_unit_views.txt")
 IncludeResource("goblin_unit_views.txt")
+IncludeResource("undead_unit_views.txt")
 IncludeResource("machine_unit_views.txt")
 IncludeResource("ship_unit_views.txt")
