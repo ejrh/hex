@@ -58,9 +58,13 @@ public:
     }
 
     void initialise_paint(Execution *execution) {
+        if (this->unit) {
+            execution->add_properties(&unit->properties);
+            if (unit->type)
+                execution->add_properties(&unit->type->properties);
+        }
         execution->variables.set<int>("stack_unit_is_present", unit_is_present);
         execution->variables.set<int>("stack_unit_is_selected", unit_is_selected);
-        execution->variables.set<int>("unit_alignment", rand() % 6); //unit->get_property<>(Alignment));
     }
 
     void set_unit(Unit *unit) {

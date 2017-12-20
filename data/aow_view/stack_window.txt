@@ -33,6 +33,14 @@ DefineScript("STACK_WINDOW", [
 DefineScript("UNIT_SLOT", [
     If($stack_unit_is_present, [
         # Draw alignment background
+        SetVariable(unit_alignment, 7),
+        If(Eq($Alignment, pure_good), SetVariable(unit_alignment, 0)),
+        If(Eq($Alignment, good), SetVariable(unit_alignment, 1)),
+        If(Eq($Alignment, neutral), SetVariable(unit_alignment, 3)),
+        If(Eq($Alignment, pure_netural), SetVariable(unit_alignment, 2)),
+        If(Eq($Alignment, evil), SetVariable(unit_alignment, 4)),
+        If(Eq($Alignment, pure_evil), SetVariable(unit_alignment, 5)),
+        If(Eq($Alignment, none), SetVariable(unit_alignment, 6)),
         SetVariable(paint_library, unitbgs),
         SetVariable(paint_offset_x, Div(Sub($window_width, 100), 2)),
         SetVariable(paint_offset_y, Div(Sub($window_height, 100), 2)),

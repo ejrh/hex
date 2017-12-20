@@ -51,6 +51,7 @@ PROPERTY_NAME(Attack)
 PROPERTY_NAME(Defence)
 PROPERTY_NAME(Damage)
 PROPERTY_NAME(Health)
+PROPERTY_NAME(Alignment)
 
 // Unit spawning
 PROPERTY_NAME(SpawnGroup)
