@@ -193,7 +193,10 @@ int Pathfinder::cost_between(const PathfinderQueueEntry& entry1, const Pathfinde
 int Pathfinder::heuristic(const PathfinderQueueEntry& entry) {
     if (entry.point == target.point)
         return 0;
-    int h = distance_between(entry.point, target.point) * movement->cost_to(*party, entry.point);
+    int cost = movement->cost_to(*party, entry.point);
+    if (cost > 32)
+        cost = 32;
+    int h = distance_between(entry.point, target.point) * cost;
 
     for (auto iter = pivots.begin(); iter != pivots.end(); iter++) {
         int l1 = (*iter)->costs[entry.point];
