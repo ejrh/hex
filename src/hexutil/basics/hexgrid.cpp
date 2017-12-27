@@ -3,42 +3,38 @@
 #include "hexutil/basics/hexgrid.h"
 
 
-void get_neighbour(const Point point, int dir, Point *neighbour) {
+Point get_neighbour(const Point point, int dir) {
     int side_adjustment1 = (point.x % 2) ? 0 : -1;
     int side_adjustment2 = side_adjustment1 + 1;
     switch (dir) {
         case 0:
-            *neighbour = Point(point.x, point.y - 1);
-            break;
+            return Point (point.x, point.y - 1);
         case 1:
-            *neighbour = Point(point.x + 1, point.y + side_adjustment1);
-            break;
+            return Point(point.x + 1, point.y + side_adjustment1);
         case 2:
-            *neighbour = Point(point.x + 1, point.y + side_adjustment2);
-            break;
+            return Point(point.x + 1, point.y + side_adjustment2);
         case 3:
-            *neighbour = Point(point.x, point.y + 1);
-            break;
+            return Point(point.x, point.y + 1);
         case 4:
-            *neighbour = Point(point.x - 1, point.y + side_adjustment2);
-            break;
+            return Point(point.x - 1, point.y + side_adjustment2);
         case 5:
-            *neighbour = Point(point.x - 1, point.y + side_adjustment1);
-            break;
+            return Point(point.x - 1, point.y + side_adjustment1);
         default:
-            *neighbour = point;
+            return point;
     }
 }
 
-void get_neighbours(const Point point, Point *neighbour) {
+PointNeighbours get_neighbours(const Point point) {
     int side_adjustment1 = (point.x % 2) ? 0 : -1;
     int side_adjustment2 = side_adjustment1 + 1;
-    neighbour[0] = Point(point.x, point.y - 1);
-    neighbour[1] = Point(point.x + 1, point.y + side_adjustment1);
-    neighbour[2] = Point(point.x + 1, point.y + side_adjustment2);
-    neighbour[3] = Point(point.x, point.y + 1);
-    neighbour[4] = Point(point.x - 1, point.y + side_adjustment2);
-    neighbour[5] = Point(point.x - 1, point.y + side_adjustment1);
+    PointNeighbours neighbours;
+    neighbours[0] = Point(point.x, point.y - 1);
+    neighbours[1] = Point(point.x + 1, point.y + side_adjustment1);
+    neighbours[2] = Point(point.x + 1, point.y + side_adjustment2);
+    neighbours[3] = Point(point.x, point.y + 1);
+    neighbours[4] = Point(point.x - 1, point.y + side_adjustment2);
+    neighbours[5] = Point(point.x - 1, point.y + side_adjustment1);
+    return neighbours;
 }
 
 int get_direction(const Point point1, const Point point2) {
@@ -79,9 +75,9 @@ int distance_between(const Point point1, const Point point2) {
         return dx/2;
 }
 
-void get_circle(const Point point, int radius, std::vector<int>& scanlines) {
+std::vector<int> get_circle_scanlines(const Point point, int radius) {
     int num_scanlines = 2*radius + 1;
-    scanlines.resize(num_scanlines);
+    std::vector<int> scanlines(num_scanlines);
 
     int short_scanlines = (radius + 1) / 2;
     int adj = (point.x % 2 == 0) ? 1 : 0;
@@ -94,13 +90,15 @@ void get_circle(const Point point, int radius, std::vector<int>& scanlines) {
     for (int i = short_scanlines; i < num_scanlines - short_scanlines; i++) {
         scanlines[i] = radius;
     }
+
+    return scanlines;
 }
 
-void get_circle_points(const Point point, int radius, std::vector<Point>& points, int width, int height) {
-    int num_scanlines = 2 * radius + 1;
-    std::vector<int> scanlines(num_scanlines);
-    get_circle(point, radius, scanlines);
-    for (int i = 0; i < num_scanlines; i++) {
+std::vector<Point> get_circle_points(const Point point, int radius, int width, int height) {
+    std::vector<int> scanlines = get_circle_scanlines(point, radius);
+    std::vector<Point> points;
+
+    for (int i = 0; i < scanlines.size(); i++) {
         int row = point.y - radius + i;
         if (row < 0 || row >= height)
             continue;
@@ -114,9 +112,11 @@ void get_circle_points(const Point point, int radius, std::vector<Point>& points
             points.push_back(Point(j, row));
         }
     }
+
+    return points;
 }
 
-void pixel_to_point(int px, int py, int x_spacing, int y_spacing, int slope_width, int slope_height, Point *point) {
+Point pixel_to_point(int px, int py, int x_spacing, int y_spacing, int slope_width, int slope_height) {
     int x_mod = px % (2*x_spacing);
     int x_div = px / (2*x_spacing);
 
@@ -130,45 +130,49 @@ void pixel_to_point(int px, int py, int x_spacing, int y_spacing, int slope_widt
     else
         segment = 3;
 
+    Point point;
+
     if (segment == 0) {
         int y_mod = py % y_spacing;
         int y_div = py / y_spacing;
         if (y_mod*slope_width < slope_height*slope_width - x_mod*slope_height) {
-            point->x = 2*x_div - 1;
-            point->y = y_div - 1;
+            point.x = 2*x_div - 1;
+            point.y = y_div - 1;
         } else if (y_mod*slope_width < slope_height*slope_width + x_mod*slope_height) {
-            point->x = 2*x_div;
-            point->y = y_div;
+            point.x = 2*x_div;
+            point.y = y_div;
         } else {
-            point->x = 2*x_div - 1;
-            point->y = y_div;
+            point.x = 2*x_div - 1;
+            point.y = y_div;
         }
     } else if (segment == 1) {
-        point->x = 2 * x_div;
-        point->y = py / y_spacing;
+        point.x = 2 * x_div;
+        point.y = py / y_spacing;
     } else if (segment == 2) {
         x_mod -= x_spacing;
         int y_mod = py % y_spacing;
         int y_div = py / y_spacing;
         if (y_mod*slope_width < x_mod*slope_height) {
-            point->x = 2*x_div + 1;
-            point->y = y_div - 1;
+            point.x = 2*x_div + 1;
+            point.y = y_div - 1;
         } else if (y_mod*slope_width < 2*slope_height*slope_width - x_mod*slope_height) {
-            point->x = 2*x_div;
-            point->y = y_div;
+            point.x = 2*x_div;
+            point.y = y_div;
         } else {
-            point->x = 2*x_div + 1;
-            point->y = y_div;
+            point.x = 2*x_div + 1;
+            point.y = y_div;
         }
     } else if (segment == 3) {
         // Note: C99 annoyingly makes integer division round toward zero, which means it does the
         // wrong thing for negative numbers; so this bit of code will be erroneous for negative py.
         // Luckily we don't tend to map negative coordinates to the non-existent tiles that they
         // should map to.
-        point->x = 2 * x_div + 1;
-        point->y = (py - slope_height) / y_spacing;
+        point.x = 2 * x_div + 1;
+        point.y = (py - slope_height) / y_spacing;
     }
     //std::cerr << "px " << px << " py " << py << " segment " << segment << " point " << *point << "\n";
+
+    return point;
 }
 
 void point_to_pixel(const Point point, int x_spacing, int y_spacing, int *px, int *py) {

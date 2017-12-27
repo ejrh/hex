@@ -67,8 +67,7 @@ void Brush::paint_tiles(const Point point) {
     if (!tile_type || tile_type->has_property(Immutable))
         return;
 
-    std::vector<int> scanlines;
-    get_circle(point, paint_radius, scanlines);
+    std::vector<int> scanlines = get_circle_scanlines(point, paint_radius);
     for (int i = 0; i < scanlines.size(); i++) {
         int row = point.y - paint_radius + i;
         if (row < 0 || row >= game->level.height)

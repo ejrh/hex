@@ -57,8 +57,7 @@ void PathfinderBase::start(const Point start_point) {
 }
 
 void PathfinderBase::get_neighbours(const PathfinderQueueEntry& entry, PathfinderQueueEntry neighbours[]) {
-    Point neighbour_points[6];
-    ::get_neighbours(entry.point, neighbour_points);
+    PointNeighbours neighbour_points = ::get_neighbours(entry.point);
     for (int i = 0; i < 6; i++) {
         if (nodes.contains(neighbour_points[i])) {
             neighbours[i].point = neighbour_points[i];

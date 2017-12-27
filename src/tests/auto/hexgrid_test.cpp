@@ -11,11 +11,9 @@ struct Fixture {
 BOOST_FIXTURE_TEST_SUITE(hexgrid_test, Fixture)
 
 void check_neighbours(Point point, Point *expected_neighbours) {
-    Point all_neighbours[6];
-    get_neighbours(point, all_neighbours);
+    PointNeighbours all_neighbours = get_neighbours(point);
     for (int i = 0; i < 6; i++) {
-        Point neighbour;
-        get_neighbour(point, i, &neighbour);
+        Point neighbour = get_neighbour(point, i);
         BOOST_CHECK_EQUAL(neighbour, expected_neighbours[i]);
         BOOST_CHECK_EQUAL(all_neighbours[i], expected_neighbours[i]);
         int dir = get_direction(point, neighbour);
@@ -43,8 +41,7 @@ BOOST_AUTO_TEST_CASE(test_get_circle_even) {
     int expected_num_scanlines = radius*2 + 1;
     int expected_scanlines[] = { 1, 3, 3, 3, 3, 2, 0 };
 
-    std::vector<int> scanlines;
-    get_circle(even_point, radius, scanlines);
+    std::vector<int> scanlines = get_circle_scanlines(even_point, radius);
     BOOST_CHECK_EQUAL(scanlines.size(), expected_num_scanlines);
     for (int i = 0; i < expected_num_scanlines; i++) {
         BOOST_CHECK_EQUAL(scanlines[i], expected_scanlines[i]);
@@ -57,8 +54,7 @@ BOOST_AUTO_TEST_CASE(test_get_circle_odd) {
     int expected_num_scanlines = radius*2 + 1;
     int expected_scanlines[] = { 0, 2, 3, 3, 3, 3, 1 };
 
-    std::vector<int> scanlines;
-    get_circle(odd_point, radius, scanlines);
+    std::vector<int> scanlines = get_circle_scanlines(odd_point, radius);
     BOOST_CHECK_EQUAL(scanlines.size(), expected_num_scanlines);
     for (int i = 0; i < expected_num_scanlines; i++) {
         BOOST_CHECK_EQUAL(scanlines[i], expected_scanlines[i]);
@@ -70,14 +66,13 @@ BOOST_AUTO_TEST_CASE(test_pixel_to_point) {
     int y_spacing = 16;
     int slope_width = 4;
     int slope_height = 8;
-    Point point;
-    pixel_to_point(0, 0, x_spacing, y_spacing, slope_width, slope_height, &point);
+    Point point = pixel_to_point(0, 0, x_spacing, y_spacing, slope_width, slope_height);
     BOOST_CHECK_EQUAL(point, Point(-1, -1));
-    pixel_to_point(2, 0, x_spacing, y_spacing, slope_width, slope_height, &point);
+    point = pixel_to_point(2, 0, x_spacing, y_spacing, slope_width, slope_height);
     BOOST_CHECK_EQUAL(point, Point(-1, -1));
-    pixel_to_point(4, 0, x_spacing, y_spacing, slope_width, slope_height, &point);
+    point = pixel_to_point(4, 0, x_spacing, y_spacing, slope_width, slope_height);
     BOOST_CHECK_EQUAL(point, Point(0, 0));
-    pixel_to_point(11, 0, x_spacing, y_spacing, slope_width, slope_height, &point);
+    point = pixel_to_point(11, 0, x_spacing, y_spacing, slope_width, slope_height);
     BOOST_CHECK_EQUAL(point, Point(0, 0));
 }
 

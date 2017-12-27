@@ -100,8 +100,7 @@ void TilePainter::repaint_tile(TileView& tile_view, const Tile& tile, const Poin
     execution.variables.set<Atom>(Atom("tile_type"), tile.type->name);
 
     for (int dir = 0; dir < 6; dir++) {
-        Point neighbour_pos;
-        get_neighbour(tile_pos, dir, &neighbour_pos);
+        Point neighbour_pos = get_neighbour(tile_pos, dir);
         if (!game->level.contains(neighbour_pos))
             continue;
 
@@ -205,8 +204,7 @@ void TilePainter::repaint_feature(TileView& tile_view, const Tile& tile, const P
     execution.variables.set<int>(Atom("tile_variation"), tile_view.variation);
 
     for (int dir = 0; dir < 6; dir++) {
-        Point neighbour_pos;
-        get_neighbour(tile_pos, dir, &neighbour_pos);
+        Point neighbour_pos = get_neighbour(tile_pos, dir);
         if (!game->level.contains(neighbour_pos))
             continue;
 

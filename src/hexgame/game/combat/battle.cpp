@@ -27,10 +27,9 @@ void Battle::set_up_participants() {
     UnitStack::pointer attacker = game->level.tiles[attacking_point].stack;
 
     for (int dir = 0; dir < 7; dir++) {
-        Point stack_point;
         UnitStack::pointer stack;
 
-        get_neighbour(target_point, dir, &stack_point);
+        Point stack_point = get_neighbour(target_point, dir);
         if (game->level.contains(stack_point)) {
             stack = game->level.tiles[stack_point].stack;
         }

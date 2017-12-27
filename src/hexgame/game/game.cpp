@@ -206,8 +206,7 @@ int Game::get_free_stack_id() {
 }
 
 int Game::get_nearby_stacks(Point position, int radius, std::vector<UnitStack::pointer>& stacks) const {
-    std::vector<Point> points;
-    get_circle_points(position, radius, points, level.width, level.height);
+    std::vector<Point> points = get_circle_points(position, radius, level.width, level.height);
     int num_found = 0;
     for (auto iter = points.begin(); iter != points.end(); iter++) {
         const Tile& tile = level.tiles[*iter];

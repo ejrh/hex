@@ -40,7 +40,7 @@ void LevelWindow::set_mouse_position(int x, int y) {
 void LevelWindow::mouse_to_tile(int x, int y, Point *tile) {
     x += shift_x - this->x;
     y += shift_y - this->y;
-    pixel_to_point(x, y, X_SPACING, Y_SPACING, SLOPE_WIDTH, SLOPE_HEIGHT, tile);
+    *tile = pixel_to_point(x, y, X_SPACING, Y_SPACING, SLOPE_WIDTH, SLOPE_HEIGHT);
 }
 
 void LevelWindow::tile_to_pixel(const Point tile, int *px, int *py) {

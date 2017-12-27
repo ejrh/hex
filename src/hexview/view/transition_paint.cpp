@@ -16,8 +16,7 @@
 bool TransitionPaintExecution::apply_transition(const std::vector<int>& dirs, const std::vector<int>& frame_nums) {
 
     for (auto dir_iter = dirs.begin(); dir_iter != dirs.end(); dir_iter++) {
-        Point neighbour_pos;
-        get_neighbour(tile_pos, *dir_iter, &neighbour_pos);
+        Point neighbour_pos = get_neighbour(tile_pos, *dir_iter);
         if (!game->level.contains(neighbour_pos)) {
             return false;
         }

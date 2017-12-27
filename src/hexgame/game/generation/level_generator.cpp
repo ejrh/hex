@@ -117,8 +117,7 @@ void LevelGenerator::coalesce_mountains() {
             if (tile_feature == "hill1") {
                 bool left = left_rand % 2 == 0;
                 int dir = left ? 4 : 2;
-                Point neighbour_pos;
-                get_neighbour(tile_pos, dir, &neighbour_pos);
+                Point neighbour_pos = get_neighbour(tile_pos, dir);
                 if (!level.contains(neighbour_pos))
                     continue;
                 Tile& neighbour = level.tiles[neighbour_pos];
@@ -134,8 +133,7 @@ void LevelGenerator::coalesce_mountains() {
             //     m   m
             //       m
             if (tile_feature == "mountain1") {
-                Point neighbour_pos[6];
-                get_neighbours(tile_pos, neighbour_pos);
+                PointNeighbours neighbour_pos = get_neighbours(tile_pos);
                 if (!level.contains(neighbour_pos[2]) || !level.contains(neighbour_pos[3]) || !level.contains(neighbour_pos[4]))
                     continue;
                 Tile& neighbour2 = level.tiles[neighbour_pos[2]];
@@ -158,14 +156,10 @@ void LevelGenerator::coalesce_mountains() {
             //        m   m
             //          m
             if (tile_feature == "mountain2") {
-                Point neighbour_pos[6];
-                get_neighbours(tile_pos, neighbour_pos);
-                Point neighbour_pos_l[6];
-                get_neighbours(neighbour_pos[4], neighbour_pos_l);
-                Point neighbour_pos_r[6];
-                get_neighbours(neighbour_pos[2], neighbour_pos_r);
-                Point neighbour_pos_b[6];
-                get_neighbours(neighbour_pos[3], neighbour_pos_b);
+                PointNeighbours neighbour_pos = get_neighbours(tile_pos);
+                PointNeighbours neighbour_pos_l = get_neighbours(neighbour_pos[4]);
+                PointNeighbours neighbour_pos_r = get_neighbours(neighbour_pos[2]);
+                PointNeighbours neighbour_pos_b = get_neighbours(neighbour_pos[3]);
                 if (!level.contains(neighbour_pos_b[3]) || !level.contains(neighbour_pos_l[4]) || !level.contains(neighbour_pos_r[2]))
                     continue;
                 Tile& neighbourl4 = level.tiles[neighbour_pos_l[4]];
@@ -212,7 +206,7 @@ void LevelGenerator::add_rivers() {
             Point next_pos;
             int attempts = 0;
             do {
-                get_neighbour(start_pos, rand() % 6, &next_pos);
+                next_pos = get_neighbour(start_pos, rand() % 6);
             } while (attempts++ < 20 && (!level.contains(next_pos) || !level.tiles[next_pos].has_property(Roadable)));
             if (attempts >= 20)
                 continue;
@@ -262,9 +256,8 @@ void LevelGenerator::add_bridges() {
         int water_neighbours = 0;
         int best_dir = -1;
         for (int dir = 0; dir < 3; dir++) {
-            Point n1, n2;
-            get_neighbour(tile_pos, dir, &n1);
-            get_neighbour(tile_pos, dir + 3, &n2);
+            Point n1 = get_neighbour(tile_pos, dir);
+            Point n2 = get_neighbour(tile_pos, dir + 3);
             if (!level.contains(n1) || !level.contains(n2))
                 continue;
 
@@ -304,8 +297,7 @@ void LevelGenerator::add_roads() {
         for (auto iter = path.begin(); iter != path.end(); iter++) {
             Tile& tile = level.tiles[*iter];
             if (tile.has_property(Roadable) && rand() % 6 != 0) {
-                Point neighbours[6];
-                get_neighbours(*iter, neighbours);
+                PointNeighbours neighbours = get_neighbours(*iter);
                 bool too_many_roads = false;
                 for (int i = 0; i < 6; i++) {
                     if (level.tiles[neighbours[i]].has_property(Road) && level.tiles[neighbours[(i+1) % 6]].has_property(Road))

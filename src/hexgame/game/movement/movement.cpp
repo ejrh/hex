@@ -129,8 +129,7 @@ void MovementModel::move(UnitStack& party, const IntSet& selected_units, const P
 }
 
 void MovementModel::alter_terrain(Point pos, Atom type) const {
-    std::vector<Point> points;
-    get_circle_points(pos, 1, points, game->level.width, game->level.height);
+    std::vector<Point> points = get_circle_points(pos, 1, game->level.width, game->level.height);
     TileType::pointer new_tile_type;
     if (type == PathOfLife)
         new_tile_type = game->tile_types.get("grass");

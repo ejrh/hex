@@ -77,8 +77,7 @@ CombatWindow::CombatWindow(int x, int y, int width, int height, ViewResources *r
     int centre_y = height/2;
 
     for (int dir = 0; dir <= 6; dir++) {
-        Point relative_point;
-        get_neighbour(centre, dir, &relative_point);
+        Point relative_point = get_neighbour(centre, dir);
         x = centre_x + relative_point.x * (battle_stack_width + battle_stack_padding) - battle_stack_width/2;
         y = centre_y + relative_point.y * (battle_stack_height + battle_stack_padding) - battle_stack_height/2 + (relative_point.x ? (battle_stack_height + battle_stack_padding) / 2 : 0);
 

@@ -45,12 +45,9 @@ void VisibilityMap::apply(const UnitStack& stack, bool visible)
     draw(stack.position, stack.sight(), visible);
 }
 
-void VisibilityMap::draw(const Point& point, int sight, bool visible)
-{
-    int num_scanlines = 2 * sight + 1;
-    std::vector<int> scanlines(num_scanlines);
-    get_circle(point, sight, scanlines);
-    for (int i = 0; i < num_scanlines; i++) {
+void VisibilityMap::draw(const Point& point, int sight, bool visible) {
+    std::vector<int> scanlines = get_circle_scanlines(point, sight);
+    for (int i = 0; i < scanlines.size(); i++) {
         int row = point.y - sight + i;
         if (row < 0 || row >= visibility.height)
             continue;

@@ -256,8 +256,7 @@ void GameView::move_units(int stack_id, const IntSet selected_units, Point point
 
     // Repaint tiles that were passed over
     TilePainter painter(game, this, resources);
-    std::vector<Point> points;
-    get_circle_points(point, 1, points, game->level.width, game->level.height);
+    std::vector<Point> points = get_circle_points(point, 1, game->level.width, game->level.height);
     for (auto iter = points.begin(); iter != points.end(); iter++) {
         painter.repaint(*iter, 1);
     }

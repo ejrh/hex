@@ -149,8 +149,7 @@ void Generator::create_towers(MessageReceiver& updater) {
             Tile& tile = game->level.tiles[tile_pos];
             if (!tile.has_property(Roadable))
                 continue;
-            Point neighbour_pos[6];
-            get_neighbours(tile_pos, neighbour_pos);
+            PointNeighbours neighbour_pos = get_neighbours(tile_pos);
             int water_count = 0;
             for (int i = 0; i < 6; i++) {
                 if (!game->level.contains(neighbour_pos[i]))
