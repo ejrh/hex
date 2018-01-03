@@ -12,11 +12,10 @@ class GameView;
 
 class MessageWindow: public UiWindow {
 public:
-    MessageWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view);
+    MessageWindow(int x, int y, int width, int height, Graphics *graphics, GameView *view);
     void draw(const UiContext& context);
 
 private:
-    Resources *resources;
     Graphics *graphics;
     GameView *view;
 };

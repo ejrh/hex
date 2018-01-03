@@ -37,9 +37,7 @@ public:
     static const int window_height = units_down * unit_height + (units_down - 1) * padding + 2 * border;
 
 private:
-    ViewResources *resources;
     GameView *view;
-    UnitRenderer *renderer;
     UnitInfoWindow *unit_info_window;
 
     std::vector<UnitSlotWindow *> unit_slots;

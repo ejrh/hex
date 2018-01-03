@@ -56,16 +56,16 @@ public:
     Datum execute_instruction(const Term *script_term);
 
     const Datum& get(const Atom& name) const;
-    const Datum get_argument(const Term *term, int position);
-    const Term *get_subterm(const Term *term, int position);
-    std::vector<int> get_as_intvector(const Term *term, int position);
+    const Datum get_argument(const Term *term, unsigned int position);
+    const Term *get_subterm(const Term *term, unsigned int position);
+    std::vector<int> get_as_intvector(const Term *term, unsigned int position);
 
     template<typename T>
     const T& get_as(const Atom& name) const {
         try {
             return get(name).get<T>();
         } catch (const boost::bad_get& err) {
-            throw ScriptError() << boost::format("Can't get variable %s as specified type (value is %s)") % name % get(name);
+            throw ScriptError() << boost::format("Can't get variable %s as specified type (value is %s): %s") % name % get(name) % err.what();
         }
     }
 

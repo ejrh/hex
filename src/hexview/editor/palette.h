@@ -31,7 +31,6 @@ public:
 
 private:
     Game *game;
-    GameView *view;
     LevelWindow *level_window;
     EditorWindow *editor_window;
     Brush *brush;

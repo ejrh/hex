@@ -21,7 +21,7 @@
 namespace hex {
 
 GameView::GameView(Game *game, Player *player, ViewResources *resources, Throttle *throttle, MessageReceiver *dispatcher):
-        game(game), player(player), level_view(&game->level), resources(resources), unit_painter(game, this, resources),
+        game(game), player(player), level_view(&game->level), resources(resources), unit_painter(resources),
         throttle(throttle), dispatcher(dispatcher),
         last_update(0), phase(0),
         faction_views("faction_views"), unit_stack_views("unit_stack_views"),

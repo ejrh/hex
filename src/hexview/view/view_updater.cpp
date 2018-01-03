@@ -80,7 +80,7 @@ void ViewUpdater::apply_update(Message *update) {
 
             UnitStackView::pointer stack_view = game_view->unit_stack_views.get(upd->data1);
             game_view->set_view_def(*stack_view);
-            UnitPainter unit_painter(game, game_view, resources);
+            UnitPainter unit_painter(resources);
             unit_painter.repaint(*stack_view, *stack);
 
             if (game_view->player->has_view(stack->owner)) {
@@ -118,7 +118,7 @@ void ViewUpdater::apply_update(Message *update) {
             StructureView::pointer structure_view = boost::make_shared<StructureView>(structure, view_def);
             game_view->level_view.tile_views[upd->data1].structure_view = structure_view;
 
-            StructurePainter painter(game, game_view, resources);
+            StructurePainter painter(game, resources);
             painter.repaint(*structure_view);
 
             if (structure->owner && game_view->player->has_view(structure->owner)) {

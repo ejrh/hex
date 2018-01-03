@@ -12,14 +12,13 @@ class UnitRenderer;
 
 class CombatScreen {
 public:
-    CombatScreen(ViewResources *resources, Graphics *graphics, Audio *audio, GameView *view, UnitRenderer *renderer);
+    CombatScreen(ViewResources *resources, Graphics *graphics, Audio *audio, UnitRenderer *renderer);
     void show_battle(Battle *battle);
 
 private:
     ViewResources *resources;
     Graphics *graphics;
     Audio *audio;
-    GameView *game_view;
     UnitRenderer *renderer;
 };
 

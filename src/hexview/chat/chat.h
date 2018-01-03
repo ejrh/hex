@@ -14,7 +14,7 @@ class MessageReceiver;
 
 class ChatWindow: public UiWindow {
 public:
-    ChatWindow(int width, int height, Resources *resources, Graphics *graphics, MessageReceiver *dispatcher);
+    ChatWindow(int width, int height, Graphics *graphics, MessageReceiver *dispatcher);
 
     virtual bool receive_keyboard_event(SDL_Event *evt);
     virtual void draw(const UiContext& context);
@@ -24,7 +24,6 @@ public:
     void add_to_history(const std::string& line);
 
 private:
-    Resources *resources;
     Graphics *graphics;
     MessageReceiver *dispatcher;
     bool open;

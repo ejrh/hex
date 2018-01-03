@@ -63,7 +63,11 @@ float Reader::read_float() {
 
     file.read((char *) buffer, 4);
 
-    return *(float *) buffer;
+    // From https://stackoverflow.com/a/3991612/63991
+    float result;
+    std::copy(reinterpret_cast<const char*>(&buffer[0]), reinterpret_cast<const char*>(&buffer[4]),
+            reinterpret_cast<char*>(&result));
+    return result;
 }
 
 void Reader::read_data(char *target, int target_size) {

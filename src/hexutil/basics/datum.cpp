@@ -46,7 +46,7 @@ int Datum::get_as_int() const {
     if (is<int>()) {
         return get<int>();
     } else if (is<float>()) {
-        return get<float>();
+        return static_cast<int>(get<float>());
     } else {
         return 0;
     }

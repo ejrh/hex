@@ -13,8 +13,8 @@
 
 namespace hex {
 
-PreUpdater::PreUpdater(Game *game, GameView *game_view):
-        game(game), game_view(game_view), combat_screen(NULL) {
+PreUpdater::PreUpdater(Game *game):
+        game(game), combat_screen(NULL) {
 }
 
 PreUpdater::~PreUpdater() {

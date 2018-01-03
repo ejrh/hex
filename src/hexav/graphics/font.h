@@ -55,14 +55,13 @@ public:
 class TextCache {
 public:
     TextCache(Graphics *graphics, const TextFormat& format, int size):
-            graphics(graphics), format(format), size(size) { }
+            graphics(graphics), format(format) { }
 
     void write_text(const std::string& text, int x, int y);
 
 private:
     Graphics *graphics;
     TextFormat format;
-    int size;
     std::unordered_map<std::string, Image *> cache;
 };
 

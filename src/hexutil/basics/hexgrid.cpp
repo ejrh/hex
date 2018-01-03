@@ -100,7 +100,7 @@ std::vector<Point> get_circle_points(const Point point, int radius, int width, i
     std::vector<int> scanlines = get_circle_scanlines(point, radius);
     std::vector<Point> points;
 
-    for (int i = 0; i < scanlines.size(); i++) {
+    for (unsigned int i = 0; i < scanlines.size(); i++) {
         int row = point.y - radius + i;
         if (row < 0 || row >= height)
             continue;

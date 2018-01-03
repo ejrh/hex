@@ -14,7 +14,8 @@ namespace hex {
 EditorWindow::EditorWindow(GameView *view, LevelWindow *level_window):
     UiWindow(level_window->x, level_window->y, level_window->width, level_window->height,
              WindowWantsMouseEvents),
-    view(view), level_window(level_window), brush(nullptr) {
+    brush(nullptr),
+    view(view) {
 }
 
 bool EditorWindow::receive_mouse_event(SDL_Event *evt, int x, int y) {

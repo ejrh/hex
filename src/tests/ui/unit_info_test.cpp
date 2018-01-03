@@ -66,12 +66,11 @@ public:
 
 class TestWindow: public UiWindow {
 public:
-    TestWindow(UiLoop *loop, Graphics *graphics, ViewResources *resources, Game *game,
+    TestWindow(UiLoop *loop, Graphics *graphics, ViewResources *resources,
             UnitType::pointer initial_unit_type, UnitInfoWindow *unit_info_window):
             UiWindow(0, 0, 0, 0, WindowIsVisible|WindowIsActive|WindowWantsKeyboardEvents),
-            loop(loop), graphics(graphics), resources(resources), game(game),
-            unit_info_window(unit_info_window),
-            last_update(0) {
+            loop(loop), graphics(graphics), resources(resources),
+            unit_info_window(unit_info_window) {
         set_unit_type(initial_unit_type);
     }
 
@@ -108,10 +107,8 @@ private:
     UiLoop *loop;
     Graphics *graphics;
     ViewResources *resources;
-    Game *game;
     UnitType::pointer unit_type;
     UnitInfoWindow *unit_info_window;
-    unsigned int last_update;
 };
 
 void run() {
@@ -142,7 +139,7 @@ void run() {
     ViewResources resources;
     load_resources(&resources, &graphics);
 
-    UnitPainter unit_painter(&game, NULL, &resources);
+    UnitPainter unit_painter(&resources);
     UnitRenderer unit_renderer(&graphics, &resources);
     unit_renderer.generate_placeholders = false;
 
@@ -157,10 +154,10 @@ void run() {
 
     UiLoop loop(&graphics, 25, &window_painter);
     BackgroundWindow *background_window = new BackgroundWindow();
-    UnitInfoWindow *unit_info_window = new UnitInfoWindow(unit_info_window_x, unit_info_window_y, UnitInfoWindow::unit_info_window_width, UnitInfoWindow::unit_info_window_height, &resources, &graphics, nullptr);
+    UnitInfoWindow *unit_info_window = new UnitInfoWindow(unit_info_window_x, unit_info_window_y, UnitInfoWindow::unit_info_window_width, UnitInfoWindow::unit_info_window_height, &resources);
     unit_info_window->open(cat);
     background_window->add_child(unit_info_window);
-    TestWindow *test_window = new TestWindow(&loop, &graphics, &resources, &game, initial_unit_type, unit_info_window);
+    TestWindow *test_window = new TestWindow(&loop, &graphics, &resources, initial_unit_type, unit_info_window);
     background_window->add_child(test_window);
     loop.set_root_window(background_window);
     loop.run();

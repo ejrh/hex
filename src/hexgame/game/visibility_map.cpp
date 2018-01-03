@@ -49,7 +49,7 @@ void VisibilityMap::apply(const UnitStack& stack, bool visible)
 
 void VisibilityMap::draw(const Point& point, int sight, bool visible) {
     std::vector<int> scanlines = get_circle_scanlines(point, sight);
-    for (int i = 0; i < scanlines.size(); i++) {
+    for (unsigned int i = 0; i < scanlines.size(); i++) {
         int row = point.y - sight + i;
         if (row < 0 || row >= visibility.height)
             continue;
@@ -72,7 +72,7 @@ bool VisibilityMap::check(const Point &tile_pos) const {
 void VisibilityMap::load(int row, const std::vector<std::string>& data) {
     std::vector<bool>& visibility_row = visibility[row];
 
-    for (int j = 0; j < visibility_row.size(); j++) {
+    for (unsigned int j = 0; j < visibility_row.size(); j++) {
         const std::string& bit_str = data[j / 8];
         int ch = bit_str[(j % 8) + 1];
         visibility_row[j] = (ch == '1');
@@ -82,7 +82,7 @@ void VisibilityMap::load(int row, const std::vector<std::string>& data) {
 void VisibilityMap::save(int row, std::vector<std::string>& data) const {
     const std::vector<bool>& visibility_row = visibility[row];
 
-    for (int j = 0; j < visibility_row.size(); j += 8) {
+    for (unsigned int j = 0; j < visibility_row.size(); j += 8) {
         std::ostringstream bit_str;
         bit_str << 'b';
         for (int k = 0; k < 8; k++) {

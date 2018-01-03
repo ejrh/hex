@@ -14,16 +14,14 @@ class UnitStackView;
 
 class UnitPainter {
 public:
-    UnitPainter(Game *game, GameView *view, Resources *resources):
-            game(game), view(view), resources(resources),
+    UnitPainter(Resources *resources):
+            resources(resources),
             unit_paint_counter("paint.unit"), unit_paint_time("paint.unit.time"), script_error_counter("paint.unit.error") { }
 
     void repaint(UnitView& unit_view, Unit& unit);
     void repaint(UnitStackView& unit_stack_view, UnitStack& unit_stack);
 
 private:
-    Game *game;
-    GameView *view;
     Resources *resources;
 
     Counter unit_paint_counter;

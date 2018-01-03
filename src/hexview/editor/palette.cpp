@@ -35,7 +35,7 @@ private:
 PaletteWindow::PaletteWindow(Game *game, GameView *view, LevelWindow *level_window, EditorWindow *editor_window):
         UiWindow(0, 0, palette_width, level_window->height,
              WindowWantsMouseEvents|WindowWantsKeyboardEvents),
-        game(game), view(view), level_window(level_window), editor_window(editor_window), brush(new Brush(game, view)) {
+        game(game), level_window(level_window), editor_window(editor_window), brush(new Brush(game, view)) {
     editor_window->brush = brush;
 
     create_brush_buttons();

@@ -117,7 +117,7 @@ struct Fixture {
 BOOST_FIXTURE_TEST_SUITE(s, Fixture)
 
 BOOST_AUTO_TEST_CASE(simple_battle) {
-    srand(time(NULL));
+    srand(static_cast<int>(time(NULL)));
     Battle battle(&game, STACK2_POS, STACK1_POS);
     battle.run();
     battle.commit();

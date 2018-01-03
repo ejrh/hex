@@ -11,8 +11,8 @@
 
 namespace hex {
 
-StatusWindow::StatusWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view):
-        UiWindow(x, y, width, height, WindowIsVisible), resources(resources), graphics(graphics), view(view) {
+StatusWindow::StatusWindow(int x, int y, int width, int height, Graphics *graphics, GameView *view):
+        UiWindow(x, y, width, height, WindowIsVisible), graphics(graphics), view(view) {
 }
 
 void StatusWindow::draw_faction_readiness() {

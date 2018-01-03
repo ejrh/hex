@@ -22,12 +22,9 @@ public:
     Brush *brush;
 
 private:
-    Game *game;
     GameView *view;
-    LevelWindow *level_window;
 };
 
 };
 
 #endif
-

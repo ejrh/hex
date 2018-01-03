@@ -41,15 +41,15 @@ void UnitRenderer::draw_health_bar(int x, int y, int w, int h, int health, int m
     if (health == 0)
         return;
     // width
-    float f = health / (float) max_health;
-    int w2 = f * (w - 2);
+    float f = health / static_cast<float>(max_health);
+    int w2 = static_cast<int>(f * (w - 2));
     // colour
-    float f2 = (health - 1) / (float) (max_health - 1);
-    float f2b = (f2 < 0.5) ? (f2 * 2) : ((f2 - 0.5) * 2);
-    float f2a = 1.0 - f2b;
-    int r = (f2 < 0.5) ? (R[0]*f2a + R[1]*f2b) : (R[1]*f2a + R[2]*f2b);
-    int g = (f2 < 0.5) ? (G[0]*f2a + G[1]*f2b) : (G[1]*f2a + G[2]*f2b);
-    int b = (f2 < 0.5) ? (B[0]*f2a + B[1]*f2b) : (B[1]*f2a + B[2]*f2b);
+    float f2 = (health - 1) / static_cast<float>(max_health - 1);
+    float f2b = (f2 < 0.5f) ? (f2 * 2) : ((f2 - 0.5f) * 2);
+    float f2a = 1.0f - f2b;
+    int r = static_cast<int>((f2 < 0.5) ? (R[0]*f2a + R[1]*f2b) : (R[1]*f2a + R[2]*f2b));
+    int g = static_cast<int>((f2 < 0.5) ? (G[0]*f2a + G[1]*f2b) : (G[1]*f2a + G[2]*f2b));
+    int b = static_cast<int>((f2 < 0.5) ? (B[0]*f2a + B[1]*f2b) : (B[1]*f2a + B[2]*f2b));
     graphics->fill_rectangle(r, g, b, x + 1, y + 1, w2, h - 2);
 }
 

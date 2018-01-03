@@ -10,9 +10,9 @@
 
 namespace hex {
 
-ChatWindow::ChatWindow(int width, int height, Resources *resources, Graphics *graphics, MessageReceiver *dispatcher):
+ChatWindow::ChatWindow(int width, int height, Graphics *graphics, MessageReceiver *dispatcher):
         UiWindow(0, 0, width, height, WindowIsActive|WindowIsVisible|WindowWantsKeyboardEvents),
-resources(resources), graphics(graphics), dispatcher(dispatcher), open(false) {
+        graphics(graphics), dispatcher(dispatcher), open(false) {
 }
 
 bool ChatWindow::receive_keyboard_event(SDL_Event *evt) {

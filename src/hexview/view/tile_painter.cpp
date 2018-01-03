@@ -47,7 +47,7 @@ void TilePainter::repaint(Point offset, int len) {
         tile_view.feature_view_def = feature_view_def;
     }
 
-    StructurePainter structure_painter(game, view, resources);
+    StructurePainter structure_painter(game, resources);
 
     for (int i = offset.y - 1; i <= offset.y + 1; i++) {
         if (i < 0 || i >= game->level.height)

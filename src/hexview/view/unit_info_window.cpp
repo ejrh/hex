@@ -39,9 +39,8 @@ static std::unordered_map<Atom, Datum> get_all_properties(const Unit& unit) {
     return properties;
 }
 
-UnitInfoWindow::UnitInfoWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view):
-        UiWindow(x, y, width, height, WindowWantsKeyboardEvents|WindowWantsUiEvents, "unit_info"),
-        resources(resources), graphics(graphics), view(view) {
+UnitInfoWindow::UnitInfoWindow(int x, int y, int width, int height, Resources *resources):
+        UiWindow(x, y, width, height, WindowWantsKeyboardEvents|WindowWantsUiEvents, "unit_info") {
     set_paint_script(resources->scripts, "UNIT_INFO_WINDOW");
 
     close_button = new UiButton(151, 380, 119, 27, "Close");
@@ -135,8 +134,6 @@ void UnitInfoWindow::open(Unit::pointer current_unit) {
     set_flag(WindowIsVisible|WindowIsActive);
 
     TextFormat tf2(SmallFont10, false, 192,192,192);
-    int x_offset = x + 12;
-    int y_offset = y + /* title_height + */ 12;
 
     // Populate abilities list
     abilities_list->clear();

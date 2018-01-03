@@ -13,7 +13,7 @@ class CombatScreen;
 
 class PreUpdater: public MessageReceiver {
 public:
-    PreUpdater(Game *game, GameView *game_view);
+    PreUpdater(Game *game);
     virtual ~PreUpdater();
 
     virtual void receive(Message *update);
@@ -23,7 +23,6 @@ private:
 
 private:
     Game *game;
-    GameView *game_view;
 
 public:
     CombatScreen *combat_screen;

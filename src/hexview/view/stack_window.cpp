@@ -51,10 +51,9 @@ private:
 
 class UnitSlotWindow: public UiButton {
 public:
-    UnitSlotWindow(int x, int y, int width, int height, Atom name, int slot_num, ViewResources *resources, UnitPainter *painter, UnitRenderer *renderer):
+    UnitSlotWindow(int x, int y, int width, int height, Atom name, ViewResources *resources, UnitPainter *painter, UnitRenderer *renderer):
             UiButton(x, y, width, height, "slot", name),
-            unit_is_present(false), unit_is_selected(false),
-            slot_num(slot_num) {
+            unit_is_present(false), unit_is_selected(false) {
         unit_image = new UnitImage(4, 4, width-8, height-16, WindowIsVisible, "unit_image", resources, painter, renderer),
         add_child(unit_image);
     }
@@ -88,7 +87,6 @@ public:
     bool unit_is_selected;
 
 private:
-    int slot_num;
     UnitImage *unit_image;
     Unit::pointer unit;
 };
@@ -96,10 +94,9 @@ private:
 
 class UnitMovesWindow: public UiButton {
 public:
-    UnitMovesWindow(int x, int y, int width, int height, Atom name, int slot_num):
+    UnitMovesWindow(int x, int y, int width, int height, Atom name):
             UiButton(x, y, width, height, "moves", name),
-            unit_is_present(false), unit_is_selected(false),
-            slot_num(slot_num) {
+            unit_is_present(false), unit_is_selected(false) {
     }
 
     void initialise_paint(Execution *execution) {
@@ -118,15 +115,12 @@ public:
 public:
     bool unit_is_present;
     bool unit_is_selected;
-
-private:
-    int slot_num;
 };
 
 
 StackWindow::StackWindow(int x, int y, int width, int height, ViewResources *resources, GameView *view, UnitRenderer *renderer, UnitInfoWindow *unit_info_window):
         UiWindow(x, y, width, height, WindowIsVisible|WindowIsActive|WindowWantsUiEvents),
-        resources(resources), view(view), renderer(renderer), unit_info_window(unit_info_window) {
+        view(view), unit_info_window(unit_info_window) {
     set_paint_script(resources->scripts, "STACK_WINDOW");
 
     int px = StackWindow::border;
@@ -135,10 +129,10 @@ StackWindow::StackWindow(int x, int y, int width, int height, ViewResources *res
     unit_slots.resize(MAX_UNITS);
     unit_moves.resize(MAX_UNITS);
     for (unsigned int i = 0; i < MAX_UNITS; i++) {
-        unit_slots[i] = new UnitSlotWindow(px, py, StackWindow::unit_width, StackWindow::unit_height, boost::str(boost::format("slot%d") % i), i, resources, &view->unit_painter, renderer);
+        unit_slots[i] = new UnitSlotWindow(px, py, StackWindow::unit_width, StackWindow::unit_height, boost::str(boost::format("slot%d") % i), resources, &view->unit_painter, renderer);
         add_child(unit_slots[i]);
 
-        unit_moves[i] = new UnitMovesWindow(px, py + StackWindow::unit_height + StackWindow::padding, StackWindow::unit_width, StackWindow::moves_height, boost::str(boost::format("moves%d") % i), i);
+        unit_moves[i] = new UnitMovesWindow(px, py + StackWindow::unit_height + StackWindow::padding, StackWindow::unit_width, StackWindow::moves_height, boost::str(boost::format("moves%d") % i));
         add_child(unit_moves[i]);
 
         px += StackWindow::unit_width + StackWindow::padding;
@@ -205,7 +199,7 @@ void StackWindow::invert_unit_selection() {
     UnitStack::pointer stack = view->game->stacks.find(view->selected_stack_id);
     if (!stack)
         return;
-    for (int i = 0; i < stack->units.size(); i++)
+    for (unsigned int i = 0; i < stack->units.size(); i++)
         view->selected_units.toggle(i);
     update_stack();
 }

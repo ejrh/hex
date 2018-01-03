@@ -70,7 +70,7 @@ void Paint::render(int x, int y, int phase, Graphics *graphics) {
 
         Image *frame = item.frames[0];
         if (item.frame_rate != -1) {
-            int pos = (phase * item.frame_rate / FRAME_RATE_BASE);
+            unsigned int pos = (phase * item.frame_rate / FRAME_RATE_BASE);
             if (pos >= item.frames.size())
                 pos %= item.frames.size();
             frame = item.frames[pos];

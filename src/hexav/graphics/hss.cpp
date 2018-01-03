@@ -145,7 +145,11 @@ void HSSReader::read(ImageMap& image_set) {
         TOC entry_toc(*this, entry_toc_pos);
         //entry_toc.print_to(std::cerr);
         Range id_pos = entry_toc.lookup_position(0x01);
-        int id = (id_pos.first == 0) ? 0 : (set_position(id_pos.first), read_int());
+        if (id_pos.first != 0) {
+            set_position(id_pos.first);
+            //TODO - store id somewhere?
+            read_int();
+        }
 
         Range ilb_pos = entry_toc.lookup_position(0x08);
         if (ilb_pos.first == 0)

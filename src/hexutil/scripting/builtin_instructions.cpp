@@ -186,7 +186,7 @@ public:
     Datum execute(const Term *instruction, Execution *execution) const {
         const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
 
-        for (int i = 0; i < list_term->subterms.size(); i++) {
+        for (unsigned int i = 0; i < list_term->subterms.size(); i++) {
             int condition = execution->get_argument(instruction, i).get_as_int();
             if (!condition) {
                 return 0;
@@ -205,7 +205,7 @@ public:
     Datum execute(const Term *instruction, Execution *execution) const {
         const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
 
-        for (int i = 0; i < list_term->subterms.size(); i++) {
+        for (unsigned int i = 0; i < list_term->subterms.size(); i++) {
             int condition = execution->get_argument(instruction, i).get_as_int();
             if (condition) {
                 return 1;
@@ -275,7 +275,7 @@ public:
     Datum execute(const Term *instruction, Execution *execution) const {
         const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
         std::ostringstream result;
-        for (int i = 0; i < list_term->subterms.size(); i++) {
+        for (unsigned int i = 0; i < list_term->subterms.size(); i++) {
             result << execution->get_argument(list_term, i).get_as_str();
         }
 
@@ -336,7 +336,7 @@ public:
         const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
         std::ostringstream message;
         bool first = true;
-        for (int i = 0; i < list_term->subterms.size(); i++) {
+        for (unsigned int i = 0; i < list_term->subterms.size(); i++) {
             if (!first)
                 message << ' ';
             message << execution->get_argument(list_term, i).get_as_str();
@@ -361,7 +361,7 @@ public:
         if (list_term->subterms.size() == 1) {
             value += 1;
         } else {
-            for (int i = 1; i < list_term->subterms.size(); i++)
+            for (unsigned int i = 1; i < list_term->subterms.size(); i++)
                 value += execution->get_argument(instruction, i).get_as_int();
         }
 

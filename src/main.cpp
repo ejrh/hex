@@ -100,11 +100,11 @@ NodeInterface *make_node_interface(Options& options) {
 
 class BackgroundWindow: public UiWindow {
 public:
-    BackgroundWindow(UiLoop *loop, Options *options, Generator *generator, Game *game, GameView *game_view,
+    BackgroundWindow(UiLoop *loop, Generator *generator, Game *game, GameView *game_view,
             NodeInterface *node_interface,
             LevelRenderer *level_renderer, PaletteWindow *palette_window):
         UiWindow(0, 0, 0, 0, WindowIsVisible|WindowIsActive|WindowWantsKeyboardEvents),
-        loop(loop), options(options), generator(generator), game(game), game_view(game_view),
+        loop(loop), generator(generator), game(game), game_view(game_view),
         node_interface(node_interface), level_renderer(level_renderer), palette_window(palette_window) { }
 
     bool receive_keyboard_event(SDL_Event *evt) {
@@ -129,7 +129,7 @@ public:
             if (local != NULL) {
                 MessageReceiver& updater = local->get_publisher();
 
-                generator->mountain_level += (evt->key.keysym.mod & KMOD_SHIFT) ? 0.2 : -0.2;
+                generator->mountain_level += (evt->key.keysym.mod & KMOD_SHIFT) ? 0.2f : -0.2f;
                 std::cerr << "mountain_level = " << generator->mountain_level << std::endl;
                 generator->create_game(updater);
                 updater.receive(create_message(GrantFactionView, 0, 2, true));
@@ -153,7 +153,6 @@ public:
 
 private:
     UiLoop *loop;
-    Options *options;
     Generator *generator;
     Game *game;
     GameView *game_view;
@@ -204,7 +203,7 @@ void run(Options& options) {
 
     Game game;
     GameView game_view(&game, &player, &resources, &node_interface->get_throttle(), node_interface);
-    PreUpdater pre_updater(&game, &game_view);
+    PreUpdater pre_updater(&game);
     node_interface->subscribe(&pre_updater);
 
     GameUpdater game_updater(&game);
@@ -246,26 +245,26 @@ void run(Options& options) {
     LevelRenderer level_renderer(&graphics, &resources, &game.level, &game_view, &unit_renderer);
     AudioRenderer audio_renderer(&audio);
     LevelWindow *level_window = new LevelWindow(graphics.width - sidebar_width, graphics.height - StatusWindow::window_height, &game_view, &level_renderer, &audio_renderer, &resources);
-    ChatWindow *chat_window = new ChatWindow(200, graphics.height, &resources, &graphics, node_interface);
+    ChatWindow *chat_window = new ChatWindow(200, graphics.height, &graphics, node_interface);
     ChatUpdater chat_updater(chat_window);
     node_interface->subscribe(&chat_updater);
 
     WindowPainter window_painter(&resources);
     UiLoop loop(&graphics, 25, &window_painter);
 
-    UnitInfoWindow *unit_info_window = new UnitInfoWindow(unit_info_window_x, unit_info_window_y, UnitInfoWindow::unit_info_window_width, UnitInfoWindow::unit_info_window_height, &resources, &graphics, &game_view);
+    UnitInfoWindow *unit_info_window = new UnitInfoWindow(unit_info_window_x, unit_info_window_y, UnitInfoWindow::unit_info_window_width, UnitInfoWindow::unit_info_window_height, &resources);
     MapWindow *map_window = new MapWindow(sidebar_position, 0, sidebar_width, map_window_height, &game_view, level_window, &graphics, &resources);
     StackWindow *stack_window = new StackWindow(sidebar_position, 200, sidebar_width, StackWindow::window_height, &resources, &game_view, &unit_renderer, unit_info_window);
-    MessageWindow *message_window = new MessageWindow(sidebar_position, map_window_height + stack_window_height, sidebar_width, message_window_height, &resources, &graphics, &game_view);
-    StatusWindow *status_window = new StatusWindow(0, level_window->height, graphics.width, status_window_height, &resources, &graphics, &game_view);
+    MessageWindow *message_window = new MessageWindow(sidebar_position, map_window_height + stack_window_height, sidebar_width, message_window_height, &graphics, &game_view);
+    StatusWindow *status_window = new StatusWindow(0, level_window->height, graphics.width, status_window_height, &graphics, &game_view);
 
-    CombatScreen combat_screen(&resources, &graphics, &audio, &game_view, &unit_renderer);
+    CombatScreen combat_screen(&resources, &graphics, &audio, &unit_renderer);
     pre_updater.combat_screen = &combat_screen;
 
     EditorWindow *editor_window = new EditorWindow(&game_view, level_window);
     PaletteWindow *palette_window = new PaletteWindow(&game, &game_view, level_window, editor_window);
 
-    BackgroundWindow *bw = new BackgroundWindow(&loop, &options, &generator, &game, &game_view, node_interface, &level_renderer, palette_window);
+    BackgroundWindow *bw = new BackgroundWindow(&loop, &generator, &game, &game_view, node_interface, &level_renderer, palette_window);
     loop.set_root_window(bw);
     bw->add_child(level_window);
     bw->add_child(editor_window);

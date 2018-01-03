@@ -93,7 +93,7 @@ public:
                     paint = closed_tile;
 
                 std::vector<int> scanlines = get_circle_scanlines(tile_pos, brush_radius);
-                for (int i = 0; i < scanlines.size(); i++) {
+                for (unsigned int i = 0; i < scanlines.size(); i++) {
                     for (int j = -scanlines[i]; j <= scanlines[i]; j++) {
                         Point point(tile_pos.x + j, tile_pos.y - brush_radius + i);
                         if (level_view.level->contains(point))
@@ -109,6 +109,9 @@ public:
             } break;
             case TargetMode: {
                 target = level_view.highlight_tile;
+            } break;
+            case WeightMode: {
+                // ignore
             } break;
         };
 
@@ -187,7 +190,7 @@ void PathfindingRenderer::render_tile(int x, int y, Point tile_pos) {
     Pathfinder &pathfinder = (static_cast<PathfindingView *>(view))->pathfinder;
     PathfinderNode &node = pathfinder.nodes[tile_pos];
 
-    if (node.state != PathfinderNode::State::None && node.cost != 0) {
+    if (node.state != PathfinderNode::None && node.cost != 0) {
         int x1, y1;
         int x2, y2;
         point_to_pixel(tile_pos, X_SPACING, Y_SPACING, &x1, &y1);

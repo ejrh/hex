@@ -122,7 +122,7 @@ void UiTextList::add_line(const std::string& text) {
     int next_label_y = 5 + 16 * children.size();
     if (next_label_y > height-16) {
         children.erase(children.begin());
-        for (int i = 0; i < children.size(); i++)
+        for (unsigned int i = 0; i < children.size(); i++)
             children[i]->y -= 16;
         next_label_y -= 16;
     }

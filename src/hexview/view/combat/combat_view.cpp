@@ -41,7 +41,7 @@ void CombatStackView::add_participant(ParticipantView& pv) {
 }
 
 CombatView::CombatView(Battle *battle, int width, int height, ViewResources *resources):
-        battle(battle), width(width), height(height), resources(resources), unit_painter(battle->game, NULL, resources),
+        battle(battle), width(width), height(height), resources(resources), unit_painter(resources),
         last_update(0),
         phase(0), current_move(0), current_step(0), phase_end(1000) {
     for (auto iter = battle->participants.begin(); iter != battle->participants.end(); iter++) {

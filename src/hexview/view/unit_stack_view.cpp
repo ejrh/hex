@@ -7,7 +7,7 @@ namespace hex {
 
 void UnitStackView::set_representative(ViewResources *resources) {
     representative = 0;
-    for (int i = 1; i < stack->units.size(); i++) {
+    for (unsigned int i = 1; i < stack->units.size(); i++) {
         if (stack->units[i]->has_property(Transport)) {
             representative = i;
             break;

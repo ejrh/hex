@@ -32,7 +32,7 @@ void PathfinderBase::clear() {
         for (int j = 0; j < nodes.width; j++) {
             nodes[i][j].cost = INT_MAX;
             nodes[i][j].heuristic = INT_MIN;
-            nodes[i][j].state = PathfinderNode::State::None;
+            nodes[i][j].state = PathfinderNode::None;
         }
 
     queue.clear();
@@ -50,7 +50,7 @@ void PathfinderBase::start(const Point start_point) {
     source.node->cost = 0;
     source.node->predecessor = source.point;
 
-    source.node->state = PathfinderNode::State::Open;
+    source.node->state = PathfinderNode::Open;
     source.node->heuristic = heuristic(source);
     source.score = source.node->cost + source.node->heuristic * weight;
     queue.push(source);
@@ -101,7 +101,7 @@ void PathfinderBase::step() {
         return;
     }
 
-    next_node.node->state = PathfinderNode::State::Closed;
+    next_node.node->state = PathfinderNode::Closed;
     PathfinderQueueEntry neighbours[6];
     get_neighbours(next_node, neighbours);
 
@@ -121,17 +121,17 @@ void PathfinderBase::step() {
         PathfinderQueueEntry &neighbour = neighbours[dir];
         if (neighbour.node == NULL)
             continue;
-        if (neighbour.node->state == PathfinderNode::State::Closed)
+        if (neighbour.node->state == PathfinderNode::Closed)
             continue;
         int step_cost = cost_between(next_node, neighbour);
         int new_cost = next_node.node->cost + step_cost;
         if (new_cost < neighbour.node->cost && step_cost < INT_MAX) {
             neighbour.node->cost = new_cost;
             neighbour.node->predecessor = next_node.point;
-            if (neighbour.node->state == PathfinderNode::State::None) {
+            if (neighbour.node->state == PathfinderNode::None) {
                 neighbour.node->heuristic = heuristic(neighbour);
             }
-            neighbour.node->state = PathfinderNode::State::Open;
+            neighbour.node->state = PathfinderNode::Open;
             neighbour.score = neighbour.node->cost + neighbour.node->heuristic * weight;
             queue.push(neighbour);
             nodes_pushed++;

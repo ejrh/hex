@@ -48,9 +48,7 @@ void CombatStackWindow::draw(const UiContext& context) {
             }
         }
 
-        Unit& unit = *pv.participant->unit;
         renderer->draw_unit(px, py, pv);
-
 
         if (pv.selected) {
             Move& move = view->battle->moves[view->current_move];

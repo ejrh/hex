@@ -39,8 +39,8 @@ static bool compatible(const std::string& tile_type, const std::string& feature_
 
 
 Brush::Brush(Game *game, GameView *view):
-     game(game), view(view),
-     paint_radius(1) {
+    paint_radius(1),
+    game(game), view(view) {
 }
 
 void Brush::set_type(const std::string& type_name) {
@@ -70,7 +70,7 @@ void Brush::paint_tiles(const Point point) {
         return;
 
     std::vector<int> scanlines = get_circle_scanlines(point, paint_radius);
-    for (int i = 0; i < scanlines.size(); i++) {
+    for (unsigned int i = 0; i < scanlines.size(); i++) {
         int row = point.y - paint_radius + i;
         if (row < 0 || row >= game->level.height)
             continue;

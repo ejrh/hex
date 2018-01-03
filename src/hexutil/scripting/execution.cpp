@@ -53,7 +53,7 @@ const Datum& Execution::get(const Atom& name) const {
     return variables.get(name);
 }
 
-const Datum Execution::get_argument(const Term *term, int position) {
+const Datum Execution::get_argument(const Term *term, unsigned int position) {
     const CompoundTerm *script_term = dynamic_cast<const CompoundTerm *>(term);
     if (!script_term) {
         throw ScriptError() << "Cannot get argument from non-list term!";
@@ -86,7 +86,7 @@ const Datum Execution::get_argument(const Term *term, int position) {
     return datum;
 }
 
-const Term *Execution::get_subterm(const Term *term, int position) {
+const Term *Execution::get_subterm(const Term *term, unsigned int position) {
     const CompoundTerm *script_term = dynamic_cast<const CompoundTerm *>(term);
     if (!script_term) {
         throw ScriptError() << "Cannot get argument from non-list term!";
@@ -98,10 +98,10 @@ const Term *Execution::get_subterm(const Term *term, int position) {
     return script_term->subterms[position].get();
 }
 
-std::vector<int> Execution::get_as_intvector(const Term *term, int position) {
+std::vector<int> Execution::get_as_intvector(const Term *term, unsigned int position) {
     const CompoundTerm *argterm = dynamic_cast<const CompoundTerm *>(get_subterm(term, position));
     std::vector<int> result;
-    for (int i = 0; i < argterm->subterms.size(); i++) {
+    for (unsigned int i = 0; i < argterm->subterms.size(); i++) {
         int value = get_argument(argterm, i);
         result.push_back(value);
     }

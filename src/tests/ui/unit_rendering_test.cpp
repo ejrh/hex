@@ -181,7 +181,7 @@ void run() {
 
     TilePainter tile_painter(&game, NULL, &resources);
 
-    UnitPainter unit_painter(&game, NULL, &resources);
+    UnitPainter unit_painter(&resources);
     UnitRenderer unit_renderer(&graphics, &resources);
     unit_renderer.generate_placeholders = false;
 

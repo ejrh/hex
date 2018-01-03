@@ -17,7 +17,7 @@ class ItemSlotWindow;
 
 class UnitInfoWindow: public UiWindow {
 public:
-    UnitInfoWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view);
+    UnitInfoWindow(int x, int y, int width, int height, Resources *resources);
     bool receive_keyboard_event(SDL_Event *evt);
     bool receive_ui_event(SDL_Event *evt, UiWindow *control);
     void draw(const UiContext& context);
@@ -29,9 +29,6 @@ public:
     static const int unit_info_window_height = 417;
 
 private:
-    Resources *resources;
-    Graphics *graphics;
-    GameView *view;
     Unit::pointer current_unit;
 
     UiButton *close_button;

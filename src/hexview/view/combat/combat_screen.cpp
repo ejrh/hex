@@ -60,8 +60,8 @@ private:
 
 }
 
-CombatScreen::CombatScreen(ViewResources *resources, Graphics *graphics, Audio *audio, GameView *game_view, UnitRenderer *renderer):
-        resources(resources), graphics(graphics), audio(audio), game_view(game_view), renderer(renderer) { }
+CombatScreen::CombatScreen(ViewResources *resources, Graphics *graphics, Audio *audio, UnitRenderer *renderer):
+        resources(resources), graphics(graphics), audio(audio), renderer(renderer) { }
 
 void CombatScreen::show_battle(Battle *battle) {
     CombatView combat_view(battle, graphics->width, graphics->height, resources);

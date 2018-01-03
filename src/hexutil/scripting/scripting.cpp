@@ -11,10 +11,10 @@ std::string Script::signature() const {
     if (parameters.size() > 0) {
         oss << '(';
         bool first = true;
-        for (int i = 0; i < parameters.size(); i++) {
+        for (auto iter = parameters.begin(); iter != parameters.end(); iter++) {
             if (!first)
                 oss << ", ";
-            oss << parameters[i];
+            oss << *iter;
             first = false;
         }
         oss << ')';
@@ -30,7 +30,7 @@ Script::pointer compile_script(const std::string& name, Term *parameters, Term *
         instruction = parameters;
     } else {
         const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(parameters);
-        for (int i = 0; i < list_term->subterms.size(); i++) {
+        for (unsigned int i = 0; i < list_term->subterms.size(); i++) {
             const DatumTerm *datum_term = dynamic_cast<const DatumTerm *>(list_term->subterms[i].get());
             parameter_atoms.push_back(datum_term->datum);
         }

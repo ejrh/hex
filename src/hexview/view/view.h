@@ -101,7 +101,7 @@ public:
 
 public:
     UnitStack::pointer stack;
-    int representative;
+    unsigned int representative;
     bool moving, locked;
     Path path;
 };
