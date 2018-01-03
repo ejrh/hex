@@ -1,6 +1,8 @@
 #ifndef LEVEL_GENERATOR_H
 #define LEVEL_GENERATOR_H
 
+namespace hex {
+
 class Generator;
 class Game;
 
@@ -28,6 +30,8 @@ private:
     Level& level;
     std::map<std::string, TileType::pointer>& types;
     std::map<std::string, FeatureType::pointer>& feature_types;
+};
+
 };
 
 #endif

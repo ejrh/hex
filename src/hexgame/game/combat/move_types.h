@@ -1,6 +1,8 @@
 #ifndef MOVE_TYPES
 #define MOVE_TYPES
 
+namespace hex {
+
 class Battle;
 class Participant;
 class Move;
@@ -76,5 +78,7 @@ inline std::ostream& operator<<(std::ostream& os, const MoveType& t) {
     os << t.type;
     return os;
 }
+
+};
 
 #endif

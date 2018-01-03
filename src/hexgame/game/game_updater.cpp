@@ -9,6 +9,8 @@
 #include "hexgame/game/combat/combat.h"
 
 
+namespace hex {
+
 GameUpdater::GameUpdater(Game *game): game(game) {
 }
 
@@ -149,3 +151,5 @@ void GameUpdater::apply_update(Message *update) {
             break;
     }
 }
+
+};

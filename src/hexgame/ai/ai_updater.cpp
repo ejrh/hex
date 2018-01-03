@@ -11,6 +11,8 @@
 #include "hexgame/game/game_updater.h"
 
 
+namespace hex {
+
 AiUpdater::AiUpdater(Ai *ai): ai(ai) {
     game_updater = new GameUpdater(&ai->game);
 }
@@ -37,3 +39,5 @@ void AiUpdater::apply_update(Message *update) {
             break;
     }
 }
+
+};

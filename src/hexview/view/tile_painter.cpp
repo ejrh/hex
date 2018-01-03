@@ -12,6 +12,8 @@
 #include "hexview/view/view_resources.h"
 
 
+namespace hex {
+
 TilePainter::TilePainter(Game *game, GameView *view, ViewResources *resources):
         game(game), view(view), resources(resources),
         tile_paint_counter("paint.tile"), tile_paint_time("paint.tile.time"), tile_script_error_counter("paint.tile.error"),
@@ -226,3 +228,5 @@ void TilePainter::repaint_feature(TileView& tile_view, const Tile& tile, const P
 
     ++feature_paint_counter;
 }
+
+};

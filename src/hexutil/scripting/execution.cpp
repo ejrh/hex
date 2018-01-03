@@ -4,6 +4,8 @@
 #include "hexutil/scripting/scripting.h"
 
 
+namespace hex {
+
 void Execution::add_properties(Properties *properties) {
     properties_list.push_back(properties);
 }
@@ -108,3 +110,5 @@ std::vector<int> Execution::get_as_intvector(const Term *term, int position) {
 
 
 std::unordered_map<Atom, std::unique_ptr<Interpreter> > InterpreterRegistry::interpreters;
+
+};

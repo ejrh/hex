@@ -5,6 +5,9 @@
 #include "hexview/view/audio_renderer.h"
 #include "hexview/view/view.h"
 
+
+namespace hex {
+
 void AudioRenderer::render_unit_sound(UnitView& unit_view) {
     if (!unit_view.play_sound)
         return;
@@ -17,3 +20,5 @@ void AudioRenderer::render_unit_sound(UnitView& unit_view) {
         audio->play_sound(*sound);
     }
 }
+
+};

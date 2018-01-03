@@ -6,6 +6,8 @@
 #include "hexav/resources/image_ref.h"
 
 
+namespace hex {
+
 class Graphics;
 class Resources;
 class Level;
@@ -47,6 +49,8 @@ protected:
     ImageSeries shadow_images;
 
     friend class LevelWindow;
+};
+
 };
 
 #endif

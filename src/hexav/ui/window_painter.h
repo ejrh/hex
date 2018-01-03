@@ -9,6 +9,9 @@
 
 #include "hexav/resources/paint.h"
 
+
+namespace hex {
+
 class Resources;
 
 
@@ -30,5 +33,6 @@ private:
 
 void register_window_interpreters();
 
+};
 
 #endif

@@ -5,6 +5,9 @@
 #include "hexgame/game/combat/combat_model.h"
 #include "hexgame/game/combat/move_types.h"
 
+
+namespace hex {
+
 CombatModel CombatModel::default_combat_model;
 
 CombatModel::~CombatModel() {
@@ -42,3 +45,5 @@ void CombatModel::populate_move_types() {
     move_types[Strike] = new StrikeMoveType();
     move_types[Riposte] = new RiposteMoveType();
 }
+
+};

@@ -4,6 +4,8 @@
 #include "hexutil/messaging/receiver.h"
 
 
+namespace hex {
+
 class Game;
 
 class GameUpdater: public MessageReceiver {
@@ -20,5 +22,6 @@ private:
     Game *game;
 };
 
+};
 
 #endif

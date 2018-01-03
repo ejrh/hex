@@ -10,6 +10,8 @@
 #include "hexview/view/view_resources.h"
 
 
+namespace hex {
+
 class FactionView: public boost::enable_shared_from_this<FactionView> {
 public:
     typedef boost::shared_ptr<FactionView> pointer;
@@ -208,6 +210,8 @@ public:
 
 private:
     Counter ghost_counter;
+};
+
 };
 
 #endif

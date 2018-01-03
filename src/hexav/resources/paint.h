@@ -6,6 +6,9 @@
 
 #include "hexav/graphics/graphics.h"
 
+
+namespace hex {
+
 class Resources;
 
 #define FRAME_RATE_BASE 1048576
@@ -97,5 +100,7 @@ public:
 };
 
 void register_paint_interpreters();
+
+};
 
 #endif

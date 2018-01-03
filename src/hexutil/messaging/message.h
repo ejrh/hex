@@ -3,6 +3,9 @@
 
 #include "hexutil/messaging/serialiser.h"
 
+
+namespace hex {
+
 enum {
     UndefinedMessageType = 0
 };
@@ -258,5 +261,7 @@ private:
 };
 
 #define create_message(s, ...) boost::make_shared<s ## Message>(s, ##__VA_ARGS__)
+
+};
 
 #endif

@@ -4,6 +4,8 @@
 #include "hexutil/basics/properties.h"
 
 
+namespace hex {
+
 enum GameAtom {
     FirstGameAtom = 2000,
     #define PROPERTY_NAME(n) n,
@@ -14,5 +16,7 @@ enum GameAtom {
 
 
 void register_property_names();
+
+};
 
 #endif

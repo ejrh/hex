@@ -7,6 +7,9 @@
 #include "hexav/ui/ui.h"
 #include "hexav/ui/controls.h"
 
+
+namespace hex {
+
 class TestWindow: public UiWindow {
 public:
     TestWindow(UiLoop *loop, Graphics *graphics):
@@ -112,6 +115,11 @@ void run() {
     loop.set_root_window(test_window);
     loop.run();
 }
+
+};
+
+
+using namespace hex;
 
 int main(int argc, char *argv[]) {
     try {

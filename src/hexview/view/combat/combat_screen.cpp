@@ -12,6 +12,9 @@
 #include "hexview/view/combat/combat_window.h"
 #include "hexview/view/view.h"
 
+
+namespace hex {
+
 namespace combat_screen {
 
 class BackgroundWindow: public UiWindow {
@@ -72,3 +75,5 @@ void CombatScreen::show_battle(Battle *battle) {
     bg_window->add_child(top_window);
     loop.run();
 }
+
+};

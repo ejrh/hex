@@ -4,6 +4,8 @@
 #include "hexutil/basics/point.h"
 
 
+namespace hex {
+
 template <typename T>
 struct Vector2 {
     typedef std::vector<T> V1;
@@ -68,6 +70,8 @@ struct Vector2<bool> {
     V2::const_reference operator[](int i) const { return data[i]; }
     V1::reference operator[](const Point& point) { return data[point.y][point.x]; }
     V1::const_reference operator[](const Point& point) const { return data[point.y][point.x]; }
+};
+
 };
 
 #endif

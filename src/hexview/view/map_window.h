@@ -6,6 +6,8 @@
 #include "hexav/ui/ui.h"
 
 
+namespace hex {
+
 class GameView;
 class LevelWindow;
 class Graphics;
@@ -36,6 +38,8 @@ protected:
     Resources *resources;
     bool dragging;
     Image *map_image;
+};
+
 };
 
 #endif

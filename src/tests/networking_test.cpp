@@ -8,6 +8,8 @@
 #include "hexutil/networking/networking.h"
 
 
+namespace hex {
+
 #define SERVER_PORT 9999
 
 void run() {
@@ -30,6 +32,11 @@ void run() {
 
     server.stop();
 }
+
+};
+
+
+using namespace hex;
 
 int main(int argc, char *argv[]) {
     try {

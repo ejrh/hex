@@ -4,6 +4,8 @@
 #include "hexgame/game/game.h"
 
 
+namespace hex {
+
 void EndOfTurn::apply() {
     for (auto iter = game->stacks.begin(); iter != game->stacks.end(); iter++) {
         UnitStack::pointer stack = iter->second;
@@ -25,3 +27,5 @@ void EndOfTurn::restore_health(Unit& unit) {
     if (health > 0 && health < max_health)
         unit.properties.increment(Health, 1);
 }
+
+};

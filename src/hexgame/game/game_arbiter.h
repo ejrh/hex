@@ -6,6 +6,8 @@
 #include "hexutil/messaging/receiver.h"
 
 
+namespace hex {
+
 class Game;
 class Updater;
 
@@ -30,5 +32,6 @@ private:
     MessageCounter update_counter;
 };
 
+};
 
 #endif

@@ -8,6 +8,8 @@
 #include "hexview/view/unit_painter.h"
 
 
+namespace hex {
+
 void UnitPainter::repaint(UnitView& unit_view, Unit& unit) {
     Timer paint_time(unit_paint_time);
 
@@ -78,3 +80,5 @@ void UnitPainter::repaint(UnitStackView& unit_stack_view, UnitStack& unit_stack)
     Unit& unit = *unit_stack.units[unit_stack_view.representative];
     repaint(unit_stack_view, unit);
 }
+
+};

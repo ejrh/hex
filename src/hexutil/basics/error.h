@@ -1,6 +1,8 @@
 #ifndef ERROR_H
 #define ERROR_H
 
+namespace hex {
+
 template<class E>
 class BaseError: public std::exception {
 public:
@@ -24,6 +26,8 @@ class Error: public BaseError<Error> {
 };
 
 class DataError: public BaseError<DataError> {
+};
+
 };
 
 #endif

@@ -1,6 +1,8 @@
 #ifndef STATISTICS_H
 #define STATISTICS_H
 
+namespace hex {
+
 class Counter;
 
 void register_counter(Counter *counter, const std::string& name);
@@ -59,6 +61,8 @@ public:
 private:
     Counter& counter;
     long start_time;
+};
+
 };
 
 #endif

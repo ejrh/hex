@@ -12,6 +12,8 @@
 #include "hexav/resources/resource_messages.h"
 
 
+namespace hex {
+
 void ResourceLoader::handle_message(Message *msg) {
     switch (msg->type) {
         case ImageFile: {
@@ -157,3 +159,5 @@ std::string get_resource_basename(const std::string& filename) {
 bool has_extension(const std::string& filename, const std::string& ext) {
     return boost::algorithm::iends_with(filename, ext);
 }
+
+};

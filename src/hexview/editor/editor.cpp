@@ -9,6 +9,8 @@
 #include "hexview/view/view.h"
 
 
+namespace hex {
+
 EditorWindow::EditorWindow(GameView *view, LevelWindow *level_window):
     UiWindow(level_window->x, level_window->y, level_window->width, level_window->height,
              WindowWantsMouseEvents),
@@ -27,3 +29,5 @@ bool EditorWindow::receive_mouse_event(SDL_Event *evt, int x, int y) {
     }
     return false;
 }
+
+};

@@ -6,6 +6,8 @@
 #include "hexav/resources/image_ref.h"
 
 
+namespace hex {
+
 #include "hexav/resources/message_types.h"
 #define MESSAGE_TEMPLATE_NAME Resource
 #define MESSAGE_TEMPLATE_INCLUDE_FILE "hexav/resources/message_types.h"
@@ -14,5 +16,7 @@
 
 
 void register_resource_messages();
+
+};
 
 #endif

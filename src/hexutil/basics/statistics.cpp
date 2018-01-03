@@ -2,6 +2,9 @@
 
 #include "hexutil/basics/statistics.h"
 
+
+namespace hex {
+
 static std::unordered_map<Counter *, std::string> counters;
 static std::vector<std::pair<std::string, Counter::counter_type> > pending;
 static time_t last_log = std::time(NULL);
@@ -67,3 +70,5 @@ void log_statistics(const std::string& label) {
 
     last_log = std::time(NULL);
 }
+
+};

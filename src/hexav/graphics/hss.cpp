@@ -6,6 +6,9 @@
 
 #include "ilb.h"
 
+
+namespace hex {
+
 typedef std::pair<int, int> Range;
 
 class TOC {
@@ -181,3 +184,5 @@ void load_hss(const std::string& filename, Graphics *graphics, ImageMap& image_s
     HSSReader reader(file, graphics);
     reader.read(image_set);
 }
+
+};

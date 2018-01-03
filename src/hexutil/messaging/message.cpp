@@ -4,6 +4,8 @@
 #include "hexutil/messaging/serialiser.h"
 
 
+namespace hex {
+
 Serialiser& operator<<(Serialiser& serialiser, const Message *msg) {
     if (msg->origin != 0 || msg->id != 0) {
         serialiser.begin_tuple();
@@ -110,3 +112,5 @@ Message *MessageTypeRegistry::new_message(int type) {
 
     return nullptr;
 }
+
+};

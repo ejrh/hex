@@ -3,6 +3,9 @@
 
 #include "hexutil/basics/error.h"
 
+
+namespace hex {
+
 template<typename K, typename T>
 class ObjMap {
 public:
@@ -109,6 +112,8 @@ public:
     int get_free_id() const {
         return this->highest() + 1;
     }
+};
+
 };
 
 #endif

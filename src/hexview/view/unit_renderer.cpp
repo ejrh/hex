@@ -10,6 +10,8 @@
 #include "hexview/view/view.h"
 
 
+namespace hex {
+
 UnitRenderer::UnitRenderer(Graphics *graphics, Resources *resources):
         generate_placeholders(true),
         graphics(graphics), resources(resources) {
@@ -50,3 +52,5 @@ void UnitRenderer::draw_health_bar(int x, int y, int w, int h, int health, int m
     int b = (f2 < 0.5) ? (B[0]*f2a + B[1]*f2b) : (B[1]*f2a + B[2]*f2b);
     graphics->fill_rectangle(r, g, b, x + 1, y + 1, w2, h - 2);
 }
+
+};

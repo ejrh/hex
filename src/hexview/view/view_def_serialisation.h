@@ -6,6 +6,8 @@
 #include "hexview/view/view_def.h"
 
 
+namespace hex {
+
 inline Serialiser& operator<<(Serialiser& serialiser, const FactionViewDef& d) {
     serialiser << d.name << d.r << d.g << d.b;
     return serialiser;
@@ -55,5 +57,7 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, StructureViewDef& d)
     deserialiser >> d.name;
     return deserialiser;
 }
+
+};
 
 #endif

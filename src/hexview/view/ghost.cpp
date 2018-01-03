@@ -11,6 +11,8 @@
 #include "hexview/view/view_def.h"
 
 
+namespace hex {
+
 Ghost::Ghost(GameView *view, UnitPainter *unit_painter, UnitStack::pointer& stack, const IntSet selected_units):
         finished(false), view(view), unit_painter(unit_painter), progress(0) {
 
@@ -55,3 +57,5 @@ void Ghost::update(unsigned int update_ms) {
         view->level_view.ghost_visibility.draw(target_position, stack.sight(), true);
     }
 }
+
+};

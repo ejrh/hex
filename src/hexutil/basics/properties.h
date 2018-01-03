@@ -5,6 +5,8 @@
 #include "hexutil/basics/datum.h"
 
 
+namespace hex {
+
 class Properties {
 public:
     int count(const Atom& name) const {
@@ -58,5 +60,6 @@ public:
 
 std::ostream& operator<<(std::ostream& os, const Properties& p);
 
+};
 
 #endif

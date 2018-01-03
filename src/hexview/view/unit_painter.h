@@ -4,6 +4,8 @@
 #include "hexutil/messaging/counter.h"
 
 
+namespace hex {
+
 class Game;
 class GameView;
 class Resources;
@@ -27,6 +29,8 @@ private:
     Counter unit_paint_counter;
     Counter unit_paint_time;
     Counter script_error_counter;
+};
+
 };
 
 #endif

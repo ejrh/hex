@@ -7,6 +7,8 @@
 #include "hexview/view/view_def_serialisation.h"
 
 
+namespace hex {
+
 #include "hexview/view/message_types.h"
 #define MESSAGE_TEMPLATE_NAME ViewResource
 #define MESSAGE_TEMPLATE_INCLUDE_FILE "hexview/view/message_types.h"
@@ -15,5 +17,7 @@
 
 
 void register_view_resource_messages();
+
+};
 
 #endif

@@ -5,6 +5,9 @@
 #include "hexav/resources/resource_messages.h"
 #include "hexav/resources/paint.h"
 
+
+namespace hex {
+
 class FrameWidthInterpreter: public Interpreter {
 public:
     FrameWidthInterpreter(): Interpreter("FrameWidth") { }
@@ -87,3 +90,5 @@ void register_paint_interpreters() {
     InterpreterRegistry::register_interpreter(new PaintFrameInterpreter());
     InterpreterRegistry::register_interpreter(new PaintAnimationInterpreter());
 }
+
+};

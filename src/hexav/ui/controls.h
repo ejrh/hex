@@ -5,6 +5,9 @@
 #include "hexav/graphics/font.h"
 #include "hexav/ui/ui.h"
 
+
+namespace hex {
+
 class UiLabel: public UiWindow {
 public:
     UiLabel(int x, int y, int width, int height);
@@ -72,6 +75,8 @@ public:
 
 public:
     UiWindow *current_tab;
+};
+
 };
 
 #endif

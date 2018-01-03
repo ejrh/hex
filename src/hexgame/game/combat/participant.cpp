@@ -3,6 +3,9 @@
 #include "hexgame/game/game.h"
 #include "hexgame/game/combat/combat.h"
 
+
+namespace hex {
+
 Participant::Participant(int id, Side side, int stack_num, UnitStack::pointer stack, int unit_number):
         id(id), side(side), stack_num(stack_num), stack(stack), unit_number(unit_number)
 {
@@ -52,3 +55,5 @@ std::ostream& operator<<(std::ostream& os, const Participant& p) {
     os << boost::format("[%d %c] S%d/U%d (%s) ") % p.id % ((p.side == Attacker) ? 'A' : 'D') % p.stack->id % p.unit_number % p.unit->type->name << p.unit->properties;
     return os;
 }
+
+};

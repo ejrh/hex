@@ -3,6 +3,9 @@
 #include "hexutil/basics/error.h"
 #include "hexutil/messaging/serialiser.h"
 
+
+namespace hex {
+
 bool is_atom_char(int x) {
     return std::isalnum(x) || x == '_' || x == '-' || x == '$';
 }
@@ -323,3 +326,5 @@ void Deserialiser::error(const char *fmt, ...) {
 
     BOOST_LOG_TRIVIAL(warning) << buffer;
 }
+
+};

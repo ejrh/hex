@@ -14,6 +14,8 @@
 #include "hexview/view/combat/combat_window.h"
 
 
+namespace hex {
+
 CombatStackWindow::CombatStackWindow(int x, int y, int width, int height, ViewResources *resources, CombatView *view, UnitRenderer *renderer, int stack_num):
         UiWindow(x, y, width, height, WindowIsVisible),
         resources(resources), view(view), renderer(renderer), stack_num(stack_num) {
@@ -85,3 +87,5 @@ CombatWindow::CombatWindow(int x, int y, int width, int height, ViewResources *r
         add_child(stack_windows[dir]);
     }
 }
+
+};

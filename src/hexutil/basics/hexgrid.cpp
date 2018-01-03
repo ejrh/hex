@@ -3,6 +3,8 @@
 #include "hexutil/basics/hexgrid.h"
 
 
+namespace hex {
+
 Point get_neighbour(const Point point, int dir) {
     int side_adjustment1 = (point.x % 2) ? 0 : -1;
     int side_adjustment2 = side_adjustment1 + 1;
@@ -183,3 +185,5 @@ void point_to_pixel(const Point point, int x_spacing, int y_spacing, int *px, in
         *py = point.y * y_spacing + y_spacing / 2;
     }
 }
+
+};

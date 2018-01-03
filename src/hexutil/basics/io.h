@@ -1,6 +1,8 @@
 #ifndef IO_H
 #define IO_H
 
+namespace hex {
+
 // Based on an answer on StackOverflow, by James Kanze
 // http://stackoverflow.com/a/24861313/63991
 
@@ -53,6 +55,8 @@ private:
     bool myIsAtStartOfLine;
     char myBuffer;
     int line_no, col_no;
+};
+
 };
 
 #endif

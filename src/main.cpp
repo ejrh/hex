@@ -53,6 +53,8 @@
 #include "hexview/view/combat/combat_screen.h"
 
 
+namespace hex {
+
 struct Options {
     bool server_mode;
     bool client_mode;
@@ -349,6 +351,11 @@ bool parse_options(int argc, char *argv[], Options& options) {
 
     return true;
 }
+
+};
+
+
+using namespace hex;
 
 int main(int argc, char *argv[]) {
     try {

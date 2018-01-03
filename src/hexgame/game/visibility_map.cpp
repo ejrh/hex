@@ -6,6 +6,8 @@
 #include "hexgame/game/visibility_map.h"
 
 
+namespace hex {
+
 VisibilityMap::VisibilityMap(const Level& level) {
     resize(level.width, level.height);
 }
@@ -114,3 +116,5 @@ bool VisibilityMapUnion::check(const Point& tile_pos) const {
 
     return false;
 }
+
+};

@@ -8,6 +8,8 @@
 #include "hexgame/game/movement/movement.h"
 
 
+namespace hex {
+
 Game::Game():
         tile_types("tile types"), feature_types("feature types"),
         unit_types("unit types"), structure_types("structure types"),
@@ -217,3 +219,5 @@ int Game::get_nearby_stacks(Point position, int radius, std::vector<UnitStack::p
     }
     return num_found;
 }
+
+};

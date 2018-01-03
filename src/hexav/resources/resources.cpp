@@ -7,6 +7,8 @@
 #include "hexav/resources/resource_loader.h"
 
 
+namespace hex {
+
 Resources::Resources():
         scripts("scripts") {
 }
@@ -83,3 +85,5 @@ Image *Resources::get_library_image(Atom library_name, int image_num) {
     }
     return found->second.get();
 }
+
+};

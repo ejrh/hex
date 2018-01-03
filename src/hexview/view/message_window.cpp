@@ -9,6 +9,8 @@
 #include "hexview/view/view.h"
 
 
+namespace hex {
+
 MessageWindow::MessageWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view):
         UiWindow(x, y, width, height, WindowIsVisible), resources(resources), graphics(graphics), view(view) {
 }
@@ -28,3 +30,5 @@ void MessageWindow::draw(const UiContext& context) {
         y_offset += 12;
     }
 }
+
+};

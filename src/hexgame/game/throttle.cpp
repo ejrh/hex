@@ -4,6 +4,8 @@
 #include "hexgame/game/throttle.h"
 
 
+namespace hex {
+
 Throttle::Throttle(MessageReceiver *receiver):
          receiver(receiver) {
 }
@@ -59,3 +61,5 @@ void Throttle::check_blocked_messages() {
         receiver->receive(message);
     }
 }
+
+};

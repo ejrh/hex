@@ -9,10 +9,12 @@
 #include "hexgame/game/game.h"
 
 #include "hexview/view/level_renderer.h"
+#include "hexview/view/player.h"
 #include "hexview/view/unit_renderer.h"
 #include "hexview/view/view.h"
-#include "player.h"
 
+
+namespace hex {
 
 LevelRenderer::LevelRenderer(Graphics *graphics, Resources *resources, Level *level, GameView *view, UnitRenderer *unit_renderer):
         show_hexagons(false), graphics(graphics), resources(resources), level(level), view(view), unit_renderer(unit_renderer) {
@@ -168,3 +170,5 @@ void LevelRenderer::render_fog(int x, int y, Point tile_pos) {
         graphics->blit(shadow, x - shadow->width / 2, y - shadow->height / 2, SDL_BLENDMODE_BLEND);
     }
 }
+
+};

@@ -11,6 +11,8 @@
 #include "hexview/view/unit_painter.h"
 
 
+namespace hex {
+
 ParticipantView::ParticipantView(Participant *participant):
         participant(participant) {
 }
@@ -133,3 +135,5 @@ void CombatView::step() {
         } break;
     }
 }
+
+};

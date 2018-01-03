@@ -2,6 +2,9 @@
 
 #include "hexgame/game/game.h"
 
+
+namespace hex {
+
 UnitStack::pointer UnitStack::copy_subset(const IntSet unit_selection) const {
     UnitStack::pointer new_stack = boost::make_shared<UnitStack>(position, owner);
     for (unsigned int i = 0; i < units.size(); i++) {
@@ -31,3 +34,5 @@ bool UnitStack::has_units(const IntSet unit_selection) const {
 
     return true;
 }
+
+};

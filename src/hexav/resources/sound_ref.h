@@ -4,6 +4,8 @@
 #include "hexutil/messaging/serialiser.h"
 
 
+namespace hex {
+
 class Sound;
 
 struct SoundRef {
@@ -33,5 +35,7 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, SoundRef& r) {
     r.sound = NULL;
     return deserialiser;
 }
+
+};
 
 #endif

@@ -1,6 +1,8 @@
 #ifndef AUDIO_RENDERER_H
 #define AUDIO_RENDERER_H
 
+namespace hex {
+
 class Audio;
 class UnitView;
 
@@ -13,6 +15,8 @@ public:
 
 private:
     Audio *audio;
+};
+
 };
 
 #endif

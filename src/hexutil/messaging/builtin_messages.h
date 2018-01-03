@@ -7,6 +7,8 @@
 #include "hexutil/messaging/message.h"
 
 
+namespace hex {
+
 #define MESSAGE_TEMPLATE_NAME Builtin
 #define MESSAGE_TEMPLATE_INCLUDE_FILE "hexutil/messaging/message_types.h"
 #define MESSAGE_TEMPLATE_START_ID 0
@@ -15,5 +17,6 @@
 
 void register_builtin_messages();
 
+};
 
 #endif

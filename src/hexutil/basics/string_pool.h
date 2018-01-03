@@ -1,6 +1,8 @@
 #ifndef STRING_POOL_H
 #define STRING_POOL_H
 
+namespace hex {
+
 class StringPool {
 public:
     class Entry {
@@ -74,5 +76,7 @@ private:
 inline std::ostream& operator<<(std::ostream& os, const poolstr& ps) {
     return os << ps.entry->str;
 }
+
+};
 
 #endif

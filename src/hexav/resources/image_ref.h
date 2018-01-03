@@ -4,6 +4,8 @@
 #include "hexutil/messaging/serialiser.h"
 
 
+namespace hex {
+
 class Image;
 
 struct ImageRef {
@@ -33,5 +35,7 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, ImageRef& r) {
     r.image = NULL;
     return deserialiser;
 }
+
+};
 
 #endif

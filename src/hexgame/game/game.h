@@ -10,6 +10,9 @@
 #include "hexgame/game/game_properties.h"
 #include "hexgame/game/visibility_map.h"
 
+
+namespace hex {
+
 #define MOVE_SCALE 1
 
 class Faction: public boost::enable_shared_from_this<Faction> {
@@ -274,6 +277,8 @@ public:
     Level level;
     IntMap<Faction> factions;
     IntMap<UnitStack> stacks;
+};
+
 };
 
 #endif

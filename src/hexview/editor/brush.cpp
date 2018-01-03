@@ -9,6 +9,8 @@
 #include "hexview/editor/brush.h"
 
 
+namespace hex {
+
 static bool compatible(const std::string& tile_type, const FeatureType& feature_type) {
     if (feature_type.has_property(RequiredTileType)) {
         std::string required_pattern = feature_type.get_property<std::string>(RequiredTileType);
@@ -122,3 +124,5 @@ bool Brush::paint_tile(const Tile& tile, std::string& new_tile_type, std::string
 
     return false;
 }
+
+};

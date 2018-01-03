@@ -1,6 +1,8 @@
 #ifndef STRING_VECTOR_H
 #define STRING_VECTOR_H
 
+namespace hex {
+
 class CompressableStringVector {
 public:
     std::vector<std::string> data;
@@ -24,5 +26,7 @@ inline void compress_string_vector(const CompressableStringVector& input, std::v
 inline void decompress_string_vector(const std::vector<std::string>& input, CompressableStringVector& output) {
     decompress_string_vector(input, output.data);
 }
+
+};
 
 #endif

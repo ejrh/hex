@@ -5,6 +5,8 @@
 #include "hexutil/messaging/receiver.h"
 
 
+namespace hex {
+
 class Game;
 class GameView;
 class Resources;
@@ -25,5 +27,6 @@ private:
     ViewResources *resources;
 };
 
+};
 
 #endif

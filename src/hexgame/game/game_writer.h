@@ -1,6 +1,8 @@
 #ifndef GAME_WRITER_H
 #define GAME_WRITER_H
 
+namespace hex {
+
 class Game;
 class MessageReceiver;
 class Message;
@@ -26,6 +28,8 @@ private:
 
 private:
     MessageReceiver *receiver;
+};
+
 };
 
 #endif

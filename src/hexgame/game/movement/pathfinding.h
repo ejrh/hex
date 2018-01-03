@@ -5,6 +5,8 @@
 #include "hexutil/basics/vector2.h"
 
 
+namespace hex {
+
 class Level;
 class MovementModel;
 class UnitStack;
@@ -100,6 +102,8 @@ public:
     PathfinderQueueEntry target;
     Level *level;
     MovementModel *movement;
+};
+
 };
 
 #endif

@@ -17,6 +17,8 @@
 #include "hexview/view/view_resource_messages.h"
 
 
+namespace hex {
+
 void ViewResourceLoader::handle_message(Message *msg) {
     switch (msg->type) {
         case CreateFactionView: {
@@ -96,3 +98,5 @@ void ViewResourceLoader::handle_message(Message *msg) {
 
     ++view_message_counter;
 }
+
+};

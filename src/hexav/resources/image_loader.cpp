@@ -6,6 +6,8 @@
 #include "hexav/resources/resource_loader.h"
 
 
+namespace hex {
+
 extern void load_hss(const std::string& filename, Graphics *graphics, ImageMap& image_set);
 
 extern void load_image(const std::string& filename, Graphics *graphics, ImageMap& image_set);
@@ -74,3 +76,5 @@ void ImageLoader::load_library(Atom name, const std::string& filename) {
     }
     lib->loaded = true;
 }
+
+};

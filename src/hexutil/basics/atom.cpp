@@ -2,6 +2,9 @@
 
 #include "hexutil/basics/atom.h"
 
+
+namespace hex {
+
 std::unordered_map<int, std::string> AtomRegistry::id_to_str;
 std::unordered_map<std::string, int> AtomRegistry::str_to_id;
 int AtomRegistry::next_free_id(1);
@@ -32,3 +35,5 @@ Atom AtomRegistry::register_atom(const std::string& name, int id) {
 
     return Atom(id);
 }
+
+};

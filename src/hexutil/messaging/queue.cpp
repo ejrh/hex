@@ -5,6 +5,8 @@
 #include "hexutil/messaging/queue.h"
 
 
+namespace hex {
+
 MessageQueue::MessageQueue(unsigned int capacity):
         capacity(capacity) {
 }
@@ -46,3 +48,5 @@ int MessageQueue::flush(MessageReceiver *receiver) {
     queue.clear();
     return num;
 }
+
+};

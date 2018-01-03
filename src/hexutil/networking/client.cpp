@@ -6,6 +6,8 @@
 #include "hexutil/messaging/builtin_messages.h"
 
 
+namespace hex {
+
 Client::Client(MessageReceiver *receiver):
         receiver(receiver), io_service(), resolver(io_service), game_id(0), last_received_id(0),
         receive_counter("network.client.receive"), send_counter("network.client.broadcast") {
@@ -77,3 +79,5 @@ void Client::handle_connect(const boost::system::error_code& error, tcp::resolve
     connection->send_message(create_message(StreamOpen, std::string("Hex Client 0.1")));
     connection->send_message(create_message(StreamReplay, game_id, last_received_id));
 }
+
+};

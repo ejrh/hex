@@ -6,6 +6,8 @@
 #include "hexutil/networking/networking.h"
 
 
+namespace hex {
+
 Connection::Connection(boost::asio::io_service& io_service, NetworkInterface *iface): iface(iface), socket(io_service) {
 }
 
@@ -95,3 +97,5 @@ void Connection::handle_read(const boost::system::error_code& error, size_t byte
 
     continue_reading();
 }
+
+};

@@ -8,6 +8,8 @@
 #include "hexutil/basics/term.h"
 
 
+namespace hex {
+
 bool is_atom_char(int x);
 bool needs_quoting(const std::string& str);
 int get_character_escape(int ch);
@@ -320,6 +322,8 @@ private:
     std::istream &in;
     PositionStreambuf pos_buf;
     bool expect_seperator;
+};
+
 };
 
 #endif

@@ -11,6 +11,8 @@
 #include "hexview/view/level_window.h"
 
 
+namespace hex {
+
 class BrushButton: public UiButton {
 public:
     BrushButton(int x, int y, int width, int height, const std::string& label_text, Brush *brush):
@@ -108,3 +110,5 @@ bool PaletteWindow::receive_keyboard_event(SDL_Event *evt) {
 void PaletteWindow::draw(const UiContext& context) {
     context.fill_rectangle(128, 128, 128, x, y, width, height);
 }
+
+};

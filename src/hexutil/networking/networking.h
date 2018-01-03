@@ -12,6 +12,8 @@
 #include "hexutil/messaging/receiver.h"
 
 
+namespace hex {
+
 using boost::asio::ip::tcp;
 
 class NetworkInterface: public MessageReceiver {
@@ -110,6 +112,8 @@ private:
 
     Counter receive_counter;
     Counter send_counter;
+};
+
 };
 
 #endif

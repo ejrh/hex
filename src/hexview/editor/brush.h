@@ -6,6 +6,8 @@
 #include "hexview/view/view.h"
 
 
+namespace hex {
+
 class Brush {
 public:
     Brush(Game *game, GameView *view);
@@ -25,6 +27,7 @@ private:
     GameView *view;
 };
 
+};
 
 #endif
 

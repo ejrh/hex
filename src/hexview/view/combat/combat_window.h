@@ -6,6 +6,8 @@
 #include "hexgame/game/game.h"
 
 
+namespace hex {
+
 class ViewResources;
 class CombatView;
 class UnitRenderer;
@@ -46,5 +48,6 @@ private:
     CombatStackWindow *stack_windows[7];
 };
 
+};
 
 #endif

@@ -4,6 +4,8 @@
 #include <SDL2/SDL_ttf.h>
 
 
+namespace hex {
+
 enum FontId {
     SmallFont10,
     SmallFont14
@@ -62,6 +64,8 @@ private:
     TextFormat format;
     int size;
     std::unordered_map<std::string, Image *> cache;
+};
+
 };
 
 #endif

@@ -3,6 +3,8 @@
 #include "hexutil/scripting/scripting.h"
 
 
+namespace hex {
+
 std::string Script::signature() const {
     std::ostringstream oss;
     oss << name;
@@ -36,3 +38,5 @@ Script::pointer compile_script(const std::string& name, Term *parameters, Term *
 
     return boost::make_shared<Script>(name, parameter_atoms, std::unique_ptr<Term>(instruction));
 }
+
+};

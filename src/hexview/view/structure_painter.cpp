@@ -8,6 +8,8 @@
 #include "hexview/view/structure_painter.h"
 
 
+namespace hex {
+
 void StructurePainter::repaint(StructureView& structure_view) {
     Timer paint_time(structure_paint_time);
 
@@ -58,3 +60,5 @@ void StructurePainter::repaint(StructureView& structure_view) {
     }
     ++structure_paint_counter;
 }
+
+};

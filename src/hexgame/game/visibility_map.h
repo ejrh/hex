@@ -5,6 +5,8 @@
 #include "hexutil/basics/vector2.h"
 
 
+namespace hex {
+
 class UnitStack;
 class Level;
 
@@ -38,6 +40,8 @@ public:
 
 private:
     std::vector<const VisibilityMap *> maps;
+};
+
 };
 
 #endif

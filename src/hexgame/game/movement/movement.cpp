@@ -7,6 +7,8 @@
 #include "hexgame/game/movement/movement.h"
 
 
+namespace hex {
+
 MovementModel::MovementModel(Game *game): game(game), target_pos(-1, -1) { }
 
 MovementModel::MovementModel(Game *game, const Point& target_pos): game(game), target_pos(target_pos) { }
@@ -176,3 +178,5 @@ bool MovementModel::check_step(const UnitStack& stack, StackMovePoints *points, 
 
     return !points->exhausted();
 }
+
+};

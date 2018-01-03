@@ -22,6 +22,8 @@
 #include "hexview/view/view_resource_messages.h"
 
 
+namespace hex {
+
 void load_resources(ViewResources *resources, Graphics *graphics) {
     ImageLoader image_loader(resources, graphics);
     ViewResourceLoader loader(resources, &image_loader, NULL);
@@ -163,6 +165,11 @@ void run() {
     loop.set_root_window(background_window);
     loop.run();
 }
+
+};
+
+
+using namespace hex;
 
 int main(int argc, char *argv[]) {
     try {

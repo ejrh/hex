@@ -4,6 +4,8 @@
 #include "hexutil/messaging/receiver.h"
 
 
+namespace hex {
+
 class Publisher: public MessageReceiver {
 public:
     Publisher();
@@ -26,5 +28,6 @@ private:
     std::vector<MessageReceiver *> subscribers;
 };
 
+};
 
 #endif

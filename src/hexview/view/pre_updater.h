@@ -5,6 +5,8 @@
 #include "hexutil/messaging/receiver.h"
 
 
+namespace hex {
+
 class Game;
 class GameView;
 class CombatScreen;
@@ -25,6 +27,8 @@ private:
 
 public:
     CombatScreen *combat_screen;
+};
+
 };
 
 #endif

@@ -5,6 +5,9 @@
 #include "hexav/graphics/graphics.h"
 #include "hexav/graphics/ilb.h"
 
+
+namespace hex {
+
 #define MAX_NAME_LENGTH 100
 
 long Reader::current_position() {
@@ -458,3 +461,5 @@ void load_ilb(const std::string& filename, Graphics *graphics, ImageMap& image_s
     ILBReader reader(file, graphics);
     reader.read(image_set);
 }
+
+};

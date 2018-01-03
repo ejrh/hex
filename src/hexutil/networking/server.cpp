@@ -6,6 +6,8 @@
 #include "hexutil/messaging/builtin_messages.h"
 
 
+namespace hex {
+
 Server::Server(int port, MessageReceiver *receiver):
         port(port), receiver(receiver), io_service(), acceptor(io_service), shutdown_requested(false),
         next_connection_id(1), game_id(0), last_message_id(0), last_dropped_id(0), max_backlog_size(1000),
@@ -118,3 +120,5 @@ void Server::handle_accept(Connection::pointer new_connection, const boost::syst
 
     ++connect_counter;
 }
+
+};

@@ -5,6 +5,8 @@
 #include "hexutil/messaging/receiver.h"
 
 
+namespace hex {
+
 Publisher::Publisher(): id(0), next_message_id(1) {
 }
 
@@ -35,3 +37,5 @@ void Publisher::send_update_to_subscribers(Message *update) {
         subscriber->receive(update);
     }
 }
+
+};

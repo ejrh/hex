@@ -5,6 +5,9 @@
 #include "hexutil/messaging/message.h"
 #include "hexutil/messaging/receiver.h"
 
+
+namespace hex {
+
 class MessageLoader: public MessageReceiver {
 public:
     MessageLoader() { }
@@ -32,6 +35,8 @@ public:
 
 private:
     MessageReceiver& receiver;
+};
+
 };
 
 #endif

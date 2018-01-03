@@ -3,6 +3,9 @@
 
 #include "hexutil/messaging/receiver.h"
 
+
+namespace hex {
+
 class MessageLogger: public MessageReceiver {
 public:
     MessageLogger(const std::string& prefix): prefix(prefix) { }
@@ -12,6 +15,8 @@ public:
 
 private:
     std::string prefix;
+};
+
 };
 
 #endif

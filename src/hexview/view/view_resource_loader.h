@@ -12,6 +12,8 @@
 #include "hexview/view/view_resources.h"
 
 
+namespace hex {
+
 class ViewResourceLoader: public ResourceLoader {
 public:
     ViewResourceLoader(ViewResources *resources, ImageLoader *image_loader, SoundLoader *sound_loader):
@@ -34,5 +36,6 @@ private:
     Counter view_message_counter;
 };
 
+};
 
 #endif

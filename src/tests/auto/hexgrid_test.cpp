@@ -5,6 +5,9 @@
 #define BOOST_TEST_MODULE HexgridTest
 #include <boost/test/included/unit_test.hpp>
 
+
+namespace hex {
+
 struct Fixture {
 };
 
@@ -77,3 +80,5 @@ BOOST_AUTO_TEST_CASE(test_pixel_to_point) {
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+};

@@ -5,6 +5,8 @@
 #include "hexgame/game/movement/pathfinding.h"
 
 
+namespace hex {
+
 Pivot::Pivot(Point position, Atom movement_type, int width, int height):
         position(position), movement_type(movement_type), costs(width, height) {
 }
@@ -46,3 +48,5 @@ Pivot *calculate_pivot(Point position, Atom movement_type, Level *level, Movemen
 
     return pivot;
 }
+
+};

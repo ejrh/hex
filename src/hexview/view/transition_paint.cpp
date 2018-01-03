@@ -13,6 +13,8 @@
 #include "hexview/view/view_def.h"
 
 
+namespace hex {
+
 bool TransitionPaintExecution::apply_transition(const std::vector<int>& dirs, const std::vector<int>& frame_nums) {
 
     for (auto dir_iter = dirs.begin(); dir_iter != dirs.end(); dir_iter++) {
@@ -80,3 +82,5 @@ void register_transition_paint_interpreters() {
     InterpreterRegistry::register_interpreter(new TransitionMatchInterpreter());
     InterpreterRegistry::register_interpreter(new TransitionInterpreter());
 }
+
+};

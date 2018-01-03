@@ -6,6 +6,8 @@
 #include "hexav/ui/ui.h"
 
 
+namespace hex {
+
 class Resources;
 class Graphics;
 class MessageReceiver;
@@ -37,6 +39,8 @@ public:
 
 private:
     ChatWindow *chat_window;
+};
+
 };
 
 #endif

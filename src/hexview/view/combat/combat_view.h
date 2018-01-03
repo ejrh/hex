@@ -4,6 +4,9 @@
 #include "hexview/view/view.h"
 #include "hexview/view/view_resources.h"
 
+
+namespace hex {
+
 class Participant;
 class UnitStack;
 class Battle;
@@ -46,6 +49,8 @@ public:
     unsigned int current_move;
     unsigned int current_step;
     unsigned int phase_end;
+};
+
 };
 
 #endif

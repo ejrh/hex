@@ -6,6 +6,7 @@
 #include "hexav/graphics/font.h"
 
 
+namespace hex {
 
 #define FONT_PATH "c:/windows/fonts/arial.ttf"
 #define FONT_PATH_2 "/usr/share/fonts/truetype/msttcorefonts/Arial.ttf"
@@ -148,3 +149,5 @@ void TextCache::write_text(const std::string& text, int x, int y) {
 
     graphics->blit(image, x, y, SDL_BLENDMODE_BLEND);
 }
+
+};

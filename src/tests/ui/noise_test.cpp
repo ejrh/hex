@@ -6,6 +6,9 @@
 #include "hexav/graphics/graphics.h"
 #include "hexav/graphics/font.h"
 
+
+namespace hex {
+
 static bool show_gradients;
 
 void draw_noise(Graphics &graphics, PerlinNoise &noise) {
@@ -80,6 +83,11 @@ void run() {
         SDL_Delay(25);
     }
 }
+
+};
+
+
+using namespace hex;
 
 int main(int argc, char *argv[]) {
     try {

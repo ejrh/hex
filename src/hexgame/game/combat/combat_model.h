@@ -3,6 +3,9 @@
 
 #include "hexutil/basics/properties.h"
 
+
+namespace hex {
+
 class Battle;
 class Participant;
 class MoveType;
@@ -30,6 +33,8 @@ public:
 
 private:
     static CombatModel default_combat_model;
+};
+
 };
 
 #endif

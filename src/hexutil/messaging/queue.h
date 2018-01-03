@@ -4,6 +4,8 @@
 #include "hexutil/messaging/receiver.h"
 
 
+namespace hex {
+
 class MessageQueue: public MessageReceiver {
 public:
     MessageQueue(unsigned int capacity);
@@ -21,5 +23,6 @@ private:
     std::vector<boost::shared_ptr<Message> > queue;
 };
 
+};
 
 #endif

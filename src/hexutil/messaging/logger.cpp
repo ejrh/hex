@@ -5,6 +5,8 @@
 #include "hexutil/messaging/receiver.h"
 
 
+namespace hex {
+
 void MessageLogger::receive(Message *update) {
     std::ostringstream buf;
     Serialiser writer(buf);
@@ -14,3 +16,5 @@ void MessageLogger::receive(Message *update) {
         s.resize(s.size() - 1);
     BOOST_LOG_TRIVIAL(trace) << prefix << s;
 }
+
+};

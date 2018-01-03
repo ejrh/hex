@@ -5,6 +5,8 @@
 #include "hexgame/game/game.h"
 
 
+namespace hex {
+
 inline Serialiser& operator<<(Serialiser& serialiser, const CompressableStringVector& v) {
     std::vector<std::string> strs;
     compress_string_vector(v, strs);
@@ -99,5 +101,7 @@ inline Deserialiser& operator>>(Deserialiser& deserialiser, Move& m) {
     deserialiser.end_tuple();
     return deserialiser;
 }
+
+};
 
 #endif

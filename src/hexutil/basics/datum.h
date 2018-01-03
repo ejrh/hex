@@ -4,6 +4,8 @@
 #include "hexutil/basics/atom.h"
 
 
+namespace hex {
+
 // The variant must be wrapped like this, otherwise the compiler will get confused about which overload to use
 struct Datum {
     Datum(): value(0) { }
@@ -45,5 +47,6 @@ struct Datum {
 
 std::ostream& operator<<(std::ostream& os, const Datum& atom);
 
+};
 
 #endif

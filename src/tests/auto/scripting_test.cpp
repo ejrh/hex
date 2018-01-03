@@ -10,6 +10,9 @@
 #define BOOST_TEST_MODULE ScriptingTest
 #include <boost/test/included/unit_test.hpp>
 
+
+namespace hex {
+
 class ScriptLoader: public MessageReceiver {
 public:
     ScriptLoader(StrMap<Script> *scripts): scripts(scripts) {
@@ -179,3 +182,5 @@ BOOST_AUTO_TEST_CASE(while_lt) {
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+};

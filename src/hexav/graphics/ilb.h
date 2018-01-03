@@ -3,6 +3,9 @@
 
 #include "hexav/graphics/graphics.h"
 
+
+namespace hex {
+
 #define ILB_MAGIC 0x424C4904
 #define ILB_VERSION_3 0x40400000
 #define ILB_VERSION_4 0x40800000
@@ -105,5 +108,7 @@ private:
 };
 
 void load_ilb(const std::string& filename, Graphics *graphics, ImageMap& image_set);
+
+};
 
 #endif

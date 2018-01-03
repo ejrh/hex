@@ -13,6 +13,8 @@
 #include "hexgame/game/game_updater.h"
 
 
+namespace hex {
+
 #define ORIGIN 1
 
 
@@ -30,6 +32,10 @@ private:
     Serialiser &writer;
 };
 
+};
+
+
+using namespace hex;
 
 int main(int argc, char *argv[]) {
     register_builtin_messages();

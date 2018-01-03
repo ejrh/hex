@@ -8,6 +8,8 @@
 #include "hexview/chat/chat.h"
 
 
+namespace hex {
+
 ChatWindow::ChatWindow(int width, int height, Resources *resources, Graphics *graphics, MessageReceiver *dispatcher):
         UiWindow(0, 0, width, height, WindowIsActive|WindowIsVisible|WindowWantsKeyboardEvents),
 resources(resources), graphics(graphics), dispatcher(dispatcher), open(false) {
@@ -76,3 +78,5 @@ bool ChatWindow::type(SDL_TextInputEvent *evt) {
 void ChatWindow::add_to_history(const std::string& line) {
     chat_history.push_back(line);
 }
+
+};

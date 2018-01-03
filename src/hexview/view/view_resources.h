@@ -13,6 +13,8 @@
 #include "hexview/view/view_def.h"
 
 
+namespace hex {
+
 class ViewResources: public Resources {
 public:
     ViewResources();
@@ -38,5 +40,6 @@ public:
     friend class ViewResourceLoader;
 };
 
+};
 
 #endif

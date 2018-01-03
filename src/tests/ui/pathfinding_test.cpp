@@ -16,6 +16,8 @@
 #include "hexview/view/view.h"
 
 
+namespace hex {
+
 #define TILE_WIDTH 48
 #define TILE_HEIGHT 32
 #define X_SPACING 32
@@ -48,7 +50,7 @@ enum Mode {
 class PathfindingView: public GameView {
 public:
     PathfindingView(Game *game):
-            GameView(game, NULL, &::resources, NULL, NULL), movement_model(game), pathfinder(&game->level, &movement_model),
+            GameView(game, NULL, &hex::resources, NULL, NULL), movement_model(game), pathfinder(&game->level, &movement_model),
             brush_radius(2), pivot_num(1), weight(1), mode(EditMode) {
     }
 
@@ -138,7 +140,7 @@ public:
 class PathfindingRenderer: public LevelRenderer {
 public:
     PathfindingRenderer(Graphics *graphics, Level *level, PathfindingView *view):
-            LevelRenderer(graphics, &::resources, level, view, NULL),
+            LevelRenderer(graphics, &hex::resources, level, view, NULL),
             cache1(graphics, TextFormat(SmallFont10, true, 250,50,50), 1000),
             cache2(graphics, TextFormat(SmallFont10, true, 100,200,50), 1000),
             cache3(graphics, TextFormat(SmallFont10, true, 255,255,255), 10) { }
@@ -402,6 +404,11 @@ void run() {
     bg_window->add_child(tw);
     loop.run();
 }
+
+};
+
+
+using namespace hex;
 
 int main(int argc, char *argv[]) {
     try {

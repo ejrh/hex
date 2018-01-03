@@ -4,6 +4,8 @@
 #include "hexutil/messaging/receiver.h"
 
 
+namespace hex {
+
 class MessageChecksum: public MessageReceiver {
 public:
     MessageChecksum(): checksum(0) { }
@@ -12,6 +14,8 @@ public:
 
 public:
     unsigned long checksum;
+};
+
 };
 
 #endif

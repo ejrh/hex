@@ -4,6 +4,8 @@
 #include "hexutil/messaging/receiver.h"
 
 
+namespace hex {
+
 class Throttle: public MessageReceiver {
 public:
     Throttle(MessageReceiver *receiver);
@@ -25,5 +27,6 @@ private:
     std::unordered_set<int> locked_stacks;
 };
 
+};
 
 #endif

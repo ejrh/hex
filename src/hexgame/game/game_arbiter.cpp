@@ -9,6 +9,8 @@
 #include "hexgame/game/movement/movement.h"
 
 
+namespace hex {
+
 GameArbiter::GameArbiter(Game *game, MessageReceiver *publisher):
         game(game), publisher(publisher),
         command_counter("arbiter.command"), update_counter("arbiter.update") {
@@ -187,3 +189,5 @@ void GameArbiter::emit(boost::shared_ptr<Message> update) {
     publisher->receive(update);
     update_counter.receive(update.get());
 }
+
+};

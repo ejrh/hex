@@ -7,6 +7,8 @@
 #include "hexutil/basics/term.h"
 
 
+namespace hex {
+
 class Execution;
 
 class ScriptError: public BaseError<ScriptError> {
@@ -117,5 +119,6 @@ void register_builtin_interpreters();
 
 Script::pointer compile_script(const std::string& name, Term *parameters, Term *instruction);
 
+};
 
 #endif

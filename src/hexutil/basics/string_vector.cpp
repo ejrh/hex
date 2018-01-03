@@ -2,6 +2,9 @@
 
 #include "hexutil/basics/string_vector.h"
 
+
+namespace hex {
+
 void compress_string_vector(const std::vector<std::string>& input, std::vector<std::string>& output) {
     std::unordered_map<std::string, std::string> dictionary;
 
@@ -41,3 +44,5 @@ void decompress_string_vector(const std::vector<std::string>& input, std::vector
         }
     }
 }
+
+};

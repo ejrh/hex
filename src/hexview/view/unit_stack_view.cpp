@@ -2,6 +2,9 @@
 
 #include "hexview/view/view.h"
 
+
+namespace hex {
+
 void UnitStackView::set_representative(ViewResources *resources) {
     representative = 0;
     for (int i = 1; i < stack->units.size(); i++) {
@@ -18,3 +21,5 @@ void UnitStackView::set_representative(ViewResources *resources) {
         view_def.reset();
     }
 }
+
+};

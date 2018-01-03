@@ -3,6 +3,9 @@
 
 #include "hexgame/game/combat/move.h"
 
+
+namespace hex {
+
 class UnitStack;
 class Unit;
 class CombatModel;
@@ -68,6 +71,8 @@ public:
     int last_attacking_health;
     int last_defending_health;
     int rounds_without_injury;
+};
+
 };
 
 #endif

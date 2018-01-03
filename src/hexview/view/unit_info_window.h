@@ -5,6 +5,8 @@
 #include "hexav/ui/controls.h"
 
 
+namespace hex {
+
 class Resources;
 class Graphics;
 class GameView;
@@ -40,6 +42,8 @@ private:
     UiTextList *abilities_list;
 
     ItemSlotWindow *item_slots[NUM_ITEM_SLOTS];
+};
+
 };
 
 #endif

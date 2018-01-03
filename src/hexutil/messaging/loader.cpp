@@ -7,6 +7,8 @@
 #include "hexutil/messaging/builtin_messages.h"
 
 
+namespace hex {
+
 void MessageLoader::receive(Message *msg) {
     switch (msg->type) {
         case IncludeResource: {
@@ -56,3 +58,5 @@ void MessageLoader::include(const std::string& filename, bool skip_missing) {
 const std::string& MessageLoader::get_current_file() const {
     return current_files.back();
 }
+
+};

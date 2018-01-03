@@ -4,6 +4,8 @@
 #include "hexutil/messaging/receiver.h"
 
 
+namespace hex {
+
 class MessageWriter: public MessageReceiver {
 public:
     MessageWriter(std::ostream& os): writer(os) { }
@@ -15,6 +17,8 @@ public:
 
 private:
     Serialiser writer;
+};
+
 };
 
 #endif

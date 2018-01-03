@@ -4,6 +4,8 @@
 #include "hexav/ui/ui.h"
 
 
+namespace hex {
+
 class ViewResources;
 class Graphics;
 class GameView;
@@ -42,6 +44,8 @@ private:
 
     std::vector<UnitSlotWindow *> unit_slots;
     std::vector<UnitMovesWindow *> unit_moves;
+};
+
 };
 
 #endif

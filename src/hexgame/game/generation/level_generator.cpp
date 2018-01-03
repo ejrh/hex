@@ -16,6 +16,9 @@
 #include "hexgame/game/movement/movement.h"
 #include "hexgame/game/movement/pathfinding.h"
 
+
+namespace hex {
+
 std::string feature(Tile& tile) {
     return tile.feature_type->name;
 }
@@ -310,3 +313,5 @@ void LevelGenerator::add_roads() {
         }
     }
 }
+
+};

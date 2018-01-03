@@ -2,6 +2,9 @@
 
 #include "hexview/view/player.h"
 
+
+namespace hex {
+
 Player::Player(int id, const std::string& name): id(id), name(name) {
 }
 
@@ -26,3 +29,5 @@ bool Player::has_view(Faction::pointer faction) const {
 bool Player::has_control(Faction::pointer faction) const {
     return faction_control.find(faction->id) != faction_control.end();
 }
+
+};

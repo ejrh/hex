@@ -1,6 +1,8 @@
 #ifndef INTSET_H
 #define INTSET_H
 
+namespace hex {
+
 class IntSet {
 public:
     static const unsigned int bitsize = sizeof(unsigned int)*8;
@@ -85,5 +87,7 @@ inline std::ostream& operator<<(std::ostream& os, const IntSet& set) {
     }
     return os << "}";
 }
+
+};
 
 #endif

@@ -7,6 +7,8 @@
 #include "hexview/chat/chat.h"
 
 
+namespace hex {
+
 ChatUpdater::ChatUpdater(ChatWindow *chat_window): chat_window(chat_window) {
 }
 
@@ -16,3 +18,5 @@ void ChatUpdater::receive(Message *update) {
         chat_window->add_to_history(chat_msg->data);
     }
 }
+
+};

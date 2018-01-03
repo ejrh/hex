@@ -3,6 +3,9 @@
 
 #include "hexutil/messaging/receiver.h"
 
+
+namespace hex {
+
 class Ai;
 class GameUpdater;
 
@@ -19,6 +22,8 @@ private:
 private:
     Ai *ai;
     GameUpdater *game_updater;
+};
+
 };
 
 #endif

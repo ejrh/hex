@@ -4,6 +4,8 @@
 #include "hexgame/game/game.h"
 
 
+namespace hex {
+
 class AiUpdater;
 class MessageReceiver;
 class MessageQueue;
@@ -35,6 +37,8 @@ private:
     boost::thread ai_thread;
 
     friend class AiUpdater;
+};
+
 };
 
 #endif

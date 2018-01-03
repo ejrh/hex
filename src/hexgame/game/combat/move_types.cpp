@@ -7,6 +7,9 @@
 #include "hexgame/game/combat/move.h"
 #include "hexgame/game/combat/move_types.h"
 
+
+namespace hex {
+
 int damage_roll(int attack, int defence, int damage) {
     if (attack < 1)
         attack = 1;
@@ -131,3 +134,5 @@ Move RiposteMoveType::generate(const Battle& battle, const Participant& particip
     move.effect = damage_roll(participant.get_attack() - 1, target.get_defence(), participant.get_attack() - 1);
     return move;
 }
+
+};

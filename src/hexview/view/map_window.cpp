@@ -11,6 +11,8 @@
 #include "hexview/view/unit_renderer.h"
 
 
+namespace hex {
+
 MapWindow::MapWindow(int x, int y, int width, int height, GameView *view, LevelWindow *level_window, Graphics *graphics, Resources *resources):
         UiWindow(x, y, width, height, WindowIsVisible|WindowIsActive|WindowWantsMouseEvents|WindowWantsKeyboardEvents),
         view(view), level_window(level_window), graphics(graphics), resources(resources),
@@ -196,3 +198,5 @@ void MapWindow::create_map_image() {
     lw.draw(context);
     graphics->unset_target_image();
 }
+
+};

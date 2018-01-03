@@ -4,6 +4,8 @@
 #include "hexutil/messaging/message.h"
 
 
+namespace hex {
+
 void MessageCounter::receive(Message *msg) {
     auto found = counters.find(msg->type);
     if (found == counters.end()) {
@@ -13,3 +15,5 @@ void MessageCounter::receive(Message *msg) {
         ++found->second;
     }
 }
+
+};

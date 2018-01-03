@@ -8,6 +8,8 @@
 #include "hexav/resources/paint.h"
 
 
+namespace hex {
+
 class SoundDef {
 public:
     SoundDef() { }
@@ -81,6 +83,8 @@ public:
 
     std::string name;
     Script::pointer script;
+};
+
 };
 
 #endif

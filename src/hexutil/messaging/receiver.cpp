@@ -4,6 +4,9 @@
 #include "hexutil/messaging/message.h"
 #include "hexutil/messaging/receiver.h"
 
+
+namespace hex {
+
 void replay_messages(const std::string& filename, MessageReceiver& receiver) {
     std::ifstream file(filename.c_str(), std::ios::in | std::ios::binary);
     if (file.fail())
@@ -34,3 +37,5 @@ void replay_messages(std::istream& input, MessageReceiver& receiver, const std::
         BOOST_LOG_TRIVIAL(error) << boost::format("Error in %s:%d:%d: %s") % input_name % line_no % col_no % err.what();
     }
 }
+
+};

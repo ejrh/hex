@@ -7,6 +7,9 @@
 #include "hexgame/game/combat/combat_model.h"
 #include "hexgame/game/combat/move_types.h"
 
+
+namespace hex {
+
 Battle::Battle(Game *game, const Point& target_point, const Point& attacking_point):
         game(game), target_point(target_point), attacking_point(attacking_point), turn(0)
 {
@@ -213,3 +216,5 @@ void Battle::commit() {
         }
     }
 }
+
+};

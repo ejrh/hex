@@ -4,6 +4,8 @@
 #include "hexutil/basics/error.h"
 
 
+namespace hex {
+
 class Atom {
 public:
     Atom(): id(0) { }
@@ -94,11 +96,13 @@ inline std::ostream& operator<<(std::ostream& os, const Atom& atom) {
     return os << AtomRegistry::name(atom);
 }
 
+};
+
 namespace std {
     template<>
-    struct hash<Atom> {
-        size_t operator()(const Atom& atom) const {
-            return AtomRegistry::id(atom);
+    struct hash<hex::Atom> {
+        size_t operator()(const hex::Atom& atom) const {
+            return hex::AtomRegistry::id(atom);
         }
     };
 }

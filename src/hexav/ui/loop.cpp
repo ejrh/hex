@@ -4,6 +4,8 @@
 #include "hexav/ui/window_painter.h"
 
 
+namespace hex {
+
 Uint32 user_event_type_base = 0;
 
 Uint32 drag_event_type = 0;
@@ -176,3 +178,5 @@ void UiLoop::run() {
         update();
     }
 }
+
+};

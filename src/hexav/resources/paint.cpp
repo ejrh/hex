@@ -7,6 +7,8 @@
 #include "hexav/resources/resources.h"
 
 
+namespace hex {
+
 static void add_bounds(SDL_Rect& bounds, const SDL_Rect& new_bounds) {
     if (bounds.x == INT_MAX) {
         bounds = new_bounds;
@@ -217,3 +219,5 @@ void PaintExecution::run(Script *script) {
     variables.set<int>(paint_frame_offset_atom, 0);
     Execution::run(script);
 }
+
+};

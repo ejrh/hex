@@ -3,6 +3,8 @@
 #include "hexgame/game/game.h"
 
 
+namespace hex {
+
 Level::Level(int width, int height): width(width), height(height), tiles(width, height) {
 }
 
@@ -18,3 +20,5 @@ Level::~Level() {
 std::ostream& operator<<(std::ostream &strm, const Level &level) {
     return strm << "Level(" << level.width << ", " << level.height << ")" << std::endl;
 }
+
+};

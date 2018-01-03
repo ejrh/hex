@@ -4,6 +4,8 @@
 #include "hexgame/game/game.h"
 
 
+namespace hex {
+
 class Player {
 public:
     Player(int id, const std::string& name);
@@ -21,5 +23,6 @@ private:
     std::unordered_set<int> faction_control;
 };
 
+};
 
 #endif

@@ -15,6 +15,8 @@
 #include "hexview/view/view_resource_messages.h"
 
 
+namespace hex {
+
 void run() {
     register_builtin_messages();
     register_game_messages();
@@ -31,6 +33,11 @@ void run() {
     ReceiverMessageLoader game_loader(game_updater);
     game_loader.load("data/game.txt");
 }
+
+};
+
+
+using namespace hex;
 
 int main(int argc, char *argv[]) {
     try {

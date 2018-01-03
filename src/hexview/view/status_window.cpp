@@ -8,6 +8,9 @@
 #include "hexview/view/status_window.h"
 #include "hexview/view/view.h"
 
+
+namespace hex {
+
 StatusWindow::StatusWindow(int x, int y, int width, int height, Resources *resources, Graphics *graphics, GameView *view):
         UiWindow(x, y, width, height, WindowIsVisible), resources(resources), graphics(graphics), view(view) {
 }
@@ -35,3 +38,5 @@ void StatusWindow::draw(const UiContext& context) {
         tf.write_text(graphics, "Debug", x + width - 42, y + 4);
     }
 }
+
+};

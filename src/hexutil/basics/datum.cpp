@@ -3,6 +3,8 @@
 #include "hexutil/basics/datum.h"
 
 
+namespace hex {
+
 class ostream_visitor: public boost::static_visitor<> {
 public:
     ostream_visitor(std::ostream& os): os(os) { }
@@ -49,3 +51,5 @@ int Datum::get_as_int() const {
         return 0;
     }
 }
+
+};

@@ -10,6 +10,8 @@
 #include "hexgame/game/throttle.h"
 
 
+namespace hex {
+
 class NodeInterface: public MessageReceiver {
 public:
     virtual ~NodeInterface() { }
@@ -136,6 +138,8 @@ private:
     Client client;
     Throttle throttle;
     Publisher publisher;
+};
+
 };
 
 #endif

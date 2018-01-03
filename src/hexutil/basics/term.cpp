@@ -4,6 +4,9 @@
 #include "hexutil/basics/datum.h"
 #include "hexutil/basics/term.h"
 
+
+namespace hex {
+
 void DatumTerm::print_to_stream(std::ostream& os) const {
     os << datum;
 }
@@ -48,3 +51,5 @@ std::ostream& operator<<(std::ostream& os, const Term& term) {
 
 
 Atom CompoundTerm::list_functor("[]");
+
+};

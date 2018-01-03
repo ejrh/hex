@@ -1,9 +1,10 @@
 #ifndef PALETTE_H
 #define PALETTE_H
 
-
 #include "hexav/ui/ui.h"
 
+
+namespace hex {
 
 class Game;
 class GameView;
@@ -36,6 +37,7 @@ private:
     Brush *brush;
 };
 
+};
 
 #endif
 

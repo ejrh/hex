@@ -13,6 +13,8 @@
 #include "hexav/resources/sound_ref.h"
 
 
+namespace hex {
+
 struct ImageLibraryResource {
     ImageLibraryResource(const std::string& path): path(path), loaded(false) { }
 
@@ -52,5 +54,6 @@ protected:
     friend class ResourceLoader;
 };
 
+};
 
 #endif

@@ -9,6 +9,8 @@
 #include "hexview/view/view.h"
 
 
+namespace hex {
+
 class ItemSlotWindow: public UiWindow {
 public:
     ItemSlotWindow(int x, int y, int width, int height, Atom name):
@@ -154,3 +156,5 @@ void UnitInfoWindow::close() {
     current_unit.reset();
     clear_flag(WindowIsVisible|WindowIsActive);
 }
+
+};

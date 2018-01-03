@@ -1,6 +1,8 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
+namespace hex {
+
 class MessageReceiver;
 class Game;
 
@@ -33,6 +35,8 @@ public:
 private:
     unsigned int seed;
     Game *game;
+};
+
 };
 
 #endif

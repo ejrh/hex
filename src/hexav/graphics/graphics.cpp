@@ -4,6 +4,9 @@
 
 #include "hexav/graphics/graphics.h"
 
+
+namespace hex {
+
 Image::Image(int id, SDL_Texture *texture):
         id(id), clip_x_offset(0), clip_y_offset(0), texture(texture) {
     Uint32 format;
@@ -169,3 +172,5 @@ SDL_Rect Graphics::push_clip_rect(const SDL_Rect& clip_rect) {
     }
     return old_clip_rect;
 }
+
+};

@@ -15,6 +15,8 @@
 #include "hexgame/game/movement/pathfinding.h"
 
 
+namespace hex {
+
 int get_random_faction(IntMap<Faction>& factions) {
     auto faction_iter = factions.begin();
     std::advance(faction_iter, rand() % factions.size());
@@ -224,3 +226,5 @@ void Generator::create_nodes(MessageReceiver& updater) {
         }
     }
 }
+
+};

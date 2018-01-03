@@ -1,6 +1,7 @@
 #ifndef COMBAT_SCREEN_H
 #define COMBAT_SCREEN_H
 
+namespace hex {
 
 class Battle;
 class ViewResources;
@@ -22,5 +23,6 @@ private:
     UnitRenderer *renderer;
 };
 
+};
 
 #endif

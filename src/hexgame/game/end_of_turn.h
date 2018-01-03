@@ -1,6 +1,8 @@
 #ifndef END_OF_TURN
 #define END_OF_TURN
 
+namespace hex {
+
 class Game;
 class Unit;
 
@@ -15,6 +17,8 @@ private:
 
 private:
     Game *game;
+};
+
 };
 
 #endif

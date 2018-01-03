@@ -8,6 +8,8 @@
 #include "hexview/view/level_renderer.h"
 
 
+namespace hex {
+
 class AudioRenderer;
 class LevelView;
 class Resources;
@@ -47,6 +49,8 @@ protected:
 
     friend class LevelRenderer;
     friend class MapWindow;
+};
+
 };
 
 #endif

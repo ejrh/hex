@@ -6,6 +6,9 @@
 
 #include "hexav/resources/paint.h"
 
+
+namespace hex {
+
 class Game;
 class GameView;
 class Resources;
@@ -32,5 +35,7 @@ private:
 };
 
 void register_transition_paint_interpreters();
+
+};
 
 #endif

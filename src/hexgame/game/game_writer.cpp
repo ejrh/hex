@@ -8,6 +8,8 @@
 #include "hexgame/game/game_messages.h"
 
 
+namespace hex {
+
 void GameWriter::write(Game *game) {
     write_unit_types(game);
     write_tile_types(game);
@@ -105,3 +107,5 @@ void GameWriter::write_turn(Game *game) {
 void GameWriter::emit(const boost::shared_ptr<Message>& message) {
     receiver->receive(message);
 }
+
+};

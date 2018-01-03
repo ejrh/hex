@@ -5,6 +5,8 @@
 #include "hexav/ui/ui.h"
 
 
+namespace hex {
+
 UiWindow::UiWindow(int x, int y, int width, int height, UiWindowFlags flags, Atom name):
         x(x), y(y), width(width), height(height), flags(flags), name(name),
         parent(nullptr) {
@@ -80,3 +82,5 @@ void UiWindow::set_paint_script(Script::pointer paint_script) {
     this->set_flag(WindowHasPaint);
     this->needs_repaint = true;
 }
+
+};

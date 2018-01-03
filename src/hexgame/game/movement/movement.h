@@ -3,6 +3,9 @@
 
 #include "hexutil/basics/point.h"
 
+
+namespace hex {
+
 class UnitStack;
 class Tile;
 class UnitType;
@@ -48,6 +51,8 @@ public:
 private:
     Game *game;
     Point target_pos;
+};
+
 };
 
 #endif

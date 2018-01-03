@@ -5,6 +5,8 @@
 #include "hexav/ui/controls.h"
 
 
+namespace hex {
+
 UiLabel::UiLabel(int x, int y, int width, int height):
         UiWindow(x, y, width, height, WindowIsVisible), text_image(NULL) {
 }
@@ -172,3 +174,5 @@ void UiTabBar::select_tab(UiWindow *tab) {
     }
     push_ui_event(tab_event_type, this);
 }
+
+};

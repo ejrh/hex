@@ -1,6 +1,8 @@
 #ifndef NOISE_H
 #define NOISE_H
 
+namespace hex {
+
 typedef float float_vector[2];
 
 class PerlinNoise {
@@ -19,6 +21,8 @@ private:
     float_vector **gradients;
 
     int grid_width, grid_height;
+};
+
 };
 
 #endif

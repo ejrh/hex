@@ -1,6 +1,7 @@
 #ifndef POINT_H
 #define POINT_H
 
+namespace hex {
 
 struct Point {
     int x, y;
@@ -46,5 +47,6 @@ inline std::ostream& operator<<(std::ostream& os, const std::vector<Point> &path
     return os << "]";
 }
 
+};
 
 #endif

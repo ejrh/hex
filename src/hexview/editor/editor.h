@@ -1,9 +1,10 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
-
 #include "hexav/ui/ui.h"
 
+
+namespace hex {
 
 class Game;
 class GameView;
@@ -26,6 +27,7 @@ private:
     LevelWindow *level_window;
 };
 
+};
 
 #endif
 

@@ -6,6 +6,8 @@
 #include "hexav/resources/image_ref.h"
 
 
+namespace hex {
+
 class Graphics;
 class Resources;
 class UnitView;
@@ -26,6 +28,8 @@ protected:
     Resources *resources;
 
     friend class LevelRenderer;
+};
+
 };
 
 #endif

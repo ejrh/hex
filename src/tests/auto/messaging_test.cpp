@@ -9,6 +9,9 @@
 #define BOOST_TEST_MODULE MessagingTest
 #include <boost/test/included/unit_test.hpp>
 
+
+namespace hex {
+
 struct Fixture {
     Fixture() {
         register_builtin_messages();
@@ -106,3 +109,5 @@ BOOST_AUTO_TEST_CASE(message_with_vector) {
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+};

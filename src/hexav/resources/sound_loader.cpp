@@ -4,6 +4,8 @@
 #include "hexav/resources/resource_loader.h"
 
 
+namespace hex {
+
 void SoundLoader::load(const std::string& filename) {
     std::string basename = get_resource_basename(filename);
     if (has_extension(basename, ".wav")) {
@@ -18,3 +20,5 @@ void SoundLoader::load(const std::string& filename) {
         BOOST_LOG_TRIVIAL(warning) << "Don't know how to load sound from: " << filename;
     }
 }
+
+};

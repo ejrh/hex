@@ -6,6 +6,8 @@
 #include <boost/test/included/unit_test.hpp>
 
 
+namespace hex {
+
 bool check_arrays(const std::vector<std::string>& expected, const std::vector<std::string>& actual) {
     BOOST_CHECK_EQUAL(expected.size(), actual.size());
     if (expected.size() == actual.size()) {
@@ -86,3 +88,5 @@ BOOST_AUTO_TEST_CASE(pattern_121) {
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+};

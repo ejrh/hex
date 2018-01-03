@@ -10,6 +10,9 @@
 //TODO remove dependency on resources!
 #include "hexav/resources/resources.h"
 
+
+namespace hex {
+
 Sound::Sound():
         chunk(NULL) {
 }
@@ -113,3 +116,5 @@ Sound *Audio::load_sound(const std::string& filename) {
 
     return sound;
 }
+
+};

@@ -1,6 +1,8 @@
 #ifndef MOVE_H
 #define MOVE_H
 
+namespace hex {
+
 class Move {
 public:
     Move():
@@ -19,5 +21,7 @@ inline std::ostream& operator<<(std::ostream& os, const Move& a) {
     os << boost::format("%d-%d, type %s effect %d") % a.participant_id % a.target_id % a.type % a.effect;
     return os;
 }
+
+};
 
 #endif

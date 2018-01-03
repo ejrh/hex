@@ -4,6 +4,8 @@
 #include "hexutil/scripting/scripting.h"
 
 
+namespace hex {
+
 class ListInterpreter: public Interpreter {
 public:
     ListInterpreter(): Interpreter("[]") { }
@@ -392,3 +394,5 @@ void register_builtin_interpreters() {
     InterpreterRegistry::register_interpreter(new LogInterpreter());
     InterpreterRegistry::register_interpreter(new IncrementInterpreter());
 }
+
+};

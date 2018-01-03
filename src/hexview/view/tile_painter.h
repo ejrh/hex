@@ -3,6 +3,9 @@
 
 #include "hexutil/basics/point.h"
 
+
+namespace hex {
+
 class Game;
 class GameView;
 class ViewResources;
@@ -32,6 +35,8 @@ private:
     Counter transition_paint_counter;
     Counter transition_paint_time;
     Counter transition_script_error_counter;
+};
+
 };
 
 #endif

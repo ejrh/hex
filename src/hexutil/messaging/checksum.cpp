@@ -5,6 +5,8 @@
 #include "hexutil/messaging/serialiser.h"
 
 
+namespace hex {
+
 void MessageChecksum::receive(Message *msg) {
     std::ostringstream stream;
     Serialiser writer(stream);
@@ -15,3 +17,5 @@ void MessageChecksum::receive(Message *msg) {
     result.process_bytes(buffer.c_str(), buffer.size());
     checksum = result.checksum();
 }
+
+};

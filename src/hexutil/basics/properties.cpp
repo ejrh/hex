@@ -3,6 +3,8 @@
 #include "hexutil/basics/properties.h"
 
 
+namespace hex {
+
 std::ostream& operator<<(std::ostream& os, const Properties& p) {
     os << "{";
     bool first = true;
@@ -17,3 +19,5 @@ std::ostream& operator<<(std::ostream& os, const Properties& p) {
     os << "}";
     return os;
 }
+
+};

@@ -12,6 +12,8 @@
 #include "hexview/view/view.h"
 
 
+namespace hex {
+
 #define TILE_WIDTH 48
 #define X_SPACING 32
 #define Y_SPACING 32
@@ -261,3 +263,5 @@ void LevelWindow::draw_ghost(Ghost& ghost) {
 
     audio_renderer->render_unit_sound(*stack_view);
 }
+
+};

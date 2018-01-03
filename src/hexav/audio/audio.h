@@ -4,6 +4,8 @@
 #include "hexutil/basics/statistics.h"
 
 
+namespace hex {
+
 class Resources;
 
 // Can't define these if also including SDL_mixer.h
@@ -44,6 +46,8 @@ private:
     Counter sounds_counter;
     Counter sounds_loaded_counter;
     Counter songs_counter;
+};
+
 };
 
 #endif

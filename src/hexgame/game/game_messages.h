@@ -9,6 +9,8 @@
 #include "hexgame/game/game_serialisation.h"
 
 
+namespace hex {
+
 #define MESSAGE_TEMPLATE_NAME Game
 #define MESSAGE_TEMPLATE_INCLUDE_FILE "hexgame/game/message_types.h"
 #define MESSAGE_TEMPLATE_START_ID 1000
@@ -16,5 +18,7 @@
 
 
 void register_game_messages();
+
+};
 
 #endif

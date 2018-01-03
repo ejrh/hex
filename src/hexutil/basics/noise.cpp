@@ -2,6 +2,9 @@
 
 #include "hexutil/basics/noise.h"
 
+
+namespace hex {
+
 static float interpolate(float x1, float x2, float w) {
     return (1.0f - w) * x1 + w * x2;
 }
@@ -78,4 +81,6 @@ float PerlinNoise::value(float x, float y) {
      value = interpolate(ix0, ix1, sy);
 
      return value;
- }
+}
+
+};

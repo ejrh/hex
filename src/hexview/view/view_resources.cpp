@@ -7,6 +7,8 @@
 #include "hexview/view/view_resource_loader.h"
 
 
+namespace hex {
+
 ViewResources::ViewResources():
         Resources(),
         tile_view_defs("tile_view_defs"), feature_view_defs("feature_view_defs"),
@@ -75,3 +77,5 @@ StructureViewDef::pointer ViewResources::get_structure_view_def(const std::strin
 FactionViewDef::pointer ViewResources::get_faction_view_def(const std::string& name) {
     return faction_view_defs.get_and_warn(name);
 }
+
+};

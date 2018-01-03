@@ -12,6 +12,8 @@
 #include "hexgame/game/movement/pathfinding.h"
 
 
+namespace hex {
+
 Ai::Ai(const std::string& faction_type, MessageReceiver *dispatcher):
         faction_type(faction_type), dispatcher(dispatcher),
         update_step(0), started(false) {
@@ -116,3 +118,5 @@ UnitStack::pointer Ai::get_nearest_enemy(UnitStack& stack) {
     }
     return UnitStack::pointer();
 }
+
+};

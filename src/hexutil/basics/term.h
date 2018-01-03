@@ -1,6 +1,8 @@
 #ifndef TERM_H
 #define TERM_H
 
+namespace hex {
+
 class Term {
 public:
     virtual ~Term() { }
@@ -49,5 +51,7 @@ public:
 
 std::ostream& operator<<(std::ostream& os, const Term *term);
 std::ostream& operator<<(std::ostream& os, const Term& term);
+
+};
 
 #endif

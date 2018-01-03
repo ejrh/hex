@@ -11,6 +11,8 @@
 #include "hexview/view/combat/combat_screen.h"
 
 
+namespace hex {
+
 PreUpdater::PreUpdater(Game *game, GameView *game_view):
         game(game), game_view(game_view), combat_screen(NULL) {
 }
@@ -43,3 +45,5 @@ void PreUpdater::apply_update(Message *update) {
             break;
     }
 }
+
+};

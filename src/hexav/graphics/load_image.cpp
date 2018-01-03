@@ -4,6 +4,9 @@
 
 #include "hexav/graphics/graphics.h"
 
+
+namespace hex {
+
 void load_image(const std::string& filename, Graphics *graphics, ImageMap& image_set) {
     SDL_Surface *surface = IMG_Load(filename.c_str());
     if (surface == NULL) {
@@ -30,3 +33,5 @@ void load_image(const std::string& filename, Graphics *graphics, ImageMap& image
         key = filename.substr(pos+1);
     image_set[key] = im;
 }
+
+};

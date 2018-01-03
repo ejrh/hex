@@ -8,6 +8,8 @@
 #include "hexav/resources/resources.h"
 
 
+namespace hex {
+
 class ImageLoader {
 public:
     ImageLoader(Resources *resources, Graphics *graphics): resources(resources), graphics(graphics) { }
@@ -61,5 +63,7 @@ private:
 
 std::string get_resource_basename(const std::string& filename);
 bool has_extension(const std::string& filename, const std::string& ext);
+
+};
 
 #endif

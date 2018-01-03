@@ -18,6 +18,8 @@
 #include <boost/test/included/unit_test.hpp>
 
 
+namespace hex {
+
 #define LEVEL_WIDTH 8
 #define LEVEL_HEIGHT 8
 
@@ -372,3 +374,5 @@ BOOST_AUTO_TEST_CASE(movement_model_check_path) {
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+};

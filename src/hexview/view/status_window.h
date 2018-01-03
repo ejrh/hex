@@ -4,6 +4,8 @@
 #include "hexav/ui/ui.h"
 
 
+namespace hex {
+
 class Resources;
 class Graphics;
 class GameView;
@@ -20,6 +22,8 @@ private:
     Resources *resources;
     Graphics *graphics;
     GameView *view;
+};
+
 };
 
 #endif

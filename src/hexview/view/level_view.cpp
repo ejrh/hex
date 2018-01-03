@@ -14,6 +14,8 @@
 #include "hexview/view/view_def.h"
 
 
+namespace hex {
+
 LevelView::LevelView(Level *level):
         level(level), visibility(*level), ghost_visibility(*level) {
     resize(level->width, level->height);
@@ -53,3 +55,5 @@ bool LevelView::check_discovered(const Point& tile_pos) {
 bool LevelView::check_visibility(const Point& tile_pos) {
     return visibility.check(tile_pos) || ghost_visibility.check(tile_pos);
 }
+
+};

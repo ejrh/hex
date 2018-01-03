@@ -13,6 +13,8 @@
 #include "hexview/view/view_resources.h"
 
 
+namespace hex {
+
 class UnitImage: public UiWindow {
 public:
     UnitImage(int x, int y, int width, int height, UiWindowFlags flags, Atom name, ViewResources *resources, UnitPainter *painter, UnitRenderer *renderer):
@@ -207,3 +209,5 @@ void StackWindow::invert_unit_selection() {
         view->selected_units.toggle(i);
     update_stack();
 }
+
+};

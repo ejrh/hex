@@ -5,6 +5,8 @@
 #include "hexview/view/view_resource_messages.h"
 
 
+namespace hex {
+
 #include "hexview/view/message_types.h"
 #define MESSAGE_TEMPLATE_NAME ViewResource
 #define MESSAGE_TEMPLATE_INCLUDE_FILE "hexview/view/message_types.h"
@@ -17,3 +19,5 @@ static ViewResourceMessageFactory view_resource_messages_factory;
 void register_view_resource_messages() {
     MessageTypeRegistry::add_factory(&view_resource_messages_factory);
 }
+
+};

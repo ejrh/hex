@@ -18,6 +18,8 @@
 #include "hexview/view/view_def.h"
 
 
+namespace hex {
+
 GameView::GameView(Game *game, Player *player, ViewResources *resources, Throttle *throttle, MessageReceiver *dispatcher):
         game(game), player(player), level_view(&game->level), resources(resources), unit_painter(game, this, resources),
         throttle(throttle), dispatcher(dispatcher),
@@ -339,3 +341,5 @@ void GameView::fix_stack_views() {
         unit_stack_views.remove(*iter);
     }
 }
+
+};

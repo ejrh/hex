@@ -7,6 +7,8 @@
 #include "hexav/ui/window_painter.h"
 
 
+namespace hex {
+
 class WindowExecution: public PaintExecution {
 public:
     WindowExecution(StrMap<Script> *scripts, Resources *resources, Paint *paint, UiWindow *window):
@@ -117,3 +119,5 @@ void register_window_interpreters() {
     InterpreterRegistry::register_interpreter(new PositionControlInterpreter());
     InterpreterRegistry::register_interpreter(new HideControlInterpreter());
 }
+
+};

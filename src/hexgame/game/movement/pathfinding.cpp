@@ -8,6 +8,8 @@
 #include "hexgame/game/movement/pathfinding.h"
 
 
+namespace hex {
+
 PathfinderBase::PathfinderBase(int width, int height) {
     nodes.resize(width, height);
 
@@ -57,7 +59,7 @@ void PathfinderBase::start(const Point start_point) {
 }
 
 void PathfinderBase::get_neighbours(const PathfinderQueueEntry& entry, PathfinderQueueEntry neighbours[]) {
-    PointNeighbours neighbour_points = ::get_neighbours(entry.point);
+    PointNeighbours neighbour_points = hex::get_neighbours(entry.point);
     for (int i = 0; i < 6; i++) {
         if (nodes.contains(neighbour_points[i])) {
             neighbours[i].point = neighbour_points[i];
@@ -209,3 +211,5 @@ int Pathfinder::heuristic(const PathfinderQueueEntry& entry) {
     return h;
 
 }
+
+};
