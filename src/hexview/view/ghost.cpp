@@ -4,7 +4,9 @@
 
 #include "hexgame/game/game.h"
 #include "hexgame/game/movement/movement.h"
+#include "hexgame/game/throttle.h"
 
+#include "hexview/view/ghost.h"
 #include "hexview/view/player.h"
 #include "hexview/view/unit_painter.h"
 #include "hexview/view/view.h"
@@ -25,6 +27,12 @@ Ghost::Ghost(GameView *view, UnitPainter *unit_painter, UnitStack::pointer& stac
     stack_view->moving = true;
     stack_view->posture = Moving;
     stack_view->selected = view->selected_stack_id == stack->id;
+
+    view->throttle->lock_stack(stack_view->stack->id);
+}
+
+Ghost::~Ghost() {
+    view->throttle->unlock_stack(stack_view->stack->id);
 }
 
 void Ghost::set_target(Point target) {

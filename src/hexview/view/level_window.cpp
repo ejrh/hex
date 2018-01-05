@@ -8,6 +8,7 @@
 #include "hexgame/game/game.h"
 
 #include "hexview/view/audio_renderer.h"
+#include "hexview/view/ghost.h"
 #include "hexview/view/level_window.h"
 #include "hexview/view/view.h"
 

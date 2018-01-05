@@ -5,6 +5,7 @@
 #include "hexgame/game/game.h"
 
 #include "hexview/view/view.h"
+#include "hexview/view/ghost.h"
 #include "hexview/view/level_renderer.h"
 #include "hexview/view/level_window.h"
 #include "hexview/view/map_window.h"

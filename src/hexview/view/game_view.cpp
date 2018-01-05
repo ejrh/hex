@@ -11,6 +11,7 @@
 #include "hexgame/game/movement/pathfinding.h"
 
 #include "hexview/editor/editor.h"
+#include "hexview/view/ghost.h"
 #include "hexview/view/player.h"
 #include "hexview/view/tile_painter.h"
 #include "hexview/view/unit_painter.h"
@@ -28,6 +29,10 @@ GameView::GameView(Game *game, Player *player, ViewResources *resources, Throttl
         selected_stack_id(0), selected_structure(), debug_mode(false),
         ghost_counter("view.ghost") {
     update_player();
+}
+
+void GameView::stop() {
+    ghosts.clear();
 }
 
 void GameView::update() {

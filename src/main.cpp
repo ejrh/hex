@@ -35,6 +35,7 @@
 #include "hexview/editor/palette.h"
 #include "hexview/editor/editor.h"
 #include "hexview/view/audio_renderer.h"
+#include "hexview/view/ghost.h"
 #include "hexview/view/level_renderer.h"
 #include "hexview/view/level_window.h"
 #include "hexview/view/map_window.h"
@@ -280,6 +281,12 @@ void run(Options& options) {
     log_statistics("beginning of loop");
     loop.run();
     log_statistics("end of loop");
+
+    // We have to explicitly "stop" the game view, so that any current ghosts can be destroyed.
+    // This unlocks any locked stacks, which could release a lot of blocked messages.  If this
+    // happened in the game view's destructor, it could result in messages being sent to
+    // subscribers that have already been destroyed.  It's all pretty yucky.
+    game_view.stop();
 
     node_interface->stop();
     delete node_interface;

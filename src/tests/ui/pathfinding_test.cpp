@@ -11,6 +11,7 @@
 #include "hexgame/game/movement/movement.h"
 #include "hexgame/game/movement/pathfinding.h"
 
+#include "hexview/view/ghost.h"
 #include "hexview/view/level_renderer.h"
 #include "hexview/view/level_window.h"
 #include "hexview/view/view.h"

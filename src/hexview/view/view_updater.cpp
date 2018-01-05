@@ -5,6 +5,7 @@
 #include "hexgame/game/game.h"
 #include "hexgame/game/game_messages.h"
 
+#include "hexview/view/ghost.h"
 #include "hexview/view/player.h"
 #include "hexview/view/structure_painter.h"
 #include "hexview/view/tile_painter.h"

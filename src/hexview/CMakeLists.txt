@@ -18,6 +18,7 @@ set(srcs
         view/audio_renderer.h
         view/game_view.cpp
         view/ghost.cpp
+        view/ghost.h
         view/level_renderer.cpp
         view/level_renderer.h
         view/level_view.cpp
