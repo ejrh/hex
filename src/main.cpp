@@ -128,14 +128,14 @@ public:
         } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_F6) {
             LocalNode *local = dynamic_cast<LocalNode *>(node_interface);
             if (local != NULL) {
-                MessageReceiver& updater = local->get_publisher();
+                MessageReceiver& emitter = local->get_emitter();
 
                 generator->mountain_level += (evt->key.keysym.mod & KMOD_SHIFT) ? 0.2f : -0.2f;
                 std::cerr << "mountain_level = " << generator->mountain_level << std::endl;
-                generator->create_game(updater);
-                updater.receive(create_message(GrantFactionView, 0, 2, true));
-                updater.receive(create_message(GrantFactionControl, 0, 2, true));
-                updater.receive(create_message(GrantFactionControl, 0, 3, true));
+                generator->create_game(emitter);
+                emitter.receive(create_message(GrantFactionView, 0, 2, true));
+                emitter.receive(create_message(GrantFactionControl, 0, 2, true));
+                emitter.receive(create_message(GrantFactionControl, 0, 3, true));
             }
             return true;
         }
@@ -219,16 +219,16 @@ void run(Options& options) {
         LocalNode *local = static_cast<LocalNode *>(node_interface);
         local->add_ai(std::string("independent"));
 
-        MessageReceiver& updater = local->get_publisher();
+        MessageReceiver& emitter = local->get_emitter();
         if (options.load_filename.empty()) {
-            generator.create_game(updater);
+            generator.create_game(emitter);
         } else {
-            load_game(options.load_filename, updater);
+            load_game(options.load_filename, emitter);
         }
 
-        updater.receive(create_message(GrantFactionView, 0, 2, true));
-        updater.receive(create_message(GrantFactionControl, 0, 2, true));
-        updater.receive(create_message(GrantFactionControl, 0, 3, true));
+        emitter.receive(create_message(GrantFactionView, 0, 2, true));
+        emitter.receive(create_message(GrantFactionControl, 0, 2, true));
+        emitter.receive(create_message(GrantFactionControl, 0, 3, true));
     }
 
     node_interface->start();

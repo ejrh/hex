@@ -12,17 +12,27 @@
 namespace hex {
 
 GameArbiter::GameArbiter(Game *game, MessageReceiver *publisher):
-        game(game), publisher(publisher),
-        command_counter("arbiter.command"), update_counter("arbiter.update") {
+        game(game), game_updater(game), emitter(1000),
+        command_logger("Command: "), command_counter("arbiter.command"),
+        update_logger("Update: "), update_counter("arbiter.update") {
+    emitter.subscribe(&game_updater);
+    emitter.subscribe(&update_logger);
+    emitter.subscribe(&update_counter);
+    emitter.subscribe(publisher);
 }
 
 GameArbiter::~GameArbiter() {
 }
 
+MessageReceiver& GameArbiter::get_emitter() {
+    return emitter;
+}
+
 void GameArbiter::receive(Message *command) {
     try {
-        process_command(command);
+        command_logger.receive(command);
         command_counter.receive(command);
+        process_command(command);
     } catch (const DataError& err) {
         BOOST_LOG_TRIVIAL(error) << "Invalid command received; " << err.what();
     }
@@ -185,9 +195,8 @@ void GameArbiter::spawn_units() {
         }
 }
 
-void GameArbiter::emit(boost::shared_ptr<Message> update) {
-    publisher->receive(update);
-    update_counter.receive(update.get());
+void GameArbiter::emit(const boost::shared_ptr<Message>& update) {
+    emitter.receive(update.get());
 }
 
 };

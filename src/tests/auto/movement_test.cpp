@@ -10,7 +10,6 @@
 #include "hexgame/game/game.h"
 #include "hexgame/game/game_arbiter.h"
 #include "hexgame/game/game_messages.h"
-#include "hexgame/game/game_updater.h"
 #include "hexgame/game/game_writer.h"
 #include "hexgame/game/movement/movement.h"
 
@@ -104,14 +103,13 @@ unsigned long game_checksum(Game& game) {
 
 struct Fixture {
     Fixture():
-             game_updater(&game), writer(std::cout), updater(1000), arbiter(&game, &updater), collector(1000) {
+             writer(std::cout), publisher(1000), arbiter(&game, &publisher), collector(1000) {
         register_game_messages();
         register_property_names();
 
-        updater.subscribe(&game_updater);
-        create_game(updater);
-        updater.subscribe(&writer);
-        updater.subscribe(&collector);
+        create_game(arbiter.get_emitter());
+        publisher.subscribe(&writer);
+        publisher.subscribe(&collector);
 
         path_to_empty.push_back(STEP_POS);
         path_to_empty.push_back(EMPTY_POS);
@@ -137,9 +135,8 @@ struct Fixture {
     }
 
     Game game;
-    GameUpdater game_updater;
     MessageWriter writer;
-    Publisher updater;
+    Publisher publisher;
     GameArbiter arbiter;
     MessageQueue collector;
 

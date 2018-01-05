@@ -9,8 +9,6 @@
 #include "hexgame/game/game.h"
 #include "hexgame/game/game_arbiter.h"
 #include "hexgame/game/game_messages.h"
-#include "hexgame/game/game_serialisation.h"
-#include "hexgame/game/game_updater.h"
 #include "hexgame/game/game_writer.h"
 #include "hexgame/game/combat/combat.h"
 
@@ -99,18 +97,16 @@ unsigned long game_checksum(Game& game) {
 
 struct Fixture {
     Fixture():
-             game_updater(&game), writer(std::cout), updater(1000), arbiter(&game, &updater) {
+             writer(std::cout), publisher(1000), arbiter(&game, &publisher) {
         register_property_names();
 
-        updater.subscribe(&game_updater);
-        create_game(updater);
-        updater.subscribe(&writer);
+        create_game(arbiter.get_emitter());
+        publisher.subscribe(&writer);
     }
 
     Game game;
-    GameUpdater game_updater;
     MessageWriter writer;
-    Publisher updater;
+    Publisher publisher;
     GameArbiter arbiter;
 };
 

@@ -10,7 +10,6 @@
 
 #include "hexgame/game/game.h"
 #include "hexgame/game/game_messages.h"
-#include "hexgame/game/game_updater.h"
 #include "hexgame/game/generation/generator.h"
 #include "hexgame/game/generation/level_generator.h"
 #include "hexgame/game/movement/movement.h"

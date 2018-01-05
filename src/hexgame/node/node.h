@@ -6,7 +6,6 @@
 
 #include "hexgame/game/game.h"
 #include "hexgame/game/game_arbiter.h"
-#include "hexgame/game/game_updater.h"
 #include "hexgame/game/throttle.h"
 
 
@@ -25,9 +24,7 @@ public:
 class LocalNode: public NodeInterface {
 public:
     LocalNode():
-            game(), game_updater(&game), publisher(1000), throttle(&publisher), arbiter(&game, &throttle), dispatch_queue(1000), update_logger("Update: ") {
-        publisher.subscribe(&update_logger);
-        publisher.subscribe(&game_updater);
+            publisher(1000), throttle(&publisher), arbiter(&game, &throttle), dispatch_queue(1000) {
     }
 
     virtual void receive(Message *command) {
@@ -63,8 +60,8 @@ public:
         ais.push_back(ai);
     }
 
-    MessageReceiver& get_publisher() {
-        return publisher;
+    MessageReceiver& get_emitter() {
+        return arbiter.get_emitter();
     }
 
     Throttle& get_throttle() {
@@ -73,12 +70,10 @@ public:
 
 protected:
     Game game;
-    GameUpdater game_updater;
     Publisher publisher;
     Throttle throttle;
     GameArbiter arbiter;
     MessageQueue dispatch_queue;
-    MessageLogger update_logger;
     std::vector<Ai *> ais;
 };
 
