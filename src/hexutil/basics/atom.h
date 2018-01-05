@@ -74,6 +74,7 @@ public:
     static Atom empty;
 
 private:
+    static boost::mutex mtx;
     static std::unordered_map<int, std::string> id_to_str;
     static std::unordered_map<std::string, int> str_to_id;
     static int next_free_id;

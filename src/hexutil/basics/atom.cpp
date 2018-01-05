@@ -5,6 +5,7 @@
 
 namespace hex {
 
+boost::mutex AtomRegistry::mtx;
 std::unordered_map<int, std::string> AtomRegistry::id_to_str;
 std::unordered_map<std::string, int> AtomRegistry::str_to_id;
 int AtomRegistry::next_free_id(1);
@@ -12,6 +13,8 @@ const std::string AtomRegistry::empty_string;
 Atom AtomRegistry::empty(0, "");
 
 Atom AtomRegistry::register_atom(const std::string& name, int id) {
+    boost::lock_guard<boost::mutex> guard(mtx);
+
     auto found = id_to_str.find(id);
     if (found != id_to_str.end()) {
         if (found->second != name)
