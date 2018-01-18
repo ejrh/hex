@@ -8,5 +8,7 @@ before_install:
 script:
   - mkdir build
   - cd build
-  - cmake -D CMAKE_BUILD_TYPE=Release -D TREAT_WARNINGS_AS_ERRORS=1 .. && make -j 2 && ctest --output-on-failure
+  - cmake -D CMAKE_BUILD_TYPE=Release -D TREAT_WARNINGS_AS_ERRORS=1 .. 
+  - make -j 2
+  - ctest --output-on-failure
 
