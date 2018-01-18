@@ -34,7 +34,7 @@ void replay_messages(std::istream& input, MessageReceiver& receiver, const std::
     } catch (Error err) {
         int line_no = reader.line();
         int col_no = reader.column();
-        BOOST_LOG_TRIVIAL(error) << boost::format("Error in %s:%d:%d: %s") % input_name % line_no % col_no % err.what();
+        throw DataError() << boost::format("Error in %s:%d:%d: %s") % input_name % line_no % col_no % err.what();
     }
 }
 

@@ -14,10 +14,18 @@
 #include "hexview/view/view_resource_loader.h"
 #include "hexview/view/view_resource_messages.h"
 
+#define BOOST_TEST_MODULE DataTest
+#include <boost/test/included/unit_test.hpp>
+
 
 namespace hex {
 
-void run() {
+struct Fixture {
+};
+
+BOOST_FIXTURE_TEST_SUITE(hexgrid_test, Fixture)
+
+BOOST_AUTO_TEST_CASE(test_resources_load) {
     register_builtin_messages();
     register_game_messages();
     register_resource_messages();
@@ -27,6 +35,14 @@ void run() {
     ViewResources resources;
     ViewResourceLoader loader(&resources, NULL, NULL);
     loader.load("data/resources.txt");
+}
+
+BOOST_AUTO_TEST_CASE(test_game_load) {
+    register_builtin_messages();
+    register_game_messages();
+    register_resource_messages();
+    register_view_resource_messages();
+    register_property_names();
 
     Game game;
     GameUpdater game_updater(&game);
@@ -34,17 +50,6 @@ void run() {
     game_loader.load("data/game.txt");
 }
 
+BOOST_AUTO_TEST_SUITE_END()
+
 };
-
-
-using namespace hex;
-
-int main(int argc, char *argv[]) {
-    try {
-        run();
-    } catch (Error &ex) {
-        BOOST_LOG_TRIVIAL(fatal) << "Failed with: " << ex.what();
-    }
-
-    return 0;
-}
