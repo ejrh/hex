@@ -43,6 +43,7 @@ void WindowPainter::repaint_window(UiWindow *window) {
     execution.variables["window_width"] = window->width;
     execution.variables["window_height"] = window->height;
     execution.variables["window_has_focus"] = (window->flags & WindowHasFocus) != 0;
+    execution.variables["window_has_dragging"] = (window->flags & WindowHasDragging) != 0;
     execution.variables["window_is_selected"] = (window->flags & WindowIsSelected) != 0;
 
     window->initialise_paint(&execution);

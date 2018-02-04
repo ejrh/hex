@@ -2,6 +2,7 @@
 
 #include "hexutil/basics/point.h"
 
+#include "hexav/ui/button.h"
 #include "hexav/ui/controls.h"
 
 #include "hexview/editor/brush.h"

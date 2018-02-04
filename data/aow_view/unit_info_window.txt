@@ -113,7 +113,12 @@ DefineScript("UNIT_INFO_CLOSE_BUTTON", [
     SetVariable(paint_library, genericb),
 
     SetVariable(paint_frame_offset, 19),
-    If($window_has_focus, SetVariable(paint_frame_offset, 25)),
+    If($window_has_focus, [
+        SetVariable(paint_frame_offset, 25),
+        If($window_has_dragging, [
+            SetVariable(paint_frame_offset, 22)
+        ]),
+    ]),
 
     SetVariable(paint_offset_x, 0),
     SetVariable(paint_offset_y, 0),

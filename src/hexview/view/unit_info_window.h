@@ -2,6 +2,7 @@
 #define UNIT_INFO_WINDOW_H
 
 #include "hexav/ui/ui.h"
+#include "hexav/ui/button.h"
 #include "hexav/ui/controls.h"
 
 

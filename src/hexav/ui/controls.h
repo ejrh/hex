@@ -38,20 +38,6 @@ public:
     UiLabel *title;
 };
 
-class UiButton: public UiWindow {
-public:
-    UiButton(int x, int y, int width, int height, const std::string& label_text);
-    UiButton(int x, int y, int width, int height, const std::string& label_text, Atom name);
-    virtual ~UiButton();
-
-    virtual bool receive_mouse_event(SDL_Event *evt, int x, int y);
-    virtual bool receive_ui_event(SDL_Event *evt, UiWindow *control);
-    virtual void draw(const UiContext& context);
-
-public:
-    UiLabel *label;
-};
-
 class UiTextList: public UiWindow {
 public:
     UiTextList(int x, int y, int width, int height);

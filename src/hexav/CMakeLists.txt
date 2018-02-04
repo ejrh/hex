@@ -23,6 +23,8 @@ set(srcs
         resources/resource_messages.h
         resources/sound_loader.cpp
         resources/sound_ref.h
+        ui/button.cpp
+        ui/button.h
         ui/controls.cpp
         ui/controls.h
         ui/loop.cpp

@@ -18,10 +18,11 @@ enum UiWindowFlags {
     WindowIsSelected = 4,
     WindowHasPaint = 8,
     WindowHasFocus = 16,
-    WindowWantsMouseEvents = 32,
-    WindowWantsKeyboardEvents = 64,
-    WindowWantsUiEvents = 128,
-    WindowWantsGlobalEvents = 256
+    WindowHasDragging = 32,
+    WindowWantsMouseEvents = 64,
+    WindowWantsKeyboardEvents = 128,
+    WindowWantsUiEvents = 256,
+    WindowWantsGlobalEvents = 512
 };
 
 inline UiWindowFlags operator|(UiWindowFlags a, UiWindowFlags b) {
@@ -74,6 +75,7 @@ public:
     void add_child(UiWindow *child);
     void remove_child(UiWindow *child);
     void set_flag(UiWindowFlags flag) { flags = flags | flag; }
+    void set_flag(UiWindowFlags flag, bool value) { if (value) set_flag(flag); else clear_flag(flag); }
     void clear_flag(UiWindowFlags flag) { flags = flags & ~flag; }
     UiWindow *get_control(Atom control_name) const;
     void set_paint_script(StrMap<Script>& scripts, const std::string& script_name);
@@ -120,6 +122,7 @@ public:
 };
 
 extern Uint32 drag_event_type;
+extern Uint32 drag_end_event_type;
 extern Uint32 focus_event_type;
 extern Uint32 unfocus_event_type;
 extern Uint32 click_event_type;

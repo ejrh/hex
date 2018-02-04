@@ -9,6 +9,7 @@ namespace hex {
 Uint32 user_event_type_base = 0;
 
 Uint32 drag_event_type = 0;
+Uint32 drag_end_event_type = 0;
 Uint32 focus_event_type = 0;
 Uint32 unfocus_event_type = 0;
 Uint32 click_event_type = 0;
@@ -29,13 +30,14 @@ static bool is_ui_event(SDL_Event *event) {
 
 static void register_user_events() {
     if (user_event_type_base == 0) {
-        user_event_type_base = SDL_RegisterEvents(4);
+        user_event_type_base = SDL_RegisterEvents(6);
 
         drag_event_type = user_event_type_base;
-        focus_event_type = user_event_type_base+1;
-        unfocus_event_type = user_event_type_base+2;
-        click_event_type = user_event_type_base+3;
-        tab_event_type = user_event_type_base+4;
+        drag_end_event_type = user_event_type_base+1;
+        focus_event_type = user_event_type_base+2;
+        unfocus_event_type = user_event_type_base+3;
+        click_event_type = user_event_type_base+4;
+        tab_event_type = user_event_type_base+5;
     }
 }
 
@@ -87,6 +89,7 @@ bool UiLoop::deliver_event(UiWindow& window, SDL_Event *event, int offset_x, int
             }
             consumed = window.receive_mouse_event(event, x, y);
             if (event->type == SDL_MOUSEBUTTONDOWN && consumed) {
+                window.set_flag(WindowHasDragging);
                 dragging_window = &window;
             }
         } else if (window.flags & WindowHasFocus) {
@@ -146,8 +149,11 @@ void UiLoop::update() {
         if (root) {
             deliver_event(*root, &evt, 0, 0);
         }
-        if (evt.type == SDL_MOUSEBUTTONUP) {
-            dragging_window = NULL;
+        if (evt.type == SDL_MOUSEBUTTONUP && dragging_window != NULL) {
+            evt.type = drag_end_event_type;
+            dragging_window->receive_mouse_event(&evt, 0, 0); // TODO pass in position of mouse relative to window
+            dragging_window->clear_flag(WindowHasDragging);
+            dragging_window = nullptr;
         } else if (evt.type == SDL_MOUSEMOTION && dragging_window != NULL) {
             evt.type = drag_event_type;
             dragging_window->receive_mouse_event(&evt, 0, 0); // TODO pass in position of mouse relative to window

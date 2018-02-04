@@ -5,6 +5,7 @@
 #include "hexav/graphics/font.h"
 #include "hexav/graphics/graphics.h"
 #include "hexav/ui/ui.h"
+#include "hexav/ui/button.h"
 #include "hexav/ui/controls.h"
 
 
@@ -56,8 +57,11 @@ public:
     TestCloseButton(int x, int y, int width, int height):
             UiButton(x, y, width, height, "Close") { }
 
-    bool receive_mouse_event(SDL_Event *evt, int x, int y) {
-        if (evt->type == SDL_MOUSEBUTTONDOWN) {
+    bool receive_ui_event(SDL_Event* evt, UiWindow *control) {
+        if (UiButton::receive_ui_event(evt, control))
+            return true;
+
+        if (evt->type == click_event_type && control == this) {
             parent->clear_flag(WindowIsVisible);
             return true;
         }
