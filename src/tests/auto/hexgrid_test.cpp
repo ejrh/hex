@@ -79,6 +79,28 @@ BOOST_AUTO_TEST_CASE(test_pixel_to_point) {
     BOOST_CHECK_EQUAL(point, Point(0, 0));
 }
 
+BOOST_AUTO_TEST_CASE(test_circle_iterator_zero_radius) {
+    hexgrid_circle circle(Point(7,21), 0);
+    auto iter = circle.begin();
+    BOOST_CHECK_EQUAL(*iter, Point(7, 21));
+    BOOST_CHECK_EQUAL(iter == circle.end(), false);
+    BOOST_CHECK_EQUAL(iter != circle.end(), true);
+    iter++;
+    BOOST_CHECK_EQUAL(iter == circle.end(), true);
+    BOOST_CHECK_EQUAL(iter != circle.end(), false);
+}
+
+BOOST_AUTO_TEST_CASE(test_circle_iterator_big) {
+    hexgrid_circle circle(Point(7,21), 2);
+    std::vector<Point> points;
+    int max = 20;
+    for (auto iter = circle.begin(); iter != circle.end() && max > 0; iter++, max--) {
+        points.push_back(*iter);
+    }
+    std::vector<Point> expected_points = get_circle_points(Point(7,21), 2, 100, 100);
+    BOOST_CHECK_EQUAL(points, expected_points);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 };

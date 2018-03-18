@@ -93,13 +93,11 @@ public:
                 else
                     paint = closed_tile;
 
-                std::vector<int> scanlines = get_circle_scanlines(tile_pos, brush_radius);
-                for (unsigned int i = 0; i < scanlines.size(); i++) {
-                    for (int j = -scanlines[i]; j <= scanlines[i]; j++) {
-                        Point point(tile_pos.x + j, tile_pos.y - brush_radius + i);
-                        if (level_view.level->contains(point))
-                            level_view.level->tiles[point].type = paint;
-                    }
+                hexgrid_circle circle(tile_pos, brush_radius);
+                for (auto iter = circle.begin(); iter != circle.end(); iter++) {
+                    const Point& point = *iter;
+                    if (level_view.level->contains(point))
+                        level_view.level->tiles[point].type = paint;
                 }
             } break;
             case PivotMode: {

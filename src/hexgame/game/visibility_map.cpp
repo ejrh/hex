@@ -48,20 +48,12 @@ void VisibilityMap::apply(const UnitStack& stack, bool visible)
 }
 
 void VisibilityMap::draw(const Point& point, int sight, bool visible) {
-    std::vector<int> scanlines = get_circle_scanlines(point, sight);
-    for (unsigned int i = 0; i < scanlines.size(); i++) {
-        int row = point.y - sight + i;
-        if (row < 0 || row >= visibility.height)
+    hexgrid_circle circle(point, sight);
+    for (auto iter = circle.begin(); iter != circle.end(); iter++) {
+        const Point& point = *iter;
+        if (point.x < 0 || point.y < 0 || point.x >= visibility.width || point.y >= visibility.height)
             continue;
-        int x1 = point.x - scanlines[i];
-        int x2 = point.x + scanlines[i];
-        if (x1 < 0)
-            x1 = 0;
-        if (x2 >= visibility.width)
-            x2 = visibility.width - 1;
-        for (int j = x1; j <= x2; j++) {
-            visibility[row][j] = visible;
-        }
+        visibility[point] = visible;
     }
 }
 
