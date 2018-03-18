@@ -60,10 +60,6 @@ void Ghost::update(unsigned int update_ms) {
     }
 
     stack_view->update(update_ms);
-    UnitStack& stack = *stack_view->stack;
-    if (view->player->has_view(stack.owner)) {
-        view->level_view.ghost_visibility.draw(target_position, stack.sight(), true);
-    }
 }
 
 };

@@ -152,6 +152,7 @@ public:
     Path find_path(UnitStack& party, const Point& from_pos, const Point& to_pos);
     void clear_drawn_path();
     void update_visibility();
+    void update_ghost_visibility();
     UnitStackView::pointer get_stack_view(int stack_id);
     TileView *get_tile_view(const Point tile_pos);
     void move_units(int stack_id, const IntSet selected_units, Point point);

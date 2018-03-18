@@ -2,6 +2,7 @@
 
 #include "hexutil/basics/hexgrid.h"
 
+#include "hexgame/game/constants.h"
 #include "hexgame/game/game.h"
 #include "hexgame/game/visibility_map.h"
 
@@ -35,11 +36,29 @@ void VisibilityMap::rebuild(const Level& level) {
 
     for (int i = 0; i < level.tiles.height; i++)
         for (int j = 0; j < level.tiles.width; j++) {
-            UnitStack::pointer stack = level.tiles[i][j].stack;
-            if (!stack)
-                continue;
-            apply(*stack, true);
+            Point point(j, i);
+            apply(level, point, true);
         }
+}
+
+void VisibilityMap::update(const Level& level, const Point& centre, int radius) {
+    draw(centre, radius, false);
+    hexgrid_circle circle(centre, radius + MAX_VISIBILITY_RADIUS);
+    for (auto iter = circle.begin(); iter != circle.end(); iter++) {
+        const Point& point = *iter;
+        apply(level, point, true);
+    }
+}
+
+void VisibilityMap::apply(const Level& level, const Point& point, bool visible) {
+    if (!level.contains(point))
+        return;
+
+    UnitStack::pointer stack = level.tiles[point].stack;
+    if (!stack)
+        return;
+
+    apply(*stack, visible);
 }
 
 void VisibilityMap::apply(const UnitStack& stack, bool visible)

@@ -61,7 +61,6 @@ void GameView::update() {
         stack_view.update(update_ms);
     }
 
-    level_view.ghost_visibility.clear();
     auto iter = ghosts.begin();
     while (iter != ghosts.end()) {
         Ghost& ghost = *iter->second;
@@ -75,6 +74,7 @@ void GameView::update() {
         else
             iter++;
     }
+    update_ghost_visibility();
 }
 
 void GameView::update_player() {
@@ -221,6 +221,17 @@ void GameView::update_visibility() {
     }
 }
 
+void GameView::update_ghost_visibility() {
+    level_view.ghost_visibility.clear();
+    for (auto iter = ghosts.begin(); iter != ghosts.end(); iter++) {
+        const Ghost& ghost = *iter->second;
+        UnitStack::pointer stack = ghost.stack_view->stack;
+        if (player->has_view(stack->owner)) {
+            level_view.ghost_visibility.draw(ghost.position, stack->sight(), true);
+        }
+    }
+}
+
 UnitStackView::pointer GameView::get_stack_view(int stack_id) {
     return unit_stack_views.find(stack_id);
 }
@@ -255,6 +266,8 @@ void GameView::move_units(int stack_id, const IntSet selected_units, Point point
         }
 
         ++ghost_counter;
+        update_visibility();
+        update_ghost_visibility();
     } else {
         Ghost& ghost = *found->second;
         ghost.set_target(point);
@@ -294,8 +307,6 @@ void GameView::transfer_units(int stack_id, const IntSet selected_units, Path pa
     target_stack_view->moving = false;
     stack_view->moving = false;
     if (player->has_view(stack->owner)) {
-        //TODO!
-        //view->level_view.visibility.unmask(*target);
         update_visibility();
     }
     unit_painter.repaint(*stack_view, *stack_view->stack);

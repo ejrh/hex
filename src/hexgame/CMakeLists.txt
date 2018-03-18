@@ -3,6 +3,7 @@ set(srcs
         ai/ai.h
         ai/ai_updater.cpp
         ai/ai_updater.h
+        game/constants.h
         game/end_of_turn.cpp
         game/end_of_turn.h
         game/game.cpp

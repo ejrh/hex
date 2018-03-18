@@ -19,6 +19,8 @@ public:
     void clear();
     void fill();
     void rebuild(const Level& level);
+    void update(const Level& level, const Point& centre, int radius);
+    void apply(const Level& level, const Point& point, bool visible);
     void apply(const UnitStack& stack, bool visible);
     void draw(const Point& point, int sight, bool visible);
 
