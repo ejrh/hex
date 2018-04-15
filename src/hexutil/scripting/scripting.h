@@ -61,9 +61,9 @@ public:
     std::vector<int> get_as_intvector(const Term *term, unsigned int position);
 
     template<typename T>
-    const T& get_as(const Atom& name) const {
+    const T get_as(const Atom& name) const {
         try {
-            return get(name).get<T>();
+            return get(name).get_as<T>();
         } catch (const boost::bad_get& err) {
             throw ScriptError() << boost::format("Can't get variable %s as specified type (value is %s): %s") % name % get(name) % err.what();
         }

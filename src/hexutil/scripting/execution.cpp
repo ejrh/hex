@@ -77,7 +77,7 @@ const Datum Execution::get_argument(const Term *term, unsigned int position) {
     }
     Datum datum = arg_term->datum;
     while (datum.is<Atom>()) {
-        const std::string& atom_name = static_cast<const std::string>(datum.get<Atom>());
+        const std::string& atom_name = datum.get_as_str();
         if (atom_name.empty() || atom_name.at(0) != '$')
             break;
         const char *var_str = atom_name.c_str() + 1;

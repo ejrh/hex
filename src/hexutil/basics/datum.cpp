@@ -44,9 +44,9 @@ Atom Datum::get_as_atom() const {
 
 int Datum::get_as_int() const {
     if (is<int>()) {
-        return get<int>();
+        return boost::get<int>(value);
     } else if (is<float>()) {
-        return static_cast<int>(get<float>());
+        return static_cast<int>(boost::get<float>(value));
     } else {
         return 0;
     }

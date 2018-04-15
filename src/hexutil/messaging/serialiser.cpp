@@ -153,7 +153,7 @@ Deserialiser& Deserialiser::operator>>(Term *& term) {
         *this >> datum;
         if (datum.is<Atom>() && peek() == '(') {
             //TODO reuse list parsing code for arguments
-            CompoundTerm *compound_term = new CompoundTerm(datum.get<Atom>());
+            CompoundTerm *compound_term = new CompoundTerm(datum.get_as_known<Atom>());
             skip_expected('(');
             expect_seperator = false;
             while (true) {
