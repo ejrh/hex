@@ -1,0 +1,64 @@
+ImageLibrary(hlfsl, "images/units/hlf/hlfsl.ilb")
+ImageLibrary(hlfwr, "images/units/hlf/hlfwr.ilb")
+ImageLibrary(hlfcl, "images/units/hlf/hlfcl.ilb")
+ImageLibrary(hlfpr, "images/units/hlf/hlfpr.ilb")
+ImageLibrary(hlfrg, "images/units/hlf/hlfrg.ilb")
+ImageLibrary(hlfer, "images/units/hlf/hlfer.ilb")
+ImageLibrary(centr, "images/units/hlf/centr.ilb")
+
+CreateUnitView("halfling_slinger")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [22, 23])),
+    SetVariable(unit_lib, hlfsl),
+    Call(archer_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("halfling_swordsman")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [20, 21])),
+    SetVariable(unit_lib, hlfwr),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("halfling_cleric")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [26, 27])),
+    SetVariable(unit_lib, hlfcl),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("halfling_rider")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [24, 25])),
+    SetVariable(unit_lib, hlfpr),
+    Call(mounted_ps)
+])
+UnitSounds(1, ["horse1.wav", "horse2.wav"])
+
+CreateUnitView("halfling_rogue")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [28])),
+    SetVariable(unit_lib, hlfrg),
+    Call(infantry_ps)
+])
+UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
+
+CreateUnitView("halfling_eagle_rider")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [29, 30])),
+    SetVariable(unit_lib, hlfer),
+    Call(flying_ps)
+])
+UnitSounds(1, ["flutter.wav"])
+
+CreateUnitView("halfling_centaur")
+UnitPaint([
+    SetVariable(death_frame, Choose($unit_variation, [33])),
+    SetVariable(unit_lib, centr),
+    Call(mounted_ps)
+])
+UnitSounds(1, ["horse1.wav", "horse2.wav"])
+

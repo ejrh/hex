@@ -33,6 +33,14 @@ CreateUnitType("frostling_yeti", {"Walking", "Climbing", "Moves": 28, "Sight": 3
 CreateUnitType("frostling_queen", {"Walking", "Swimming", "PathOfIce", "Moves": 26, "Sight": 3, "Attack": 4, "Defence": 3, "Damage": 3, "Health": 8, "Strike", "Alignment": neutral})
 CreateUnitType("frostling_drake", {"Flying", "Moves": 36, "Sight": 5, "Attack": 7, "Defence": 5, "Damage": 4, "Health": 17, "Strike", "Alignment": neutral})
 
+CreateUnitType("halfling_slinger", {"Walking", "Moves": 24, "Sight": 3, "Attack": 3, "Defence": 2, "Damage": 2, "Health": 5, "Alignment": good})
+CreateUnitType("halfling_swordsman", {"Walking", "Moves": 24, "Sight": 3, "Attack": 4, "Defence": 2, "Damage": 2, "Health": 5, "Strike", "Alignment": good})
+CreateUnitType("halfling_cleric", {"Walking", "Moves": 24, "Sight": 3, "Attack": 3, "Defence": 2, "Damage": 2, "Health": 5, "Healing", "Alignment": good})
+CreateUnitType("halfling_rider", {"Walking", "Moves": 32, "Sight": 3, "Attack": 5, "Defence": 2, "Damage": 3, "Health": 7, "Strike", "Charge", "Alignment": good})
+CreateUnitType("halfling_rogue", {"Walking", "Moves": 26, "Sight": 3, "Attack": 5, "Defence": 4, "Damage": 4, "Health": 6, "Strike", "Alignment": good})
+CreateUnitType("halfling_eagle_rider", {"Flying", "Moves": 36, "Sight": 5, "Attack": 5, "Defence": 2, "Damage": 4, "Health": 8, "Strike", "Charge", "Alignment": good})
+CreateUnitType("halfling_centaur", {"Walking", "Forestry", "Moves": 36, "Sight": 3, "Attack": 6, "Defence": 4, "Damage": 3, "Health": 11, "Archery", "Strike", "Charge", "Alignment": good})
+
 CreateUnitType("elf_archer", {"Walking", "Forestry", "Moves": 26, "Sight": 3, "Attack": 3, "Defence": 2, "Damage": 1, "Health": 5, "Archery", "SpawnGroup": 1, "SpawnChance": 10, "Alignment": good})
 CreateUnitType("elf_swordsman", {"Walking", "Forestry", "Moves": 26, "Sight": 3, "Attack": 5, "Defence": 2, "Damage": 2, "Health": 5, "Strike", "SpawnGroup": 1, "SpawnChance": 10, "Alignment": good})
 CreateUnitType("elf_priest", {"Walking", "Forestry", "Moves": 26, "Sight": 3, "Attack": 3, "Defence": 2, "Damage": 2, "Health": 5, "Strike", "Healing", "SpawnGroup": 1, "SpawnChance": 5, "Alignment": good})
