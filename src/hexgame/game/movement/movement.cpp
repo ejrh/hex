@@ -133,18 +133,24 @@ void MovementModel::move(UnitStack& party, const IntSet& selected_units, const P
 void MovementModel::alter_terrain(Point pos, Atom type) const {
     std::vector<Point> points = get_circle_points(pos, 1, game->level.width, game->level.height);
     TileType::pointer new_tile_type;
+    TileType::pointer new_water_tile_type;
     if (type == PathOfLife)
         new_tile_type = game->tile_types.get("grass");
     else if (type == PathOfDeath)
         new_tile_type = game->tile_types.get("wasteland");
-    else
+    else {
         new_tile_type = game->tile_types.get("snow");
+        new_water_tile_type = game->tile_types.get("ice");
+        //TODO ice is only temporary!  Maybe we need a terrain type for "temporary ice"
+    }
     for (auto iter = points.begin(); iter != points.end(); iter++) {
         if (!game->level.contains(*iter))
             continue;
         Tile& tile = game->level.tiles[*iter];
         if (tile.type->name == "grass" || tile.type->name == "desert" || tile.type->name == "snow" || tile.type->name == "steppe")
             tile.type = new_tile_type;
+        else if (tile.type->name == "water" && new_water_tile_type)
+            tile.type = new_water_tile_type;
     }
 }
 
