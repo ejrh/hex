@@ -15,7 +15,7 @@ namespace hex {
 
 class ScriptLoader: public MessageReceiver {
 public:
-    ScriptLoader(StrMap<Script> *scripts): scripts(scripts) {
+    ScriptLoader(AtomMap<Script> *scripts): scripts(scripts) {
     }
 
     void receive(Message *msg) {
@@ -34,7 +34,7 @@ public:
     }
 
 private:
-    StrMap<Script> *scripts;
+    AtomMap<Script> *scripts;
 };
 
 struct Fixture {
@@ -50,7 +50,7 @@ struct Fixture {
     }
 
 public:
-    StrMap<Script> scripts;
+    AtomMap<Script> scripts;
     Atom VarX, VarY, VarZ;
 };
 

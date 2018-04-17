@@ -14,7 +14,7 @@
 
 namespace hex {
 
-Ai::Ai(const std::string& faction_type, MessageReceiver *dispatcher):
+Ai::Ai(const Atom faction_type, MessageReceiver *dispatcher):
         faction_type(faction_type), dispatcher(dispatcher),
         update_step(0), started(false) {
     updater = new AiUpdater(this);

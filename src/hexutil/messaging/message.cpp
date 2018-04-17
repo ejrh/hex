@@ -13,8 +13,8 @@ Serialiser& operator<<(Serialiser& serialiser, const Message *msg) {
         serialiser << msg->id;
         serialiser.end_tuple();
     }
-    std::string type_name = MessageTypeRegistry::get_message_type_name(msg->type);
-    serialiser.type_begin_tuple(type_name.c_str());
+    Atom type_name = MessageTypeRegistry::get_message_type_name(msg->type);
+    serialiser.type_begin_tuple(type_name);
     msg->write(serialiser);
     serialiser.end_tuple();
 
@@ -31,12 +31,12 @@ Deserialiser& operator>>(Deserialiser& deserialiser, Message *& msg) {
         deserialiser >> id;
         deserialiser.end_tuple();
     }
-    std::string type_name;
+    Atom type_name;
     deserialiser.type_begin_tuple(type_name);
     int type = MessageTypeRegistry::get_message_type(type_name);
     msg = MessageTypeRegistry::new_message(type);
     if (msg == NULL) {
-        deserialiser.error("Could not create class of type: %s", type_name.c_str());
+        deserialiser.error("Could not create class of type: %s", type_name);
         return deserialiser;
     }
     msg->origin = origin;
@@ -65,18 +65,15 @@ Deserialiser& operator>>(Deserialiser& deserialiser, MessageSequence& sequence) 
 }
 
 
-const std::string MessageFactory::empty_string;
-
-
 MessageTypeRegistry MessageTypeRegistry::instance;
-std::string MessageTypeRegistry::undefined_message_type_str("UndefinedMessageType");
+Atom MessageTypeRegistry::undefined_message_type_name("UndefinedMessageType");
 
 
 void MessageTypeRegistry::add_factory(MessageFactory *factory) {
     instance.factories.push_back(factory);
 }
 
-int MessageTypeRegistry::get_message_type(const std::string& name) {
+int MessageTypeRegistry::get_message_type(const Atom name) {
     for (auto iter = instance.factories.begin(); iter != instance.factories.end(); iter++) {
         MessageFactory *factory = *iter;
         int rv = factory->get_message_type(name);
@@ -87,17 +84,17 @@ int MessageTypeRegistry::get_message_type(const std::string& name) {
     return UndefinedMessageType;
 }
 
-const std::string& MessageTypeRegistry::get_message_type_name(int type) {
+Atom MessageTypeRegistry::get_message_type_name(int type) {
     for (auto iter = instance.factories.begin(); iter != instance.factories.end(); iter++) {
         MessageFactory *factory = *iter;
         if (type >= factory->min_type() && type <= factory->max_type()) {
-            const std::string& rv = factory->get_message_type_name(type);
-            if (rv != MessageFactory::empty_string)
+            Atom rv = factory->get_message_type_name(type);
+            if (rv != AtomRegistry::empty)
                 return rv;
         }
     }
 
-    return undefined_message_type_str;
+    return undefined_message_type_name;
 }
 
 Message *MessageTypeRegistry::new_message(int type) {

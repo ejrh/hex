@@ -32,7 +32,7 @@ public:
 
     Datum execute(const Term *instruction, Execution *execution) const {
         const Atom script_name = execution->get_argument(instruction, 0).get_as_atom();
-        StrMap<Script>& scripts = *execution->scripts;
+        AtomMap<Script>& scripts = *execution->scripts;
         Script::pointer script = scripts.find(script_name);
         if (!script)
             throw ScriptError() << "Script not found: " << script_name;
@@ -63,7 +63,7 @@ public:
     SetVariableInterpreter(): Interpreter("SetVariable") { }
 
     Datum execute(const Term *instruction, Execution *execution) const {
-        const Atom& property = execution->get_argument(instruction, 0);
+        const Atom property = execution->get_argument(instruction, 0);
         const Datum& value = execution->get_argument(instruction, 1);
         execution->variables[property] = value;
         return value;
@@ -355,7 +355,7 @@ public:
 
     Datum execute(const Term *instruction, Execution *execution) const {
         const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
-        const Atom& property = execution->get_argument(instruction, 0);
+        const Atom property = execution->get_argument(instruction, 0);
         int value = execution->variables[property].get_as_int();
 
         if (list_term->subterms.size() == 1) {

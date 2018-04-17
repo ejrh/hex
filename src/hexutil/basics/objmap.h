@@ -1,6 +1,7 @@
 #ifndef OBJMAP_H
 #define OBJMAP_H
 
+#include "hexutil/basics/atom.h"
 #include "hexutil/basics/error.h"
 
 
@@ -96,6 +97,12 @@ public:
 private:
     std::string name;
     map data;
+};
+
+template<typename T>
+class AtomMap: public ObjMap<Atom, T> {
+public:
+    AtomMap(const char *name): ObjMap<Atom, T>(name) { }
 };
 
 template<typename T>

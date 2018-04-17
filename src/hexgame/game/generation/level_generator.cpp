@@ -18,7 +18,7 @@
 
 namespace hex {
 
-std::string feature(Tile& tile) {
+Atom feature(Tile& tile) {
     return tile.feature_type->name;
 }
 
@@ -69,7 +69,7 @@ void LevelGenerator::generate_terrain() {
                 tile.type = (sector == 4) ? types["ice"] : types["water"];
                 tile.feature_type = (sector == 4) ? feature_types["ice"] : feature_types["water"];
             } else {
-                std::string type_name;
+                Atom type_name;
                 switch (sector) {
                     case 0: type_name = "grass"; break;
                     case 1: type_name = "desert"; break;
@@ -83,7 +83,7 @@ void LevelGenerator::generate_terrain() {
                     throw Error() << boost::format("Unknown tile type: %s") % type_name;
                 }
 
-                std::string feature_type_name = "plains";
+                Atom feature_type_name = "plains";
 
                 if (height > generator->mountain_level) {
                     feature_type_name = "mountain1";
@@ -107,7 +107,7 @@ void LevelGenerator::coalesce_mountains() {
             Point tile_pos(j, i);
             Tile& tile = level.tiles[tile_pos];
 
-            std::string tile_feature = feature(tile);
+            Atom tile_feature = feature(tile);
 
             int mountain_rand = rand();
             int hill_rand = rand();
@@ -238,7 +238,7 @@ void LevelGenerator::add_forests() {
 
             int forest_rand = rand();
             if (forest_value > 0.0 && feature(tile) == "plains" && forest_rand % 4 != 0) {
-                std::string forest_type = (forest_rand % 3 == 0) ? "dead_forest" : "forest";
+                Atom forest_type = (forest_rand % 3 == 0) ? "dead_forest" : "forest";
                 tile.feature_type = feature_types[forest_type];
             }
         }

@@ -7,7 +7,7 @@ ImageLibrary(galln, "images/units/ships/galln.ilb")
 
 
 # TODO - flying_ps is for things with flapping wings
-CreateUnitView("air_galley")
+CreateUnitView(air_galley)
 UnitPaint([
     SetVariable(death_frame, 14),
     SetVariable(unit_lib, hmnas),
@@ -16,7 +16,7 @@ UnitPaint([
 UnitSounds(1, ["air1.wav", "air2.wav"])
 
 # TODO - flying_ps is for things with flapping wings
-CreateUnitView("balloon")
+CreateUnitView(balloon)
 UnitPaint([
     SetVariable(death_frame, 54),
     SetVariable(unit_lib, dwras),
@@ -24,28 +24,28 @@ UnitPaint([
 ])
 UnitSounds(1, ["air1.wav", "air2.wav"])
 
-CreateUnitView("transport_ship")
+CreateUnitView(transport_ship)
 UnitPaint([
     SetVariable(unit_lib, sloop),
     Call(ship_ps)
 ])
 UnitSounds(1, ["waterlg.wav"])
 
-CreateUnitView("dragon_ship")
+CreateUnitView(dragon_ship)
 UnitPaint([
     SetVariable(unit_lib, dship),
     Call(ship_ps)
 ])
 UnitSounds(1, ["waterlg.wav"])
 
-CreateUnitView("galley")
+CreateUnitView(galley)
 UnitPaint([
     SetVariable(unit_lib, gally),
     Call(ship_ps)
 ])
 UnitSounds(1, ["waterlg.wav"])
 
-CreateUnitView("galleon")
+CreateUnitView(galleon)
 UnitPaint([
     SetVariable(unit_lib, galln),
     Call(ship_ps)

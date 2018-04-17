@@ -58,7 +58,7 @@ public:
         }
 
         if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_PAGEDOWN) {
-            std::map<std::string,UnitViewDef::pointer>& map = resources->unit_view_defs;
+            std::map<Atom, UnitViewDef::pointer>& map = resources->unit_view_defs;
             auto iter = map.find(view_def->name);
             iter++;
             if (iter == map.end()) {
@@ -66,7 +66,7 @@ public:
             }
             set_view_def(iter->second);
         } else if (evt->type == SDL_KEYDOWN && evt->key.keysym.sym == SDLK_PAGEUP) {
-            std::map<std::string,UnitViewDef::pointer>& map = resources->unit_view_defs;
+            std::map<Atom, UnitViewDef::pointer>& map = resources->unit_view_defs;
             auto iter = map.find(view_def->name);
             if (iter == map.begin()) {
                 iter = map.end();
@@ -87,7 +87,7 @@ public:
         view_def = new_view_def;
         std::string background_name;
         boost::regex pattern_re(".*_ship|gall.*|sea_.*|mermaid");
-        if (boost::regex_match(view_def->name, pattern_re)) {
+        if (boost::regex_match(static_cast<std::string>(view_def->name), pattern_re)) {
             background_name = "water";
         } else {
             background_name = "grass";

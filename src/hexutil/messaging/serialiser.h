@@ -119,7 +119,7 @@ public:
         return *this;
     }
 
-    void type_begin_tuple(const char *type);
+    void type_begin_tuple(const Atom type);
     void begin_vector(int size);
     void end_vector();
     void begin_map(int size);
@@ -282,7 +282,7 @@ public:
 
     Deserialiser& operator>>(Term *& term);
 
-    void type_begin_tuple(std::string &type_name);
+    void type_begin_tuple(Atom& type_name);
     void begin_vector(int &size);
     void end_vector();
     void begin_map(int &size);

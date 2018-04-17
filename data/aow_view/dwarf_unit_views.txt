@@ -7,7 +7,7 @@ ImageLibrary(giant, "images/units/dwr/giant.ilb")
 ImageLibrary(dwrmo, "images/units/dwr/dwrmo.ilb")
 ImageLibrary(dwrfb, "images/units/dwr/dwrfb.ilb")
 
-CreateUnitView("dwarf_archer")
+CreateUnitView(dwarf_archer)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [42, 43])),
     SetVariable(unit_lib, dwrar),
@@ -15,7 +15,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("dwarf_axeman")
+CreateUnitView(dwarf_axeman)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [40, 41])),
     SetVariable(unit_lib, dwrwr),
@@ -23,7 +23,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("dwarf_berserker")
+CreateUnitView(dwarf_berserker)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [48, 49])),
     SetVariable(unit_lib, dwrbz),
@@ -31,7 +31,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("dwarf_cleric")
+CreateUnitView(dwarf_cleric)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [46, 47])),
     SetVariable(unit_lib, dwrcl),
@@ -39,7 +39,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("dwarf_boar_rider")
+CreateUnitView(dwarf_boar_rider)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [44, 45])),
     SetVariable(unit_lib, dwrbr),
@@ -47,7 +47,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
-CreateUnitView("dwarf_giant")
+CreateUnitView(dwarf_giant)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [52, 53])),
     SetVariable(unit_lib, giant),
@@ -55,7 +55,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
-CreateUnitView("dwarf_mole")
+CreateUnitView(dwarf_mole)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [38, 39])),
     SetVariable(unit_lib, dwrmo),
@@ -63,7 +63,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["flutter.wav"])
 
-CreateUnitView("dwarf_firstborn")
+CreateUnitView(dwarf_firstborn)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [50, 51])),
     SetVariable(unit_lib, dwrfb),

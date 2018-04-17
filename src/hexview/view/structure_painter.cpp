@@ -42,11 +42,11 @@ void StructurePainter::repaint(StructureView& structure_view) {
     execution.add_properties(&tile.type->properties);
 
     Atom terrain_type_atom = AtomRegistry::atom("terrain_type");
-    execution.variables.set<std::string>(terrain_type_atom, tile.type->name);
+    execution.variables.set<Atom>(terrain_type_atom, tile.type->name);
 
     if (structure.owner) {
         Atom faction_type_atom = AtomRegistry::atom("faction_type");
-        execution.variables.set<std::string>(faction_type_atom, structure.owner->type_name);
+        execution.variables.set<Atom>(faction_type_atom, structure.owner->type_name);
     }
 
     Atom selected_atom = AtomRegistry::atom("selected");

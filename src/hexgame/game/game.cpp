@@ -27,7 +27,7 @@ void Game::set_level_data(const Point& offset, const std::vector<std::string>& t
 
         Tile& tile = level.tiles[tile_pos];
 
-        const std::string& tile_type_name = tile_data[i];
+        const Atom tile_type_name = tile_data[i];
         TileType::pointer tile_type = tile_types.get(tile_type_name);
         if (!tile_type) {
             BOOST_LOG_TRIVIAL(error) << "Unknown tile type: " << tile_type_name;
@@ -35,7 +35,7 @@ void Game::set_level_data(const Point& offset, const std::vector<std::string>& t
             tile.type = tile_type;
         }
 
-        const std::string& feature_type_name = feature_data[i];
+        const Atom feature_type_name = feature_data[i];
         FeatureType::pointer feature_type = feature_types.get(feature_type_name);
         if (!feature_type) {
             BOOST_LOG_TRIVIAL(error) << "Unknown feature type: " << feature_type_name;
@@ -69,7 +69,7 @@ StructureType::pointer Game::create_structure_type(StructureType& structure_type
     return new_structure_type;
 }
 
-Faction::pointer Game::create_faction(int id, const std::string& type_name, const std::string& name) {
+Faction::pointer Game::create_faction(int id, const Atom type_name, const Atom name) {
     Faction::pointer faction = boost::make_shared<Faction>(id, type_name, name, level.width, level.height);
     factions.put(id, faction);
     return faction;
@@ -89,7 +89,7 @@ UnitStack::pointer Game::create_unit_stack(int id, const Point position, int own
     return new_stack;
 }
 
-Unit::pointer Game::create_unit(int stack_id, const std::string& type_name) {
+Unit::pointer Game::create_unit(int stack_id, const Atom type_name) {
     UnitType::pointer type = unit_types.get(type_name);
 
     UnitStack::pointer stack = stacks.get(stack_id);
@@ -109,7 +109,7 @@ Unit::pointer Game::create_unit(int stack_id, const std::string& type_name) {
     return new_unit;
 }
 
-Structure::pointer Game::create_structure(const Point& position, const std::string& type_name, int owner_id) {
+Structure::pointer Game::create_structure(const Point& position, const Atom type_name, int owner_id) {
     Tile& tile = level.tiles[position];
     if (tile.structure) {
         throw DataError() << "Structure already exists at: " << position;

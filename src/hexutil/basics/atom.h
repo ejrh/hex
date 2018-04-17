@@ -19,13 +19,17 @@ public:
         return id == other.id;
     }
 
+    bool operator!=(const Atom& other) const {
+        return id != other.id;
+    }
+
     bool operator<(const Atom& other) const {
         return id < other.id;
     }
 
-    /*operator int() const {
+    operator int() const {
         return id;
-    }*/
+    }
 
     // Defined below as they reference AtomRegistry
     operator const std::string&() const;
@@ -49,7 +53,7 @@ public:
         return register_atom(name, next_free_id);
     }
 
-    static const std::string& name(const Atom& atom) {
+    static const std::string& name(const Atom atom) {
         auto found = id_to_str.find(atom.id);
         if (found != id_to_str.end())
             return found->second;
@@ -64,7 +68,7 @@ public:
         return atom(name).id;
     }
 
-    static inline int id(const Atom& atom) {
+    static inline int id(const Atom atom) {
         return atom.id;
     }
 
@@ -95,6 +99,10 @@ inline Atom::Atom(const std::string& name): id(AtomRegistry::id(name)) { }
 
 inline std::ostream& operator<<(std::ostream& os, const Atom& atom) {
     return os << AtomRegistry::name(atom);
+}
+
+inline Atom operator+(const Atom& atom1, const Atom& atom2) {
+    return AtomRegistry::atom(AtomRegistry::name(atom1) + AtomRegistry::name(atom2));
 }
 
 };

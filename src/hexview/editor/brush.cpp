@@ -11,27 +11,27 @@
 
 namespace hex {
 
-static bool compatible(const std::string& tile_type, const FeatureType& feature_type) {
+static bool compatible(const Atom tile_type, const FeatureType& feature_type) {
     if (feature_type.has_property(RequiredTileType)) {
         std::string required_pattern = feature_type.get_property<std::string>(RequiredTileType);
         boost::regex required_re(required_pattern);
-        if (!boost::regex_match(tile_type, required_re))
+        if (!boost::regex_match(static_cast<const std::string&>(tile_type), required_re))
             return false;
     }
     return true;
 }
 
-static bool compatible(const std::string& tile_type, const std::string& feature_type, const StructureType& structure_type) {
+static bool compatible(const Atom tile_type, const Atom feature_type, const StructureType& structure_type) {
     if (structure_type.has_property(RequiredTileType)) {
         std::string required_pattern = structure_type.get_property<std::string>(RequiredTileType);
         boost::regex required_re(required_pattern);
-        if (!boost::regex_match(tile_type, required_re))
+        if (!boost::regex_match(static_cast<const std::string&>(tile_type), required_re))
             return false;
     }
     if (structure_type.has_property(RequiredFeatureType)) {
         std::string required_pattern = structure_type.get_property<std::string>(RequiredFeatureType);
         boost::regex required_re(required_pattern);
-        if (!boost::regex_match(feature_type, required_re))
+        if (!boost::regex_match(static_cast<const std::string&>(feature_type), required_re))
             return false;
     }
     return true;
@@ -43,12 +43,12 @@ Brush::Brush(Game *game, GameView *view):
     game(game), view(view) {
 }
 
-void Brush::set_type(const std::string& type_name) {
+void Brush::set_type(Atom type_name) {
     tile_type = game->tile_types.get(type_name);
 }
 
 void Brush::next_type() {
-    std::map<std::string,TileType::pointer>& map = game->tile_types;
+    std::map<Atom, TileType::pointer>& map = game->tile_types;
     if (!tile_type) {
         auto first = map.begin();
         if (first == map.end())
@@ -88,8 +88,8 @@ void Brush::paint_tiles(const Point point) {
             Point tile_pos = Point(i,row);
             const Tile& tile = game->level.tiles[tile_pos];
 
-            std::string new_tile_type = tile.type->name;
-            std::string new_feature_type = tile.feature_type->name;
+            Atom new_tile_type = tile.type->name;
+            Atom new_feature_type = tile.feature_type->name;
 
             bool remove_structure = paint_tile(tile, new_tile_type, new_feature_type);
             if (remove_structure)
@@ -107,7 +107,7 @@ void Brush::paint_tiles(const Point point) {
     }
 }
 
-bool Brush::paint_tile(const Tile& tile, std::string& new_tile_type, std::string& new_feature_type) {
+bool Brush::paint_tile(const Tile& tile, Atom& new_tile_type, Atom& new_feature_type) {
     if (tile.has_property(Immutable)) {
         return false;
     }

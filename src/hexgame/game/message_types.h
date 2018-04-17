@@ -21,16 +21,16 @@ MSG_TYPE(CreateStructureType, WM(StructureType))
 
 MSG_TYPE(SetLevel, WM2(int, int))
 MSG_TYPE(SetLevelData, WM3(Point, CompressableStringVector, CompressableStringVector))
-MSG_TYPE(CreateFaction, WM3(int, std::string, std::string))
+MSG_TYPE(CreateFaction, WM3(int, Atom, Atom))
 MSG_TYPE(SetFactionDiscovered, WM3(int, int, CompressableStringVector))
 
 MSG_TYPE(CreateStack, WM3(int, Point, int))
-MSG_TYPE(CreateUnit, WM2(int, std::string))
+MSG_TYPE(CreateUnit, WM2(int, Atom))
 MSG_TYPE(MoveUnits, WM3(int, IntSet, Point))
 MSG_TYPE(TransferUnits, WM4(int, IntSet, Path, int))
 MSG_TYPE(DestroyStack, WM(int))
 
-MSG_TYPE(CreateStructure, WM3(Point, std::string, int))
+MSG_TYPE(CreateStructure, WM3(Point, Atom, int))
 MSG_TYPE(DestroyStructure, WM(Point))
 
 MSG_TYPE(GrantFactionView, WM3(int, int, bool))

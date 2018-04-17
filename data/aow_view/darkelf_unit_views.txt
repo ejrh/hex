@@ -5,7 +5,7 @@ ImageLibrary(dlfhr, "images/units/dlf/dlfhr.ilb")
 ImageLibrary(dlfex, "images/units/dlf/dlfex.ilb")
 ImageLibrary(dlfsq, "images/units/dlf/dlfsq.ilb")
 
-CreateUnitView("darkelf_archer")
+CreateUnitView(darkelf_archer)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [232, 233])),
     SetVariable(unit_lib, dlfar),
@@ -13,7 +13,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("darkelf_swordsman")
+CreateUnitView(darkelf_swordsman)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [230, 231])),
     SetVariable(unit_lib, dlfwr),
@@ -21,7 +21,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("darkelf_priest")
+CreateUnitView(darkelf_priest)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [238, 239])),
     SetVariable(unit_lib, dlfcl),
@@ -29,7 +29,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("darkelf_rider")
+CreateUnitView(darkelf_rider)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [236, 237])),
     SetVariable(unit_lib, dlfhr),
@@ -37,7 +37,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
-CreateUnitView("darkelf_executioner")
+CreateUnitView(darkelf_executioner)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [244, 245])),
     SetVariable(unit_lib, dlfex),
@@ -45,7 +45,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
-CreateUnitView("darkelf_spiderqueen")
+CreateUnitView(darkelf_spiderqueen)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [242, 243])),
     SetVariable(unit_lib, dlfsq),

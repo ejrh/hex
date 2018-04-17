@@ -27,7 +27,7 @@ public:
 
 class CompoundTerm: public Term {
 public:
-    CompoundTerm(const Atom& functor): functor(functor) { }
+    CompoundTerm(const Atom functor): functor(functor) { }
     CompoundTerm(std::vector<Term *>& terms): functor(list_functor) {
         for (auto iter = terms.begin(); iter != terms.end(); iter++)
             add_subterm(*iter);

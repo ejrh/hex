@@ -8,7 +8,7 @@ ImageLibrary(demon, "images/units/und/demon.ilb")
 ImageLibrary(undgh, "images/units/und/undgh.ilb")
 ImageLibrary(undrp, "images/units/und/undrp.ilb")
 
-CreateUnitView("undead_archer")
+CreateUnitView(undead_archer)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [152, 153])),
     SetVariable(unit_lib, undar),
@@ -16,7 +16,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("undead_swordsman")
+CreateUnitView(undead_swordsman)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [150, 151])),
     SetVariable(unit_lib, undwr),
@@ -24,7 +24,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("undead_hell_hound")
+CreateUnitView(undead_hell_hound)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [154, 155])),
     SetVariable(unit_lib, undhh),
@@ -32,7 +32,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("undead_doom_priest")
+CreateUnitView(undead_doom_priest)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [158, 159])),
     SetVariable(unit_lib, undcl),
@@ -40,7 +40,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("undead_knight")
+CreateUnitView(undead_knight)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [156, 157])),
     SetVariable(unit_lib, undhr),
@@ -48,7 +48,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
-CreateUnitView("undead_bone_horror")
+CreateUnitView(undead_bone_horror)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [164, 165])),
     SetVariable(unit_lib, boneh),
@@ -56,7 +56,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["sftstep1.wav", "sftstep2.wav", "sftstep3.wav", "sftstep4.wav"])
 
-CreateUnitView("undead_demon")
+CreateUnitView(undead_demon)
 UnitPaint([
     SetVariable(death_frame, 16),
     SetVariable(unit_lib, demon),
@@ -64,7 +64,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("undead_wraith")
+CreateUnitView(undead_wraith)
 UnitPaint([
     SetVariable(death_frame, 161),
     SetVariable(unit_lib, undgh),
@@ -72,7 +72,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("undead_reaper")
+CreateUnitView(undead_reaper)
 UnitPaint([
     SetVariable(death_frame, 163),
     SetVariable(unit_lib, undrp),

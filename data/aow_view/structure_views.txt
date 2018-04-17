@@ -38,7 +38,7 @@ DefineScript(small_flag_ps, [
 ])
 
 
-CreateStructureView("farm")
+CreateStructureView(farm)
 StructurePaint([
     Call(pad1_ps),
     Call(small_flag_ps),
@@ -51,7 +51,7 @@ StructurePaint([
 ])
 
 
-CreateStructureView("mine")
+CreateStructureView(mine)
 StructurePaint([
     Call(small_flag_ps),
     SetVariable(paint_library, str_mine),
@@ -67,7 +67,7 @@ StructurePaint([
 ])
 
 
-CreateStructureView("power_node")
+CreateStructureView(power_node)
 StructurePaint([
     Call(small_flag_ps),
     SetVariable(paint_library, str_node),
@@ -83,7 +83,7 @@ StructurePaint([
 ])
 
 
-CreateStructureView("life_node")
+CreateStructureView(life_node)
 StructurePaint([
     Call(small_flag_ps),
     SetVariable(paint_library, pro_grov),
@@ -99,7 +99,7 @@ StructurePaint([
 ])
 
 
-CreateStructureView("death_node")
+CreateStructureView(death_node)
 StructurePaint([
     Call(small_flag_ps),
     SetVariable(paint_library, str_node),
@@ -115,7 +115,7 @@ StructurePaint([
 ])
 
 
-CreateStructureView("fire_node")
+CreateStructureView(fire_node)
 StructurePaint([
     Call(small_flag_ps),
     SetVariable(paint_library, str_node),
@@ -134,7 +134,7 @@ StructurePaint([
 ])
 
 
-CreateStructureView("water_node")
+CreateStructureView(water_node)
 StructurePaint([
     Call(small_flag_ps),
     SetVariable(paint_library, str_nrck),
@@ -150,7 +150,7 @@ StructurePaint([
 ])
 
 
-CreateStructureView("earth_node")
+CreateStructureView(earth_node)
 StructurePaint([
     Call(small_flag_ps),
     SetVariable(paint_library, str_node),
@@ -169,7 +169,7 @@ StructurePaint([
 ])
 
 
-CreateStructureView("air_node")
+CreateStructureView(air_node)
 StructurePaint([
     Call(small_flag_ps),
     SetVariable(paint_library, str_node),
@@ -185,7 +185,7 @@ StructurePaint([
 ])
 
 
-CreateStructureView("tower")
+CreateStructureView(tower)
 StructurePaint([
     Call(pad1_ps),
     Call(small_flag_ps),
@@ -198,7 +198,7 @@ StructurePaint([
 ])
 
 
-CreateStructureView("wizard_tower")
+CreateStructureView(wizard_tower)
 StructurePaint([
     Call(pad1_ps),
     SetVariable(paint_library, str_wtwr),

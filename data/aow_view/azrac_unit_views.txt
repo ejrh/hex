@@ -9,7 +9,7 @@ ImageLibrary(bhldr, "images/units/azr/bhldr.ilb")
 ImageLibrary(djinn, "images/units/azr/djinn.ilb")
 ImageLibrary(wormy, "images/units/azr/wormy.ilb")
 
-CreateUnitView("azrac_archer")
+CreateUnitView(azrac_archer)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [272, 273])),
     SetVariable(unit_lib, azrar),
@@ -17,7 +17,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("azrac_swordsman")
+CreateUnitView(azrac_swordsman)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [270, 271])),
     SetVariable(unit_lib, azrwr),
@@ -25,7 +25,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("azrac_elephant")
+CreateUnitView(azrac_elephant)
 UnitPaint([
     SetVariable(death_frame, 283),
     SetVariable(unit_lib, eleph),
@@ -33,7 +33,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["sfstep1.wav", "sfstep2.wav", "sfstep3.wav", "sfstep4.wav"])
 
-CreateUnitView("azrac_scorpion")
+CreateUnitView(azrac_scorpion)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [274, 275])),
     SetVariable(unit_lib, scorp),
@@ -41,7 +41,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["insect1.wav", "insect2.wav"])
 
-CreateUnitView("azrac_priest")
+CreateUnitView(azrac_priest)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [278, 279])),
     SetVariable(unit_lib, azrcl),
@@ -49,7 +49,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("azrac_rider")
+CreateUnitView(azrac_rider)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [276, 277])),
     SetVariable(unit_lib, azrhr),
@@ -57,7 +57,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
-CreateUnitView("azrac_yaka_avatar")
+CreateUnitView(azrac_yaka_avatar)
 UnitPaint([
     SetVariable(death_frame, 284),
     SetVariable(unit_lib, azrav),
@@ -65,7 +65,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("azrac_beholder")
+CreateUnitView(azrac_beholder)
 UnitPaint([
     SetVariable(death_frame, 280),
     SetVariable(unit_lib, bhldr),
@@ -73,7 +73,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["air1.wav", "air1.wav"])
 
-CreateUnitView("azrac_djinn")
+CreateUnitView(azrac_djinn)
 UnitPaint([
     SetVariable(death_frame, 281),
     SetVariable(unit_lib, djinn),
@@ -81,7 +81,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["air1.wav", "air1.wav"])
 
-CreateUnitView("azrac_sandworm")
+CreateUnitView(azrac_sandworm)
 UnitPaint([
     SetVariable(death_frame, 282),
     SetVariable(unit_lib, wormy),

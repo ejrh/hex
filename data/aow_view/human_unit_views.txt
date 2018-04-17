@@ -7,7 +7,7 @@ ImageLibrary(hmnms, "images/units/hmn/hmnms.ilb")
 ImageLibrary(hmnpl, "images/units/hmn/hmnpl.ilb")
 ImageLibrary(hmnsp, "images/units/hmn/hmnsp.ilb")
 
-CreateUnitView("human_archer")
+CreateUnitView(human_archer)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [2, 3])),
     SetVariable(unit_lib, hmnar),
@@ -15,7 +15,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("human_swordsman")
+CreateUnitView(human_swordsman)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [0, 1])),
     SetVariable(unit_lib, hmnwr),
@@ -23,7 +23,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("human_charlatan")
+CreateUnitView(human_charlatan)
 UnitPaint([
     SetVariable(death_frame, 10),
     SetVariable(unit_lib, hmnch),
@@ -31,7 +31,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("human_priest")
+CreateUnitView(human_priest)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [8, 9])),
     SetVariable(unit_lib, hmncl),
@@ -39,7 +39,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("human_musketeer")
+CreateUnitView(human_musketeer)
 UnitPaint([
     SetVariable(death_frame, 13),
     SetVariable(unit_lib, hmnms),
@@ -47,7 +47,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("human_cavalier")
+CreateUnitView(human_cavalier)
 UnitPaint([
     SetVariable(death_frame, 11),
     SetVariable(unit_lib, hmnpl),
@@ -55,7 +55,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
-CreateUnitView("human_cavalry")
+CreateUnitView(human_cavalry)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [6, 7])),
     SetVariable(unit_lib, hmnhr),
@@ -63,7 +63,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
-CreateUnitView("human_pikeman")
+CreateUnitView(human_pikeman)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [4, 5])),
     SetVariable(unit_lib, hmnsp),

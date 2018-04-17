@@ -6,7 +6,7 @@ ImageLibrary(orcwl, "images/units/orc/orcwl.ilb")
 ImageLibrary(orcas, "images/units/orc/orcas.ilb")
 ImageLibrary(orcdr, "images/units/orc/orcdr.ilb")
 
-CreateUnitView("orc_archer")
+CreateUnitView(orc_archer)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [172, 173])),
     SetVariable(unit_lib, orcar),
@@ -14,7 +14,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("orc_swordsman")
+CreateUnitView(orc_swordsman)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [170, 171])),
     SetVariable(unit_lib, orcwr),
@@ -22,7 +22,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("orc_shaman")
+CreateUnitView(orc_shaman)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [178, 179])),
     SetVariable(unit_lib, orccl),
@@ -30,7 +30,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("orc_cavalry")
+CreateUnitView(orc_cavalry)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [176, 177])),
     SetVariable(unit_lib, orchr),
@@ -38,7 +38,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
-CreateUnitView("orc_warlord")
+CreateUnitView(orc_warlord)
 UnitPaint([
     SetVariable(death_frame, 181),
     SetVariable(unit_lib, orcwl),
@@ -46,7 +46,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("orc_assassin")
+CreateUnitView(orc_assassin)
 UnitPaint([
     SetVariable(death_frame, 180),
     SetVariable(unit_lib, orcas),
@@ -54,7 +54,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["sftstep1.wav", "sftstep2.wav", "sftstep3.wav", "sftstep4.wav"])
 
-CreateUnitView("orc_red_dragon")
+CreateUnitView(orc_red_dragon)
 UnitPaint([
     SetVariable(death_frame, 182),
     SetVariable(unit_lib, orcdr),

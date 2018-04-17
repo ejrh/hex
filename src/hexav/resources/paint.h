@@ -62,7 +62,7 @@ private:
 
 class PaintExecution: public Execution {
 public:
-    PaintExecution(StrMap<Script> *scripts, Resources *resources, Paint *paint): Execution(scripts), resources(resources), paint(paint) {
+    PaintExecution(AtomMap<Script> *scripts, Resources *resources, Paint *paint): Execution(scripts), resources(resources), paint(paint) {
         paint_library_atom = AtomRegistry::atom("paint_library");
         paint_offset_x_atom = AtomRegistry::atom("paint_offset_x");
         paint_offset_y_atom = AtomRegistry::atom("paint_offset_y");

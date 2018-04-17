@@ -27,7 +27,7 @@ bool TransitionPaintExecution::apply_transition(const std::vector<int>& dirs, co
             return false;
         }
 
-        if (!boost::regex_match(neighbour_def->name, pattern_re)) {
+        if (!boost::regex_match(static_cast<std::string>(neighbour_def->name), pattern_re)) {
             return false;
         }
     }

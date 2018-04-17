@@ -217,7 +217,7 @@ void run(Options& options) {
 
     if (!options.client_mode) {
         LocalNode *local = static_cast<LocalNode *>(node_interface);
-        local->add_ai(std::string("independent"));
+        local->add_ai("independent");
 
         MessageReceiver& emitter = local->get_emitter();
         if (options.load_filename.empty()) {

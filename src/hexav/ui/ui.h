@@ -78,7 +78,7 @@ public:
     void set_flag(UiWindowFlags flag, bool value) { if (value) set_flag(flag); else clear_flag(flag); }
     void clear_flag(UiWindowFlags flag) { flags = flags & ~flag; }
     UiWindow *get_control(Atom control_name) const;
-    void set_paint_script(StrMap<Script>& scripts, const std::string& script_name);
+    void set_paint_script(AtomMap<Script>& scripts, Atom script_name);
     void set_paint_script(Script::pointer paint_script);
 
 public:

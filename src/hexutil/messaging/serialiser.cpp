@@ -57,7 +57,7 @@ Serialiser& Serialiser::operator<<(const Datum& datum) {
     return *this;
 }
 
-void Serialiser::type_begin_tuple(const char *type) {
+void Serialiser::type_begin_tuple(const Atom type) {
     if (need_seperator)
         out << ", ";
     out << type << "(";
@@ -178,11 +178,11 @@ Deserialiser& Deserialiser::operator>>(Term *& term) {
     return *this;
 }
 
-void Deserialiser::type_begin_tuple(std::string &type_name) {
+void Deserialiser::type_begin_tuple(Atom& type_name) {
     skip_to_next();
     std::stringbuf sbuf;
     in.get(sbuf, '(');
-    type_name.assign(sbuf.str());
+    type_name = sbuf.str();
     skip_expected('(');
     expect_seperator = false;
 }

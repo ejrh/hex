@@ -44,8 +44,8 @@ public:
     ImageMap images;
     std::unordered_map<Atom, std::unique_ptr<ImageLibraryResource> > image_libraries;
     SoundMap sounds;
-    std::unordered_map<std::string, ImageSeries> image_series;
-    StrMap<Script> scripts;
+    std::unordered_map<Atom, ImageSeries> image_series;
+    AtomMap<Script> scripts;
     std::set<std::string> songs;
 
 protected:

@@ -6,7 +6,7 @@ ImageLibrary(hlfrg, "images/units/hlf/hlfrg.ilb")
 ImageLibrary(hlfer, "images/units/hlf/hlfer.ilb")
 ImageLibrary(centr, "images/units/hlf/centr.ilb")
 
-CreateUnitView("halfling_slinger")
+CreateUnitView(halfling_slinger)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [22, 23])),
     SetVariable(unit_lib, hlfsl),
@@ -14,7 +14,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("halfling_swordsman")
+CreateUnitView(halfling_swordsman)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [20, 21])),
     SetVariable(unit_lib, hlfwr),
@@ -22,7 +22,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("halfling_cleric")
+CreateUnitView(halfling_cleric)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [26, 27])),
     SetVariable(unit_lib, hlfcl),
@@ -30,7 +30,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("halfling_rider")
+CreateUnitView(halfling_rider)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [24, 25])),
     SetVariable(unit_lib, hlfpr),
@@ -38,7 +38,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["horse1.wav", "horse2.wav"])
 
-CreateUnitView("halfling_rogue")
+CreateUnitView(halfling_rogue)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [28])),
     SetVariable(unit_lib, hlfrg),
@@ -46,7 +46,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["fstep1.wav", "fstep2.wav", "fstep3.wav", "fstep4.wav"])
 
-CreateUnitView("halfling_eagle_rider")
+CreateUnitView(halfling_eagle_rider)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [29, 30])),
     SetVariable(unit_lib, hlfer),
@@ -54,7 +54,7 @@ UnitPaint([
 ])
 UnitSounds(1, ["flutter.wav"])
 
-CreateUnitView("halfling_centaur")
+CreateUnitView(halfling_centaur)
 UnitPaint([
     SetVariable(death_frame, Choose($unit_variation, [33])),
     SetVariable(unit_lib, centr),

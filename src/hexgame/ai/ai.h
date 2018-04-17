@@ -12,7 +12,7 @@ class MessageQueue;
 
 class Ai {
 public:
-    Ai(const std::string& faction_type, MessageReceiver *dispatcher);
+    Ai(Atom faction_type, MessageReceiver *dispatcher);
     ~Ai();
 
     void start();
@@ -27,7 +27,7 @@ private:
 
 private:
     Game game;
-    std::string faction_type;
+    Atom faction_type;
     AiUpdater *updater;
     MessageQueue *receiver;
     MessageReceiver *dispatcher;

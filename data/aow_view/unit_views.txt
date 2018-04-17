@@ -108,7 +108,7 @@ DefineScript(archer_ps, [
     If(Eq($unit_posture, attacking), PaintAnimation(200, [10,11])),
     If(Eq($unit_posture, recoiling), PaintAnimation(200, [12])),
     If(Eq($unit_posture, dying), [
-        If(Eq($death_lib, 0), SetVariable(death_lib, "deadunit")),
+        If(Eq($death_lib, 0), SetVariable(death_lib, deadunit)),
         SetVariable(paint_library, $death_lib),
         SetVariable(paint_frame_offset, $death_frame),
         PaintFrame(0)
@@ -131,7 +131,7 @@ DefineScript(bomber_ps, [
     If(Eq($unit_posture, attacking), PaintAnimation(200, [1,2,3,4,5,6])),
     If(Eq($unit_posture, recoiling), PaintAnimation(200, [1,2,3,4,5,6])),
     If(Eq($unit_posture, dying), [
-        If(Eq($death_lib, 0), SetVariable(death_lib, "deadunit")),
+        If(Eq($death_lib, 0), SetVariable(death_lib, deadunit)),
         SetVariable(paint_library, $death_lib),
         SetVariable(paint_frame_offset, $death_frame),
         PaintFrame(0)
@@ -150,7 +150,7 @@ DefineScript(mounted_ps, [
     If(Eq($unit_posture, attacking), PaintAnimation(200, [10,11])),
     If(Eq($unit_posture, recoiling), PaintAnimation(200, [12])),
     If(Eq($unit_posture, dying), [
-        If(Eq($death_lib, 0), SetVariable(death_lib, "deadunit")),
+        If(Eq($death_lib, 0), SetVariable(death_lib, deadunit)),
         SetVariable(paint_library, $death_lib),
         SetVariable(paint_frame_offset, $death_frame),
         PaintFrame(0)
@@ -168,7 +168,7 @@ DefineScript(monster_ps, [
     If(Eq($unit_posture, attacking), PaintAnimation(200, [10,11])),
     If(Eq($unit_posture, recoiling), PaintAnimation(200, [12])),
     If(Eq($unit_posture, dying), [
-        If(Eq($death_lib, 0), SetVariable(death_lib, "deadunit")),
+        If(Eq($death_lib, 0), SetVariable(death_lib, deadunit)),
         SetVariable(paint_library, $death_lib),
         SetVariable(paint_frame_offset, $death_frame),
         PaintFrame(0)
@@ -186,7 +186,7 @@ DefineScript(machine_ps, [
     If(Eq($unit_posture, attacking), PaintAnimation(200, [5,6,5])),
     If(Eq($unit_posture, recoiling), PaintFrame(5)),
     If(Eq($unit_posture, dying), [
-        If(Eq($death_lib, 0), SetVariable(death_lib, "deadunit")),
+        If(Eq($death_lib, 0), SetVariable(death_lib, deadunit)),
         SetVariable(paint_library, $death_lib),
         SetVariable(paint_frame_offset, $death_frame),
         PaintFrame(0)
@@ -208,7 +208,7 @@ DefineScript(flying_ps, [
     If(Eq($unit_posture, attacking), PaintAnimation(150, [9,10,11,12,13,14,15])),
     If(Eq($unit_posture, recoiling), PaintAnimation(150, [12])),
     If(Eq($unit_posture, dying), [
-        If(Eq($death_lib, 0), SetVariable(death_lib, "deadunit")),
+        If(Eq($death_lib, 0), SetVariable(death_lib, deadunit)),
         SetVariable(paint_library, $death_lib),
         SetVariable(paint_frame_offset, $death_frame),
         PaintFrame(0)
@@ -230,7 +230,7 @@ DefineScript(hovering_ps, [
     If(Eq($unit_posture, attacking), PaintAnimation(100, [9,10])),
     If(Eq($unit_posture, recoiling), PaintFrame(11)),
     If(Eq($unit_posture, dying), [
-        If(Eq($death_lib, 0), SetVariable(death_lib, "deadunit")),
+        If(Eq($death_lib, 0), SetVariable(death_lib, deadunit)),
         SetVariable(paint_library, $death_lib),
         SetVariable(paint_frame_offset, $death_frame),
         PaintFrame(0)
@@ -249,7 +249,7 @@ DefineScript(fairy_ps, [
     If(Eq($unit_posture, attacking), PaintAnimation(100, [7,8])),
     If(Eq($unit_posture, recoiling), PaintAnimation(100, [9])),
     If(Eq($unit_posture, dying), [
-        If(Eq($death_lib, 0), SetVariable(death_lib, "deadunit")),
+        If(Eq($death_lib, 0), SetVariable(death_lib, deadunit)),
         SetVariable(paint_library, $death_lib),
         SetVariable(paint_frame_offset, $death_frame),
         PaintFrame(0)
@@ -274,7 +274,7 @@ DefineScript(airship_ps, [
     If(Match($unit_posture, "holding|attacking|recoiling"), PaintAnimation(100, [1,2,3,4,5,6])),
     If(Eq($unit_posture, moving), PaintAnimation(100, [1,2,3,4,5,6])),
     If(Eq($unit_posture, dying), [
-        If(Eq($death_lib, 0), SetVariable(death_lib, "deadunit")),
+        If(Eq($death_lib, 0), SetVariable(death_lib, deadunit)),
         SetVariable(paint_library, $death_lib),
         SetVariable(paint_frame_offset, $death_frame),
         PaintFrame(0)

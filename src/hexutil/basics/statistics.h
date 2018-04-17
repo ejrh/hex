@@ -1,11 +1,14 @@
 #ifndef STATISTICS_H
 #define STATISTICS_H
 
+#include "hexutil/basics/atom.h"
+
+
 namespace hex {
 
 class Counter;
 
-void register_counter(Counter *counter, const std::string& name);
+void register_counter(Counter *counter, const Atom name);
 void register_counter(Counter *counter, const Counter *existing);
 void unregister_counter(Counter *counter);
 void log_statistics(const std::string& label);
@@ -15,10 +18,10 @@ public:
     typedef unsigned long int counter_type;
 
     Counter() { }
-    Counter(const std::string& name): value(0) {
+    Counter(const Atom name): value(0) {
         register_counter(this, name);
     }
-    Counter(const std::string& name, counter_type value): value(value) {
+    Counter(const Atom name, counter_type value): value(value) {
         register_counter(this, name);
     }
     Counter(const Counter& other) {

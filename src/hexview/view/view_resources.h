@@ -24,18 +24,18 @@ public:
     TileViewDef::pointer create_tile_view(const TileViewDef& def);
     FeatureViewDef::pointer create_feature_view(const FeatureViewDef& def);
     StructureViewDef::pointer create_structure_view(const StructureViewDef& data);
-    TileViewDef::pointer get_tile_view_def(const std::string& name);
-    FeatureViewDef::pointer get_feature_view_def(const std::string& name);
-    UnitViewDef::pointer get_unit_view_def(const std::string& name);
-    StructureViewDef::pointer get_structure_view_def(const std::string& name);
-    FactionViewDef::pointer get_faction_view_def(const std::string& name);
+    TileViewDef::pointer get_tile_view_def(const Atom name);
+    FeatureViewDef::pointer get_feature_view_def(const Atom name);
+    UnitViewDef::pointer get_unit_view_def(const Atom name);
+    StructureViewDef::pointer get_structure_view_def(const Atom name);
+    FactionViewDef::pointer get_faction_view_def(const Atom name);
 
 public:
-    StrMap<TileViewDef> tile_view_defs;
-    StrMap<FeatureViewDef> feature_view_defs;
-    StrMap<UnitViewDef> unit_view_defs;
-    StrMap<StructureViewDef> structure_view_defs;
-    StrMap<FactionViewDef> faction_view_defs;
+    AtomMap<TileViewDef> tile_view_defs;
+    AtomMap<FeatureViewDef> feature_view_defs;
+    AtomMap<UnitViewDef> unit_view_defs;
+    AtomMap<StructureViewDef> structure_view_defs;
+    AtomMap<FactionViewDef> faction_view_defs;
 
     friend class ViewResourceLoader;
 };

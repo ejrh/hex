@@ -16,7 +16,7 @@ class Resources;
 
 class TransitionPaintExecution: public PaintExecution {
 public:
-    TransitionPaintExecution(StrMap<Script> *scripts, Resources *resources, Paint *paint,
+    TransitionPaintExecution(AtomMap<Script> *scripts, Resources *resources, Paint *paint,
             Game *game, GameView *view, Point tile_pos):
         PaintExecution(scripts, resources, paint),
         game(game), view(view),

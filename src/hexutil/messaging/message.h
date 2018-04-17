@@ -193,19 +193,16 @@ public:
     virtual int min_type() = 0;
     virtual int max_type() = 0;
 
-    virtual int get_message_type(const std::string& name) = 0;
-    virtual const std::string& get_message_type_name(int type) = 0;
+    virtual int get_message_type(const Atom name) = 0;
+    virtual Atom get_message_type_name(int type) = 0;
     virtual Message *new_message(int type) = 0;
-
-public:
-    static const std::string empty_string;
 };
 
 
 class AbstractMessageFactory: public MessageFactory {
 public:
     AbstractMessageFactory(int min_message_type, int max_message_type):
-            min_message_type(min_message_type), max_message_type(max_message_type) {
+            min_message_type(min_message_type), max_message_type(max_message_type), populated(false) {
     }
 
     int min_type() {
@@ -216,7 +213,12 @@ public:
         return max_message_type;
     }
 
-    int get_message_type(const std::string& name) {
+    int get_message_type(const Atom name) {
+        if (!populated) {
+            populate_names();
+            populated = true;
+        }
+
         for (int i = min_message_type; i <= max_message_type; i++) {
             if (name == msg_type_names[i - min_message_type])
                 return i;
@@ -224,19 +226,28 @@ public:
         return UndefinedMessageType;
     }
 
-    const std::string& get_message_type_name(int type) {
+    Atom get_message_type_name(int type) {
+        if (!populated) {
+            populate_names();
+            populated = true;
+        }
+
         if (type >= min_message_type && type <= max_message_type) {
             return msg_type_names[type - min_message_type];
         } else {
-            return empty_string;
+            return AtomRegistry::empty;
         }
     }
 
     virtual Message *new_message(int type) = 0;
 
 protected:
+    virtual void populate_names() = 0;
+
+protected:
     int min_message_type, max_message_type;
-    std::vector<std::string> msg_type_names;
+    std::vector<Atom> msg_type_names;
+    bool populated;
 };
 
 
@@ -244,8 +255,8 @@ class MessageTypeRegistry {
 public:
     static void add_factory(MessageFactory *factory);
 
-    static int get_message_type(const std::string& name);
-    static const std::string& get_message_type_name(int type);
+    static int get_message_type(const Atom name);
+    static Atom get_message_type_name(int type);
     static Message *new_message(int type);
 
 private:
@@ -257,7 +268,7 @@ private:
     std::vector<MessageFactory *> factories;
 
     static MessageTypeRegistry instance;
-    static std::string undefined_message_type_str;
+    static Atom undefined_message_type_name;
 };
 
 #define create_message(s, ...) boost::make_shared<s ## Message>(s, ##__VA_ARGS__)

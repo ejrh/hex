@@ -29,39 +29,39 @@ class Script: public boost::enable_shared_from_this<Script> {
 public:
     typedef boost::shared_ptr<Script> pointer;
 
-    Script(const std::string& name, std::unique_ptr<Term> instructions):
+    Script(const Atom name, std::unique_ptr<Term> instructions):
             name(name), instructions(std::move(instructions)) { }
-    Script(const std::string& name, const std::vector<Atom>& parameters, std::unique_ptr<Term> instructions):
+    Script(const Atom name, const std::vector<Atom>& parameters, std::unique_ptr<Term> instructions):
             name(name), parameters(parameters), instructions(std::move(instructions)) { }
 
     std::string signature() const;
 
 public:
-    std::string name;
+    Atom name;
     std::vector<Atom> parameters;
     std::unique_ptr<Term> instructions;
 };
 
 class Execution {
 public:
-    Execution(StrMap<Script> *scripts): scripts(scripts), return_active(false) { }
+    Execution(AtomMap<Script> *scripts): scripts(scripts), return_active(false) { }
     virtual ~Execution() { }
 
     void add_properties(Properties *properties);
 
     void run(Script *script);
-    void run(const std::string& script_name);
+    void run(const Atom script_name);
 
     Datum execute_script(Script *script);
     Datum execute_instruction(const Term *script_term);
 
-    const Datum& get(const Atom& name) const;
+    const Datum& get(const Atom name) const;
     const Datum get_argument(const Term *term, unsigned int position);
     const Term *get_subterm(const Term *term, unsigned int position);
     std::vector<int> get_as_intvector(const Term *term, unsigned int position);
 
     template<typename T>
-    const T get_as(const Atom& name) const {
+    const T get_as(const Atom name) const {
         try {
             return get(name).get_as<T>();
         } catch (const boost::bad_get& err) {
@@ -70,7 +70,7 @@ public:
     }
 
 public:
-    StrMap<Script> *scripts;
+    AtomMap<Script> *scripts;
     Properties locals;
     Properties variables;
     std::vector<Properties *> properties_list;
@@ -117,7 +117,7 @@ private:
 
 void register_builtin_interpreters();
 
-Script::pointer compile_script(const std::string& name, Term *parameters, Term *instruction);
+Script::pointer compile_script(const Atom name, Term *parameters, Term *instruction);
 
 };
 

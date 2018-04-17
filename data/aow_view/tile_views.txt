@@ -47,10 +47,10 @@ DefineScript(water_transition_def, [
 ##### Tiles #####
 
 
-CreateTileView("outside", 128,128,128)
+CreateTileView(outside, 128,128,128)
 
 
-CreateTileView("grass", 64,192,64)
+CreateTileView(grass, 64,192,64)
 TilePaint([
     SetVariable(paint_offset_x, -24),
     SetVariable(paint_offset_y, -16),
@@ -59,7 +59,7 @@ TilePaint([
 ])
 TransitionPaint([SetVariable(paint_frame_offset, 22), TransitionMatch("desert|snow|steppe|wasteland"), Call(ground_transition_ps)])
 
-CreateTileView("desert", 128,128,64)
+CreateTileView(desert, 128,128,64)
 TilePaint([
     SetVariable(paint_offset_x, -24),
     SetVariable(paint_offset_y, -16),
@@ -68,7 +68,7 @@ TilePaint([
 ])
 TransitionPaint([SetVariable(paint_frame_offset, 38), TransitionMatch("grass|snow|steppe|wasteland"), Call(ground_transition_ps)])
 
-CreateTileView("snow", 128,128,128)
+CreateTileView(snow, 128,128,128)
 TilePaint([
     SetVariable(paint_offset_x, -24),
     SetVariable(paint_offset_y, -16),
@@ -77,7 +77,7 @@ TilePaint([
 ])
 TransitionPaint([SetVariable(paint_frame_offset, 54), TransitionMatch("grass|desert|steppe|wasteland"), Call(ground_transition_ps)])
 
-CreateTileView("steppe", 128,96,64)
+CreateTileView(steppe, 128,96,64)
 TilePaint([
     SetVariable(paint_offset_x, -24),
     SetVariable(paint_offset_y, -16),
@@ -86,7 +86,7 @@ TilePaint([
 ])
 TransitionPaint([SetVariable(paint_frame_offset, 70), TransitionMatch("grass|desert|snow|wasteland"), Call(ground_transition_ps)])
 
-CreateTileView("wasteland", 64,64,64)
+CreateTileView(wasteland, 64,64,64)
 TilePaint([
     SetVariable(paint_offset_x, -24),
     SetVariable(paint_offset_y, -16),
@@ -99,7 +99,7 @@ TransitionPaint([SetVariable(paint_frame_offset, 86), TransitionMatch("grass|des
 ##### Water tiles #####
 
 
-CreateTileView("water", 64,64,192)
+CreateTileView(water, 64,64,192)
 TilePaint([
     SetVariable(paint_offset_x, -24),
     SetVariable(paint_offset_y, -16),
@@ -133,7 +133,7 @@ TransitionPaint([
 ])
 
 
-CreateTileView("ice", 128,128,192)
+CreateTileView(ice, 128,128,192)
 TilePaint([
     SetVariable(paint_offset_x, -24),
     SetVariable(paint_offset_y, -16),
@@ -171,7 +171,7 @@ TransitionPaint([
 ##### Features types #####
 
 
-CreateFeatureView("outside")
+CreateFeatureView(outside)
 FeaturePaint([
     SetVariable(paint_offset_x, -24),
     SetVariable(paint_offset_y, -24),
@@ -180,16 +180,16 @@ FeaturePaint([
 ])
 
 
-CreateFeatureView("water");
+CreateFeatureView(water);
 FeaturePaint([])
 
 
-CreateFeatureView("plains");
+CreateFeatureView(plains);
 FeaturePaint([])
 
 
 # TODO - roads should be painted underneath other features
-CreateFeatureView("road");
+CreateFeatureView(road);
 FeaturePaint([
     SetVariable(paint_offset_x, -30),
     SetVariable(paint_offset_y, -26),
@@ -206,26 +206,15 @@ FeaturePaint([
     If($neighbour5_road, PaintFrame(5)),
 ])
 
-#CreateTileView("grass_road", "grass", 0,128,0)
-#TileRoads(["Rd_gr.BMP/1-0", "Rd_gr.BMP/2-1", "Rd_gr.BMP/3-2", "Rd_gr.BMP/4-3", "Rd_gr.BMP/5-4", "Rd_gr.BMP/6-5"])
-#CreateTileView("desert_road", "desert", 128,128,64)
-#TileRoads(["Rd_de.BMP/1-0", "Rd_de.BMP/2-1", "Rd_de.BMP/3-2", "Rd_de.BMP/4-3", "Rd_de.BMP/5-4", "Rd_de.BMP/6-5"])
-#CreateTileView("snow_road", "snow", 128,128,128)
-#TileRoads(["Rd_sn.BMP/1-0", "Rd_sn.BMP/2-1", "Rd_sn.BMP/3-2", "Rd_sn.BMP/4-3", "Rd_sn.BMP/5-4", "Rd_sn.BMP/6-5"])
-#CreateTileView("steppe_road", "steppe", 128,96,64)
-#TileRoads(["Rd_st.BMP/1-0", "Rd_st.BMP/2-1", "Rd_st.BMP/3-2", "Rd_st.BMP/4-3", "Rd_st.BMP/5-4", "Rd_st.BMP/6-5"])
-#CreateTileView("wasteland_road", "wasteland", 64,64,64)
-#TileRoads(["Rd_Wl.BMP/1-0", "Rd_Wl.BMP/2-1", "Rd_Wl.BMP/3-2", "Rd_Wl.BMP/4-3", "Rd_Wl.BMP/5-4", "Rd_Wl.BMP/6-5"])
 
-
-CreateFeatureView("structure");
+CreateFeatureView(structure);
 FeaturePaint([])
 
 
 ##### Forests #####
 
 
-CreateFeatureView("forest")
+CreateFeatureView(forest)
 FeaturePaint([
     SetVariable(paint_offset_x, -32),
     SetVariable(paint_offset_y, -44),
@@ -236,7 +225,7 @@ FeaturePaint([
     If(Match($tile_type, "wasteland"), [SetVariable(paint_library, wl_tree), PaintFrame(Choose($tile_variation, [0,1,2,3,4,5,6,7]))]),
 ])
 
-CreateFeatureView("dead_forest")
+CreateFeatureView(dead_forest)
 FeaturePaint([
     SetVariable(paint_offset_x, -32),
     SetVariable(paint_offset_y, -44),
@@ -251,7 +240,7 @@ FeaturePaint([
 ##### Bridges #####
 
 
-CreateFeatureView("bridge0")
+CreateFeatureView(bridge0)
 FeaturePaint([
     SetVariable(paint_offset_x, -38),
     SetVariable(paint_offset_y, -38),
@@ -259,7 +248,7 @@ FeaturePaint([
     PaintFrame(0),
 ])
 
-CreateFeatureView("bridge1")
+CreateFeatureView(bridge1)
 FeaturePaint([
     SetVariable(paint_offset_x, -38),
     SetVariable(paint_offset_y, -38),
@@ -267,7 +256,7 @@ FeaturePaint([
     PaintFrame(1),
 ])
 
-CreateFeatureView("bridge2")
+CreateFeatureView(bridge2)
 FeaturePaint([
     SetVariable(paint_offset_x, -38),
     SetVariable(paint_offset_y, -38),
@@ -279,10 +268,10 @@ FeaturePaint([
 ##### Hills #####
 
 
-CreateFeatureView("hill0")
+CreateFeatureView(hill0)
 FeaturePaint([])
 
-CreateFeatureView("hill1")
+CreateFeatureView(hill1)
 FeaturePaint([
     SetVariable(paint_offset_x, -30),
     SetVariable(paint_offset_y, -26),
@@ -294,7 +283,7 @@ FeaturePaint([
     If(Match($tile_type, "wasteland"), PaintFrame(20)),
 ])
 
-CreateFeatureView("hill2")
+CreateFeatureView(hill2)
 FeaturePaint([
     SetVariable(paint_offset_x, -62),
     SetVariable(paint_offset_y, -24),
@@ -306,7 +295,7 @@ FeaturePaint([
     If(Match($tile_type, "wasteland"), PaintFrame(21)),
 ])
 
-CreateFeatureView("hill3")
+CreateFeatureView(hill3)
 FeaturePaint([
     SetVariable(paint_offset_x, -28),
     SetVariable(paint_offset_y, -26),
@@ -322,10 +311,10 @@ FeaturePaint([
 ###### Mountains #####
 
 
-CreateFeatureView("mountain0")
+CreateFeatureView(mountain0)
 FeaturePaint([])
 
-CreateFeatureView("mountain1")
+CreateFeatureView(mountain1)
 FeaturePaint([
     SetVariable(paint_offset_x, -30),
     SetVariable(paint_offset_y, -31),
@@ -337,7 +326,7 @@ FeaturePaint([
     If(Match($tile_type, "wasteland"), PaintFrame(29)),
 ])
 
-CreateFeatureView("mountain2")
+CreateFeatureView(mountain2)
 FeaturePaint([
     SetVariable(paint_offset_x, -62),
     SetVariable(paint_offset_y, -44),
@@ -349,7 +338,7 @@ FeaturePaint([
     If(Match($tile_type, "wasteland"), PaintFrame(23)),
 ])
 
-CreateFeatureView("mountain3")
+CreateFeatureView(mountain3)
 FeaturePaint([
     SetVariable(paint_offset_x, -94),
     SetVariable(paint_offset_y, -44),

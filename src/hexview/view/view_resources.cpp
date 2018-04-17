@@ -58,23 +58,23 @@ StructureViewDef::pointer ViewResources::create_structure_view(const StructureVi
     return def;
 }
 
-TileViewDef::pointer ViewResources::get_tile_view_def(const std::string& name) {
+TileViewDef::pointer ViewResources::get_tile_view_def(const Atom name) {
     return tile_view_defs.get_and_warn(name);
 }
 
-FeatureViewDef::pointer ViewResources::get_feature_view_def(const std::string& name) {
+FeatureViewDef::pointer ViewResources::get_feature_view_def(const Atom name) {
     return feature_view_defs.get_and_warn(name);
 }
 
-UnitViewDef::pointer ViewResources::get_unit_view_def(const std::string& name) {
+UnitViewDef::pointer ViewResources::get_unit_view_def(const Atom name) {
     return unit_view_defs.get_and_warn(name);
 }
 
-StructureViewDef::pointer ViewResources::get_structure_view_def(const std::string& name) {
+StructureViewDef::pointer ViewResources::get_structure_view_def(const Atom name) {
     return structure_view_defs.get_and_warn(name);
 }
 
-FactionViewDef::pointer ViewResources::get_faction_view_def(const std::string& name) {
+FactionViewDef::pointer ViewResources::get_faction_view_def(const Atom name) {
     return faction_view_defs.get_and_warn(name);
 }
 

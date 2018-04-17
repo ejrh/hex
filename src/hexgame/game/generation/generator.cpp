@@ -23,7 +23,7 @@ int get_random_faction(IntMap<Faction>& factions) {
     return faction_iter->second->id;
 }
 
-void create_structure(MessageReceiver& updater, Tile& tile, Point tile_pos, std::string structure_type, int faction) {
+void create_structure(MessageReceiver& updater, Tile& tile, Point tile_pos, Atom structure_type, int faction) {
     CompressableStringVector type_data;
     type_data.push_back(tile.type->name);
     CompressableStringVector feature_data;
@@ -111,7 +111,7 @@ void Generator::create_unit_stacks(MessageReceiver& updater) {
         int num = (rand() % 8) + 1;
         int has_transport = false;
         for (int j = 0; j < num; j++) {
-            StrMap<UnitType>::iterator item;
+            AtomMap<UnitType>::iterator item;
             int attempts = 0;
             do {
                 item = game->unit_types.begin();
@@ -211,7 +211,7 @@ void Generator::create_nodes(MessageReceiver& updater) {
             if ((tile.feature_type->name == "plains" || tile.feature_type->name == "water") && tile.has_property((type_num == 4) ? Swimmable : Roadable) && rand() % 20 == 0 && !tile.structure) {
                 int faction = get_random_faction(game->factions);
 
-                std::string type;
+                Atom type;
                 switch (type_num) {
                     case 0: type = "power_node"; break;
                     case 1: type = "life_node"; break;

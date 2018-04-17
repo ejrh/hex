@@ -23,7 +23,7 @@ std::string Script::signature() const {
 }
 
 
-Script::pointer compile_script(const std::string& name, Term *parameters, Term *instruction) {
+Script::pointer compile_script(const Atom name, Term *parameters, Term *instruction) {
     std::vector<Atom> parameter_atoms;
 
     if (instruction == nullptr) {

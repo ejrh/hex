@@ -1,7 +1,7 @@
-DefineScript("STACK_WINDOW", [
+DefineScript(STACK_WINDOW, [
     Increment(w, $window_width, -12),
     Increment(h, $window_height, -26),
-    Call("draw_floater_fr", [$w, $h]),
+    Call(draw_floater_fr, [$w, $h]),
 
     SetVariable(paint_library, generict),
     SetVariable(paint_tile_width, $w),
@@ -30,7 +30,7 @@ DefineScript("STACK_WINDOW", [
 ])
 
 
-DefineScript("UNIT_SLOT", [
+DefineScript(UNIT_SLOT, [
     If($stack_unit_is_present, [
         # Draw alignment background
         SetVariable(unit_alignment, 7),
@@ -59,17 +59,17 @@ DefineScript("UNIT_SLOT", [
         Increment(w, $window_width, -32),
         Increment(h, $window_height, -32),
         If($stack_unit_is_selected, [
-            Call("draw_stack_unit_slot_normal", [$w, $h]),
+            Call(draw_stack_unit_slot_normal, [$w, $h]),
         ], [
-            Call("draw_stack_unit_slot_excluded", [$w, $h]),
+            Call(draw_stack_unit_slot_excluded, [$w, $h]),
         ]),
 
-        PositionControl(unit_image, 4, 3, Sub($window_width, 7), Sub($window_height, 10), ""),
+        PositionControl(unit_image, 4, 3, Sub($window_width, 7), Sub($window_height, 10), none),
     ],
     [
         Increment(w, $window_width, -32),
         Increment(h, $window_height, -32),
-        Call("draw_stack_unit_slot_empty", [$w, $h]),
+        Call(draw_stack_unit_slot_empty, [$w, $h]),
 
         SetVariable(paint_library, units),
         SetVariable(paint_tile_width, $w),
@@ -85,7 +85,7 @@ DefineScript("UNIT_SLOT", [
 ])
 
 
-DefineScript("UNIT_MOVES", [
+DefineScript(UNIT_MOVES, [
     SetVariable(paint_library, units),
     If($stack_unit_is_present,
         If($stack_unit_is_selected,

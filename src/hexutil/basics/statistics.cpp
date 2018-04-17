@@ -5,11 +5,11 @@
 
 namespace hex {
 
-static std::unordered_map<Counter *, std::string> counters;
-static std::vector<std::pair<std::string, Counter::counter_type> > pending;
+static std::unordered_map<Counter *, Atom> counters;
+static std::vector<std::pair<Atom, Counter::counter_type> > pending;
 static time_t last_log = std::time(NULL);
 
-void register_counter(Counter *counter, const std::string& name) {
+void register_counter(Counter *counter, const Atom name) {
     counters[counter] = name;
 }
 
@@ -27,7 +27,7 @@ void unregister_counter(Counter *counter) {
 
     Counter::counter_type value = counter->reset();
     if (value != 0) {
-        std::pair<std::string, Counter::counter_type> p("", value);
+        std::pair<Atom, Counter::counter_type> p("", value);
         pending.push_back(p);
         std::swap(pending.rbegin()->first, found->second);
     }
@@ -38,7 +38,7 @@ void unregister_counter(Counter *counter) {
 void log_statistics(const std::string& label) {
     time_t seconds = std::time(NULL) - last_log;
 
-    std::map<std::string, Counter::counter_type> summary;
+    std::map<Atom, Counter::counter_type> summary;
     for (auto iter = counters.begin(); iter != counters.end(); iter++) {
         Counter::counter_type value = iter->first->reset();
         if (value == 0)

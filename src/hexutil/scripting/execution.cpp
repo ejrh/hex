@@ -14,7 +14,7 @@ void Execution::run(Script *script) {
     execute_script(script);
 }
 
-void Execution::run(const std::string& script_name) {
+void Execution::run(const Atom script_name) {
     Script *script = scripts->get(script_name).get();
     execute_script(script);
 }
@@ -40,7 +40,7 @@ Datum Execution::execute_instruction(const Term *script_term) {
     throw ScriptError() << "Can't find interpreter for term: " << script_term << "\n";
 }
 
-const Datum& Execution::get(const Atom& name) const {
+const Datum& Execution::get(const Atom name) const {
     if (locals.contains(name))
         return locals.get(name);
     if (variables.contains(name))

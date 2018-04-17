@@ -1,4 +1,4 @@
-DefineScript("UNIT_INFO_WINDOW", [
+DefineScript(UNIT_INFO_WINDOW, [
     Call("draw_dialog_fr", [376, 372]),
 
     SetVariable(paint_offset_x, 21),
@@ -109,7 +109,7 @@ DefineScript("UNIT_INFO_WINDOW", [
 ])
 
 
-DefineScript("UNIT_INFO_CLOSE_BUTTON", [
+DefineScript(UNIT_INFO_CLOSE_BUTTON, [
     SetVariable(paint_library, genericb),
 
     SetVariable(paint_frame_offset, 19),
@@ -134,7 +134,7 @@ DefineScript("UNIT_INFO_CLOSE_BUTTON", [
 ])
 
 
-DefineScript("UNIT_INFO_TAB_BAR", [
+DefineScript(UNIT_INFO_TAB_BAR, [
     SetVariable(paint_offset_x, 0),
     SetVariable(paint_offset_y, 1),
     SetVariable(paint_library, generict),
@@ -154,7 +154,7 @@ DefineScript("UNIT_INFO_TAB_BAR", [
 ])
 
 
-DefineScript("UNIT_INFO_TAB_BUTTON", [
+DefineScript(UNIT_INFO_TAB_BUTTON, [
     SetVariable(tab_middle, $window_width),
     Increment(tab_middle, -13, -13),
 
@@ -177,7 +177,7 @@ DefineScript("UNIT_INFO_TAB_BUTTON", [
 ])
 
 
-DefineScript("UNIT_INFO_TAB_PANEL0", [
+DefineScript(UNIT_INFO_TAB_PANEL0, [
     SetVariable(paint_library, generict),
     SetVariable(paint_tile_width, $window_width),
     SetVariable(paint_tile_height, $window_height),
@@ -197,11 +197,11 @@ DefineScript("UNIT_INFO_TAB_PANEL0", [
 
     SetVariable(paint_offset_x, 10),
     SetVariable(paint_offset_y, 24),
-    Call("draw_gold_fr", [100, 100]),
+    Call(draw_gold_fr, [100, 100]),
 ])
 
 
-DefineScript("UNIT_INFO_TAB_PANEL1", [
+DefineScript(UNIT_INFO_TAB_PANEL1, [
     SetVariable(paint_library, generict),
     SetVariable(paint_tile_width, $window_width),
     SetVariable(paint_tile_height, $window_height),
@@ -209,14 +209,14 @@ DefineScript("UNIT_INFO_TAB_PANEL1", [
     SetVariable(paint_tile_width, 0),
     SetVariable(paint_tile_height, 0),
 
-    Call("draw_gold_frame_box", [10, 11, 359, 80]),
-    Call("draw_gold_frame_box", [10, 105, 109, 80]),
-    Call("draw_gold_frame_box", [131, 105, 118, 80]),
-    Call("draw_gold_frame_box", [261, 105, 108, 80]),
+    Call(draw_gold_frame_box, [10, 11, 359, 80]),
+    Call(draw_gold_frame_box, [10, 105, 109, 80]),
+    Call(draw_gold_frame_box, [131, 105, 118, 80]),
+    Call(draw_gold_frame_box, [261, 105, 108, 80]),
 ])
 
 
-DefineScript("UNIT_INFO_TAB_PANEL2", [
+DefineScript(UNIT_INFO_TAB_PANEL2, [
     SetVariable(paint_library, generict),
     SetVariable(paint_tile_width, $window_width),
     SetVariable(paint_tile_height, $window_height),
@@ -265,7 +265,7 @@ DefineScript("UNIT_INFO_TAB_PANEL2", [
 ])
 
 
-DefineScript("UNIT_ITEM_SLOT", [
+DefineScript(UNIT_ITEM_SLOT, [
     SetVariable(paint_library, unitwin),
     SetVariable(paint_frame_offset, 34),
     If(Match($window_name, "bag.+"), SetVariable(paint_frame_offset, 30)),

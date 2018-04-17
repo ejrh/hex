@@ -12,11 +12,11 @@ class Brush {
 public:
     Brush(Game *game, GameView *view);
 
-    void set_type(const std::string& type_name);
+    void set_type(Atom type_name);
     void next_type();
 
     void paint_tiles(const Point point);
-    bool paint_tile(const Tile& tile, std::string& new_tile_type, std::string& new_feature_type);
+    bool paint_tile(const Tile& tile, Atom& new_tile_type, Atom& new_feature_type);
 
 public:
     int paint_radius;

@@ -54,7 +54,7 @@ public:
         publisher.subscribe(receiver);
     }
 
-    void add_ai(const std::string& faction_type) {
+    void add_ai(const Atom faction_type) {
         Ai *ai = new Ai(faction_type, &dispatch_queue);
         subscribe(ai->get_receiver());
         ais.push_back(ai);

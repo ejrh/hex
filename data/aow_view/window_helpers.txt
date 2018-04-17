@@ -1,4 +1,4 @@
-DefineScript("draw_frame", [inner_width, inner_height], [
+DefineScript(draw_frame, [inner_width, inner_height], [
     SetVariable(saved_paint_offset_x, $paint_offset_x),
     SetVariable(saved_paint_offset_y, $paint_offset_y),
 #Top
@@ -36,7 +36,7 @@ DefineScript("draw_frame", [inner_width, inner_height], [
 DefineScript("draw_dialog_fr", [inner_width, inner_height], [
     SetVariable(paint_library, genericf),
     SetVariable(paint_frame_offset, 32),
-    Call("draw_frame", [$inner_width, $inner_height]),
+    Call(draw_frame, [$inner_width, $inner_height]),
     SetVariable(paint_frame_offset, 0),
 ])
 
@@ -44,7 +44,7 @@ DefineScript("draw_dialog_fr", [inner_width, inner_height], [
 DefineScript("draw_floater_fr", [inner_width, inner_height], [
     SetVariable(paint_library, genericf),
     SetVariable(paint_frame_offset, 0),
-    Call("draw_frame", [$inner_width, $inner_height]),
+    Call(draw_frame, [$inner_width, $inner_height]),
     SetVariable(paint_frame_offset, 0),
 ])
 
@@ -52,7 +52,7 @@ DefineScript("draw_floater_fr", [inner_width, inner_height], [
 DefineScript("draw_thin_fr", [inner_width, inner_height], [
     SetVariable(paint_library, genericf),
     SetVariable(paint_frame_offset, 105),
-    Call("draw_frame", [$inner_width, $inner_height]),
+    Call(draw_frame, [$inner_width, $inner_height]),
     SetVariable(paint_frame_offset, 0),
 ])
 
@@ -60,7 +60,7 @@ DefineScript("draw_thin_fr", [inner_width, inner_height], [
 DefineScript("draw_gold_fr", [inner_width, inner_height], [
     SetVariable(paint_library, genericf),
     SetVariable(paint_frame_offset, 113),
-    Call("draw_frame", [$inner_width, $inner_height]),
+    Call(draw_frame, [$inner_width, $inner_height]),
     SetVariable(paint_frame_offset, 0),
 ])
 
@@ -94,7 +94,7 @@ DefineScript("draw_gold_frame_box", [x, y, w, h], [
 DefineScript("draw_stack_unit_slot_empty", [inner_width, inner_height], [
     SetVariable(paint_library, units),
     SetVariable(paint_frame_offset, 0),
-    Call("draw_frame", [$inner_width, $inner_height]),
+    Call(draw_frame, [$inner_width, $inner_height]),
     SetVariable(paint_frame_offset, 0),
 ])
 
@@ -102,7 +102,7 @@ DefineScript("draw_stack_unit_slot_empty", [inner_width, inner_height], [
 DefineScript("draw_stack_unit_slot_normal", [inner_width, inner_height], [
     SetVariable(paint_library, units),
     SetVariable(paint_frame_offset, 12),
-    Call("draw_frame", [$inner_width, $inner_height]),
+    Call(draw_frame, [$inner_width, $inner_height]),
     SetVariable(paint_frame_offset, 0),
 ])
 
@@ -110,6 +110,6 @@ DefineScript("draw_stack_unit_slot_normal", [inner_width, inner_height], [
 DefineScript("draw_stack_unit_slot_excluded", [inner_width, inner_height], [
     SetVariable(paint_library, units),
     SetVariable(paint_frame_offset, 26),
-    Call("draw_frame", [$inner_width, $inner_height]),
+    Call(draw_frame, [$inner_width, $inner_height]),
     SetVariable(paint_frame_offset, 0),
 ])

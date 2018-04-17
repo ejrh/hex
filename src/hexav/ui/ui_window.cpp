@@ -68,7 +68,7 @@ UiWindow *UiWindow::get_control(Atom control_name) const {
     return nullptr;
 }
 
-void UiWindow::set_paint_script(StrMap<Script>& scripts, const std::string& script_name) {
+void UiWindow::set_paint_script(AtomMap<Script>& scripts, const Atom script_name) {
     Script::pointer script = scripts.find(script_name);
     if (script) {
         set_paint_script(script);

@@ -19,15 +19,15 @@ class Faction: public boost::enable_shared_from_this<Faction> {
 public:
     typedef boost::shared_ptr<Faction> pointer;
 
-    Faction(int id, const std::string& type_name, const std::string& name, int level_width, int level_height):
+    Faction(int id, const Atom type_name, const Atom name, int level_width, int level_height):
             id(id), type_name(type_name), name(name), ready(false),
             discovered(level_width, level_height) { }
     ~Faction() { }
 
 public:
     int id;
-    std::string type_name;
-    std::string name;
+    Atom type_name;
+    Atom name;
     bool ready;
     VisibilityMap discovered;
 };
@@ -47,7 +47,7 @@ public:
     }
 
 public:
-    std::string name;
+    Atom name;
     Properties properties;
 };
 
@@ -125,7 +125,7 @@ public:
     }
 
 public:
-    std::string name;
+    Atom name;
     Properties properties;
 };
 
@@ -153,7 +153,7 @@ public:
     typedef boost::shared_ptr<TileType> pointer;
 
     TileType() { }
-    TileType(const std::string& name): name(name) { }
+    TileType(const Atom name): name(name) { }
     ~TileType() { }
 
     bool has_property(Atom property) const {
@@ -165,7 +165,7 @@ public:
     }
 
 public:
-    std::string name;
+    Atom name;
     Properties properties;
 };
 
@@ -185,7 +185,7 @@ public:
     }
 
 public:
-    std::string name;
+    Atom name;
     Properties properties;
 };
 
@@ -247,10 +247,10 @@ public:
     UnitType::pointer create_unit_type(const UnitType& unit_type);
     StructureType::pointer create_structure_type(StructureType& structure_type);
 
-    Faction::pointer create_faction(int id, const std::string& type_name, const std::string& name);
+    Faction::pointer create_faction(int id, const Atom type_name, const Atom name);
     UnitStack::pointer create_unit_stack(int id, const Point position, int owner_id);
-    Unit::pointer create_unit(int stack_id, const std::string& type_name);
-    Structure::pointer create_structure(const Point& position, const std::string& type_name, int owner_id);
+    Unit::pointer create_unit(int stack_id, const Atom type_name);
+    Structure::pointer create_structure(const Point& position, const Atom type_name, int owner_id);
     void destroy_structure(const Point& position);
     void destroy_unit_stack(int stack_id);
     void move_units(int stack_id, const IntSet selected_units, Point point);
@@ -265,10 +265,10 @@ public:
     int get_nearby_stacks(Point position, int radius, std::vector<UnitStack::pointer>& stacks) const;
 
 public:
-    StrMap<TileType> tile_types;
-    StrMap<FeatureType> feature_types;
-    StrMap<UnitType> unit_types;
-    StrMap<StructureType> structure_types;
+    AtomMap<TileType> tile_types;
+    AtomMap<FeatureType> feature_types;
+    AtomMap<UnitType> unit_types;
+    AtomMap<StructureType> structure_types;
 
     int game_id;
     int message_id;

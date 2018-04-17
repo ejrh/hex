@@ -28,8 +28,8 @@ private:
     Generator *generator;
     Game *game;
     Level& level;
-    std::map<std::string, TileType::pointer>& types;
-    std::map<std::string, FeatureType::pointer>& feature_types;
+    std::map<Atom, TileType::pointer>& types;
+    std::map<Atom, FeatureType::pointer>& feature_types;
 };
 
 };

@@ -11,7 +11,7 @@ namespace hex {
 
 class WindowExecution: public PaintExecution {
 public:
-    WindowExecution(StrMap<Script> *scripts, Resources *resources, Paint *paint, UiWindow *window):
+    WindowExecution(AtomMap<Script> *scripts, Resources *resources, Paint *paint, UiWindow *window):
             PaintExecution(scripts, resources, paint),
             window(window) {
     }

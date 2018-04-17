@@ -28,7 +28,7 @@ MSG_TYPE(CreateStructureView, WM(StructureViewDef))
 MSG_TYPE(StructurePaint, WM(Term *))
 
 MSG_TYPE(CreateFactionView, WM(FactionViewDef))
-MSG_TYPE(FactionImageSet, WM2(std::string, ImageSeries))
+MSG_TYPE(FactionImageSet, WM2(Atom, ImageSeries))
 
 #undef P
 
