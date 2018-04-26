@@ -117,7 +117,11 @@ public:
     IntMap(const char *name): ObjMap<int, T>(name) { }
 
     int get_free_id() const {
-        return this->highest() + 1;
+        if (this->size() > 1) {
+            return this->highest() + 1;
+        } else {
+            return 1;
+        }
     }
 };
 
