@@ -60,7 +60,7 @@ class UiWindow {
 public:
     typedef std::unique_ptr<UiWindow> pointer;
 
-    UiWindow(int x, int y, int width, int height, UiWindowFlags flags, Atom name = AtomRegistry::empty);
+    UiWindow(int x, int y, int width, int height, UiWindowFlags flags, Atom name = AtomRegistry::get_instance().empty);
     virtual ~UiWindow();
 
     virtual bool receive_mouse_event(SDL_Event *evt, int x, int y);

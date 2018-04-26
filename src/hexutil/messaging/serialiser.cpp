@@ -134,7 +134,7 @@ Deserialiser& Deserialiser::operator>>(Datum& datum) {
         if (*end == '\0') {
             datum.value = intval;
         } else {
-            Atom atom = AtomRegistry::atom(word);
+            Atom atom = AtomRegistry::get_instance().atom(word);
             datum.value = atom;
         }
     }

@@ -235,7 +235,7 @@ public:
         if (type >= min_message_type && type <= max_message_type) {
             return msg_type_names[type - min_message_type];
         } else {
-            return AtomRegistry::empty;
+            return AtomRegistry::get_instance().empty;
         }
     }
 

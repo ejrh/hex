@@ -103,7 +103,7 @@ public:
     }
 
     Serialiser& operator<<(const Atom& t) {
-        *this << AtomRegistry::name(t);
+        *this << AtomRegistry::get_instance().name(t);
         return *this;
     }
 
@@ -269,7 +269,7 @@ public:
     Deserialiser& operator>>(Atom& t) {
         std::string name;
         *this >> name;
-        t = AtomRegistry::atom(name);
+        t = AtomRegistry::get_instance().atom(name);
         return *this;
     }
 

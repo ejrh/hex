@@ -50,20 +50,20 @@ void UnitPainter::repaint(UnitView& unit_view, Unit& unit) {
         execution.variables.set<std::string>(faction_type_atom, unit.owner->type_name);
     }*/
 
-    Atom selected_atom = AtomRegistry::atom("selected");
+    Atom selected_atom = AtomRegistry::get_instance().atom("selected");
     execution.variables.set<bool>(selected_atom, unit_view.selected);
 
-    Atom shadow_atom = AtomRegistry::atom("shadow");
+    Atom shadow_atom = AtomRegistry::get_instance().atom("shadow");
     execution.variables.set<bool>(shadow_atom, unit_view.shadow);
 
-    Atom unit_facing_atom = AtomRegistry::atom("unit_facing");
+    Atom unit_facing_atom = AtomRegistry::get_instance().atom("unit_facing");
     execution.variables.set<int>(unit_facing_atom, unit_view.facing);
 
-    Atom unit_posture_atom = AtomRegistry::atom("unit_posture");
-    Atom posture_atoms[] = { AtomRegistry::atom("holding"), AtomRegistry::atom("moving"), AtomRegistry::atom("attacking"), AtomRegistry::atom("recoiling"), AtomRegistry::atom("dying") };
+    Atom unit_posture_atom = AtomRegistry::get_instance().atom("unit_posture");
+    Atom posture_atoms[] = { AtomRegistry::get_instance().atom("holding"), AtomRegistry::get_instance().atom("moving"), AtomRegistry::get_instance().atom("attacking"), AtomRegistry::get_instance().atom("recoiling"), AtomRegistry::get_instance().atom("dying") };
     execution.variables.set<Atom>(unit_posture_atom, posture_atoms[unit_view.posture]);
 
-    Atom unit_variation_atom = AtomRegistry::atom("unit_variation");
+    Atom unit_variation_atom = AtomRegistry::get_instance().atom("unit_variation");
     execution.variables.set<int>(unit_variation_atom, unit_view.variation);
 
     try {

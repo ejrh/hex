@@ -37,6 +37,8 @@ public:
     Atom(const char *name);
     Atom(const std::string& name);
 
+    const char *c_str() const;
+
 private:
     int id;
 
@@ -45,64 +47,62 @@ private:
 
 class AtomRegistry {
 public:
-    static const Atom atom(const std::string& name) {
-        auto found = str_to_id.find(name);
-        if (found != str_to_id.end())
-            return Atom(found->second);
-
-        return register_atom(name, next_free_id);
+    static AtomRegistry& get_instance() {
+        static AtomRegistry instance;
+        return instance;
     }
 
-    static const std::string& name(const Atom atom) {
-        auto found = id_to_str.find(atom.id);
-        if (found != id_to_str.end())
-            return found->second;
-        return empty_string;
-    }
-
-    static inline int id(const char *name) {
-        return atom(name).id;
-    }
-
-    static inline int id(const std::string& name) {
-        return atom(name).id;
-    }
-
-    static inline int id(const Atom atom) {
-        return atom.id;
-    }
-
-    static Atom register_atom(const std::string& name, int id);
+    const Atom atom(const std::string& name);
+    const std::string& name(const Atom atom);
+    int id(const char *name);
+    int id(const std::string& name);
+    int id(const Atom atom);
+	void log_registered_atoms();
+    Atom register_atom(const std::string& name, int id);
 
 public:
-    static Atom empty;
+    Atom empty;
 
 private:
-    static boost::mutex mtx;
-    static std::unordered_map<int, std::string> id_to_str;
-    static std::unordered_map<std::string, int> str_to_id;
-    static int next_free_id;
-    static const std::string empty_string;
+    AtomRegistry();
+
+    Atom register_atom_nolock(const std::string& name, int id);
+    int get_free_id();
+
+private:
+    boost::mutex mtx;
+    std::unordered_map<int, std::string> id_to_str;
+    std::unordered_map<std::string, int> str_to_id;
+    int next_free_id;
+    const std::string empty_string;
 };
 
 inline Atom::operator const std::string&() const {
-    return AtomRegistry::name(*this);
+    return AtomRegistry::get_instance().name(*this);
 }
 
 inline Atom::Atom(int id, const char *name): id(id) {
-    AtomRegistry::register_atom(name, id);
+    AtomRegistry::get_instance().register_atom(name, id);
 }
 
-inline Atom::Atom(const char *name): id(AtomRegistry::id(name)) { }
+inline Atom::Atom(const char *name): id(AtomRegistry::get_instance().id(name)) { }
 
-inline Atom::Atom(const std::string& name): id(AtomRegistry::id(name)) { }
+inline Atom::Atom(const std::string& name): id(AtomRegistry::get_instance().id(name)) { }
 
 inline std::ostream& operator<<(std::ostream& os, const Atom& atom) {
-    return os << AtomRegistry::name(atom);
+    return os << AtomRegistry::get_instance().name(atom);
 }
 
 inline Atom operator+(const Atom& atom1, const Atom& atom2) {
-    return AtomRegistry::atom(AtomRegistry::name(atom1) + AtomRegistry::name(atom2));
+    return AtomRegistry::get_instance().atom(AtomRegistry::get_instance().name(atom1) + AtomRegistry::get_instance().name(atom2));
+}
+
+inline const char *Atom::c_str() const {
+    return AtomRegistry::get_instance().name(*this).c_str();
+}
+
+inline Atom operator+(const char *a, Atom& other) {
+    return Atom(a + AtomRegistry::get_instance().name(other));
 }
 
 };
@@ -111,7 +111,7 @@ namespace std {
     template<>
     struct hash<hex::Atom> {
         size_t operator()(const hex::Atom& atom) const {
-            return hex::AtomRegistry::id(atom);
+            return hex::AtomRegistry::get_instance().id(atom);
         }
     };
 }

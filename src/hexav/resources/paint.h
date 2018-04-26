@@ -63,16 +63,16 @@ private:
 class PaintExecution: public Execution {
 public:
     PaintExecution(AtomMap<Script> *scripts, Resources *resources, Paint *paint): Execution(scripts), resources(resources), paint(paint) {
-        paint_library_atom = AtomRegistry::atom("paint_library");
-        paint_offset_x_atom = AtomRegistry::atom("paint_offset_x");
-        paint_offset_y_atom = AtomRegistry::atom("paint_offset_y");
-        paint_tile_width_atom = AtomRegistry::atom("paint_tile_width");
-        paint_tile_height_atom = AtomRegistry::atom("paint_tile_height");
-        paint_clip_x_atom = AtomRegistry::atom("paint_clip_x");
-        paint_clip_y_atom = AtomRegistry::atom("paint_clip_y");
-        paint_blend_alpha_atom = AtomRegistry::atom("paint_blend_alpha");
-        paint_blend_addition_atom = AtomRegistry::atom("paint_blend_addition");
-        paint_frame_offset_atom = AtomRegistry::atom("paint_frame_offset");
+        paint_library_atom = AtomRegistry::get_instance().atom("paint_library");
+        paint_offset_x_atom = AtomRegistry::get_instance().atom("paint_offset_x");
+        paint_offset_y_atom = AtomRegistry::get_instance().atom("paint_offset_y");
+        paint_tile_width_atom = AtomRegistry::get_instance().atom("paint_tile_width");
+        paint_tile_height_atom = AtomRegistry::get_instance().atom("paint_tile_height");
+        paint_clip_x_atom = AtomRegistry::get_instance().atom("paint_clip_x");
+        paint_clip_y_atom = AtomRegistry::get_instance().atom("paint_clip_y");
+        paint_blend_alpha_atom = AtomRegistry::get_instance().atom("paint_blend_alpha");
+        paint_blend_addition_atom = AtomRegistry::get_instance().atom("paint_blend_addition");
+        paint_frame_offset_atom = AtomRegistry::get_instance().atom("paint_frame_offset");
     }
 
     int frame_width(int frame_num);

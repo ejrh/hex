@@ -36,7 +36,7 @@ Deserialiser& operator>>(Deserialiser& deserialiser, Message *& msg) {
     int type = MessageTypeRegistry::get_message_type(type_name);
     msg = MessageTypeRegistry::new_message(type);
     if (msg == NULL) {
-        deserialiser.error("Could not create class of type: %s", type_name);
+        deserialiser.error("Could not create class of type: %s", type_name.c_str());
         return deserialiser;
     }
     msg->origin = origin;
@@ -89,7 +89,7 @@ Atom MessageTypeRegistry::get_message_type_name(int type) {
         MessageFactory *factory = *iter;
         if (type >= factory->min_type() && type <= factory->max_type()) {
             Atom rv = factory->get_message_type_name(type);
-            if (rv != AtomRegistry::empty)
+            if (rv != AtomRegistry::get_instance().empty)
                 return rv;
         }
     }
