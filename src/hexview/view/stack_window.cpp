@@ -175,21 +175,22 @@ bool StackWindow::receive_ui_event(SDL_Event *evt, UiWindow *control) {
             if (control == unit_slots[i] && unit_slots[i]->unit_is_present) {
                 UnitStack::pointer stack = view->game->stacks.find(view->selected_stack_id);
                 unit_info_window->open(stack->units[i]);
+                update_stack();
+                return true;
             } else if (control == unit_moves[i] && unit_moves[i]->unit_is_present) {
                 view->selected_units.toggle(i);
+                update_stack();
+                return true;
             }
         }
-        update_stack();
-        return true;
     } else if (evt->type == click_event_type && evt->user.code == SDL_BUTTON_RIGHT) {
         for (int i = 0; i < MAX_UNITS; i++) {
             if (control == unit_moves[i]) {
                 invert_unit_selection();
-                break;
+                update_stack();
+                return true;
             }
         }
-        update_stack();
-        return true;
     }
 
     return false;
