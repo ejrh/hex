@@ -18,8 +18,12 @@ public:
 
     bool receive_mouse_event(SDL_Event *evt, int x, int y);
 
+private:
+    void paint(Point point);
+
 public:
     Brush *brush;
+    int paint_radius;
 
 private:
     GameView *view;

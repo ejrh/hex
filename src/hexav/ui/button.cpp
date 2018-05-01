@@ -63,6 +63,10 @@ void UiButton::draw(const UiContext& context) {
     } else {
         context.fill_rectangle(0,0,0, 2, 2, width-4, height-4);
     }
+
+    if (flags & WindowIsSelected) {
+        context.draw_rectangle(255,255,255, 4, 4, width-8, height-8);
+    }
 }
 
 };

@@ -14,21 +14,27 @@ namespace hex {
 EditorWindow::EditorWindow(GameView *view, LevelWindow *level_window):
     UiWindow(level_window->x, level_window->y, level_window->width, level_window->height,
              WindowWantsMouseEvents),
-    brush(nullptr),
+    brush(nullptr), paint_radius(1),
     view(view) {
 }
 
 bool EditorWindow::receive_mouse_event(SDL_Event *evt, int x, int y) {
     if (evt->type == drag_event_type) {
-        brush->paint_tiles(view->level_view.highlight_tile);
+        paint(view->level_view.highlight_tile);
         return true;
     } else if (evt->type == SDL_MOUSEBUTTONDOWN && evt->button.button == SDL_BUTTON_LEFT) {
         return true;
     } else if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_LEFT) {
-        brush->paint_tiles(view->level_view.highlight_tile);
+        paint(view->level_view.highlight_tile);
         return true;
     }
     return false;
+}
+
+void EditorWindow::paint(Point point) {
+    if (!brush)
+        return;
+    brush->paint(point, paint_radius, view->game, view);
 }
 
 };

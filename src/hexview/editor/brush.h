@@ -1,6 +1,7 @@
 #ifndef BRUSH_H
 #define BRUSH_H
 
+#include "hexutil/basics/atom.h"
 #include "hexutil/basics/point.h"
 
 #include "hexview/view/view.h"
@@ -10,22 +11,29 @@ namespace hex {
 
 class Brush {
 public:
-    Brush(Game *game, GameView *view);
+    virtual ~Brush() { }
+    virtual void paint(const Point point, int radius, Game *game, GameView *view) = 0;
+};
 
-    void set_type(Atom type_name);
-    void next_type();
 
-    void paint_tiles(const Point point);
+class TileTypeBrush: public Brush {
+public:
+    TileTypeBrush(TileType::pointer tile_type): tile_type(tile_type) { }
+    void paint(const Point point, int radius, Game *game, GameView *view);
+
+private:
     bool paint_tile(const Tile& tile, Atom& new_tile_type, Atom& new_feature_type);
 
 public:
-    int paint_radius;
     TileType::pointer tile_type;
-
-private:
-    Game *game;
-    GameView *view;
 };
+
+
+class FeatureType;
+class StructureType;
+
+bool compatible(const Atom tile_type, const FeatureType& feature_type);
+bool compatible(const Atom tile_type, const Atom feature_type, const StructureType& structure_type);
 
 };
 
