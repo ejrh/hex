@@ -29,6 +29,19 @@ public:
 };
 
 
+class FeatureTypeBrush: public Brush {
+public:
+    FeatureTypeBrush(FeatureType::pointer feature_type): feature_type(feature_type) { }
+    void paint(const Point point, int radius, Game *game, GameView *view);
+
+private:
+    bool paint_tile(const Tile& tile, Atom& new_feature_type);
+
+public:
+    FeatureType::pointer feature_type;
+};
+
+
 class FeatureType;
 class StructureType;
 
