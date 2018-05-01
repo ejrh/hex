@@ -12,6 +12,7 @@
 #include "hexgame/game/game_messages.h"
 #include "hexgame/game/generation/generator.h"
 #include "hexgame/game/generation/level_generator.h"
+#include "hexgame/game/generation/utils.h"
 #include "hexgame/game/movement/movement.h"
 #include "hexgame/game/movement/pathfinding.h"
 
@@ -130,55 +131,40 @@ void LevelGenerator::coalesce_mountains() {
                 }
             }
 
-            // Mountains can be coalesced as follows:
-            //       M
-            //     m   m
-            //       m
-            if (tile_feature == "mountain1") {
-                PointNeighbours neighbour_pos = get_neighbours(tile_pos);
-                if (!level.contains(neighbour_pos[2]) || !level.contains(neighbour_pos[3]) || !level.contains(neighbour_pos[4]))
-                    continue;
-                Tile& neighbour2 = level.tiles[neighbour_pos[2]];
-                Tile& neighbour3 = level.tiles[neighbour_pos[3]];
-                Tile& neighbour4 = level.tiles[neighbour_pos[4]];
-                if (feature(neighbour2) != "mountain1" || feature(neighbour3) != "mountain1" || feature(neighbour4) != "mountain1")
-                    continue;
-
-                tile.feature_type = feature_types["mountain2"];
-                neighbour2.feature_type = feature_types["mountain0"];
-                neighbour3.feature_type = feature_types["mountain0"];
-                neighbour4.feature_type = feature_types["mountain0"];
-                tile_feature = feature(tile);
-            }
-
-            // Mountains can further be coalesced:
+            // Mountains can be coalesced:
             //          M
             //        m   m
             //      m   m   m
             //        m   m
             //          m
-            if (tile_feature == "mountain2") {
-                PointNeighbours neighbour_pos = get_neighbours(tile_pos);
-                PointNeighbours neighbour_pos_l = get_neighbours(neighbour_pos[4]);
-                PointNeighbours neighbour_pos_r = get_neighbours(neighbour_pos[2]);
-                PointNeighbours neighbour_pos_b = get_neighbours(neighbour_pos[3]);
-                if (!level.contains(neighbour_pos_b[3]) || !level.contains(neighbour_pos_l[4]) || !level.contains(neighbour_pos_r[2]))
-                    continue;
-                Tile& neighbourl4 = level.tiles[neighbour_pos_l[4]];
-                Tile& neighbourb4 = level.tiles[neighbour_pos_b[4]];
-                Tile& neighbourb3 = level.tiles[neighbour_pos_b[3]];
-                Tile& neighbourb2 = level.tiles[neighbour_pos_b[2]];
-                Tile& neighbourr2 = level.tiles[neighbour_pos_r[2]];
-                if (feature(neighbourl4) != "mountain1" || feature(neighbourb4) != "mountain1" || feature(neighbourb3) != "mountain1"
-                        || feature(neighbourb2) != "mountain1" || feature(neighbourr2) != "mountain1")
+            if (tile_feature == "mountain1") {
+                std::vector<Point> covered_points = get_shape_points(tile_pos, feature_types["mountain3"]->get_property<Atom>(Shape));
+                if (!level_contains_points(level, covered_points))
                     continue;
 
+                if (!level_feature_types_match(level, covered_points, "mountain1"))
+                    continue;
+
+                set_level_feature_type(level, covered_points, feature_types["mountain0"]);
                 tile.feature_type = feature_types["mountain3"];
-                neighbourl4.feature_type = feature_types["mountain0"];
-                neighbourb4.feature_type = feature_types["mountain0"];
-                neighbourb3.feature_type = feature_types["mountain0"];
-                neighbourb2.feature_type = feature_types["mountain0"];
-                neighbourr2.feature_type = feature_types["mountain0"];
+                tile_feature = feature(tile);
+            }
+
+            // Mountains can also be coalesced:
+            //       M
+            //     m   m
+            //       m
+            if (tile_feature == "mountain1") {
+                std::vector<Point> covered_points = get_shape_points(tile_pos, feature_types["mountain2"]->get_property<Atom>(Shape));
+                if (!level_contains_points(level, covered_points))
+                    continue;
+
+                if (!level_feature_types_match(level, covered_points, "mountain1"))
+                    continue;
+
+                set_level_feature_type(level, covered_points, feature_types["mountain0"]);
+                tile.feature_type = feature_types["mountain2"];
+                tile_feature = feature(tile);
             }
 
             if (tile_feature == "mountain1" && mountain_rand % generator->mountain_culling) {

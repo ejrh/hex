@@ -35,6 +35,10 @@ public:
         return id;
     }
 
+    operator bool() const {
+        return id;
+    }
+
     // Defined below as they reference AtomRegistry
     operator const std::string&() const;
     Atom(int id, const char *name);

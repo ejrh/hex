@@ -5,6 +5,7 @@
 
 #include "hexgame/game/game.h"
 #include "hexgame/game/game_messages.h"
+#include "hexgame/game/generation/utils.h"
 
 #include "hexview/editor/brush.h"
 
@@ -81,7 +82,10 @@ void FeatureTypeBrush::paint(const Point point, int radius, Game *game, GameView
     if (!feature_type)
         return;
 
-    if (feature_type->get_property<Atom>(Shape) == Singular || feature_type->get_property<Atom>(Shape) == Flowing) {
+    if (!can_drag()) {
+        paint_singular(point, game, view);
+        return;
+    } else if (feature_type->get_property<Atom>(Shape) == Flowing) {
         radius = 0;
     }
 
@@ -124,7 +128,55 @@ void FeatureTypeBrush::paint(const Point point, int radius, Game *game, GameView
 
 bool FeatureTypeBrush::can_drag() {
     Atom shape = feature_type->get_property<Atom>(Shape);
-    return shape != Singular;
+
+    //TODO don't fall back to 0; add get-with-default for properties, and add a proper default Shape
+    return shape == "0" || shape == Flowing;
+}
+
+void FeatureTypeBrush::paint_singular(const Point point, Game *game, GameView *view) {
+    std::vector<Point> covered_points = get_shape_points(point, feature_type->get_property<Atom>(Shape));
+
+    if (!level_contains_points(game->level, covered_points))
+        return;
+
+    std::string required_pattern = feature_type->get_property<std::string>(RequiredTileType);
+    if (!level_tile_types_match(game->level, covered_points, required_pattern))
+        return;
+
+    //TODO add some kind of iterator for turning a vector of Points into scanlines
+    //TODO make sure there aren't gaps! (depends on the shapes we handle)
+    CompressableStringVector type_data;
+    CompressableStringVector feature_data;
+    bool changed_tiles = false;
+    Point start(0, -1);
+    for (auto iter = covered_points.begin(); iter != covered_points.end(); iter++) {
+        const Tile& tile = game->level.tiles[*iter];
+        if (iter->y > start.y) {
+            if (changed_tiles)
+                view->dispatcher->receive(create_message(SetLevelData, start, type_data, feature_data));
+            type_data.clear();
+            feature_data.clear();
+            changed_tiles = false;
+            start = *iter;
+        }
+
+        Atom new_feature_type = tile.feature_type->name;
+
+        bool remove_structure = paint_tile(tile, new_feature_type);
+        if (remove_structure)
+            view->dispatcher->receive(create_message(DestroyStructure, *iter));
+
+        new_feature_type = (*iter == point) ? feature_type->name : feature_type->get_property<Atom>(CoveredFeatureType);
+
+        type_data.push_back(tile.type->name);
+        feature_data.push_back(new_feature_type);
+
+        if (remove_structure || new_feature_type != tile.feature_type->name)
+            changed_tiles = true;
+    }
+
+    if (changed_tiles)
+        view->dispatcher->receive(create_message(SetLevelData, start, type_data, feature_data));
 }
 
 bool FeatureTypeBrush::paint_tile(const Tile& tile, Atom& new_feature_type) {

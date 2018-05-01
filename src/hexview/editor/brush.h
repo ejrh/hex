@@ -38,6 +38,7 @@ public:
     bool can_drag();
 
 private:
+    void paint_singular(const Point point, Game *game, GameView *view);
     bool paint_tile(const Tile& tile, Atom& new_feature_type);
 
 public:

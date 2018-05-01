@@ -32,13 +32,13 @@ CreateFeatureType(bridge2, {RequiredTileType: water, Shape: Singular, Road, Walk
 # hill2 and hill3 are diagonal two-tile hills
 CreateFeatureType(hill0, {RequiredTileType: "grass|desert|snow|steppe|wasteland", Shape: Singular, Walkable, SlowWalking})
 CreateFeatureType(hill1, {RequiredTileType: "grass|desert|snow|steppe|wasteland", Shape: Singular, Walkable, SlowWalking})
-CreateFeatureType(hill2, {RequiredTileType: "grass|desert|snow|steppe|wasteland", Shape: Singular, Walkable, SlowWalking})
-CreateFeatureType(hill3, {RequiredTileType: "grass|desert|snow|steppe|wasteland", Shape: Singular, Walkable, SlowWalking})
+CreateFeatureType(hill2, {RequiredTileType: "grass|desert|snow|steppe|wasteland", Shape: Singular2L, CoveredFeatureType: hill0, Walkable, SlowWalking})
+CreateFeatureType(hill3, {RequiredTileType: "grass|desert|snow|steppe|wasteland", Shape: Singular2R, CoveredFeatureType: hill0, Walkable, SlowWalking})
 # mountain0 is the invisible mountain used for the other parts of a multi-tile mountain
 # mountain1 is a single-tile mountain
 # mountain2 is a 2x2 mountain
 # mountain3 is a 3x3 mountain
 CreateFeatureType(mountain0, {RequiredTileType: "grass|desert|snow|steppe|wasteland", Shape: Singular, Climbable})
 CreateFeatureType(mountain1, {RequiredTileType: "grass|desert|snow|steppe|wasteland", Shape: Singular, Climbable, SlowFlying})
-CreateFeatureType(mountain2, {RequiredTileType: "grass|desert|snow|steppe|wasteland", Shape: Singular, Climbable, SlowFlying})
-CreateFeatureType(mountain3, {RequiredTileType: "grass|desert|snow|steppe|wasteland", Shape: Singular})
+CreateFeatureType(mountain2, {RequiredTileType: "grass|desert|snow|steppe|wasteland", Shape: Singular2x2, CoveredFeatureType: mountain0, Climbable, SlowFlying})
+CreateFeatureType(mountain3, {RequiredTileType: "grass|desert|snow|steppe|wasteland", Shape: Singular3x3, CoveredFeatureType: mountain0})

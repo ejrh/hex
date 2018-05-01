@@ -2,7 +2,6 @@ set(srcs
         chat/chat.h
         chat/chat_updater.cpp
         chat/chat_window.cpp
-        editor/brush.cpp
         editor/brush.h
         editor/editor.cpp
         editor/editor.h

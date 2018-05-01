@@ -22,9 +22,12 @@ PROPERTY_NAME(DefaultFeatureType)
 PROPERTY_NAME(RequiredTileType)
 PROPERTY_NAME(RequiredFeatureType)
 PROPERTY_NAME(Shape)
+PROPERTY_NAME(CoveredFeatureType)
 
 // Shape values
 PROPERTY_NAME(Singular)
+PROPERTY_NAME(Singular2x2)
+PROPERTY_NAME(Singular3x3)
 PROPERTY_NAME(Flowing)
 
 // Unit abilities

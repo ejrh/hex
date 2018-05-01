@@ -14,6 +14,10 @@ public:
     void push_back(const std::string& str) {
         return data.push_back(str);
     }
+
+    void clear() {
+        data.clear();
+    }
 };
 
 extern void compress_string_vector(const std::vector<std::string>& input, std::vector<std::string>& output);

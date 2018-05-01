@@ -23,6 +23,8 @@ set(srcs
         game/generation/generator.h
         game/generation/level_generator.cpp
         game/generation/level_generator.h
+        game/generation/utils.cpp
+        game/generation/utils.h
         game/level.cpp
         game/message_types.h
         game/combat/battle.cpp
