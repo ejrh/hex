@@ -25,6 +25,10 @@ void StructureBrush::paint(const Point point, int radius, Game *game, GameView *
     }
 }
 
+bool StructureBrush::can_drag() {
+    return false;
+}
+
 bool StructureBrush::paint_tile(const Tile& tile, Atom& new_structure_type) {
     if (tile.has_property(Immutable)) {
         return false;

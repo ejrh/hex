@@ -13,6 +13,7 @@ class Brush {
 public:
     virtual ~Brush() { }
     virtual void paint(const Point point, int radius, Game *game, GameView *view) = 0;
+    virtual bool can_drag() = 0;
 };
 
 
@@ -20,6 +21,7 @@ class TileTypeBrush: public Brush {
 public:
     TileTypeBrush(TileType::pointer tile_type): tile_type(tile_type) { }
     void paint(const Point point, int radius, Game *game, GameView *view);
+    bool can_drag();
 
 private:
     bool paint_tile(const Tile& tile, Atom& new_tile_type, Atom& new_feature_type);
@@ -33,6 +35,7 @@ class FeatureTypeBrush: public Brush {
 public:
     FeatureTypeBrush(FeatureType::pointer feature_type): feature_type(feature_type) { }
     void paint(const Point point, int radius, Game *game, GameView *view);
+    bool can_drag();
 
 private:
     bool paint_tile(const Tile& tile, Atom& new_feature_type);
@@ -46,6 +49,7 @@ class StructureBrush: public Brush {
 public:
     StructureBrush(StructureType::pointer structure_type): structure_type(structure_type) { }
     void paint(const Point point, int radius, Game *game, GameView *view);
+    bool can_drag();
 
 private:
     bool paint_tile(const Tile& tile, Atom& new_structure_type);

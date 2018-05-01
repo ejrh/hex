@@ -20,7 +20,8 @@ EditorWindow::EditorWindow(GameView *view, LevelWindow *level_window):
 
 bool EditorWindow::receive_mouse_event(SDL_Event *evt, int x, int y) {
     if (evt->type == drag_event_type) {
-        paint(view->level_view.highlight_tile);
+        if (brush && brush->can_drag())
+            paint(view->level_view.highlight_tile);
         return true;
     } else if (evt->type == SDL_MOUSEBUTTONDOWN && evt->button.button == SDL_BUTTON_LEFT) {
         return true;

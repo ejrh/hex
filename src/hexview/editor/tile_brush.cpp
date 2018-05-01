@@ -53,6 +53,11 @@ void TileTypeBrush::paint(const Point point, int radius, Game *game, GameView *v
     }
 }
 
+bool TileTypeBrush::can_drag() {
+    return true;
+}
+
+
 bool TileTypeBrush::paint_tile(const Tile & tile, Atom & new_tile_type, Atom & new_feature_type) {
     if (tile.has_property(Immutable)) {
         return false;
@@ -75,6 +80,10 @@ bool TileTypeBrush::paint_tile(const Tile & tile, Atom & new_tile_type, Atom & n
 void FeatureTypeBrush::paint(const Point point, int radius, Game *game, GameView *view) {
     if (!feature_type)
         return;
+
+    if (feature_type->get_property<Atom>(Shape) == Singular || feature_type->get_property<Atom>(Shape) == Flowing) {
+        radius = 0;
+    }
 
     std::vector<int> scanlines = get_circle_scanlines(point, radius);
     for (unsigned int i = 0; i < scanlines.size(); i++) {
@@ -111,6 +120,11 @@ void FeatureTypeBrush::paint(const Point point, int radius, Game *game, GameView
         if (changed_tiles)
             view->dispatcher->receive(create_message(SetLevelData, Point(x1,row), type_data, feature_data));
     }
+}
+
+bool FeatureTypeBrush::can_drag() {
+    Atom shape = feature_type->get_property<Atom>(Shape);
+    return shape != Singular;
 }
 
 bool FeatureTypeBrush::paint_tile(const Tile& tile, Atom& new_feature_type) {

@@ -19,6 +19,10 @@ public:
         return id == other.id;
     }
 
+    bool operator!=(const int& val) const {
+        return id != val;
+    }
+
     bool operator!=(const Atom& other) const {
         return id != other.id;
     }

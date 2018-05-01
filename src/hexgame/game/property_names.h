@@ -21,6 +21,11 @@ PROPERTY_NAME(Immutable)
 PROPERTY_NAME(DefaultFeatureType)
 PROPERTY_NAME(RequiredTileType)
 PROPERTY_NAME(RequiredFeatureType)
+PROPERTY_NAME(Shape)
+
+// Shape values
+PROPERTY_NAME(Singular)
+PROPERTY_NAME(Flowing)
 
 // Unit abilities
 PROPERTY_NAME(Walking)
