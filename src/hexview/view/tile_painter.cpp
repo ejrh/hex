@@ -205,6 +205,11 @@ void TilePainter::repaint_feature(TileView& tile_view, const Tile& tile, const P
     execution.variables.set<Atom>(Atom("feature_type"), tile.feature_type->name);
     execution.variables.set<int>(Atom("tile_variation"), tile_view.variation);
 
+    if (tile.structure) {
+        const Structure& structure = *tile.structure;
+        execution.variables.set<Atom>(Atom("structure_name"), structure.type->name);
+    }
+
     for (int dir = 0; dir < 6; dir++) {
         Point neighbour_pos = get_neighbour(tile_pos, dir);
         if (!game->level.contains(neighbour_pos))

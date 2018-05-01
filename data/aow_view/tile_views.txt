@@ -208,7 +208,19 @@ FeaturePaint([
 
 
 CreateFeatureView(structure);
-FeaturePaint([])
+FeaturePaint([
+    If(Eq($structure_name, 0), [
+        PaintText("STR"),
+    ])
+])
+
+
+CreateFeatureView(water_structure);
+FeaturePaint([
+    If(Eq($structure_name, 0), [
+        PaintText("STR"),
+    ])
+])
 
 
 ##### Forests #####

@@ -35,6 +35,7 @@ public:
     int frame_rate;
     int blend_alpha;
     int blend_addition;
+    std::string text;
 };
 
 
@@ -80,6 +81,7 @@ public:
     void paint_frame(int frame_num);
     void paint_frame(Atom image_libary, int frame_num, int offset_x, int offset_y, int tile_width, int tile_height, int clip_x, int clip_y, int blend_alpha, int blend_addition);
     void paint_animation(Atom image_libary, int frame_rate, const std::vector<int>& frame_nums, int offset_x, int offset_y, int blend_alpha, int blend_addition);
+    void paint_text(const std::string& text, int offset_x, int offset_y);
 
     void run(Script *script);
 

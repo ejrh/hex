@@ -119,6 +119,9 @@ void ViewUpdater::apply_update(Message *update) {
             StructureView::pointer structure_view = boost::make_shared<StructureView>(structure, view_def);
             game_view->level_view.tile_views[upd->data1].structure_view = structure_view;
 
+            TilePainter tile_painter(game, game_view, resources);
+            tile_painter.repaint(upd->data1, 1);
+
             StructurePainter painter(game, resources);
             painter.repaint(*structure_view);
 
@@ -130,6 +133,9 @@ void ViewUpdater::apply_update(Message *update) {
         case DestroyStructure: {
             auto upd = dynamic_cast<DestroyStructureMessage *>(update);
             game_view->level_view.tile_views[upd->data].structure_view = nullptr;
+
+            TilePainter tile_painter(game, game_view, resources);
+            tile_painter.repaint(upd->data, 1);
         } break;
 
         case GrantFactionView: {

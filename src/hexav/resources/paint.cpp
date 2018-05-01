@@ -3,6 +3,7 @@
 #include "hexutil/basics/point.h"
 #include "hexutil/basics/hexgrid.h"
 
+#include "hexav/graphics/font.h"
 #include "hexav/resources/paint.h"
 #include "hexav/resources/resources.h"
 
@@ -65,6 +66,12 @@ Paint::Paint():
 void Paint::render(int x, int y, int phase, Graphics *graphics) {
     for (auto iter = items.begin(); iter != items.end(); iter++) {
         PaintItem& item = *iter;
+
+        if (!item.text.empty()) {
+            TextFormat tf(SmallFont10, true, 255, 0, 0);
+            tf.write_text(graphics, item.text, x + item.offset_x, y + item.offset_y);
+        }
+
         if (item.frames.size() == 0)
             continue;
 
@@ -204,6 +211,14 @@ void PaintExecution::paint_animation(Atom image_library, int frame_time, const s
         Image *image = resources->get_library_image(image_library, *iter);
         pi.frames.push_back(image);
     }
+    paint->add(pi);
+}
+
+void PaintExecution::paint_text(const std::string& text, int offset_x, int offset_y) {
+    PaintItem pi;
+    pi.offset_x = offset_x;
+    pi.offset_y = offset_y;
+    pi.text = text;
     paint->add(pi);
 }
 

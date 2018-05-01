@@ -83,12 +83,33 @@ public:
     }
 };
 
+class PaintTextInterpreter: public Interpreter {
+    public:
+        PaintTextInterpreter(): Interpreter("PaintText") { }
+
+        Datum execute(const Term *instruction, Execution *execution) const {
+            std::string text = execution->get_argument(instruction, 0);
+
+            PaintExecution* pe = dynamic_cast<PaintExecution *>(execution);
+            if (!pe)
+                throw ScriptError() << "PaintText can only be executed in a PaintExecution";
+
+            int offset_x = execution->get(pe->paint_offset_x_atom);
+            int offset_y = execution->get(pe->paint_offset_y_atom);
+
+            pe->paint_text(text, offset_x, offset_y);
+
+            return 0;
+        }
+    };
+
 
 void register_paint_interpreters() {
     InterpreterRegistry::register_interpreter(new FrameWidthInterpreter());
     InterpreterRegistry::register_interpreter(new FrameHeightInterpreter());
     InterpreterRegistry::register_interpreter(new PaintFrameInterpreter());
     InterpreterRegistry::register_interpreter(new PaintAnimationInterpreter());
+    InterpreterRegistry::register_interpreter(new PaintTextInterpreter());
 }
 
 };
