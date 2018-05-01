@@ -42,6 +42,19 @@ public:
 };
 
 
+class StructureBrush: public Brush {
+public:
+    StructureBrush(StructureType::pointer structure_type): structure_type(structure_type) { }
+    void paint(const Point point, int radius, Game *game, GameView *view);
+
+private:
+    bool paint_tile(const Tile& tile, Atom& new_structure_type);
+
+public:
+    StructureType::pointer structure_type;
+};
+
+
 class FeatureType;
 class StructureType;
 

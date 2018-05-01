@@ -138,6 +138,7 @@ void GameArbiter::process_command(Message *command) {
         } break;
 
         case SetLevelData:
+        case CreateStructure:
         case DestroyStructure: {
             emit(command->shared_from_this());
         } break;

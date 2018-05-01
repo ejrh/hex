@@ -8,6 +8,7 @@ set(srcs
         editor/editor.h
         editor/palette.cpp
         editor/palette.h
+        editor/structure_brush.cpp
         editor/tile_brush.cpp
         view/combat/combat_screen.cpp
         view/combat/combat_screen.h

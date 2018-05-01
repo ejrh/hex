@@ -32,7 +32,7 @@ public:
 
     static const int palette_width = 160;
 
-    static const int NUM_TABS = 2;
+    static const int NUM_TABS = 3;
 
 private:
     Game *game;

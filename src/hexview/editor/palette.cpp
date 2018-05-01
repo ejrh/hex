@@ -98,7 +98,7 @@ private:
 };
 
 
-static const char *tab_names[] = { "Tile", "Feature" };
+static const char *tab_names[] = { "Tile", "Feat.", "Str." };
 
 PaletteWindow::PaletteWindow(Game *game, GameView *view, LevelWindow *level_window, EditorWindow *editor_window):
         UiWindow(0, 0, palette_width, level_window->height,
@@ -142,6 +142,13 @@ void PaletteWindow::create_terrain_brushes() {
 
     for (auto iter = game->feature_types.begin(); iter != game->feature_types.end(); iter++) {
         std::unique_ptr<Brush> brush(new FeatureTypeBrush(iter->second));
+        brush_set->add_brush(iter->first, std::move(brush));
+    }
+
+    brush_set = dynamic_cast<BrushSet *>(tab_panel[2]);
+
+    for (auto iter = game->structure_types.begin(); iter != game->structure_types.end(); iter++) {
+        std::unique_ptr<Brush> brush(new StructureBrush(iter->second));
         brush_set->add_brush(iter->first, std::move(brush));
     }
 }
