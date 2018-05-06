@@ -45,6 +45,7 @@ public:
     Atom(const char *name);
     Atom(const std::string& name);
 
+    const std::string& name() const;
     const char *c_str() const;
 
 private:
@@ -103,6 +104,10 @@ inline std::ostream& operator<<(std::ostream& os, const Atom& atom) {
 
 inline Atom operator+(const Atom& atom1, const Atom& atom2) {
     return AtomRegistry::get_instance().atom(AtomRegistry::get_instance().name(atom1) + AtomRegistry::get_instance().name(atom2));
+}
+
+inline const std::string& Atom::name() const {
+    return AtomRegistry::get_instance().name(*this);
 }
 
 inline const char *Atom::c_str() const {

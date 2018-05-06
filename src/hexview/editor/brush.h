@@ -53,7 +53,7 @@ public:
     bool can_drag();
 
 private:
-    bool paint_tile(const Tile& tile, Atom& new_structure_type);
+    bool paint_tile(const Tile& tile, Atom& new_feature_type, Atom& new_structure_type, Game *game);
 
 public:
     StructureType::pointer structure_type;
