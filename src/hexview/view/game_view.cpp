@@ -21,6 +21,15 @@
 
 namespace hex {
 
+Uint32 selection_changed_event_type = 0;
+
+static void register_view_events() {
+    if (selection_changed_event_type == 0) {
+        selection_changed_event_type = SDL_RegisterEvents(1);
+    }
+}
+
+
 GameView::GameView(Game *game, Player *player, ViewResources *resources, Throttle *throttle, MessageReceiver *dispatcher):
         game(game), player(player), level_view(&game->level), resources(resources), unit_painter(resources),
         throttle(throttle), dispatcher(dispatcher),
@@ -127,6 +136,9 @@ void GameView::left_click_tile(const Point& tile_pos) {
         StructureView::pointer structure_view = level_view.tile_views[selected_structure->position].structure_view;
         structure_view->selected = true;
     }
+
+    register_view_events();
+    push_ui_event(selection_changed_event_type, nullptr);
 }
 
 void GameView::right_click_tile(const Point& tile_pos) {
@@ -356,6 +368,10 @@ void GameView::fix_stack_views() {
     for (auto iter = to_delete.begin(); iter != to_delete.end(); iter++) {
         unit_stack_views.remove(*iter);
     }
+
+    register_view_events();
+    push_ui_event(selection_changed_event_type, nullptr);
+
 }
 
 };

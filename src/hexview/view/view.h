@@ -186,6 +186,9 @@ private:
     Counter ghost_counter;
 };
 
+
+extern Uint32 selection_changed_event_type;
+
 };
 
 #endif

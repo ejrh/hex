@@ -25,7 +25,7 @@ static bool is_keyboard_event(SDL_Event *event) {
 }
 
 static bool is_ui_event(SDL_Event *event) {
-    return event->type >= drag_event_type && event->type <= tab_event_type;
+    return event->type >= user_event_type_base;
 }
 
 static void register_user_events() {

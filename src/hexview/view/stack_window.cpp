@@ -191,6 +191,9 @@ bool StackWindow::receive_ui_event(SDL_Event *evt, UiWindow *control) {
                 return true;
             }
         }
+    } else if (evt->type == selection_changed_event_type) {
+        update_stack();
+        // Let event propagate to other windows
     }
 
     return false;
