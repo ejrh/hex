@@ -12,7 +12,7 @@ class FrameWidthInterpreter: public Interpreter {
 public:
     FrameWidthInterpreter(): Interpreter("FrameWidth") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         int frame_num = execution->get_argument(instruction, 0);
 
         PaintExecution* pe = dynamic_cast<PaintExecution *>(execution);
@@ -27,7 +27,7 @@ class FrameHeightInterpreter: public Interpreter {
 public:
     FrameHeightInterpreter(): Interpreter("FrameHeight") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         int frame_num = execution->get_argument(instruction, 0);
 
         PaintExecution* pe = dynamic_cast<PaintExecution *>(execution);
@@ -42,7 +42,7 @@ class PaintFrameInterpreter: public Interpreter {
 public:
     PaintFrameInterpreter(): Interpreter("PaintFrame") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         int frame_num = execution->get_argument(instruction, 0);
 
         PaintExecution* pe = dynamic_cast<PaintExecution *>(execution);
@@ -59,7 +59,7 @@ class PaintAnimationInterpreter: public Interpreter {
 public:
     PaintAnimationInterpreter(): Interpreter("PaintAnimation") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         int frame_time = execution->get_argument(instruction, 0);
         std::vector<int> frame_nums = execution->get_as_intvector(instruction, 1);
 
@@ -87,7 +87,7 @@ class PaintTextInterpreter: public Interpreter {
     public:
         PaintTextInterpreter(): Interpreter("PaintText") { }
 
-        Datum execute(const Term *instruction, Execution *execution) const {
+        Datum execute(const CompoundTerm *instruction, Execution *execution) const {
             std::string text = execution->get_argument(instruction, 0);
 
             PaintExecution* pe = dynamic_cast<PaintExecution *>(execution);

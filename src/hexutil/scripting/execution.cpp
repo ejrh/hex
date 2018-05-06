@@ -26,18 +26,21 @@ Datum Execution::execute_script(Script *script) {
 }
 
 Datum Execution::execute_instruction(const Term *script_term) {
-    const Interpreter *interpreter = InterpreterRegistry::get_interpreter(script_term);
-    if (interpreter) {
-        Datum rv;
-        try {
-            rv = interpreter->execute(script_term, this);
-        } catch (const boost::bad_get& err) {
-            throw ScriptError() << "Line " << script_term->line_no << " '" << script_term << "': " << err.what();
+    const CompoundTerm *instr_term = dynamic_cast<const CompoundTerm *>(script_term);
+    if (instr_term) {
+        const Interpreter *interpreter = InterpreterRegistry::get_interpreter(instr_term);
+        if (interpreter) {
+            Datum rv;
+            try {
+                rv = interpreter->execute(instr_term, this);
+            } catch (const boost::bad_get &err) {
+                throw ScriptError() << "Line " << script_term->line_no << " '" << script_term << "': " << err.what();
+            }
+            return rv;
         }
-        return rv;
     }
 
-    throw ScriptError() << "Can't find interpreter for term: " << script_term << "\n";
+    throw ScriptError() << "Can't find interpreter for term: " << script_term;
 }
 
 const Datum& Execution::get(const Atom name) const {
@@ -51,6 +54,14 @@ const Datum& Execution::get(const Atom name) const {
             return properties.get(name);
     }
     return variables.get(name);
+}
+
+unsigned int Execution::get_num_subterms(const Term *term) const {
+    const CompoundTerm *compound_term = dynamic_cast<const CompoundTerm *>(term);
+    if (!compound_term)
+        return 0;
+    else
+        return compound_term->subterms.size();
 }
 
 const Datum Execution::get_argument(const Term *term, unsigned int position) {

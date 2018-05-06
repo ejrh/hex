@@ -80,6 +80,7 @@ public:
     UiWindow *get_control(Atom control_name) const;
     void set_paint_script(AtomMap<Script>& scripts, Atom script_name);
     void set_paint_script(Script::pointer paint_script);
+    void clear_paint_script();
 
 public:
     int x, y;

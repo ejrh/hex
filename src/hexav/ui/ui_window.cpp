@@ -79,8 +79,13 @@ void UiWindow::set_paint_script(AtomMap<Script>& scripts, const Atom script_name
 
 void UiWindow::set_paint_script(Script::pointer paint_script) {
     this->paint_script = paint_script;
-    this->set_flag(WindowHasPaint);
-    this->needs_repaint = true;
+    set_flag(WindowHasPaint);
+    needs_repaint = true;
+}
+
+void UiWindow::clear_paint_script() {
+    paint_script = nullptr;
+    clear_flag(WindowHasPaint);
 }
 
 };

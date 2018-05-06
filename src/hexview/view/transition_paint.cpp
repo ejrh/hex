@@ -47,7 +47,7 @@ class TransitionMatchInterpreter: public Interpreter {
 public:
     TransitionMatchInterpreter(): Interpreter("TransitionMatch") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         TransitionPaintExecution* tpe = dynamic_cast<TransitionPaintExecution *>(execution);
         if (!tpe)
             throw ScriptError() << "TransitionMatch can only be executed in a TransitionPaintExecution";
@@ -65,7 +65,7 @@ class TransitionInterpreter: public Interpreter {
 public:
     TransitionInterpreter(): Interpreter("Transition") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         TransitionPaintExecution* tpe = dynamic_cast<TransitionPaintExecution *>(execution);
         if (!tpe)
             throw ScriptError() << "TransitionMatch can only be executed in a TransitionPaintExecution";

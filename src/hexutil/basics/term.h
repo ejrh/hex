@@ -39,6 +39,8 @@ public:
         return functor == list_functor;
     }
 
+    unsigned int num_subterms() const { return subterms.size(); }
+
     virtual void print_to_stream(std::ostream& os) const;
 
 public:

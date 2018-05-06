@@ -10,11 +10,9 @@ class ListInterpreter: public Interpreter {
 public:
     ListInterpreter(): Interpreter("[]") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
-        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
-
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         Datum rv = 0;
-        for (auto iter = list_term->subterms.begin(); iter != list_term->subterms.end(); iter++) {
+        for (auto iter = instruction->subterms.begin(); iter != instruction->subterms.end(); iter++) {
             const Term *instr = iter->get();
             rv = execution->execute_instruction(instr);
             if (execution->return_active)
@@ -30,7 +28,7 @@ class CallInterpreter: public Interpreter {
 public:
     CallInterpreter(): Interpreter("Call") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         const Atom script_name = execution->get_argument(instruction, 0).get_as_atom();
         AtomMap<Script>& scripts = *execution->scripts;
         Script::pointer script = scripts.find(script_name);
@@ -38,10 +36,8 @@ public:
             throw ScriptError() << "Script not found: " << script_name;
 
         /* Check number of arguments vs parameters. */
-        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
-        const Term *arguments = (list_term->subterms.size() > 1) ? execution->get_subterm(list_term, 1) : nullptr;
-        const CompoundTerm *arguments_term = dynamic_cast<const CompoundTerm *>(arguments);
-        int num_arguments = arguments_term ? arguments_term->subterms.size() : 0;
+        const Term *arguments = (instruction->num_subterms() > 1) ? execution->get_subterm(instruction, 1) : nullptr;
+        int num_arguments = execution->get_num_subterms(arguments);
         int num_parameters = script->parameters.size();
         if (num_arguments != num_parameters)
             throw ScriptError() << boost::format("Script '%s' expects %d parameters; %d provided") % script_name % num_parameters % num_arguments;
@@ -62,7 +58,7 @@ class SetVariableInterpreter: public Interpreter {
 public:
     SetVariableInterpreter(): Interpreter("SetVariable") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         const Atom property = execution->get_argument(instruction, 0);
         const Datum& value = execution->get_argument(instruction, 1);
         execution->variables[property] = value;
@@ -75,12 +71,11 @@ class IfInterpreter: public Interpreter {
 public:
     IfInterpreter(): Interpreter("If") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         int condition = execution->get_argument(instruction, 0).get_as_int();
         const Term *body = execution->get_subterm(instruction, 1);
 
-        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
-        const Term *else_body = (list_term->subterms.size() >= 3) ? execution->get_subterm(list_term, 2) : nullptr;
+        const Term *else_body = (instruction->num_subterms() >= 3) ? execution->get_subterm(instruction, 2) : nullptr;
 
         if (condition) {
             return execution->execute_instruction(body);
@@ -97,7 +92,7 @@ class WhileInterpreter: public Interpreter {
 public:
     WhileInterpreter(): Interpreter("While") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         const Term *body = execution->get_subterm(instruction, 1);
 
         Datum result = 0;
@@ -114,7 +109,7 @@ class MatchInterpreter: public Interpreter {
 public:
     MatchInterpreter(): Interpreter("Match") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         const std::string& value = execution->get_argument(instruction, 0).get_as_str();
         const std::string& pattern = execution->get_argument(instruction, 1).get_as_str();
 
@@ -132,7 +127,7 @@ class EqInterpreter: public Interpreter {
 public:
     EqInterpreter(): Interpreter("Eq") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         const Datum& value = execution->get_argument(instruction, 0);
         const Datum& value2 = execution->get_argument(instruction, 1);
 
@@ -149,7 +144,7 @@ class GtInterpreter: public Interpreter {
 public:
     GtInterpreter(): Interpreter("Gt") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         int value = execution->get_argument(instruction, 0).get_as_int();
         int value2 = execution->get_argument(instruction, 1).get_as_int();
 
@@ -166,7 +161,7 @@ class LtInterpreter: public Interpreter {
 public:
     LtInterpreter(): Interpreter("Lt") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         int value = execution->get_argument(instruction, 0).get_as_int();
         int value2 = execution->get_argument(instruction, 1).get_as_int();
 
@@ -183,10 +178,8 @@ class AndInterpreter: public Interpreter {
 public:
     AndInterpreter(): Interpreter("And") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
-        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
-
-        for (unsigned int i = 0; i < list_term->subterms.size(); i++) {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
+        for (unsigned int i = 0; i < instruction->num_subterms(); i++) {
             int condition = execution->get_argument(instruction, i).get_as_int();
             if (!condition) {
                 return 0;
@@ -202,10 +195,8 @@ class OrInterpreter: public Interpreter {
 public:
     OrInterpreter(): Interpreter("Or") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
-        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
-
-        for (unsigned int i = 0; i < list_term->subterms.size(); i++) {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
+        for (unsigned int i = 0; i < instruction->num_subterms(); i++) {
             int condition = execution->get_argument(instruction, i).get_as_int();
             if (condition) {
                 return 1;
@@ -221,7 +212,7 @@ class NotInterpreter: public Interpreter {
 public:
     NotInterpreter(): Interpreter("Not") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         int condition = execution->get_argument(instruction, 0).get_as_int();
 
         return !condition;
@@ -233,7 +224,7 @@ class AddInterpreter: public Interpreter {
 public:
     AddInterpreter(): Interpreter("Add") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         int value = execution->get_argument(instruction, 0).get_as_int();
         int value2 = execution->get_argument(instruction, 1).get_as_int();
 
@@ -246,7 +237,7 @@ class SubInterpreter: public Interpreter {
 public:
     SubInterpreter(): Interpreter("Sub") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         int value = execution->get_argument(instruction, 0).get_as_int();
         int value2 = execution->get_argument(instruction, 1).get_as_int();
 
@@ -259,7 +250,7 @@ class DivInterpreter: public Interpreter {
 public:
     DivInterpreter(): Interpreter("Div") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         int value = execution->get_argument(instruction, 0).get_as_int();
         int value2 = execution->get_argument(instruction, 1).get_as_int();
 
@@ -272,11 +263,10 @@ class ConcatInterpreter: public Interpreter {
 public:
     ConcatInterpreter(): Interpreter("Concat") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
-        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         std::ostringstream result;
-        for (unsigned int i = 0; i < list_term->subterms.size(); i++) {
-            result << execution->get_argument(list_term, i).get_as_str();
+        for (unsigned int i = 0; i < instruction->num_subterms(); i++) {
+            result << execution->get_argument(instruction, i).get_as_str();
         }
 
         return result.str();
@@ -288,12 +278,11 @@ class ReturnInterpreter: public Interpreter {
 public:
     ReturnInterpreter(): Interpreter("Return") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         execution->return_active = true;
 
-        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
-        if (list_term->subterms.size() >= 1) {
-            return execution->get_argument(list_term, 0);
+        if (instruction->num_subterms() >= 1) {
+            return execution->get_argument(instruction, 0);
         } else {
             return 0;
         }
@@ -305,11 +294,10 @@ class ChooseInterpreter: public Interpreter {
 public:
     ChooseInterpreter(): Interpreter("Choose") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         const int seed = execution->get_argument(instruction, 0).get_as_int();
         const Term *choices = execution->get_subterm(instruction, 1);
-        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(choices);
-        return execution->get_argument(choices, seed % list_term->subterms.size());
+        return execution->get_argument(choices, seed % execution->get_num_subterms(choices));
     }
 };
 
@@ -318,7 +306,7 @@ class MixInterpreter: public Interpreter {
 public:
     MixInterpreter(): Interpreter("Mix") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         const int seed1 = execution->get_argument(instruction, 0).get_as_int();
         const int seed2 = execution->get_argument(instruction, 1).get_as_int();
 
@@ -332,18 +320,17 @@ class LogInterpreter: public Interpreter {
 public:
     LogInterpreter(): Interpreter("Log") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
-        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         std::ostringstream message;
         bool first = true;
-        for (unsigned int i = 0; i < list_term->subterms.size(); i++) {
+        for (unsigned int i = 0; i < instruction->num_subterms(); i++) {
             if (!first)
                 message << ' ';
-            message << execution->get_argument(list_term, i).get_as_str();
+            message << execution->get_argument(instruction, i).get_as_str();
             first = false;
         }
 
-        BOOST_LOG_TRIVIAL(info) << boost::format("Script line %d: ") % instruction->line_no <<  message.str();
+        BOOST_LOG_TRIVIAL(info) << boost::format("Script line %d: ") % instruction->line_no << message.str();
         return 1;
     }
 };
@@ -353,15 +340,14 @@ class IncrementInterpreter: public Interpreter {
 public:
     IncrementInterpreter(): Interpreter("Increment") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
-        const CompoundTerm *list_term = dynamic_cast<const CompoundTerm *>(instruction);
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         const Atom property = execution->get_argument(instruction, 0);
         int value = execution->variables[property].get_as_int();
 
-        if (list_term->subterms.size() == 1) {
+        if (instruction->num_subterms() == 1) {
             value += 1;
         } else {
-            for (unsigned int i = 1; i < list_term->subterms.size(); i++)
+            for (unsigned int i = 1; i < instruction->subterms.size(); i++)
                 value += execution->get_argument(instruction, i).get_as_int();
         }
 

@@ -19,7 +19,7 @@ public:
     Interpreter(Atom functor): functor(functor) { }
     virtual ~Interpreter() { }
 
-    virtual Datum execute(const Term *instruction, Execution *execution) const = 0;
+    virtual Datum execute(const CompoundTerm *instruction, Execution *execution) const = 0;
 
 public:
     Atom functor;
@@ -56,6 +56,7 @@ public:
     Datum execute_instruction(const Term *script_term);
 
     const Datum& get(const Atom name) const;
+    unsigned int get_num_subterms(const Term *term) const;
     const Datum get_argument(const Term *term, unsigned int position);
     const Term *get_subterm(const Term *term, unsigned int position);
     std::vector<int> get_as_intvector(const Term *term, unsigned int position);
@@ -100,10 +101,7 @@ public:
         interpreters[interpreter->functor] = std::unique_ptr<Interpreter>(interpreter);
     }
 
-    static Interpreter *get_interpreter(const Term *script_term) {
-        const CompoundTerm *instr_term = dynamic_cast<const CompoundTerm *>(script_term);
-        if (!instr_term)
-            return nullptr;
+    static Interpreter *get_interpreter(const CompoundTerm *instr_term) {
         Atom functor = instr_term->functor;
         auto found = interpreters.find(functor);
         if (found == interpreters.end())

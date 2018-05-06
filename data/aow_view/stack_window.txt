@@ -64,7 +64,7 @@ DefineScript(UNIT_SLOT, [
             Call(draw_stack_unit_slot_excluded, [$w, $h]),
         ]),
 
-        PositionControl(unit_image, 4, 3, Sub($window_width, 7), Sub($window_height, 10), none),
+        PositionControl(unit_image, 4, 3, Sub($window_width, 7), Sub($window_height, 10)),
     ],
     [
         Increment(w, $window_width, -32),

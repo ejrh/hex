@@ -63,13 +63,15 @@ class PositionControlInterpreter: public Interpreter {
 public:
     PositionControlInterpreter(): Interpreter("PositionControl") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         Atom control_name = execution->get_argument(instruction, 0).get_as_atom();
         int x = execution->get_argument(instruction, 1).get_as_int();
         int y = execution->get_argument(instruction, 2).get_as_int();
         int w = execution->get_argument(instruction, 3).get_as_int();
         int h = execution->get_argument(instruction, 4).get_as_int();
-        Atom control_script_name = execution->get_argument(instruction, 5).get_as_atom();
+        Atom control_script_name;
+        if (execution->get_num_subterms(instruction) > 5)
+            control_script_name = execution->get_argument(instruction, 5).get_as_atom();
 
         WindowExecution* swe = dynamic_cast<WindowExecution *>(execution);
         if (!swe)
@@ -85,7 +87,10 @@ public:
         control->y = y;
         control->width = w;
         control->height = h;
-        control->set_paint_script(*swe->scripts, control_script_name);
+        if (control_script_name)
+            control->set_paint_script(*swe->scripts, control_script_name);
+        else
+            control->clear_paint_script();
 
         return 1;
     }
@@ -96,7 +101,7 @@ class HideControlInterpreter: public Interpreter {
 public:
     HideControlInterpreter(): Interpreter("HideControl") { }
 
-    Datum execute(const Term *instruction, Execution *execution) const {
+    Datum execute(const CompoundTerm *instruction, Execution *execution) const {
         Atom control_name = execution->get_argument(instruction, 0);
 
         WindowExecution* swe = dynamic_cast<WindowExecution *>(execution);
